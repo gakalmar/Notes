@@ -1,0 +1,37 @@
+/*
+string.toUpperCase()                                //returns a string with UPPERCASE
+string.toLowerCase()                                //returns a string with lowercase
+
+string.length                                       //returns the length of a string (or array)
+string.concat(str1, " ", str2)                      //combines 2 or more strings into a single string
+
+string.indexOf("char1")                             //returns the index value of first char1 in string
+string.lastIndexOf("char1")                         //returns the index value of last char1 in string
+string.charAt(index)                                //returns the character at a specific index number
+
+string.split("")                                    //splits the string into an array of it's letters
+string.split("splitteritem")                        //splits the string into an array creating a new item at every "splitteritem"
+
+array.join("")                                      //joins the elements of an array into a string
+
+string.replace("what", "withwhat")                  //replaces characters in a string with another string
+string.trim()                                       //removes whitespace from end and beginning of a string
+
+array.push('item1')                                 //add item to end
+array.pop('item2')                                  //remove item from end
+array.shift('item3')                                //add item to start
+array.unshift('item4')                              //remove item from start
+array[1]                                            //returns 2nd item in array with index1
+
+array.reverse()                                     //reverses array order in place (it changes the original too!)
+
+array.slice(firstindex, lastindex)                  //returns the array from first index to last index (no value means from start or to end)
+string.slice(firstindex, lastindex)                 //returns the string from first index to last index
+
+array.map()                                         //creates a new array by applying a function to each element of an existing array.
+array.filter()                                      //creates a new array with elements that pass a specific condition
+
+parseInt("42")                                      //converts a string into a number
+42.toString()                                       //converts a number into a string
+
+*/

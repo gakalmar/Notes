@@ -102,9 +102,9 @@ OBJECTS
 
 LOOPS
 
-    arrLoop = ['item1', 'item2', 'item3', 'item4', 'item5']       //this is just an array with 5 elements for better understanding
-    for(let i = 0; i < arrLoop.length; i++) {                         //let i = 0 means i variable's initial value is 0" // i < 5 means until when should it be repeated // i++ means that 1 should be added to 'i' after each step
-        console.log(arrLoop[i]);                                      //print arr[0] then arr[1] ... until it reaches limit
+    arr = ['item1', 'item2', 'item3', 'item4', 'item5']         //this is just an array with 5 elements for better understanding
+    for(let i = 0; i < arrLoop.length; i++) {                   //let i = 0 means i variable's initial value is 0" // i < 5 means until when should it be repeated // i++ means that 1 should be added to 'i' after each step
+        console.log(arr[i]);                                    //print arr[0] then arr[1] ... until it reaches limit
     }
 
         // break to be used in for loops when you want the code to stop immediately
