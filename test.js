@@ -1,12 +1,9 @@
-function highAndLow(numbers){
-    numbersArray = numbers.split(' ');
-    for (let i = 0; i < numbersArray.length; i++){
-        numbersArray[i] = parseInt(numbersArray[i]);
+function toJadenCase(str1){
+    let words = str1.split(" ")
+    for (let i = 0; i < words.length; i++){
+        words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
     }
-    console.log(typeof numbersArray[1]);
-    console.log(Math.max(...numbersArray));
-    console.log(Math.min(...numbersArray));
-    return [Math.max(numbersArray), Math.min(numbers)]
+    return words.join(" ");
 }
 
-console.log(highAndLow("1 2 -2 9"));
+console.log(toJadenCase("How can mirrors be real if our eyes aren't real"));

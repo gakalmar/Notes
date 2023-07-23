@@ -39,11 +39,15 @@ CONDITIONAL STATEMENTS
 
     if (cond){
         CODE IF TRUE;
-    } else if {
+    } else if (cond2) {
         CODE IF ELSE IS TRUE;
     } else {
         CODE IF ALL BEFORE ARE FALSE;
     }
+
+    Alternative way:
+    CONDITION ? ValueIfTrue : ValueIfFalse;
+    eg: x == 5 ? Yes : No;
 
 LOGICAL OPERATORS (By hierarchy)
 
@@ -59,11 +63,12 @@ VARIABLE, CONSTANT
 
 FUNCTIONS
 
-    function funcName(par1, par2) {
+
+    function funcName(par1, par2) {         //Declare function (=create)
         //CODE
     }
 
-    funcName(arg1, arg2)    //calls the function with the parameters swapped to the input argumetns
+    funcName(arg1, arg2)                    //calls the function with the parameters swapped to the input argumetns
 
 RETURN VS. CONSOLE.LOG()
 
