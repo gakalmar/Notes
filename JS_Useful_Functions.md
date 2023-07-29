@@ -11,7 +11,13 @@ string.lastIndexOf("char1")                         //returns the index value of
 string.charAt(index)                                //returns the character at a specific index number
 
 string.split("")                                    //splits the string into an array of it's letters
-string.split("splitteritem")                        //splits the string into an array creating a new item at every "splitteritem"
+string.split("splitteritem") eg. ", "               //splits the string into an array creating a new item at every "splitteritem"
+string.split("x").lenght                            //use this to count the number of 'x' items in the string
+
+string.slice(firstindex, lastindex)                 //returns the string from first index to last index
+
+string.StartsWith("strTest")                        //returns true if "string" starts with "strTest"
+string.EndsWith("strTest")                          //returns true if "string" ends with "strTest"
 
 array.join("")                                      //joins the elements of an array into a string
 
@@ -27,10 +33,10 @@ array[1]                                            //returns 2nd item in array 
 array.reverse()                                     //reverses array order in place (it changes the original too!)
 
 array.slice(firstindex, lastindex)                  //returns the array from first index to last index (no value means from start or to end)
-string.slice(firstindex, lastindex)                 //returns the string from first index to last index
 
 array.map()                                         //creates a new array by applying a function to each element of an existing array.
-array.filter()                                      //creates a new array with elements that pass a specific condition
+array.filter(condition)                             //creates a new array with elements that pass a specific condition
+                                                    //condition example: (elementInArray => elementInArray.length > 4)
 
 parseInt("42")                                      //converts a string into a number
 42.toString()                                       //converts a number into a string
