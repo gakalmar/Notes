@@ -1,4 +1,3 @@
-/*
 DATA TYPES
 
     String ("string1" or 'string2')
@@ -117,5 +116,3 @@ LOOPS
     }
 
         //do-while loops are used when the first iteration is always wanted to be executed, even if the first condition is not true
-
-*/

@@ -1,4 +1,3 @@
-/*
 '${something}'                                      //creates a pocket for 'something' that displays as a string
 
 string.toUpperCase()                                //returns a string with UPPERCASE
@@ -40,5 +39,3 @@ Math.max(...arrayOfNumbers) or                      //returns max or min values 
     Math.max(1, 2, 3)
 Math.min(...arrayOfNumbers) or
     Math.min(1, 2, 3)
-
-*/
