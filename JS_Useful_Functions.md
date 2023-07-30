@@ -21,7 +21,9 @@ string.EndsWith("strTest")                          //returns true if "string" e
 
 array.join("")                                      //joins the elements of an array into a string
 
-string.replace("what", "withwhat")                  //replaces characters in a string with another string (STINGS ONLY!)
+string.replace("what", "withwhat")                  //replaces characters in a string with another string (STINGS ONLY!). It doesn't modify the original, so to update it you need to use str = str.replace(a, b)
+string.replace(/a/gi, "")                           //writing it this way, /g refers to all occurencies, not just the first one. Adding the i makes it case insensitive
+string.replace(/[aeiou]/gi, "")                     //this is an advanced way to write it (/ refers to a global expression, [aeiou] refers to a character class and the letters to look for inside it). g means all occurrencies, i means case insensitive search
 string.trim()                                       //removes whitespace from end and beginning of a string
 
 array.push('item1')                                 //add item to end

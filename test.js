@@ -1,9 +1,10 @@
-function toJadenCase(str1){
-    let words = str1.split(" ")
-    for (let i = 0; i < words.length; i++){
-        words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
-    }
-    return words.join(" ");
+function disemvowel(str) {
+    str = str.replace(/a/gi, "");
+    str = str.replace(/e/gi, "");
+    str = str.replace(/i/gi, "");
+    str = str.replace(/o/gi, "");
+    str = str.replace(/u/gi, "");
+    return str;
 }
 
-console.log(toJadenCase("How can mirrors be real if our eyes aren't real"));
+console.log(disemvowel("This website LOL"));
