@@ -1,10 +1,12 @@
-function disemvowel(str) {
-    str = str.replace(/a/gi, "");
-    str = str.replace(/e/gi, "");
-    str = str.replace(/i/gi, "");
-    str = str.replace(/o/gi, "");
-    str = str.replace(/u/gi, "");
-    return str;
-}
-
-console.log(disemvowel("This website LOL"));
+function animateLoading() {
+    const frames = ["|", "/", "-", "\\"];
+    let index = 0;
+  
+    setInterval(() => {
+      process.stdout.write(`Loading ${frames[index]} \r`);
+      index = (index + 1) % frames.length;
+    }, 200);
+  }
+  
+  animateLoading();
+  

@@ -13,6 +13,7 @@ cd ..                               //move to parent folder
 pwd                                 //Show local directory
 
 dir                                 //Shows directories inside local folder
+mkdir DirectoryNAME                 //Creates Directory
 ls                                  //Lists all elements in local folder
 ls .a                               //Lists items in Git context
                                     // . -> refers to local folder
