@@ -35,6 +35,8 @@ array[1]                                            //returns 2nd item in array 
 array.reverse()                                     //reverses array order in place (it changes the original too!)
 
 array.slice(firstindex, lastindex)                  //returns the array from first index to last index (no value means from start or to end)
+                                                      firstindex - IS included
+                                                      lastindex - ISN'T included (leave it empty if you want to list the items to the last item)
 
 array.map()                                         //creates a new array by applying a function to each element of an existing array.
 array.filter(condition)                             //creates a new array with elements that pass a specific condition
@@ -47,3 +49,4 @@ Math.max(...arrayOfNumbers) or                      //returns max or min values 
     Math.max(1, 2, 3)
 Math.min(...arrayOfNumbers) or
     Math.min(1, 2, 3)
+Math.Pi                                             //Refers to 3.1415...

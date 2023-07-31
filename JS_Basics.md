@@ -133,11 +133,13 @@ VARIABLE, CONSTANT
 
 ARITHMETIC OPERATORS
 
-    +   works also with strings (old way of doing it), and variables that are numbers (eg. let number = 10, number + 1 = 11)
+    =   Assignment operator. Assigns or reassigns a value to an item or variable
+
+    +   Works also with strings (old way of doing it), and variables that are numbers (eg. let number = 10, number + 1 = 11)
     -
     *
     /
-    %   modulo - returns the 'leftover' value after a division (eg. 14 % 5 = 4)
+    %   Modulo - returns the 'leftover' value after a division (eg. 14 % 5 = 4)
 
     == equal to
     != not equal to
