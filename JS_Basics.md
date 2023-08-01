@@ -2,7 +2,7 @@ DATA TYPES
 
     PRIMITIVES
 
-        String ("string1" or 'string2')
+        1 String ("string1" or 'string2')
 
             'It\'s a beautiful day!'        //Escape character \
             \\                              //Double backslash to include a single backslash eg. "C:\\User\\Username" -> C:\User\Username
@@ -15,25 +15,38 @@ DATA TYPES
                                             With numbers, the value within is evaluated first, then the result is printed (eg. `${a + b}` -> if a=5 and b=10 -> "15 will print", not "5 + 10")
                                             ONLY WORKS WITH BACKTICK! `
 
-        Number (integer or float/fraction)
+        2 Number (integer or float/fraction)
 
-            Integer - whole numbers
+            Integers - whole numbers
         
-        Boolean (true or false)
-            Values for non-booleans:
+        3 Boolean (true or false):
+
+            Values for non-booleans (Thruthy - Falsy):          //if we have a constant or variable, and assign a true or false value to it, we also call that truthy and falsy
+            
                 1           true
                 0           false
                 "a"         true
                 ""          false
                 Nan         false
                 undefined   false
-                Null        false
+                null        false
+                []          true
+                {}          true
+            
+            Example:
 
-        Undefined
+                let name = ``;
+                if (name){
+                    consoloe.log(`Hello ${name}!`);
+                } else {
+                    console.log(`There was no name provided.`);
+                }
+
+        4 Undefined
         
-        Null
+        5 null
 
-    DATA STRUCUTURES - NOT PRIMITIVES (eg. Arrays, Properties, Grouped data)
+    DATA STRUCUTURES - NOT PRIMITIVES (eg. Objects, Arrays, Properties, Grouped data)
 
         **Commonly OBJECTS are stored within ARRAYS:
 
@@ -128,37 +141,59 @@ VARIABLE, CONSTANT
         
         let myAge = 36
         let myNewAge = myAge    ->  This will make myNewAge the value of myAge, which is 36
-        myAge = 37              ->  This will update myAge, but not myNewAge!
+        myAge = 37              ->  This will update myAge, but not myNewAge
+                                    So myAge will be 37 and myNewAge will stay 36
 
 
-ARITHMETIC OPERATORS
+OPERATORS
+    
+    ARITHMETIC OPERATORS
 
-    =   Assignment operator. Assigns or reassigns a value to an item or variable
+    +       Works also with strings (old way of doing concatenation), and variables that are numbers (eg. let number = 10, number + 1 = 11)
+    -       Substraction
+    *       Multiplication
+    /       Division
 
-    +   Works also with strings (old way of doing it), and variables that are numbers (eg. let number = 10, number + 1 = 11)
-    -
-    *
-    /
-    %   Modulo - returns the 'leftover' value after a division (eg. 14 % 5 = 4)
+    %       Modulo/modulus - returns the 'leftover' or 'remainder' value after a division (eg. 14 % 5 = 4)
+    i++     i = i + 1 | Increment - Add 1 to the current value of the variable 'i' ('i' needs to be declared first)        //To be used only with VARIABLES!
+    i--     i = i - 1 | Decrement - Substract 1 of current value                                                           
 
-    == equal to
-    != not equal to
-    === stricklty equal to
-    !== stricktly not equal to
-    > greater than
-    < less than
-    >= greter or equal to
-    <= less than or equal to
+    ASSIGNMENT OPERATORS
+    
+    =       Assigns or reassigns a value to an item or variable
+    +=      i = i + x is the same as i += x                             //To be used only with VARIABLES!
+    -=      i = i - x
+    *=      i = i * x
+    /=      i = i / x
+    
+    COMPARISON OPERATORS
 
-LOGICAL OPERATORS (By hierarchy)
+    ==      equal to                    //These return boolean values
+    !=      not equal to
+    ===     stricklty equal to          //Comparing OBJECTS or ARRAYS won't return true even if they consist of the same, because they are different objects with the same value (so let a = {age:18}; b = {age: 18}; a === b will be false). But if we compare the properties inside, they will be true (a.age === b.age will be true)
+    !==     stricktly not equal to
+    
+    >       greater than                //Mathematiocal operators for numbers only
+    <       less than
+    >=      greter or equal to
+    <=      less than or equal to
+
+    LOGICAL OPERATORS (By hierarchy)
 
     !   NOT     Inverts true or false values
     ||  OR      If at least one value is true, it returns true
     &&  AND     If all values are true, it returns true
 
+    CONDITIONAL OPERATORS
+
+    ?:      BOOLEAN ? "valueIfTrue" : "ValueIfFalse"
+
+    FULL HIERARCHY DESCENDING (also called PRECEDENCE): 
+    () . ! ** * / % + - ""+"" < <= === !== && || ?: assignments
+
 CONDITIONAL STATEMENTS
     
-    IF STATEMENT
+    IF-ELSE STATEMENT (Remember to use *else if* between the conditions, not *if else*!)
     
         if (cond){
             CODE IF TRUE;
@@ -174,15 +209,45 @@ CONDITIONAL STATEMENTS
 
     LOOPS
 
-        FOR LOOP
+        FOR LOOP (Used when you know the number of repetitions):
+
+            for (INITIALIZATION; CONDITION; INCR/DECR){                 //INITIALIZATION - Executed once before the code runs
+                BODY;                                                   //CONDITION - Evaluated at the beginning of each loop 
+            }                                                           //INCR/DECR - Evaluated after each loop
+
+            Example:
 
             arr = ['item1', 'item2', 'item3', 'item4', 'item5']         //this is just an array with 5 elements for better understanding
+            
             for(let i = 0; i < arrLoop.length; i++) {                   //let i = 0 means i variable's initial value is 0" // i < 5 means until when should it be repeated // i++ means that 1 should be added to 'i' after each step
                 console.log(arr[i]);                                    //print arr[0] then arr[1] ... until it reaches limit
             }
 
                 // break to be used in for loops when you want the code to stop immediately
                 // continue to be used to break current iteration, and moves to the next iteration, so the rest of the code doesn't run for the current one
+
+        FOR...OF LOOP (Used to iterate through items in an Array or Object):
+
+            const myArray = [1, 2, 3, 4, 5]
+            for (const itemInArray of myArray){                         //itemInArray is just an in-place created constant to refer to each element in the Array or Object
+                BODY;
+            }
+
+            Example:
+
+            const animals = [                                           //An iterable item always needs to be created first
+                {name: 'Mango', type: 'dog', age: 7 },
+                {name: 'Berry', type: 'dog', age: 12 },
+                {name: 'Mango', type: 'cat', age: 7 }
+            ]
+
+            for (const animal in animals){                              //The item we refer to in each iteration is named animal (singular!), and the array is called animals (plural!)
+                if (animal.type === "dog"){                             //When you call the nested info, you have to refer to the iteration name, not the arrays name!!!
+                    console.log(`${animal.name} is a dog!`);
+                } else {
+                    console.log(`${animal.name} is not a dog. ${animal.name} is a ${animal.type}`);
+                }
+            }
 
         WHILE LOOP
 
