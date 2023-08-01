@@ -43,3 +43,7 @@ console.log(favouriteBook.age);
 
 Indentation default should be 2 or 4 whitespaces in JS?
 When to use whitespaces? (eg. let a=1 or let a = 1 )
+
+5 --------------------------------------------------------------------------------------------------------------------------------
+
+SOLD OUT / THE ALBUM OF EAGLES - How to do this properly?
