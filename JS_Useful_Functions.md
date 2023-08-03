@@ -1,3 +1,7 @@
+GENERAL:
+
+STRINGS:
+
 '${something}'                                      //creates a pocket for 'something' that displays as a string
 
 string.toUpperCase()                                //returns a string with UPPERCASE
@@ -26,11 +30,14 @@ string.replace(/a/gi, "")                           //writing it this way, /g re
 string.replace(/[aeiou]/gi, "")                     //this is an advanced way to write it (/ refers to a global expression, [aeiou] refers to a character class and the letters to look for inside it). g means all occurrencies, i means case insensitive search
 string.trim()                                       //removes whitespace from end and beginning of a string
 
-array.push('item1')                                 //add item to end
+ARRAYS:
+
+array.push('item1')                                 //add item to end of array
 array.pop('item2')                                  //remove item from end
 array.shift('item3')                                //add item to start
 array.unshift('item4')                              //remove item from start
 array[1]                                            //returns 2nd item in array with index1
+array.splice(index1, number)                        //removes the number of items from index1
 
 array.reverse()                                     //reverses array order in place (it changes the original too!)
 
@@ -45,8 +52,27 @@ array.filter(condition)                             //creates a new array with e
 parseInt("42")                                      //converts a string into a number
 42.toString()                                       //converts a number into a string
 
+OBJECTS:
+
+delete myObject.propertyN;                           //deletes the propertyN of an object                
+
+MATH:
+
 Math.max(...arrayOfNumbers) or                      //returns max or min values of an array
     Math.max(1, 2, 3)
 Math.min(...arrayOfNumbers) or
     Math.min(1, 2, 3)
 Math.Pi                                             //Refers to 3.1415...
+Marh.floor(fractionalNumber)                        //Returns the whole values of a number (integer from float)
+
+BUILT-IN FUNCTIONS:
+
+let today = new Date();                             //Gets today's date in this format: "Sat Jul 02 2023 09:30:00 GMT+0530 (India Standard Time)"
+let year = today.getFullYear();                     //Get only 'YYYY' format from previously generated date
+let month = today.getMonth() + 1;                   //Get 'MM' or 'M' - Months are zero-indexed, so we add 1 to get the correct month.
+let day = today.getDate();                          //Get 'DD' or 'D' format of the day
+let todayShort = new Date(`${year}-${month}-${day}`)//To get it in a short version
+
+let date1 = new Date(todayShort);                   //Calculate AGE (substract 2 dates)
+let date2 = new Date(`1986-10-4`);                  
+let age = (date1 - date2)*1000*60*60*24*365         //Substract 2 dates and multiply the result in millisecs until you get years (use Math.floor() to get whole numbers)
