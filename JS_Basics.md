@@ -249,6 +249,15 @@ CONDITIONAL STATEMENTS
                 }
             }
 
+        FOr...IN LOOP
+
+            Same as for of, but it's used to iterate over keys of an Object instead:
+
+                let myObject = {key1: "value1", key2: "value2", key3: "value3};
+                for (const key in myObject){
+                    console.log(key);           //will print "key1", "key2", "key3"
+                }
+
         WHILE LOOP
 
             let i = 0;                      //the variable is created outside the while loop

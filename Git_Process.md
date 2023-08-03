@@ -54,3 +54,14 @@ OTHER USEFUL COMMANDS:
     git stash clear                         //remove all stashed entries
     git stash list                          //list all stashed entries
     git stash pop stach@{index}             //restores changes to stashed data at the chosen index, and deletes stash data
+
+GIT INIT METHOD / Not recommended as the repo still needs to be created on GitHub
+
+    1 Create a folder on your PC, and open it in VS
+    2 Open Terminal
+    3 git init                                      //initializes a Git local repo
+    4 code filename.js                              //create your files and add some content
+    5 add & commit as before
+    6 Create repo on GitHub & get SSH
+    7 git remote add origin git@branchLocation.git  //add GitHub repo to your initialized folder as remote
+    8 git push -u origin master                     //push changes; -u means it creates upstream branch, so now the GitHub will be the source (?)
