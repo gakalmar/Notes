@@ -272,13 +272,94 @@ CONDITIONAL STATEMENTS
 
 FUNCTIONS
 
-    function funcName(par1, par2) {         //Declare function (=create)
-        //CODE
-    }
+    **A reusable block of code
 
-    funcName(arg1, arg2)                    //calls the function with the parameters swapped to the input argumetns
+    WAYS TO DECLARE FUNCTIONS:
+        
+        REGULAR FUNCTION:
 
-RETURN VS. CONSOLE.LOG()
+            **They can be used before their declaration.
+
+            function funcName(par1, par2) {     //Define function with FUNCTION keyword instead of LET. Then add the name of the function, and () parenthesis.
+                //BODY                          //Inside the () the inputs are called parameters, if there are any.
+            }
+
+            funcName();                         //Call a function. Evene when there are no parameters, the () are needed to call the function.
+            funcName(arg1, arg2);               //Calls the function with the parameters swapped to the input arguments.
+
+        ANONYMOUS FUNCTION (=FUNCTION EXPRESSION):
+
+            **Just as variables and constants, these can only be called after declaration.
+
+            const varName = function(){         //We can create an anonymous function by storing it in a constant or variable.
+                //BODY;
+            }
+
+            varName();                          //To call the function, we still need to add the () to the constant's name to call the function.
+
+        ARROW FUNCTION EXPRESSION:
+
+            let funcName = (par1, par2) => {    //function name is declared with let keyword, as variables. But then in () the variables are added, and the ARROW => points to the BODY
+                return par1 * par2;
+            }
+
+            funcName(arg1, arg2)                //It will be called the same way
+
+            let add = (a, b) => a + b;          //Single line functions have no function keyword, no curly braces {} and no rturn keyword, which makes them very quick to create
+            let greet = name => `Hi, ${name}!`  //If there is only one parameter, even the single parenthesis can be left.
+
+    INPUTS:
+
+        SHORT EXPANATION ABOUT GLOBAL AND LOCAL SCOPE:
+
+            ##GLOBAL SCOPE
+            let x = 10;                     //x is created on the GLOBAL SCOPE (=in the root scope of the file)
+
+            function funcName(){
+                return x * 2;               //we can call *x* here, because the function can access GLOBAL SCOPE
+            }
+
+            function funcName(){
+                ##LOCAL SCOPE
+                let x = 2;                  //we are creating *x* variable now in LOCAL SCOPE (=inside the function's scope). If we update the GLOBAL SCOPE *x* variable,
+                return x * 2                  we are creating a copy of *x*, and the GLOBAL SCOPE *x* will remain 10.
+            }
+
+            **So that's why for inputs, we use parameters.
+        
+        PARAMETERS:
+
+            function funcName(par1, par2 = 'DefaultValue') {        //We can assign a parameter a default value, if it's not called, buy writing it at declaration stage.
+                //BODY                                                par1 & par2 are locally created variables, that are only accessible from inside the function (LOCAL SCOPE)
+            }
+
+            We can call a function with a variable created on GLOBAL SCOPE too:
+
+                let x = "John";
+                
+                funcName(x);                                        //It will be the same as calling the function like this: funcName("John");
+            
+            We can even call functions with parameters, that are other functions (=CALLBACK FUNCTIONS):
+
+                function greet(name, callback) {                    //First, we create a function, and one parameter will be another function
+                    console.log(`Ciao, ${name}!`);
+                    callback();                                     //We call this other function inside this function here
+                }
+
+                function sayGoodbye() {                             //We create the other function
+                    console.log("Goodbye!");
+                }
+
+                greet("David", sayGoodbye);                         //Call the first function, with the second function as an argument (=callback function)
+
+    OUTPUT - RETURN VS. CONSOLE.LOG():
+
+        function funcName(par1, par2) {     
+            return "Return value";          //RETURN keyword is used to return values from the LOCAL SCOPE of the function to the GLOBAL SCOPE. It doesn't print it by default!!!
+        }                                     Every function returns a value, even if the return keyword is not used. The default return value is *undefined*
+
+        console.log(funcName(arg1, arg2));  //The return value only gets displayed once it is called with the console log function.
+
 
 
 
