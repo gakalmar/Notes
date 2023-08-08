@@ -22,6 +22,9 @@ WORKING PROCESS AFTER PULL/CLONE:
     git add filename                        //Add file or all files to staging area
     git add --all
     git add -A
+    
+    git restore --staged <file>             //Use this to unstage a file
+    git restore <file>                      //Use this to revert to last pull
 
     git commit -m "Commit message"          //Commit all staged files and add message
 
