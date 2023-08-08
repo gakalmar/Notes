@@ -5,6 +5,10 @@ Ctrl + '                            //Focus on Terminal
 Ctrl + 1/2/3                        //Focus on editor 1/2/3
 Ctrl + 0                            //Focus on Explorer
 
+F2                                  //select all instances of an expression when highlighted
+Ctrl + /                            //Toggle comment line
+Ctrl + [ / ]                        //Indent / Outdent line
+
 EDITOR:
 Ctrl + arrow                        //Select full words in prompt
 Alt + UP / DOWN arrow               //Move code line UP / DOWN
