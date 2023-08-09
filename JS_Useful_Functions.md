@@ -32,6 +32,8 @@ string.trim()                                       //removes whitespace from en
 
 ARRAYS:
 
+map, filter, find
+
 array.push('item1')                                 //add item to end of array
 array.pop('item2')                                  //remove item from end
 array.shift('item3')                                //add item to start
