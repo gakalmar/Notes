@@ -1,8 +1,7 @@
 To check:
 
--ESlint (email)
 -JS workflow of code reading (rewatch video tutorial)
--Get started with 
+-Get started with workbook
 
 Questions:
 
@@ -16,15 +15,35 @@ let favouriteBook = {
 }
 console.log(favouriteBook.age);
 
-2 --------------------------------------------------------------------------------------------------------------------------------
-
-Indentation default should be 2 or 4 whitespaces in JS?
-When to use whitespaces? (eg. let a=1 or let a = 1 )
-
-3 --------------------------------------------------------------------------------------------------------------------------------
-
-SOLD OUT / THE ALBUM OF EAGLES - How to do this properly?
-
 4 --------------------------------------------------------------------------------------------------------------------------------
 
-What happens at git push level, when first push is interrupted with a pull?
+What happens at git push level, when first push is interrupted with a pull? (merge development branch on remote)
+
+5 --------------------------------------------------------------------------------------------------------------------------------
+
+Truthy - Falsy
+
+if (""){                                    //("") -> false -> "Value is falsy"
+        console.log("Value is truthy");
+    } else {
+        console.log("Value is falsy");      
+    }
+
+if ("Not empty"){                           //("Not empty") -> true -> "Value is truthy"
+        console.log("Value is truthy");
+    } else {
+        console.log("Value is falsy");
+    }
+
+VS
+
+console.log("" == true);                    //false
+console.log("" == false);                   //true
+console.log("Not empty" == true);           //false - why isn't this true?
+console.log("Not empty" == false);          //false
+
+SAME WITH === :
+console.log("" === true);                   //false
+console.log("" === false);                  //false
+console.log("Not empty" === true);          //false
+console.log("Not empty" === false);         //false
