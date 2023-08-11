@@ -1,5 +1,6 @@
 VS CODE:
 Ctrl+Shift+P                        //Opens helper in VS Code
+Ctrl + Shift + V                    //Preview of MD file
 
 Ctrl + '                            //Focus on Terminal
 Ctrl + 1/2/3                        //Focus on editor 1/2/3

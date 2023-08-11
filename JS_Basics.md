@@ -203,9 +203,9 @@ CONDITIONAL STATEMENTS
             CODE IF ALL BEFORE ARE FALSE;
         }
 
-        Alternative way:
+        Alternative way: (TERNARY OPERATOR)
         CONDITION ? ValueIfTrue : ValueIfFalse;
-        eg: x == 5 ? Yes : No;
+        eg: 4 !== 5 ? "Yes" : "No";
 
     LOOPS
 
@@ -223,7 +223,7 @@ CONDITIONAL STATEMENTS
                 console.log(arr[i]);                                    //print arr[0] then arr[1] ... until it reaches limit
             }
 
-                // break to be used in for loops when you want the code to stop immediately
+                // break to be used in for loops when you want the code to stop immediately (move this to functions!)
                 // continue to be used to break current iteration, and moves to the next iteration, so the rest of the code doesn't run for the current one
 
         FOR...OF LOOP (Used to iterate through items in an Array or Object):
