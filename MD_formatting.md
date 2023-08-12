@@ -50,8 +50,9 @@ To add single line code or just code keywords use the backticks: `function()`. I
 
 Add an image from local library:
 
-![Name the image](/assets/—Pngtree—simple hand-painted wind rockets are_4067731.png)
+![Name of the image](/assets/—Pngtree—simple hand-painted wind rockets are_4067731.png)
 
+So let's see if it displays properly?
 
 
 
