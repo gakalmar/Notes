@@ -46,6 +46,13 @@ To add single line code or just code keywords use the backticks: `function()`. I
 
         //within the code window, MD formatiing doesn't work. **See?**
 
+#### Let's see now how to add some images:
+
+Add an image from local library:
+
+![Name the image](/assets/—Pngtree—simple hand-painted wind rockets are_4067731.png)
+
+
 
 
 
