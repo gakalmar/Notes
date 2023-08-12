@@ -4,7 +4,7 @@
 
 ### Ok, this is still important, but not underlined anymore
 
-#### The heading are getting smaller...
+#### The headings are getting smaller...
 
 ##### ...and smaller. Can you still read this?
 
@@ -44,7 +44,7 @@ Now let's do **bold text**. Awesome, how about *italic*? Even better! ***Now let
 2. Just do it like this...
 3. Numbers followed by a dot.
 4. That's simple!
-5. Yous can also create a nested list:
+5. You can also create a nested list:
     - Wow!
     - This too?
 6. Then just carry on with the original list...
@@ -72,13 +72,13 @@ To add single line code or just code keywords use the backticks: `function()`. I
 
 ### Let's see now how to add some images:
 
-Add an image from local library (without the backtick):
+Add an image from your local library (without the backtick):
 
-> `![Name of the image](/assets/rocket.png)`
+`![Name of the image](/assets/rocket.png)`
 
 Add an image with a link directly:
 
-> `![cat](https://w7.pngwing.com/pngs/409/967/png-transparent-cat-kitten-veterinarian-cat.png)`
+`![cat](https://w7.pngwing.com/pngs/409/967/png-transparent-cat-kitten-veterinarian-cat.png)`
 
 But to be able to resize them, you need to use HTML syntax:
 
