@@ -292,7 +292,7 @@ FUNCTIONS
             **Just as variables and constants, these can only be called after declaration.
 
             const varName = function(){         //We can create an anonymous function by storing it in a constant or variable.
-                //BODY;
+                //BODY;                         //Creating it this way we can only call the function AFTER it was created, as opposed to regular creation method
             }
 
             varName();                          //To call the function, we still need to add the () to the constant's name to call the function.
@@ -359,6 +359,8 @@ FUNCTIONS
         }                                     Every function returns a value, even if the return keyword is not used. The default return value is *undefined*
 
         console.log(funcName(arg1, arg2));  //The return value only gets displayed once it is called with the console log function.
+
+        **return default is undefuned, so even if a function does something (eg. prints something), but the return keyword is not used, it's value will be undefined
 
 
 
