@@ -8,44 +8,32 @@
 
 ### 1
 
-        let favouriteBook = {`<br>
-            title: "Artemis",<br>
-            author: "Andy Weir",<br>
-            year: 2017,
-            age: 2023 - favouriteBook.year                  *//CAN'T ACCESS THIS INFORMATION BEFORE INITIALIZATION - HOW TO DO IT INSTEAD?*<br>
-            }<br>
-        console.log(favouriteBook.age);<br>
+SI week 2 - Take me to a nice place - Task 1
+
+If a value doesn't exist, the whole object should return as null or just the value of that key?
+
+### 2
+
+SI week 2 - Take me to a nice place - Task 1
+
+Which data should I import?
+    id -> propert id or uniq id?
+    rating -> star rating or review rating?
+
+### 3
+
+SI week 2 - Take me to a nice place - Task 2
+
+No id in Zomato data
+No description in Zomato data
 
 ### 4
 
-What happens at git push level, when first push is interrupted with a pull? (merge development branch on remote)
+SI week 2 - Take me to a nice place - Task 4
+
+Should the website load? Why doesn't it?
 
 ### 5
 
-**Truthy - Falsy**
-
-if (""){                                    //("") -> false -> "Value is falsy"
-        console.log("Value is truthy");
-    } else {
-        console.log("Value is falsy");      
-    }
-
-if ("Not empty"){                           //("Not empty") -> true -> "Value is truthy"
-        console.log("Value is truthy");
-    } else {
-        console.log("Value is falsy");
-    }
-
-VS
-
-console.log("" == true);                    //false
-console.log("" == false);                   //true
-console.log("Not empty" == true);           //false - why isn't this true?
-console.log("Not empty" == false);          //false
-
-SAME WITH === :
-console.log("" === true);                   //false
-console.log("" === false);                  //false
-console.log("Not empty" === true);          //false
-console.log("Not empty" === false);         //false
+What happens at git push level, when first push is interrupted with a pull? (merge development branch on remote)
 

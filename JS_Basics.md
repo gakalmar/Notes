@@ -105,7 +105,8 @@ DATA TYPES
             Access date inside:
 
                 person.Key1 -> This will refer to 'value1'      //DOT NOTATION -> You enter into the data of person object with the dot .
-                person["Key1"]                                  //Same thing, just with [] brackets. "" is also needed to refer to the key (Keys are actually strings within an object, but variable names are not strings)
+                person["Key1"]                                  //Same thing, just with [] brackets. "" is also needed to refer to the key (Keys are actually strings within
+                                                                  an object, but variable names are not strings) - THIS IS IMPORTANT WHEN USING THE KEY VALUE IN A FUNCTION AS PARAMETER!
                 person.Key2 -> This will refer to 42
 
                 console.log(person.attribute1)                  //prints value1

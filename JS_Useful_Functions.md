@@ -51,7 +51,8 @@ array.map()                                         //creates a new array by app
 array.filter(condition)                             //creates a new array with elements that pass a specific condition
                                                     //condition example: (elementInArray => elementInArray.length > 4)
 
-parseInt("42")                                      //converts a string into a number
+parseInt("42")                                      //converts a string into an integer
+parseFloat("42.184923")                             //converts a string into a float
 42.toString()                                       //converts a number into a string
 
 OBJECTS:
