@@ -14,6 +14,8 @@
         `${CONSTANT}`                   //Works just like a constant, you can use it to include a previously declared constant or variable within a string as text.
                                         With numbers, the value within is evaluated first, then the result is printed (eg. `${a + b}` -> if a=5 and b=10 -> "15 will print", not "5 + 10")
                                         ONLY WORKS WITH BACKTICK! `
+    
+    > Strings are immutable, so methods will return new strings instead of modifying the original ones.
 
 2. Number (integer or float/fraction)
 
@@ -387,6 +389,109 @@ Access date inside:
 
         **return default is undefuned, so even if a function does something (eg. prints something), but the return keyword is not used, it's value will be undefined
 
+# Builtin features
+
+> ### **Method**  
+> A function that is associated with an object or an instance of an object, typically used to perform operations on the object or manipulate the object's data.  
+> They are basically functions defined as values an object's' key.
+
+- For example:
+
+        const person = {
+            firstName: "Martha",
+            lastName: "Justice",
+            fullName: function() {
+                return person.firstName + " " + person.lastName;
+            }
+            };
+
+- To call them, you need to call the object first, then refer to the key that contains the function:
+
+        console.log(person.fullName()); // Output: "Martha Justice"
+
+### Built in methods in JS
+
+- They are built into JS core library to make it easier to work. Their purposes are:
+    - Simplify complex tasks
+    - Improve maintainability and readability of code
+    - Make code more reusable (consistent behaviour)
+    - Improve performance (optimized for JS engine, faster execution)
+
+- Examples:
+    - String manipulations functions (`indexOf()`, `replace()`)
+    - Number operations (`Math.floor()`, `parseFloat()`)
+    - Array manipulation (`push()`, `splice()`)
+
+### Callback builtins / Higher-order functions
+
+- There are some built-in methods that require a callback function (*a function that is called within another function using it's parameter. See more at FUNCTIONS section*)
+
+- `forEach()` is a method, that requires a callback function for example:
+
+    - It allows you to iterate over each element in an array and perform a specific action (`callback function`) for each element.
+    - Here's how it works:
+
+            myarray.forEach(function(currentValue, index, array) {
+                // Your code here
+            });
+
+            myarray: The array you want to iterate over.
+            currentValue: The current element being processed in the array.
+            index: The index of the current element.
+            array: The array that forEach() is being applied to.
+    
+    - Here's an example with only 1 parameter:
+
+            const names = ["Alice", "Bob", "Charlie", "David"];
+
+            // Create a new array with names followed by an exclamation mark
+            const namesWithExclamation = [];
+            names.forEach(function(name) {                                                          //Here only name is added to the function as a parameter
+                namesWithExclamation.push(name + "!");
+            });
+
+            console.log(namesWithExclamation);
+
+            This will be the result:
+
+                ["Alice!", "Bob!", "Charlie!", "David!"]
 
 
+    - Here's an example with 2 parameters:
+
+            const numbers = [1, 2, 3, 4, 5];
+
+            numbers.forEach(function(currentitem, indexofcurrentitem) {                             //Here 2 parameters are added to the function
+                console.log(`Element at index ${indexofcurrentitem} is: ${currentitem}`);
+            });
+
+            This will be the result:
+
+                Element at index 0 is: 1
+                Element at index 1 is: 2
+                Element at index 2 is: 3
+                Element at index 3 is: 4
+                Element at index 4 is: 5
+
+    - Here's an example with 3 parameters:
+
+                const colors = ["red", "green", "blue", "yellow"];
+
+                colors.forEach(function(currentColor, index, colorArray) {                          //Here 3 parameters are added to the function. colorArray refers to original colors array
+                    console.log(`Color at index ${index} is ${currentColor}.`);
+                    console.log(`Total number of colors in the array: ${colorArray.length}`);
+                });
+
+            This will be the result:
+
+                Color at index 0 is red.
+                Total number of colors in the array: 4
+                Color at index 1 is green.
+                Total number of colors in the array: 4
+                Color at index 2 is blue.
+                Total number of colors in the array: 4
+                Color at index 3 is yellow.
+                Total number of colors in the array: 4
+
+- `map()`, `filter()` and `reduce()` amongst others are considered **higher-order functions**, which means that they can take other functions as arguments (*=callback functions*), or they can return a function.
 
