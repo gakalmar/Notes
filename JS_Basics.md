@@ -1,200 +1,220 @@
-DATA TYPES
+# DATA TYPES
 
-    PRIMITIVES
+### - Primitives
 
-        1 String ("string1" or 'string2')
+1. String ("string1" or 'string2')
 
-            'It\'s a beautiful day!'        //Escape character \
-            \\                              //Double backslash to include a single backslash eg. "C:\\User\\Username" -> C:\User\Username
-            \n                              //New line character (only works within string)
-            \t                              //Horizontal TAB/indent character
-            \r                              //Carriage return character ("Text 1 \r Text 2") -> Only "Text 2 will display, because \r makes the cursor go back to the biginning of the line, and start the next print from there.
-                                            It's used for exapmle when we do a loading animation, where we have to delete the previously printed line and update it with a new line.
-            `string`                        //Template literal - works a bit different than simple '' or "", for example multi line text within will display as multiline, without a \n newline character 
-            `${CONSTANT}`                   //Works just like a constant, you can use it to include a previously declared constant or variable within a string as text.
-                                            With numbers, the value within is evaluated first, then the result is printed (eg. `${a + b}` -> if a=5 and b=10 -> "15 will print", not "5 + 10")
-                                            ONLY WORKS WITH BACKTICK! `
+        'It\'s a beautiful day!'        //Escape character \
+        \\                              //Double backslash to include a single backslash eg. "C:\\User\\Username" -> C:\User\Username
+        \n                              //New line character (only works within string)
+        \t                              //Horizontal TAB/indent character
+        \r                              //Carriage return character ("Text 1 \r Text 2") -> Only "Text 2 will display, because \r makes the cursor go back to the biginning of the line, and start the next print from there.
+                                        It's used for exapmle when we do a loading animation, where we have to delete the previously printed line and update it with a new line.
+        `string`                        //Template literal - works a bit different than simple '' or "", for example multi line text within will display as multiline, without a \n newline character 
+        `${CONSTANT}`                   //Works just like a constant, you can use it to include a previously declared constant or variable within a string as text.
+                                        With numbers, the value within is evaluated first, then the result is printed (eg. `${a + b}` -> if a=5 and b=10 -> "15 will print", not "5 + 10")
+                                        ONLY WORKS WITH BACKTICK! `
 
-        2 Number (integer or float/fraction)
+2. Number (integer or float/fraction)
 
-            Integers - whole numbers
-        
-        3 Boolean (true or false):
+    - Integers - whole numbers
+    - Floats - fractional numbers
 
-            Values for non-booleans (Thruthy - Falsy):          //if we have a constant or variable, and assign a true or false value to it, we also call that truthy and falsy
+3. Boolean (true or false):
+
+    - Values for non-booleans (Thruthy - Falsy):          
+    
+            1           true
+            0           false
+            "a"         true
+            ""          false
+            Nan         false
+            undefined   false
+            null        false
+            []          true
+            {}          true
             
-                1           true
-                0           false
-                "a"         true
-                ""          false
-                Nan         false
-                undefined   false
-                null        false
-                []          true
-                {}          true
-            
-            Example:
+            If we have a constant or variable, and assign a true or false value to it, we also call that truthy and falsy
+    
+    - Example:
 
-                let name = ``;
-                if (name){
-                    consoloe.log(`Hello ${name}!`);
-                } else {
-                    console.log(`There was no name provided.`);
-                }
+            let name = ``;
+            if (name){                                         //name = `` -> empty string is falsy, so 'else' branch will execute
+                consoloe.log(`Hello ${name}!`);
+            } else {
+                console.log(`There was no name provided.`);
+            }
 
-        4 Undefined
-        
-        5 null
+4. Undefined
 
-    DATA STRUCUTURES - NOT PRIMITIVES (eg. Objects, Arrays, Properties, Grouped data)
+5. null
 
-        **Commonly OBJECTS are stored within ARRAYS:
+### - Data structures, non-primitives (eg. Objects, Arrays, Properties, Grouped data)
 
-            let groupOfPeople = [               //ARRAY is declared with [
-                {                               //First OBJECT is declared with {}
-                    name: "Person1",        
-                    age: 36
-                },                              //COMMA to be used to separate next element in ARRAY
-                {                               //Second OBJECT is declared with {}
-                    name: "Person2",
-                    age: 34
-                }
-            ]                                   //ARRAY is closed with ]
+Commonly OBJECTS are stored within ARRAYS:
 
-        ARRAYS
+    let groupOfPeople = [               //ARRAY is declared with [
+        {                               //First OBJECT is declared with {}
+            name: "Person1",        
+            age: 36
+        },                              //COMMA to be used to separate next element in ARRAY
+        {                               //Second OBJECT is declared with {}
+            name: "Person2",
+            age: 34
+        }
+    ]                                   //ARRAY is closed with ]
+
+#### 1. Arrays
 
             let arr = ['index0', 'index1', 'index2']        //COMMA to be used to separate items!
             console.log(arr)
 
-            Access date inside:
+    - Access date inside:
 
-                **Arrays have keys too, like objects, but those are not visible. They are the index numbers.
+            **Arrays have keys too, like objects, but those are not visible. They are the index numbers.
 
-                arr[1]                          //Returns 2nd item in array with index1
-                arr[1] = "NewValue"             //Updates array item's value with index [1]
+            arr[1]                      //Returns 2nd item in array with index1
+            arr[1] = "NewValue"         //Updates array item's value with index [1]
 
-                If the list consists of objects within, we can combine the access methods:
-                    
-                    arrayName[2].name           //this will refer to the item with index 2, which should be an object, then reach into that object's key called "name", and refer to its value
+            If the list consists of objects within, we can combine the access methods:
+                
+            arrayName[2].name           //this will refer to the item with index 2, which should be an object, then reach into that object's key called "name", and refer to its value
 
 
-            Common Functions:
+    - Common Functions:
 
-                arr.lenght                      //the items within the array
-                arr.length-1                    //the last item's index number
+            arr.lenght                      //the items within the array
+            arr.length-1                    //the last item's index number
 
-                arr.push('item1')               //add item to end
-                arr.pop('item2')                //remove item from end
-                arr.shift('item3')              //add item to start
-                arr.unshift('item4')            //remove item from start
+            arr.push('item1')               //add item to end
+            arr.pop('item2')                //remove item from end
+            arr.shift('item3')              //add item to start
+            arr.unshift('item4')            //remove item from start
 
-        OBJECTS
+#### 2. Objects
 
-            let person = {
-                Key1: 'value1',                  //COMMA to be used to separate items!
-                Key2: 42,
-                newObject: {
-                    newObjAttr1: 'value3',
-                    newObjAttr2: 'value4'
-                },
-                myFunction: function(var1, var2) {
-                    console.log('First variable is : ' + var1 + '\n' + 'Second variable is: ' + var2)
-                }
+        let person = {
+            Key1: 'value1',                  //COMMA to be used to separate items!
+            Key2: 42,
+            newObject: {
+                newObjAttr1: 'value3',
+                newObjAttr2: 'value4'
+            },
+            myFunction: function(var1, var2) {
+                console.log('First variable is : ' + var1 + '\n' + 'Second variable is: ' + var2)
             }
+        }
 
-            Access date inside:
+Access date inside:
 
-                person.Key1 -> This will refer to 'value1'      //DOT NOTATION -> You enter into the data of person object with the dot .
-                person["Key1"]                                  //Same thing, just with [] brackets. "" is also needed to refer to the key (Keys are actually strings within
-                                                                  an object, but variable names are not strings) - THIS IS IMPORTANT WHEN USING THE KEY VALUE IN A FUNCTION AS PARAMETER!
-                person.Key2 -> This will refer to 42
+        person.Key1 -> This will refer to 'value1'      //DOT NOTATION -> You enter into the data of person object with the dot .
+        person["Key1"]                                  //Same thing, just with [] brackets. "" is also needed to refer to the key (Keys are actually strings within
+                                                            an object, but variable names are not strings) - THIS IS IMPORTANT WHEN USING THE KEY VALUE IN A FUNCTION AS PARAMETER!
+        person.Key2 -> This will refer to 42
 
-                console.log(person.attribute1)                  //prints value1
-                console.log(person.newObject.newObjAttr1)       //prints value3
-                person.myFunction('TEST1', person.attribute2)   //executes object's function
+        console.log(person.attribute1)                  //prints value1
+        console.log(person.newObject.newObjAttr1)       //prints value3
+        person.myFunction('TEST1', person.attribute2)   //executes object's function
 
-                person1.Key2 = 36                               //Assign new value to existing key
+        person1.Key2 = 36                               //Assign new value to existing key
 
-VARIABLE, CONSTANT
+# Variables & Constants
 
-    let myName          //Define a variable with no value (empty variable)
-    myName = "Gabor"    //After it was declared with the let keyword, we can assign a value to it with = (This time let keyword is not there anymore!)
-    myName = "Koni"     //After the value had already a value, we can modify it (reassign value)
+        let myName          //Define a variable with no value (empty variable)
+        myName = "Gabor"    //After it was declared with the let keyword, we can assign a value to it with = (This time let keyword is not there anymore!)
+        myName = "Koni"     //After the value had already a value, we can modify it (reassign value)
 
-    var a = 'This is a variable'        //old way
-    let b = 'This is a variable';
-    const c = 'This is a constant';     //a constant's value can't be updated later, but if it's and object, its attributes can be modified
+        var a = 'This is a variable'        //old way
+        let b = 'This is a variable';
+        const c = 'This is a constant';     //a constant's value can't be updated later, but if it's and object, its attributes can be modified
 
-    **Depending on what you write after *let nameOfVariable = *, you can define it's data type ( {} for OBJECTS, [] for ARRAYS, "" for STRINGS, or just NUMBERS )
+> Depending on what you write after *let nameOfVariable = *, you can define it's data type ( {} for OBJECTS, [] for ARRAYS, "" for STRINGS, or just NUMBERS )
 
-    NAMING:     - Start with a-z, _, $
-                - Include also numbers and A-Z
-                - No spaces within name
-                - try to use decriptive names with camelcase: eg. *let myPersonalDetails*
-                - case insensitive, so myNAME != myName
+### Naming:     
+- Start with a-z, _, $
+- Include also numbers and A-Z
+- No spaces within name
+- try to use decriptive names with camelcase: eg. *let myPersonalDetails*
+- case insensitive, so myNAME != myName
     
-    Reassigning values with new variables:
+### Reassigning values with new variables:
 
-        let myName = "Jorge"
-        let myNewName = "Denis"
-        let myName = myNewName  ->  myName will become "Denis"
-                                    myNewName will stay "Denis"
-        
-        let myAge = 36
-        let myNewAge = myAge    ->  This will make myNewAge the value of myAge, which is 36
-        myAge = 37              ->  This will update myAge, but not myNewAge
-                                    So myAge will be 37 and myNewAge will stay 36
-
-
-OPERATORS
+    let myName = "Jorge"
+    let myNewName = "Denis"
+    let myName = myNewName  ->  myName will become "Denis"
+                                myNewName will stay "Denis"
     
-    ARITHMETIC OPERATORS
+    let myAge = 36
+    let myNewAge = myAge    ->  This will make myNewAge the value of myAge, which is 36
+    myAge = 37              ->  This will update myAge, but not myNewAge
+                                So myAge will be 37 and myNewAge will stay 36
 
-    +       Works also with strings (old way of doing concatenation), and variables that are numbers (eg. let number = 10, number + 1 = 11)
-    -       Substraction
-    *       Multiplication
-    /       Division
 
-    %       Modulo/modulus - returns the 'leftover' or 'remainder' value after a division (eg. 14 % 5 = 4)
-    i++     i = i + 1 | Increment - Add 1 to the current value of the variable 'i' ('i' needs to be declared first)        //To be used only with VARIABLES!
-    i--     i = i - 1 | Decrement - Substract 1 of current value                                                           
-
-    ASSIGNMENT OPERATORS
+# Operators
     
-    =       Assigns or reassigns a value to an item or variable
-    +=      i = i + x is the same as i += x                             //To be used only with VARIABLES!
-    -=      i = i - x
-    *=      i = i * x
-    /=      i = i / x
+### 1. Arithmetic operators:
+
+        \+       Works also with strings (old way of doing concatenation), and variables that are numbers (eg. let number = 10, number + 1 = 11)
+        \-       Substraction
+        \*       Multiplication
+        /       Division
+
+        %       Modulo/modulus - returns the 'leftover' or 'remainder' value after a division (eg. 14 % 5 = 4)
+        i++     i = i + 1 | Increment - Add 1 to the current value of the variable 'i' ('i' needs to be declared first)        //To be used only with VARIABLES!
+        i--     i = i - 1 | Decrement - Substract 1 of current value                                                           
+
+### 2. Assignment operators:
     
-    COMPARISON OPERATORS
-
-    ==      equal to                    //These return boolean values
-    !=      not equal to
-    ===     stricklty equal to          //Comparing OBJECTS or ARRAYS won't return true even if they consist of the same, because they are different objects with the same value (so let a = {age:18}; b = {age: 18}; a === b will be false). But if we compare the properties inside, they will be true (a.age === b.age will be true)
-    !==     stricktly not equal to
+        =       Assigns or reassigns a value to an item or variable
+        +=      i = i + x is the same as i += x                             //To be used only with VARIABLES!
+        -=      i = i - x
+        *=      i = i * x
+        /=      i = i / x
     
-    >       greater than                //Mathematiocal operators for numbers only
-    <       less than
-    >=      greter or equal to
-    <=      less than or equal to
+### 3. Comparison operators:
 
-    LOGICAL OPERATORS (By hierarchy)
+        ==      equal to                    //These return boolean values
+        !=      not equal to
+        ===     stricklty equal to          
+        !==     stricktly not equal to
 
-    !   NOT     Inverts true or false values
-    ||  OR      If at least one value is true, it returns true
-    &&  AND     If all values are true, it returns true
+    > **Comparing OBJECTS or ARRAYS won't return true even if they consist of the same, because they are different objects with the same value (so let a = {age:18}; b = {age: 18}; a === b will be false). But if we compare the properties inside, they will be true (a.age === b.age will be true)**
 
-    CONDITIONAL OPERATORS
+        >       greater than                //Mathematiocal operators for numbers only
+        <       less than
+        >=      greter or equal to
+        <=      less than or equal to
 
-    ?:      BOOLEAN ? "valueIfTrue" : "ValueIfFalse"
+### 4. Logical operators (By hierarchy):
 
-    FULL HIERARCHY DESCENDING (also called PRECEDENCE): 
-    () . ! ** * / % + - ""+"" < <= === !== && || ?: assignments
+        !   NOT     Inverts true or false values
+        ||  OR      If at least one value is true, it returns true
+        &&  AND     If all values are true, it returns true
 
-CONDITIONAL STATEMENTS
+### 5. Conditional operators:
+
+        ?:      BOOLEAN ? "valueIfTrue" : "ValueIfFalse"        //This is the TERNARY operator, same as an IF-ELSE statement
+
+### **Hierarchy (also called Precedence):** [FULL LIST HERE](https://www.w3schools.com/js/js_precedence.asp)
+      
+>        ()                          // Highest priority
+>        .
+>        !
+>        **
+>        \*
+>        /
+>        %
+>        \+ \- ""+"" (concat)
+>        < <=
+>        === !==
+>        &&
+>        ||
+>        ?:
+>        = (assignments)             // Lowest priority
+
+# Conditional statements
     
-    IF-ELSE STATEMENT (Remember to use *else if* between the conditions, not *if else*!)
+### 1. If-else statement (Remember to use `else if` between the conditions, not `if else`!)
     
         if (cond){
             CODE IF TRUE;
@@ -208,9 +228,9 @@ CONDITIONAL STATEMENTS
         CONDITION ? ValueIfTrue : ValueIfFalse;
         eg: 4 !== 5 ? "Yes" : "No";
 
-    LOOPS
+### 2. Loops
 
-        FOR LOOP (Used when you know the number of repetitions):
+#### - **For loop** (Used when you know the number of repetitions):
 
             for (INITIALIZATION; CONDITION; INCR/DECR){                 //INITIALIZATION - Executed once before the code runs
                 BODY;                                                   //CONDITION - Evaluated at the beginning of each loop 
@@ -227,7 +247,7 @@ CONDITIONAL STATEMENTS
                 // break to be used in for loops when you want the code to stop immediately (move this to functions!)
                 // continue to be used to break current iteration, and moves to the next iteration, so the rest of the code doesn't run for the current one
 
-        FOR...OF LOOP (Used to iterate through items in an Array or Object):
+#### - **For..of loop** (Used to iterate through items in an Array or Object):
 
             const myArray = [1, 2, 3, 4, 5]
             for (const itemInArray of myArray){                         //itemInArray is just an in-place created constant to refer to each element in the Array or Object
@@ -250,7 +270,7 @@ CONDITIONAL STATEMENTS
                 }
             }
 
-        FOr...IN LOOP
+#### - **For...in loop:**
 
             Same as for of, but it's used to iterate over keys of an Object instead:
 
@@ -259,7 +279,7 @@ CONDITIONAL STATEMENTS
                     console.log(key);           //will print "key1", "key2", "key3"
                 }
 
-        WHILE LOOP
+#### - **While loop:**
 
             let i = 0;                      //the variable is created outside the while loop
             while(i <= 10) {                //while loop only has 1 condition
@@ -267,17 +287,17 @@ CONDITIONAL STATEMENTS
                 i++;                        //add 1 to iteration number
             }
 
-        DO-WHILE LOOPS
+#### - **Do-while loop**
             
                 Do-while loops are used when the first iteration is always wanted to be executed, even if the first condition is not true
 
-FUNCTIONS
+# Functions
 
-    **A reusable block of code
+> A reusable block of code
 
-    WAYS TO DECLARE FUNCTIONS:
+### Ways to declare functions:
         
-        REGULAR FUNCTION:
+1. **Regular function:**
 
             **They can be used before their declaration.
 
@@ -288,7 +308,7 @@ FUNCTIONS
             funcName();                         //Call a function. Evene when there are no parameters, the () are needed to call the function.
             funcName(arg1, arg2);               //Calls the function with the parameters swapped to the input arguments.
 
-        ANONYMOUS FUNCTION (=FUNCTION EXPRESSION):
+2. **Anonymous function** *(=Function expression)*:
 
             **Just as variables and constants, these can only be called after declaration.
 
@@ -298,7 +318,7 @@ FUNCTIONS
 
             varName();                          //To call the function, we still need to add the () to the constant's name to call the function.
 
-        ARROW FUNCTION EXPRESSION:
+3. **Arrow function expression:**
 
             let funcName = (par1, par2) => {    //function name is declared with let keyword, as variables. But then in () the variables are added, and the ARROW => points to the BODY
                 return par1 * par2;
@@ -309,51 +329,55 @@ FUNCTIONS
             let add = (a, b) => a + b;          //Single line functions have no function keyword, no curly braces {} and no rturn keyword, which makes them very quick to create
             let greet = name => `Hi, ${name}!`  //If there is only one parameter, even the single parenthesis can be left.
 
-    INPUTS:
+### Inputs:
 
-        SHORT EXPANATION ABOUT GLOBAL AND LOCAL SCOPE:
+- **Global and Local scopes:**
 
-            ##GLOBAL SCOPE
-            let x = 10;                     //x is created on the GLOBAL SCOPE (=in the root scope of the file)
+        ##GLOBAL SCOPE
+        let x = 10;                     //x is created on the GLOBAL SCOPE (=in the root scope of the file)
 
-            function funcName(){
-                return x * 2;               //we can call *x* here, because the function can access GLOBAL SCOPE
-            }
+        function funcName(){
+            return x * 2;               //we can call *x* here, because the function can access GLOBAL SCOPE
+        }
 
-            function funcName(){
-                ##LOCAL SCOPE
-                let x = 2;                  //we are creating *x* variable now in LOCAL SCOPE (=inside the function's scope). If we update the GLOBAL SCOPE *x* variable,
-                return x * 2                  we are creating a copy of *x*, and the GLOBAL SCOPE *x* will remain 10.
-            }
+        function funcName(){
+            ##LOCAL SCOPE
+            let x = 2;                  //we are creating *x* variable now in LOCAL SCOPE (=inside the function's scope). If we update the GLOBAL SCOPE *x* variable,
+            return x * 2                  we are creating a copy of *x*, and the GLOBAL SCOPE *x* will remain 10.
+        }
 
-            **So that's why for inputs, we use parameters.
+        So that's why for inputs, we use parameters.
         
-        PARAMETERS:
+- **Parameters:**
+
+    - What is a parameter?
 
             function funcName(par1, par2 = 'DefaultValue') {        //We can assign a parameter a default value, if it's not called, buy writing it at declaration stage.
                 //BODY                                                par1 & par2 are locally created variables, that are only accessible from inside the function (LOCAL SCOPE)
             }
 
-            We can call a function with a variable created on GLOBAL SCOPE too:
+    - We can call a function with a variable created on GLOBAL SCOPE too:
 
-                let x = "John";
-                
-                funcName(x);                                        //It will be the same as calling the function like this: funcName("John");
+            let x = "John";
             
-            We can even call functions with parameters, that are other functions (=CALLBACK FUNCTIONS):
+            funcName(x);                                        //It will be the same as calling the function like this: funcName("John");
+        
+    - We can even call functions with parameters, that are other functions *(=Callback functions)*:
 
-                function greet(name, callback) {                    //First, we create a function, and one parameter will be another function
-                    console.log(`Ciao, ${name}!`);
-                    callback();                                     //We call this other function inside this function here
-                }
+            function greet(name, callback) {                    //First, we create a function, and one parameter will be another function
+                console.log(`Ciao, ${name}!`);
+                callback();                                     //We call this other function inside this function here
+            }
 
-                function sayGoodbye() {                             //We create the other function
-                    console.log("Goodbye!");
-                }
+            function sayGoodbye() {                             //We create the other function
+                console.log("Goodbye!");
+            }
 
-                greet("David", sayGoodbye);                         //Call the first function, with the second function as an argument (=callback function)
+            greet("David", sayGoodbye);                         //Call the first function, with the second function as an argument (=callback function)
 
-    OUTPUT - RETURN VS. CONSOLE.LOG():
+### Output - `return` vs. `console.log()`:
+
+- `return` is used to return a value from a function (exit point), while `console.log()` is used to log data in the console (not function related also):
 
         function funcName(par1, par2) {     
             return "Return value";          //RETURN keyword is used to return values from the LOCAL SCOPE of the function to the GLOBAL SCOPE. It doesn't print it by default!!!
