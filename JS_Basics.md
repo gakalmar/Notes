@@ -2,7 +2,7 @@
 
 ### - Primitives
 
-1. String ("string1" or 'string2')
+1. **String** ("string1" or 'string2')
 
         'It\'s a beautiful day!'        //Escape character \
         \\                              //Double backslash to include a single backslash eg. "C:\\User\\Username" -> C:\User\Username
@@ -17,12 +17,12 @@
     
     > Strings are immutable, so methods will return new strings instead of modifying the original ones.
 
-2. Number (integer or float/fraction)
+2. **Number** (integer or float/fraction)
 
     - Integers - whole numbers
     - Floats - fractional numbers
 
-3. Boolean (true or false):
+3. **Boolean** (true or false):
 
     - Values for non-booleans (Thruthy - Falsy):          
     
@@ -47,53 +47,57 @@
                 console.log(`There was no name provided.`);
             }
 
-4. Undefined
+4. **Undefined**
 
-5. null
+5. **null**
 
 ### - Data structures, non-primitives (eg. Objects, Arrays, Properties, Grouped data)
 
-Commonly OBJECTS are stored within ARRAYS:
+- Commonly OBJECTS are stored within ARRAYS:
 
-    let groupOfPeople = [               //ARRAY is declared with [
-        {                               //First OBJECT is declared with {}
-            name: "Person1",        
-            age: 36
-        },                              //COMMA to be used to separate next element in ARRAY
-        {                               //Second OBJECT is declared with {}
-            name: "Person2",
-            age: 34
-        }
-    ]                                   //ARRAY is closed with ]
+        let groupOfPeople = [               //ARRAY is declared with [
+            {                               //First OBJECT is declared with {}
+                name: "Person1",        
+                age: 36
+            },                              //COMMA to be used to separate next element in ARRAY
+            {                               //Second OBJECT is declared with {}
+                name: "Person2",
+                age: 34
+            }
+        ]                                   //ARRAY is closed with ]
 
 #### 1. Arrays
 
-            let arr = ['index0', 'index1', 'index2']        //COMMA to be used to separate items!
-            console.log(arr)
+- In general:
 
-    - Access date inside:
+        let arr = ['index0', 'index1', 'index2']        //COMMA to be used to separate items!
+        console.log(arr)
 
-            **Arrays have keys too, like objects, but those are not visible. They are the index numbers.
+- Access date inside:
 
-            arr[1]                      //Returns 2nd item in array with index1
-            arr[1] = "NewValue"         //Updates array item's value with index [1]
+        **Arrays have keys too, like objects, but those are not visible. They are the index numbers.
 
-            If the list consists of objects within, we can combine the access methods:
-                
-            arrayName[2].name           //this will refer to the item with index 2, which should be an object, then reach into that object's key called "name", and refer to its value
+        arr[1]                      //Returns 2nd item in array with index1
+        arr[1] = "NewValue"         //Updates array item's value with index [1]
+
+        If the list consists of objects within, we can combine the access methods:
+            
+        arrayName[2].name           //this will refer to the item with index 2, which should be an object, then reach into that object's key called "name", and refer to its value
 
 
-    - Common Functions:
+- Common Functions:
 
-            arr.lenght                      //the items within the array
-            arr.length-1                    //the last item's index number
+        arr.lenght                      //the items within the array
+        arr.length-1                    //the last item's index number
 
-            arr.push('item1')               //add item to end
-            arr.pop('item2')                //remove item from end
-            arr.shift('item3')              //add item to start
-            arr.unshift('item4')            //remove item from start
+        arr.push('item1')               //add item to end
+        arr.pop('item2')                //remove item from end
+        arr.shift('item3')              //add item to start
+        arr.unshift('item4')            //remove item from start
 
 #### 2. Objects
+
+- In general:
 
         let person = {
             Key1: 'value1',                  //COMMA to be used to separate items!
@@ -107,7 +111,7 @@ Commonly OBJECTS are stored within ARRAYS:
             }
         }
 
-Access date inside:
+- Access date inside:
 
         person.Key1 -> This will refer to 'value1'      //DOT NOTATION -> You enter into the data of person object with the dot .
         person["Key1"]                                  //Same thing, just with [] brackets. "" is also needed to refer to the key (Keys are actually strings within
@@ -133,11 +137,11 @@ Access date inside:
 > Depending on what you write after *let nameOfVariable = *, you can define it's data type ( {} for OBJECTS, [] for ARRAYS, "" for STRINGS, or just NUMBERS )
 
 ### Naming:     
-- Start with a-z, _, $
-- Include also numbers and A-Z
+- Start with `a-z`, `_`, `$`
+- Include also numbers and `A-Z`
 - No spaces within name
-- try to use decriptive names with camelcase: eg. *let myPersonalDetails*
-- case insensitive, so myNAME != myName
+- Try to use decriptive names with ***camelCase:*** eg. `let myPersonalDetails`
+- Case insensitive, so `myNAME != myName`
     
 ### Reassigning values with new variables:
 
@@ -175,14 +179,27 @@ Access date inside:
     
 ### 3. Comparison operators:
 
+- Equality operators:
+
         ==      equal to                    //These return boolean values
         !=      not equal to
         ===     stricklty equal to          
         !==     stricktly not equal to
 
-    > **Comparing OBJECTS or ARRAYS won't return true even if they consist of the same, because they are different objects with the same value (so let a = {age:18}; b = {age: 18}; a === b will be false). But if we compare the properties inside, they will be true (a.age === b.age will be true)**
+> Comparing **OBJECTS** or **ARRAYS** won't return `true` even if they consist of the same, because they are different objects with the same value:
+>>
+>>        let a = {age:18};
+>>        let b = {age: 18};
+>>
+>>        a === b will be false 
+>>
+> But if we compare the **properties** inside, they will be true:
+>>        
+>>        a.age === b.age will be true
 
-        >       greater than                //Mathematiocal operators for numbers only
+- Mathematiocal operators for numbers only:
+
+        >       greater than                
         <       less than
         >=      greter or equal to
         <=      less than or equal to
@@ -218,15 +235,16 @@ Access date inside:
     
 ### 1. If-else statement (Remember to use `else if` between the conditions, not `if else`!)
     
-        if (cond){
-            CODE IF TRUE;
-        } else if (cond2) {
-            CODE IF ELSE IS TRUE;
-        } else {
-            CODE IF ALL BEFORE ARE FALSE;
-        }
+    if (cond){
+        CODE IF TRUE;
+    } else if (cond2) {
+        CODE IF ELSE IS TRUE;
+    } else {
+        CODE IF ALL BEFORE ARE FALSE;
+    }
 
-        Alternative way: (TERNARY OPERATOR)
+- Alternative way: *(=Ternary operator)*
+
         CONDITION ? ValueIfTrue : ValueIfFalse;
         eg: 4 !== 5 ? "Yes" : "No";
 
@@ -333,7 +351,7 @@ Access date inside:
 
 ### Inputs:
 
-- **Global and Local scopes:**
+- **Global and Local scope overview:**
 
         ##GLOBAL SCOPE
         let x = 10;                     //x is created on the GLOBAL SCOPE (=in the root scope of the file)
@@ -393,7 +411,7 @@ Access date inside:
 
 > ### **Method**  
 > A function that is associated with an object or an instance of an object, typically used to perform operations on the object or manipulate the object's data.  
-> They are basically functions defined as values an object's' key.
+> They are basically functions defined as values of an object's key.
 
 - For example:
 
@@ -428,29 +446,30 @@ Access date inside:
 
 - `forEach()` is a method, that requires a callback function for example:
 
-    - It allows you to iterate over each element in an array and perform a specific action (`callback function`) for each element.
+    - It allows you to iterate over each element in an array and perform a specific action *(callback function)* for each element.
     - Here's how it works:
 
             myarray.forEach(function(currentValue, index, array) {
                 // Your code here
             });
 
-            myarray: The array you want to iterate over.
-            currentValue: The current element being processed in the array.
-            index: The index of the current element.
-            array: The array that forEach() is being applied to.
+            myarray:        The array you want to iterate over.
+            currentValue:   The current element being processed in the array.
+            index:          The index of the current element.
+            array:          The array that forEach() is being applied to.
     
     - Here's an example with only 1 parameter:
 
-            const names = ["Alice", "Bob", "Charlie", "David"];
+                const names = ["Alice", "Bob", "Charlie", "David"];
 
-            // Create a new array with names followed by an exclamation mark
-            const namesWithExclamation = [];
-            names.forEach(function(name) {                                                          //Here only name is added to the function as a parameter
-                namesWithExclamation.push(name + "!");
-            });
+            Create a new array with names followed by an exclamation mark
+            
+                const namesWithExclamation = [];
+                names.forEach(function(name) {                                                          //Here only name is added to the function as a parameter
+                    namesWithExclamation.push(name + "!");
+                });
 
-            console.log(namesWithExclamation);
+                console.log(namesWithExclamation);
 
             This will be the result:
 
@@ -459,11 +478,11 @@ Access date inside:
 
     - Here's an example with 2 parameters:
 
-            const numbers = [1, 2, 3, 4, 5];
+                const numbers = [1, 2, 3, 4, 5];
 
-            numbers.forEach(function(currentitem, indexofcurrentitem) {                             //Here 2 parameters are added to the function
-                console.log(`Element at index ${indexofcurrentitem} is: ${currentitem}`);
-            });
+                numbers.forEach(function(currentitem, indexofcurrentitem) {                             //Here 2 parameters are added to the function
+                    console.log(`Element at index ${indexofcurrentitem} is: ${currentitem}`);
+                });
 
             This will be the result:
 
@@ -477,7 +496,7 @@ Access date inside:
 
                 const colors = ["red", "green", "blue", "yellow"];
 
-                colors.forEach(function(currentColor, index, colorArray) {                          //Here 3 parameters are added to the function. colorArray refers to original colors array
+                colors.forEach(function(currentColor, index, colorArray) {                              //Here 3 parameters are added to the function. colorArray refers to original colors array
                     console.log(`Color at index ${index} is ${currentColor}.`);
                     console.log(`Total number of colors in the array: ${colorArray.length}`);
                 });
