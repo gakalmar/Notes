@@ -1,32 +1,28 @@
-function sortByLength(array) {
-    let arrSorted = [];
-    let longestWordLen = array[0].length;
-
-    for (let item of array) {
-        if (item.length > longestWordLen) {
-            longestWordLen = item.length;
-        }
+function isSortedAndHow(array) {
+    let isAscending = true;
+    let isDescending = true;
+    for (let i = 1; i < array.length; i++){
+        if (!(array[i] >= array[i-1])){
+            isAscending = false;
+        };
     };
-    let emptyStrings = [];
-    let nonEmptyStrings = [];
-    for (let item of array) {
-        if (item === "") {
-            emptyStrings.push(item);
-        } else {
-            nonEmptyStrings.push(item);
-        }
+    if (isAscending){
+        return "yes, ascending";
     };
-    for (let i = 0; i <= longestWordLen; i++) {
-        for (let item of nonEmptyStrings) {
-            if (item.length === i) {
-                arrSorted.push(item);
-            }
-        }
+    for (let i = 1; i < array.length; i++){
+        if (!(array[i] <= array[i-1])){
+            isDescending = false;
+        };
     };
-    arrSorted = emptyStrings.concat(arrSorted);
-    return arrSorted;
-}
+    if (isDescending){
+        return "yes, descending";
+    };
+    if (!isAscending && !isDescending){
+        return "no";
+    };
+};
 
-console.log(sortByLength(["", "Moderately", "Brains", "Pizza"]));
 
-//Expected result: ["", "Pizza, "Brains", "Moderately"]
+console.log(isSortedAndHow([1, 2, 3, 4, 6]));  // yes, ascending
+console.log(isSortedAndHow([15, 7, 3, -8]));   // yes, descending
+console.log(isSortedAndHow([4, 2, 30, 4, 65])); // no

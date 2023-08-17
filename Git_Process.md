@@ -67,4 +67,4 @@ GIT INIT METHOD / Not recommended as the repo still needs to be created on GitHu
     5 add & commit as before
     6 Create repo on GitHub & get SSH
     7 git remote add origin git@branchLocation.git  //add GitHub repo to your initialized folder as remote
-    8 git push -u origin master                     //push changes; -u means it creates upstream branch, so now the GitHub will be the source (?)
+    8 git push -u origin master (or main?)          //push changes; -u means it creates upstream branch, so now the GitHub will be the source (?)
