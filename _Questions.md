@@ -8,32 +8,27 @@
 
 ### 1
 
-SI week 2 - Take me to a nice place - Task 1
-
-If a value doesn't exist, the whole object should return as null or just the value of that key?
+What happens at git push level, when first push is interrupted with a pull? (merge development branch on remote)
 
 ### 2
 
-SI week 2 - Take me to a nice place - Task 1
+const testThis = (func, limit) => {
+    let i = 0;
+    while (i < limit){
+        console.log(func);                          //Why is parentheses not needed here? console.log(func())
+        i++;                                        
+    };
+};
 
-Which data should I import?
-    id -> propert id or uniq id?
-    rating -> star rating or review rating?
+    //Shouldn't callback functions have this format once they are called within another function?
 
-### 3
+        function greet(name, callback) {
+        console.log(`Hello, ${name}!`);
+        callback();
+        }
 
-SI week 2 - Take me to a nice place - Task 2
+        function sayGoodbye() {
+        console.log("Goodbye!");
+        }
 
-No id in Zomato data
-No description in Zomato data
-
-### 4
-
-SI week 2 - Take me to a nice place - Task 4
-
-Should the website load? Why doesn't it?
-
-### 5
-
-What happens at git push level, when first push is interrupted with a pull? (merge development branch on remote)
-
+        greet("Alice", sayGoodbye); // Output: Hello, Alice! \n Goodbye!

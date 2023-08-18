@@ -394,6 +394,12 @@
             }
 
             greet("David", sayGoodbye);                         //Call the first function, with the second function as an argument (=callback function)
+    
+    - callback() vs. callback:
+
+        > When you **create a function with const**, you need to call the constant **without parentheses ()**.</br>
+        > When you actually create a **function**, you need to call it **with parentheses ()**.
+
 
 ### Output - `return` vs. `console.log()`:
 
