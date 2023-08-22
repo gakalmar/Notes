@@ -134,6 +134,8 @@
         let b = 'This is a variable';
         const c = 'This is a constant';     //a constant's value can't be updated later, but if it's and object, its attributes can be modified
 
+        let variable = Value1 || Value2     //if Value1 is truthy, it will be the variable's value, otherwise it will be Value2
+
 > Depending on what you write after *let nameOfVariable = *, you can define it's data type ( {} for OBJECTS, [] for ARRAYS, "" for STRINGS, or just NUMBERS )
 
 ### Naming:     
@@ -313,7 +315,8 @@
 
 # Functions
 
-> A reusable block of code
+> A reusable block of code  
+> Every function will essentially be a value (what it returns when called)
 
 ### Ways to declare functions:
         

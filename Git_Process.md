@@ -48,6 +48,16 @@ WORKING WITH BRANCHES:
         3 git merge development                   //merge development into active (master)
         4 git commit -m "Merge into master"       
         5 git push origin master                  //push changes into remote master branch
+    
+    WORK ON YOUR OWN BRANCH PROCESS:
+
+        1 git branch -b newbranch           //create new branch and switch to it
+        2 do the work
+        3 git checkout development          //switch back to development
+        4 git pull                          //maybe it would be a good idea to pull at this stage?
+        5 git merge newbranch               //merge your branch into development
+        6 git branch -d newbranch           //delete newbrach branch
+        7 git add- & commmit & push
 
 OTHER USEFUL COMMANDS:
 

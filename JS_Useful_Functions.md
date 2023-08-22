@@ -1,5 +1,9 @@
 # General:
 
+typeof === value instanceof Array                       //Check the type of the data
+                            String
+                            Integer(?)
+
 # Strings: 
 *Strings are immutable, so these methods will return new strings instead of modifying the original ones.*
 
@@ -55,6 +59,8 @@
     startsWith(searchValue[, startIndex])               //Determines if a string starts with the specified value, optionally at a specified index.
     endsWith(searchValue[, length])                     //Determines if a string ends with the specified value, optionally considering a specified length.
     includes(searchValue[, startIndex])                 //Determines if a string contains the specified value, optionally starting from a specified index.
+    arr.includes(searchValue)                           //See if an array or string includes searchValue.
+    arr.includes(searchValue, startindex)               //Second parameter specifies the first element of the array where the search should begin.
     repeat(count)                                       //Creates a new string by concatenating the original string a specified number of times.
 
 # Numbers:
@@ -64,7 +70,12 @@
     Math.min(...arrayOfNumbers) or
         Math.min(1, 2, 3)
     Math.Pi                                             //Refers to 3.1415...
-    Marh.floor(fractionalNumber)                        //Returns the whole values of a number (integer from float)
+    Marh.floor(fractionalNumber)                        //Returns the whole values of a number rounded down (integer from float)
+    Marh.ceil(fractionalNumber)                         //Returns the whole values of a number rounded up (integer from float)
+
+    parseInt("42")                                      //converts a string into an integer
+    parseFloat("42.184923")                             //converts a string into a float
+    42.toString()                                       //converts a number into a string
 
 ### Additional ones from Journey course:
 
@@ -115,9 +126,8 @@
     array.filter(condition)                             //creates a new array with elements that pass a specific condition
                                                         //condition example: (elementInArray => elementInArray.length > 4)
 
-    parseInt("42")                                      //converts a string into an integer
-    parseFloat("42.184923")                             //converts a string into a float
-    42.toString()                                       //converts a number into a string
+    array.includes(searchValue)                         //See if an array or string includes searchValue.
+    array.includes(searchValue, startindex)             //Second parameter specifies the first element of the array where the search should begin.
  
 ### Additional ones from Journey course:
 
