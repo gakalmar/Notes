@@ -4,6 +4,8 @@ typeof === value instanceof Array                       //Check the type of the 
                             String
                             Integer(?)
 
+Number.isInteger(value)                                 //Chheck if the value is an integer (value % 1 === 0 should also do the same!)
+
 # Strings: 
 *Strings are immutable, so these methods will return new strings instead of modifying the original ones.*
 
