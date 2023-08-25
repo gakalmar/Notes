@@ -15,7 +15,7 @@
                                         With numbers, the value within is evaluated first, then the result is printed (eg. `${a + b}` -> if a=5 and b=10 -> "15 will print", not "5 + 10")
                                         ONLY WORKS WITH BACKTICK! `
     
-    > Strings are immutable, so methods will return new strings instead of modifying the original ones.
+    > Strings are immutable, so applying methods will return new strings instead of modifying the original ones.
 
 2. **Number** (integer or float/fraction)
 
@@ -419,7 +419,8 @@
 # Builtin features
 
 > ### **Method**  
-> A function that is associated with an object or an instance of an object, typically used to perform operations on the object or manipulate the object's data.  
+> A function that is associated with an object or an instance of an object, typically used to perform operations on the object or manipulate the object's data.
+>> **Essentially it's a function stored in an object's key as a value.**
 > They are basically functions defined as values of an object's key.
 
 - For example:
@@ -435,6 +436,19 @@
 - To call them, you need to call the object first, then refer to the key that contains the function:
 
         console.log(person.fullName()); // Output: "Martha Justice"
+
+- Call them with a parameter:
+
+        let favoriteBook = {
+            title: "Artemis",
+            author: "Andy Weir",
+            year: 2017,
+            age: function(currentYear){
+                return currentYear - favoriteBook.year;
+            };
+        };
+
+        favoritebook.age(2023)      //and also use console.log if you want to log it
 
 ### Built in methods in JS
 

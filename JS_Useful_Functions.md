@@ -171,3 +171,16 @@ typeof === value instanceof Array                       //Check the type of the 
     reduce(callback[, initialValue])                    //Applies a function against an accumulator and each element in the array (from left to right) to reduce it to a single value.
     find(callback[, thisArg])                           //Returns the value of the first element in the array that satisfies the provided testing function.
     findIndex(callback[, thisArg])                      //Returns the index of the first element in the array that satisfies the provided testing function, or -1 if no element satisfies the test.
+
+    console.count()                                     //logs and also adds a counter when logged (eg. console.count("x")) => this will log: "x: 1 \nl x: 2... x: 5"
+    Object.keys(myObj)                                  //returns the keys of an object inside the parentheses
+    number.toString()                                   //converts a string or variable into a number
+    array.toString()                                    //returns a string in this format "item1,item2,item3"
+    string.split(", ")                                  //create an array from a string. Opposite of arr.join("")
+    string.split(" ", 3)                                //The second parameter show how long the return array should be maximum (3 items)
+    arr.replace                                         //this doesn't exist, use the index number instead to declara a new value to it (eg arr[0] = "New item" => this will be new 0th item in the array)
+    arr.splice(start, end, item1,...itemn)              //remove elements from list from 'start' (included) to 'end'(not included). Then add all the elements listed after it in the parameters
+    arr.slice(start, end)                               //creates new arraw from "arr", from start (included) to end(not included)
+    arr.slice(0, 3)                                     //returns items [0],[1] and [2] in a new array
+    arr.slice(-2,)                                      //returns items [-2] (=semi-last) to the last item (because there is no second argument) in a new array
+    arr.join("")                                        //joins elements from an array using what is inside the parentheses. Opposite of string.split("")

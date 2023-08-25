@@ -8,7 +8,7 @@ Ctrl + 0                            //Focus on Explorer
 
 F2                                  //select all instances of an expression when highlighted
 Ctrl + /                            //Toggle comment line
-Ctrl + [ / ]                        //Indent / Outdent line
+Ctrl + [ or ]                        //Indent / Outdent line
 
 EDITOR:
 Ctrl + arrow                        //Select full words in prompt

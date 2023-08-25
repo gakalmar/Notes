@@ -37,6 +37,7 @@
     - Make it fail *(when do you encounter the error?)*
     - Quit thinking and look *(look at the code, and not just assume what you think you wrote)*
     - Divide and Conquer *(split into small pieces and log each step, to see where it fails)*
+        - This also refers to bug finding with the halving method (split code in half, then test it for both sides. Keep doing it on the side you find the bug on)
     - **Change ONE thing at a time!**
     - Check the plug *(does everything work as intended?)*
     - Get a fresh view *(stand up and make a break, or show it to someone else)*
