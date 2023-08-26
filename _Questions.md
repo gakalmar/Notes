@@ -10,27 +10,21 @@
 
 ### 1
 
-What happens at git push level, when first push is interrupted with a pull? (merge development branch on remote)
+Miert mukodik maskepp a ket loop?
 
-### 2
-
-const testThis = (func, limit) => {
-    let i = 0;
-    while (i < limit){
-        console.log(func);                          //Why is parentheses not needed here? console.log(func())
-        i++;                                        
+const nameLength = (str) => {
+    let words = str.split(" ");
+    console.log(words);
+    for (let word of words){
+        word = word + " " + word.length;
     };
+    return words;
 };
 
-    //Shouldn't callback functions have this format once they are called within another function?
-
-        function greet(name, callback) {
-        console.log(`Hello, ${name}!`);
-        callback();
-        }
-
-        function sayGoodbye() {
-        console.log("Goodbye!");
-        }
-
-        greet("Alice", sayGoodbye); // Output: Hello, Alice! \n Goodbye!
+const nameLength = (str) => {
+    let words = str.split(" ");
+    for (let i = 0; i < words.length; i++){
+        words[i] = words[i] + " " + words[i].length;
+    };
+    return words;
+};

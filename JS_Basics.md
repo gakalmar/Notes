@@ -35,6 +35,8 @@
             null        false
             []          true
             {}          true
+            " "         true (!!!)
+            "0"         true (!!!)
             
             If we have a constant or variable, and assign a true or false value to it, we also call that truthy and falsy
     
@@ -51,7 +53,38 @@
 
 5. **null**
 
-### - Data structures, non-primitives (eg. Objects, Arrays, Properties, Grouped data)
+6. **Bigint** (not necessaty right now)
+7. **Symbol** (not necessaty right now)
+
+### **Implicit type coercion:** 
+- JavaScript attempts to convert the operands into compatible types so that the operation can be performed:
+
+            + and -             works both for strings and numbers
+            str * or / num      mathmetical operations like * and / tryes to convert str into a number, if it contains a valid numeric representation (eg. "2" => 2), otherwise it becomes NaN
+
+### **Explicit conversion:**
+        
+- String conversion with String(value):
+
+        false       ->      "false"
+        23          ->      "23"
+        null        ->      "null"
+
+- Number conversion with Number(value):  
+
+        "6"         ->      6
+        ""          ->      0
+        variable    ->      number if it's value is a number, otherwise NaN
+        undefined   ->      NaN (not 0 !!!)
+        null        ->      0
+        true/false  ->      1/0
+
+- Boolean conversion (see truthy falsy section)
+
+
+### - Data structures, non-primitives (Objects eg. grouped data)
+
+> All other complex data types are objects, even arrays, but let's go through them separately:
 
 - Commonly OBJECTS are stored within ARRAYS:
 
@@ -95,6 +128,8 @@
         arr.shift('item3')              //add item to start
         arr.unshift('item4')            //remove item from start
 
+        (...arr)                        //spread operator or syntax - creates a set of values from an array (useful with Math.min/max for example)
+
 #### 2. Objects
 
 - In general:
@@ -123,6 +158,10 @@
         person.myFunction('TEST1', person.attribute2)   //executes object's function
 
         person1.Key2 = 36                               //Assign new value to existing key
+
+- An object doesn't have a length property, but you can determine it this way:
+
+        Object.keys(myObj).length                       //creates an array from the object's keys, which can be counted
 
 # Variables & Constants
 
@@ -266,9 +305,6 @@
                 console.log(arr[i]);                                    //print arr[0] then arr[1] ... until it reaches limit
             }
 
-                // break to be used in for loops when you want the code to stop immediately (move this to functions!)
-                // continue to be used to break current iteration, and moves to the next iteration, so the rest of the code doesn't run for the current one
-
 #### - **For..of loop** (Used to iterate through items in an Array or Object):
 
             const myArray = [1, 2, 3, 4, 5]
@@ -312,6 +348,10 @@
 #### - **Do-while loop**
             
                 Do-while loops are used when the first iteration is always wanted to be executed, even if the first condition is not true
+
+> #### **BREAK** to be used with loops when you want the code to ***stop immediately***
+> #### **CONTINUE** to be used to ***break current iteration*** and move to the next one (so the rest of the code doesn't run for the current one)
+
 
 # Functions
 
@@ -398,10 +438,36 @@
 
             greet("David", sayGoodbye);                         //Call the first function, with the second function as an argument (=callback function)
     
-    - callback() vs. callback:
+    - callback() parameters:
 
-        > When you **create a function with const**, you need to call the constant **without parentheses ()**.</br>
-        > When you actually create a **function**, you need to call it **with parentheses ()**.
+        - **CREATION of 1st** 
+                
+                function func1(callback, parX){                             //NO PARENTHESES!
+                    callback(parX)  // or // callback("fixed value");       //YES PARENTHESES! arguments are added here
+                }
+
+        - **CREATION of CALLBACK**
+        
+                function func2(par1){};
+
+        - **CALLING of func1**
+
+                func1(func2, arg1) // or // func1(func2)                    //NO PARENTHESES when called as an argument!
+    
+    - rest parameters:
+
+        - when we want to keep the possibility of adding multiple arguments to our function, we can use this when we create the function:
+
+                function add(...pars){              //rest parameters operator must be the last one!
+                    let result = 0;
+                    for (let par of pars){
+                        pars += par;
+                    };
+                };
+
+                add(1, 2, 5, 7);                    //Both calls will be valid, regardless of how many arguments we call it with
+                add(12, 23);
+
 
 
 ### Output - `return` vs. `console.log()`:

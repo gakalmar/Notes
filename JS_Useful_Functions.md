@@ -176,6 +176,8 @@ Number.isInteger(value)                                 //Chheck if the value is
 
     console.count()                                     //logs and also adds a counter when logged (eg. console.count("x")) => this will log: "x: 1 \nl x: 2... x: 5"
     Object.keys(myObj)                                  //returns the keys of an object inside the parentheses
+    Object.values(myObj)                                //returns the values of an object inside the parentheses
+    Object.entries(myObj)                               //returns entries (key-value pairs) as an array, each value pair is also an array of 2 elements. [["key1", "value1"], ["key2", "value2"], ["key3", "value3"]]
     number.toString()                                   //converts a string or variable into a number
     array.toString()                                    //returns a string in this format "item1,item2,item3"
     string.split(", ")                                  //create an array from a string. Opposite of arr.join("")
@@ -186,3 +188,5 @@ Number.isInteger(value)                                 //Chheck if the value is
     arr.slice(0, 3)                                     //returns items [0],[1] and [2] in a new array
     arr.slice(-2,)                                      //returns items [-2] (=semi-last) to the last item (because there is no second argument) in a new array
     arr.join("")                                        //joins elements from an array using what is inside the parentheses. Opposite of string.split("")
+    string.repeat(n)                                    //multiply a string n times
+    Math.max(...arr)                                    // ... is the spread operator or syntax, creates a set of numbers from an array to be used as the input for Math.max(), which doesn't take arrays directly
