@@ -190,3 +190,8 @@ Number.isInteger(value)                                 //Chheck if the value is
     arr.join("")                                        //joins elements from an array using what is inside the parentheses. Opposite of string.split("")
     string.repeat(n)                                    //multiply a string n times
     Math.max(...arr)                                    // ... is the spread operator or syntax, creates a set of numbers from an array to be used as the input for Math.max(), which doesn't take arrays directly
+    arr.sort(func)                                      //sorts elements in place, as strings into an ascending order by default(alphabetical)
+                                                        //numbers will be 1, 11, 2, 3, 34, 4, etc..., so not useful this way
+    arr.sort((a, b) => a - b)                           //this is used to sort numbers to an ascending order -> SAME as "arr.sort(function(a, b){return a - b; })"
+    arr.sort((a, b) => a + b)                           //this is used to sort numbers to a descending order
+    arr.reverse()                                       //reverses array in place (so the original is modified)
