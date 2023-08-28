@@ -190,3 +190,8 @@ Number.isInteger(value)                                 //Chheck if the value is
     arr.join("")                                        //joins elements from an array using what is inside the parentheses. Opposite of string.split("")
     string.repeat(n)                                    //multiply a string n times
     Math.max(...arr)                                    // ... is the spread operator or syntax, creates a set of numbers from an array to be used as the input for Math.max(), which doesn't take arrays directly
+    Math.pow(num, pow)                                  //turn a number to it's power (eg num = 2, pow =3 => 2^3 = 8)
+    arr.includes(item, from)                            //search for 'item' in arr, an if it's in the array, it returns true, otherwise -1 (not false!!!)
+    str.includes(substr, pos)                           //search for 'substr' in 'str' and if it's in the array, it returns true, otherwise false. 'pos' only searches from and including that index
+    arr.indexOf(item, from) / arr.lastIndexOf(item)     //returns the index of the first/last item in the array with value 'item' - 'from' is optional to specify which index to start the searth at
+    str.startsWith(str) / str.endsWith(str)             //true - if str starts/ends with substr; false - if not
