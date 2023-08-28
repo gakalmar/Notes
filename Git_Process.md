@@ -1,7 +1,7 @@
 GENERAL:
 
     git status                              //type this to see what's going on right now
-    git log                                 //view changes
+    git log                                 //view changes (exit with 'q', 'space' to move down a whole page)
     git log --summary
     git diff sourcebranch targetbranch      //review changes before merging
 
