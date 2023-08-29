@@ -11,22 +11,7 @@
 // }
 // console.log(numbers);
 
-function getSum(a, b){
-  let bigger = Math.max(a, b);
-  let smaller = Math.min(a, b);
-  let sum = smaller;
-  if (a === b){
-      return a;
-  } else if(minimum + 1 === maximum){
-      return a+b;
-  }  else {
-      for (let i = 0; i < bigger - smaller - 1 ; i++){
-          sum += (smaller+i);
-      };
-  };
-  return sum+1;
-};
-
-console.log(getSum(0, -1));
-console.log(getSum(0, 1));
-console.log(getSum(2, 2));
+let arr = ["Bilbo", "Gandalf", "Nazgul"];
+arr.forEach((item, test, array) => {
+    console.log(`${item} is at index ${test} in ${array}`);
+});

@@ -78,6 +78,7 @@ Number.isInteger(value)                                 //Chheck if the value is
     parseInt("42")                                      //converts a string into an integer
     parseFloat("42.184923")                             //converts a string into a float
     42.toString()                                       //converts a number into a string
+    String(42)                                          //converts a number into a string (easier to remember way)
 
 ### Additional ones from Journey course:
 
@@ -111,10 +112,11 @@ Number.isInteger(value)                                 //Chheck if the value is
 
     map, filter, find
 
-    array.push('item1')                                 //add item to end of array
-    array.pop('item2')                                  //remove item from end
-    array.shift('item3')                                //add item to start
-    array.unshift('item4')                              //remove item from start
+    array.push('item1')                                 //add item to end of array THESE OPERATIONS MODIFY THE ORIGINAL!!! Create a copy of your arraw before doing any manipulation.
+    array.pop()                                         //remove item from end. They can't be put in chain either, as the operation doesn't return a new array, but instead the removed item
+    array.unshift('item2')                              //add item to start
+    array.shift()                                       //remove item from start
+    
     array[1]                                            //returns 2nd item in array with index1
     array.splice(index1, number)                        //removes the number of items from index1
 
@@ -165,33 +167,64 @@ Number.isInteger(value)                                 //Chheck if the value is
     let date2 = new Date(`1986-10-4`);                  
     let age = (date1 - date2)*1000*60*60*24*365         //Substract 2 dates and multiply the result in millisecs until you get years (use Math.floor() to get whole numbers)
 
-# NextGen functions / Callback builtins
+# NextGen functions
 
-    forEach(callback[, thisArg])                        //Executes the provided function once for each array element.
+    FOR EACH
+    arr.forEach(callback[, thisArg])                    //Executes the provided function once for each array element.
+    arr.forEach(item => {//dothis//})                   //the default parameters are item - current item; index - it's index; sourcearr - the array it's from
+    arr.forEach(callback(item, index, sourcearr))       //the default parameters are item - current item; index - it's index; sourcearr - the array it's from
+
+    MAP
     map(callback[, thisArg])                            //Creates a new array with the results of calling the provided function on every element in the array.
+    
+    FILTER
     filter(callback[, thisArg])                         //Creates a new array with all elements that pass the test implemented by the provided function.
+    
+    REDUCE
     reduce(callback[, initialValue])                    //Applies a function against an accumulator and each element in the array (from left to right) to reduce it to a single value.
+    
+    FIND
     find(callback[, thisArg])                           //Returns the value of the first element in the array that satisfies the provided testing function.
     findIndex(callback[, thisArg])                      //Returns the index of the first element in the array that satisfies the provided testing function, or -1 if no element satisfies the test.
+    
+# Callback builtins
 
-    console.count()                                     //logs and also adds a counter when logged (eg. console.count("x")) => this will log: "x: 1 \nl x: 2... x: 5"
     Object.keys(myObj)                                  //returns the keys of an object inside the parentheses
     Object.values(myObj)                                //returns the values of an object inside the parentheses
     Object.entries(myObj)                               //returns entries (key-value pairs) as an array, each value pair is also an array of 2 elements. [["key1", "value1"], ["key2", "value2"], ["key3", "value3"]]
-    number.toString()                                   //converts a string or variable into a number
+    
+    (number).toString()                                 //converts a string or variable into a number. NOTE the number has to be within parentheses, otherwise it's interpreted as a decimal point
     array.toString()                                    //returns a string in this format "item1,item2,item3"
+    
     string.split(", ")                                  //create an array from a string. Opposite of arr.join("")
     string.split(" ", 3)                                //The second parameter show how long the return array should be maximum (3 items)
-    arr.replace                                         //this doesn't exist, use the index number instead to declara a new value to it (eg arr[0] = "New item" => this will be new 0th item in the array)
+    
+    arr.replace                                         //this doesn't exist, only with strings. Use the index number instead to declara a new value to it (eg arr[0] = "New item" => this will be new 0th item in the array)
     arr.splice(start, end, item1,...itemn)              //remove elements from list from 'start' (included) to 'end'(not included). Then add all the elements listed after it in the parameters
     arr.slice(start, end)                               //creates new arraw from "arr", from start (included) to end(not included)
     arr.slice(0, 3)                                     //returns items [0],[1] and [2] in a new array
     arr.slice(-2,)                                      //returns items [-2] (=semi-last) to the last item (because there is no second argument) in a new array
     arr.join("")                                        //joins elements from an array using what is inside the parentheses. Opposite of string.split("")
+    str.slice(start, end)                               //returns the substring starting and including 'start' to ending but NOT including 'end'. By default end is to the end of the string if no data is added as input
     string.repeat(n)                                    //multiply a string n times
+    
     Math.max(...arr)                                    // ... is the spread operator or syntax, creates a set of numbers from an array to be used as the input for Math.max(), which doesn't take arrays directly
     Math.pow(num, pow)                                  //turn a number to it's power (eg num = 2, pow =3 => 2^3 = 8)
+    
     arr.includes(item, from)                            //search for 'item' in arr, an if it's in the array, it returns true, otherwise -1 (not false!!!)
     str.includes(substr, pos)                           //search for 'substr' in 'str' and if it's in the array, it returns true, otherwise false. 'pos' only searches from and including that index
     arr.indexOf(item, from) / arr.lastIndexOf(item)     //returns the index of the first/last item in the array with value 'item' - 'from' is optional to specify which index to start the searth at
     str.startsWith(str) / str.endsWith(str)             //true - if str starts/ends with substr; false - if not
+    
+    arr.sort()                                          //sorts arr's values in an alphabetical number
+    arr.sort((a, b) => a - b)                           //sort by ascending order
+    arr.sort((a, b) => b - a)                           //sort by desending order
+    arr.sort(func)                                      //to use it for other that default, you need to add a compare function (compares 2 numbers, which is used by sort algorithm for all the elements autoamtically):
+                                                            function compare(a, b){
+                                                                // if result < 0 (negative) -> a is first
+                                                                // if result = 0 -> no change
+                                                                // if result > 0 (positive) -> b is first
+                                                                return a-b      //eg a = 10, b = 5 -> a - b = positive, so b (5) will be the first element, and a (10) will come after
+                                                            }
+    arr.reverse()                                       //reverses and array in place and returns it (no new array is created!)
+
