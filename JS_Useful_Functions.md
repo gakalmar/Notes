@@ -227,4 +227,6 @@ Number.isInteger(value)                                 //Chheck if the value is
                                                                 return a-b      //eg a = 10, b = 5 -> a - b = positive, so b (5) will be the first element, and a (10) will come after
                                                             }
     arr.reverse()                                       //reverses and array in place and returns it (no new array is created!)
+    str.charCodeAt(index);                              //returns the ASCII (Unicode) value of a character in a string
+
 

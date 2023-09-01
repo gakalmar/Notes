@@ -11,7 +11,25 @@
 // }
 // console.log(numbers);
 
-let arr = ["Bilbo", "Gandalf", "Nazgul"];
-arr.forEach((item, test, array) => {
-    console.log(`${item} is at index ${test} in ${array}`);
-});
+let s1 = "aretheyhere";
+let s2 = "yestheyarehere";
+function longest(s1, s2) {
+    let allChars = (s1+s2).split("");
+    console.log(allChars);
+    let rtnStr = [];
+    for (let char of allChars){
+        let exists = false;
+        for (let char2 of rtnStr){
+            if (char === char2){
+                exists = true;
+                break;
+            };
+        };
+        if (!exists){
+            rtnStr.push(char);
+        };
+    };
+    return rtnStr.sort().join("");
+}
+
+console.log(longest(s1,s2));
