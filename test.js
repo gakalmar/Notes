@@ -11,25 +11,10 @@
 // }
 // console.log(numbers);
 
-let s1 = "aretheyhere";
-let s2 = "yestheyarehere";
-function longest(s1, s2) {
-    let allChars = (s1+s2).split("");
-    console.log(allChars);
-    let rtnStr = [];
-    for (let char of allChars){
-        let exists = false;
-        for (let char2 of rtnStr){
-            if (char === char2){
-                exists = true;
-                break;
-            };
-        };
-        if (!exists){
-            rtnStr.push(char);
-        };
-    };
-    return rtnStr.sort().join("");
+const filterEvenNumbers = (nums) => {
+    return nums.filter(num => num % 2 === 0);
 }
 
-console.log(longest(s1,s2));
+const numbers = [1, 2, 3, 4, 5, 6];
+const evens = filterEvenNumbers(numbers);
+console.log(evens); // Should output [2, 4, 6]

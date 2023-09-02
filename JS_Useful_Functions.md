@@ -173,13 +173,17 @@ Number.isInteger(value)                                 //Chheck if the value is
     arr.forEach(callback[, thisArg])                    //Executes the provided function once for each array element.
     arr.forEach(item => {//dothis//})                   //the default parameters are item - current item; index - it's index; sourcearr - the array it's from
     arr.forEach(callback(item, index, sourcearr))       //the default parameters are item - current item; index - it's index; sourcearr - the array it's from
+                                                        //doesn't return a new array
 
     MAP
     map(callback[, thisArg])                            //Creates a new array with the results of calling the provided function on every element in the array.
+    arr.map(function(item, index, array))               //Returns an array of modified values (eg. let arr = ["Bilbo", "Frodo", "Gollum"]); arr.map(item => item.length) => returns an array with the words' length values
     
-    FILTER
+    FILTER (use FIND for first match only)
     filter(callback[, thisArg])                         //Creates a new array with all elements that pass the test implemented by the provided function.
-    
+    arr.filter(function(item, index, array))            //filter returns an array of all matching elements if condition within is true
+    arr.filter(item => item % 2 === 0)
+
     REDUCE
     reduce(callback[, initialValue])                    //Applies a function against an accumulator and each element in the array (from left to right) to reduce it to a single value.
     
