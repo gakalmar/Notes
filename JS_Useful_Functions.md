@@ -175,14 +175,15 @@ Number.isInteger(value)                                 //Chheck if the value is
     arr.forEach(callback(item, index, sourcearr))       //the default parameters are item - current item; index - it's index; sourcearr - the array it's from
                                                         //doesn't return a new array
 
-    MAP
+    MAP (call it when creatin new arr)
     map(callback[, thisArg])                            //Creates a new array with the results of calling the provided function on every element in the array.
     arr.map(function(item, index, array))               //Returns an array of modified values (eg. let arr = ["Bilbo", "Frodo", "Gollum"]); arr.map(item => item.length) => returns an array with the words' length values
     
-    FILTER (use FIND for first match only)
+    FILTER (call it when creatin new arr)
     filter(callback[, thisArg])                         //Creates a new array with all elements that pass the test implemented by the provided function.
     arr.filter(function(item, index, array))            //filter returns an array of all matching elements if condition within is true
     arr.filter(item => item % 2 === 0)
+    (use FIND for first match only)
 
     REDUCE
     reduce(callback[, initialValue])                    //Applies a function against an accumulator and each element in the array (from left to right) to reduce it to a single value.
@@ -199,6 +200,7 @@ Number.isInteger(value)                                 //Chheck if the value is
     
     (number).toString()                                 //converts a string or variable into a number. NOTE the number has to be within parentheses, otherwise it's interpreted as a decimal point
     array.toString()                                    //returns a string in this format "item1,item2,item3"
+    number.toString(2)                                  //converts a number into its binary valu
     
     string.split(", ")                                  //create an array from a string. Opposite of arr.join("")
     string.split(" ", 3)                                //The second parameter show how long the return array should be maximum (3 items)

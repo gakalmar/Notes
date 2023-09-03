@@ -11,10 +11,14 @@
 // }
 // console.log(numbers);
 
-const filterEvenNumbers = (nums) => {
-    return nums.filter(num => num % 2 === 0);
-}
 
-const numbers = [1, 2, 3, 4, 5, 6];
-const evens = filterEvenNumbers(numbers);
-console.log(evens); // Should output [2, 4, 6]
+
+const numbers = [2, 4, 6, 8, 10];
+
+function isTriangle(a,b,c){
+    let nums = [a,b,c].sort((a,b) => a-b);
+    console.log(nums);
+};
+
+isTriangle(1,3,3);
+isTriangle(4,3,3);
