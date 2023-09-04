@@ -65,59 +65,62 @@ Igy mar mukodik:
 
 Listaztam a kozos neveket, es kivettem a duplikaciokat, ABC sorrendben is vannak:
 
-const similarCatNames = (arr1, arr2) => {
-    let popularNames = [];
-    arr1.forEach(cat1 => {
-        for (let cat2 of arr2){
-            if (cat1.name === cat2.name){
-                if (!popularNames.includes(cat1.name)){
-                    popularNames.push(cat1.name);
+        const similarCatNames = (arr1, arr2) => {
+            let popularNames = [];
+            arr1.forEach(cat1 => {
+                for (let cat2 of arr2){
+                    if (cat1.name === cat2.name){
+                        if (!popularNames.includes(cat1.name)){
+                            popularNames.push(cat1.name);
+                        };
+                    };
+                };
+            });
+            return popularNames.sort();
+        };
+
+Names counted, but not arranged (one object where keys are the names)
+
+        const similarCatNames = (arr1, arr2) => {
+            let popularNames = {};
+            for (let i = 0; i < arr1.length; i++){
+                for (let j = 0; j < arr2.length; j++){
+                    if (arr1[i].name === arr2[j].name){
+                        if (popularNames[arr1[i].name]){
+                            popularNames[arr1[i].name]++;
+                        } else{
+                            popularNames[arr1[i].name] = 1;
+                        }
+                    };
                 };
             };
+            return popularNames.sort((a, b) => a);
         };
-    });
-    return popularNames.sort();
-};
-
-// Names counted, but not arranged (one object where keys are the names)
-const similarCatNames = (arr1, arr2) => {
-    let popularNames = {};
-    for (let i = 0; i < arr1.length; i++){
-        for (let j = 0; j < arr2.length; j++){
-            if (arr1[i].name === arr2[j].name){
-                if (popularNames[arr1[i].name]){
-                    popularNames[arr1[i].name]++;
-                } else{
-                    popularNames[arr1[i].name] = 1;
-                }
-            };
-        };
-    };
-    return popularNames.sort((a, b) => a);
-};
 
 ### 4 SI / Fake profiles / Task 4: Fake profile generator:
 
-// email generator function used cannot execute .toLowerCase(), unless I create variables for the names: (I can't create the object and fill the data on the go,
-// and I can't do it line-by line either, unless I create the name variables first)
+Email generator function used cannot execute .toLowerCase(), unless I create variables for the names: (I can't create the object and fill the data on the go,
+and I can't do it line-by line either, unless I create the name variables first)
 
-//This is the email generator, that runs into an error if I try to call it without creating variables for the names:
-const emailGenerator = (firstName, lastName) => {
-    return firstName.toLowerCase() + "." + lastName.toLowerCase() + "@gmail.com";
-};
+This is the email generator, that runs into an error if I try to call it without creating variables for the names:
 
-//This is the fake-profile-object generator (it works like this, but there were extra steps added):
-const profileGenerator = (firstName, arrLastNames, arrJobs, funcRandomFromList, funcPhoneNum, funcEmail) => {
-    const obj = {};
-    
-    let firstNameVar = firstName;
-    let lastNameVar = funcRandomFromList(arrLastNames);
+        const emailGenerator = (firstName, lastName) => {
+            return firstName.toLowerCase() + "." + lastName.toLowerCase() + "@gmail.com";
+        };
 
-    obj.name = {};
-    obj.name.first = firstNameVar;
-    obj.name.last = lastNameVar;
-    obj.job = funcRandomFromList(arrJobs);
-    obj.phone = funcPhoneNum();
-    obj.email = funcEmail(firstNameVar, lastNameVar);
-    return obj;
-};
+This is the fake-profile-object generator (it works like this, but there were extra steps added):
+
+        const profileGenerator = (firstName, arrLastNames, arrJobs, funcRandomFromList, funcPhoneNum, funcEmail) => {
+            const obj = {};
+            
+            let firstNameVar = firstName;
+            let lastNameVar = funcRandomFromList(arrLastNames);
+
+            obj.name = {};
+            obj.name.first = firstNameVar;
+            obj.name.last = lastNameVar;
+            obj.job = funcRandomFromList(arrJobs);
+            obj.phone = funcPhoneNum();
+            obj.email = funcEmail(firstNameVar, lastNameVar);
+            return obj;
+        };

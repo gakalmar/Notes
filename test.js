@@ -10,15 +10,5 @@
 //   }
 // }
 // console.log(numbers);
-
-
-
-const numbers = [2, 4, 6, 8, 10];
-
-function isTriangle(a,b,c){
-    let nums = [a,b,c].sort((a,b) => a-b);
-    console.log(nums);
-};
-
-isTriangle(1,3,3);
-isTriangle(4,3,3);
+let gameDescription = 'size:6,s:{s1:a1a2,s2:c2d2e2,s3:c5,s4:e4}'
+console.log(gameDescription.slice(9).split(",").length)
