@@ -10,5 +10,25 @@
 //   }
 // }
 // console.log(numbers);
-let gameDescription = 'size:6,s:{s1:a1a2,s2:c2d2e2,s3:c5,s4:e4}'
-console.log(gameDescription.slice(9).split(",").length)
+
+
+const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+function doMath(num, mod1, mod2, mod3){
+    return mod3(mod2(mod1(num)));
+}
+
+function doubleVision(num){
+    return parseInt(String(num)+String(num));
+}
+
+function squareNum(num){
+    return num*num;
+}
+
+function addRandom(num){
+    return num+Math.floor(Math.random()*100);
+}
+console.log(doMath(5, doubleVision, squareNum, addRandom));
+console.log(doMath(2, addRandom, squareNum, doubleVision));
+console.log(doMath(3, squareNum, addRandom, doubleVision));
