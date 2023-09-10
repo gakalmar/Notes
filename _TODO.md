@@ -14,3 +14,4 @@
 - Read these links again:
     https://nodejs.dev/en/learn/run-nodejs-scripts-from-the-command-line/
     https://developer.mozilla.org/en-US/docs/Web/API/console/log
+- Learn how reduce works!!! (and add find also)
