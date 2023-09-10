@@ -21,7 +21,23 @@
 - Be constructive  
 - Bring up an example  
 
-### 2. TIME MANAGEMENT
+### 2A. TIME MANAGEMENT (WORKSHOP)
+### 2B. TIME MANAGEMENT (SI WEEK)
+
+- 2 minute rule: If you can do it in 2 minutes, do it NOW
+- procrastination:
+    - Future self - can set goals and plan
+    - Present self - only Present self can take ACTION
+
+    - The problem is starting the task, not doing it, so focus on this and make it as easy as possible to get started
+
+    - Strategies:
+        1. Connect task with something you love (eg. only listen to your favourite music when you go running)
+        2. Make effects of procrastination more immediate (eg. skipping workout is not an issue in the moment, but if you have to pay if you skip it, it becomes more painful in the moment)
+        3. Design your future action ahead (eg fill the fridge with exacly you want to eat that week)
+        4. Make the task more achievable (prepare your running kit the day before)
+        5. Make the task more achievable (break it down to smaller, more achievable steps)
+
 
 # PART B - 'TECHNICALS'
 
