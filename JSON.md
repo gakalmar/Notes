@@ -1,18 +1,8 @@
-# Basic import-export operation:
-- **Import**:
-
-        import { name } from './directory/filename.js';
-
-- **Export**:
-
-        export { name };
-
 # Reading a file
 - **Definition:** getting information from a file stored on a computer or on a server
 - **JSON:** JavaScript Object Notation (*=jelölés*)
 - Popular **data format** used for *exchanging information between a server and a client*
 - **Parsing** a JSON file means *converting the content of the JSON file into a JS object*, to access and manipulate it
-
 
 - In Node.js, you can read (parse) files:
     - **synchronously (sync)**:
@@ -90,6 +80,11 @@
 
                     readAndParseJSON();
 
+- **Blocking / Non-blocking**:
+    - desribe code behaviour with asynchronuous operations (only async?)
+    - **non-blocking**: It doesn't wait for an operation to complete before continuing with the rest of the program (the operation is ran in the background). While waiting for the operation to complete, the program can run other operations in the meantime, and proceed with it after it's done.
+    - **blocking**: It waits for the operation to complete before continuing with the rest of the program. Program might become unresponsive while waiting.
+
 - **Keywords:**
     - `import`: bring modules, functions, objects or values from other JS files into the current file (examples import the "fs" (file system) module)
     - `error`: refers to a problem/issue occurring during the reading process (eg. inaccessible, not found, no permission to read, etc.)
@@ -99,3 +94,66 @@
     - `from`: specify the module where we are importing from, followed by the name or path of the module a string
     - `fs/promises`: the name of the module we are importing from (built-in node.js module that provides an API to interact with the file system using promises instead of CB functions. It's an alternative to the "fs" module)
     - > **Summary**:** the line `import { readFile } from 'fs/promises'`; means we're importing the readFile function from the 'fs/promises' module to use it for reading files asynchronously with promises in our script.
+
+# Basic import-export operation:
+- **Import**:
+
+        import { name } from './directory/filename.js';
+
+- **Export**:
+
+        export { name };
+
+- **Read simple text file**: (async)
+    0. Use this line first to import `fs` (**File System**) built-in Node.js module:
+
+            import * as fs from 'node:fs';
+
+            Same as:
+            const fs = require('fs');
+
+    1. Use `fs.readFile("filename", "utf8, *callback*)` to read it synchronized:
+
+            fs.readFile('filename.txt', 'utf8', (err, data) => {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                console.log(data);
+            });
+    
+    - `(err, data) {CODE}` is a callback function in the parameters of the `fs.readFile` method, so we can create it separately:
+
+            let dataRead = (err, data) => {
+                if (err){
+                    console.error(err);
+                    return;
+                }
+                console.log(data);
+
+                /// ALL FUNCTIONS TO BE CALLED HERE, THAT REQUIRE IMPORTED 'DATA' VARIABLE ///
+
+            }
+
+            Call it separately:
+
+            fs.readFile("data.json", "utf8", dataRead)
+    
+    
+    2. Use `fs.readFileSync("filename", "utf8)` if you want to read it synchronized (if data file is small and if reading has to be done first):
+
+            const data = fs.readFileSync('filename.txt', 'utf8');
+            console.log(data);
+
+- **Get simple data from JSON file**:
+    - Use `JSON.parse()`:
+
+            fs.readFile('filename', 'utf8', (err, data) {
+                if (err){
+                    console.error(err);
+                    return;
+                }
+                let jsonData = JSON.parse(data);
+                console.log(jsonData);
+            })
+
