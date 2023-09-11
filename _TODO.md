@@ -7,6 +7,7 @@
 
 # To check & add:
 
+- add basic import-export operation syntax to JSON file
 - JS workflow of code reading (rewatch video tutorial)
 - Get started with workbook
 - ASCI characters and how to reference them
