@@ -81,6 +81,18 @@
 
 - Boolean conversion (see truthy falsy section)
 
+### Iterable vs. non-iterable:
+
+- Iterable objects:
+    - String
+    - Array
+    - TypedArray
+    - Map
+    - Set
+
+- Non-iterable objects:
+    - Object data types
+
 
 ### - Data structures, non-primitives (Objects eg. grouped data)
 
@@ -129,6 +141,27 @@
         arr.unshift('item4')            //remove item from start
 
         (...arr)                        //spread operator or syntax - creates a set of values from an array (useful with Math.min/max for example)
+
+- Shallow vs Deep copy:
+    - Shallow copy is when you create a copy of an array for example, and making modifications on the new array doesn't affect the original array.
+    - **Deep copy** example:
+
+            let object = {};
+            let list = [1, 2, 3, 4]
+            object.key1 = list;
+            object.key2 = list;
+
+            object.key1.push(5)  //This will update both list and key2 as well!
+
+            const numbersOdd = [1, 3, 5, 7, 9];
+            const numbersEven = [0, 2, 4, 6, 8];
+            const numbersAll = numbersOdd + numbersEven
+
+    - **Shallow copy** example:
+
+            const nums = [1, 2, 3, 4];
+            const nums2 = [...nums]  //Spread syntax creates shallow copies of arrays
+
 
 #### 2. Objects
 
@@ -305,7 +338,7 @@
                 console.log(arr[i]);                                    //print arr[0] then arr[1] ... until it reaches limit
             }
 
-#### - **For..of loop** (Used to iterate through items in an Array or Object):
+#### - **For..of loop** (Used to iterate through items in an iterable object (eg arrays)):
 
             const myArray = [1, 2, 3, 4, 5]
             for (const itemInArray of myArray){                         //itemInArray is just an in-place created constant to refer to each element in the Array or Object
@@ -328,13 +361,21 @@
                 }
             }
 
-#### - **For...in loop:**
+#### - **For...in loop:** (Used to iterate through the enumberable values of an uniterable object (eg. objects))
 
             Same as for of, but it's used to iterate over keys of an Object instead:
+
+            Iterate through keys:
 
                 let myObject = {key1: "value1", key2: "value2", key3: "value3};
                 for (const key in myObject){
                     console.log(key);           //will print "key1", "key2", "key3"
+                }
+
+            Iterate through key's values:
+
+                for (const key in myObject){
+                    console.log(myobject[key]); //Will print "value1", "value2", "value3"
                 }
 
 #### - **While loop:**
@@ -603,3 +644,102 @@
 
 - `map()`, `filter()` and `reduce()` amongst others are considered **higher-order functions**, which means that they can take other functions as arguments (*=callback functions*), or they can return a function.
 
+# Date constructor:
+
+- **Timestamp number / Time value:** an integer number representing the time in milliseconds since *January 1, 1970, UTC, 00:00:00 AM*
+- **Date string:** A string value representing a date parsed/interpreted using the same algorithm as `new Date.parse()`:
+
+### Create a date
+1. No parameters:
+
+        let newDate = new Date();                               //Will generate current date in this format (creates a timestamp):
+                                                                  Tue Sep 12 2023 14:08:57 GMT+0200 (Central European Summer Time)
+
+        Same as:
+        let newDate = new Date.now();
+
+2. Use milliseconds:
+
+        let startingDate = new Date(0);                         //Thu Jan 01 1970 01:00:00 GMT+0100 (Central European Standard Time)
+        let startingDate = new Date(1000 * 60 * 60 * 24);       //Thu Jan 02 1970 01:00:00 GMT+0100 (Central European Standard Time)
+
+        Convert a Date object to a timestamp using date.getTime():
+
+3. Use a timestring:
+
+        let date = new Date("2017-01-26");                      //This time is not set, so it can be any hour, in any timezone!
+        
+        or 
+
+        let ms = Date.parse('2012-01-26T13:51:50.417-07:00');   //The number of milliseconds since 1970-01-01
+        let date = new Date(ms)                                 //Recreate Date object
+
+        The string format should be: YYYY-MM-DDTHH:mm:ss.sssZ, where:
+
+        YYYY-MM-DD – is the date: year-month-day.
+        The character "T" is used as the delimiter.
+        HH:mm:ss.sss – is the time: hours, minutes, seconds and milliseconds.
+        The optional 'Z' part denotes the time zone in the format +-hh:mm. A single letter Z would mean UTC+0.
+        
+        Shorter variants are also possible, like YYYY-MM-DD or YYYY-MM or even YYYY.
+
+4. Use components:
+
+        let date = new Date(year, month, date, hours, minutes, seconds, ms)
+
+        let date = new Date(2023, 1, 21)                        //only first 2 are mandatory
+                                                                //months start with index 0! (so 1 will be February)
+
+### Access components
+
+- To access specific data from a `Date` object:
+
+        new Date().getFullYear();                               //Get year in YYYY format (NOT getYear!!!)
+        new Date().getMonth();                                  //Get month in M format (0 to 11!!!)
+        new Date().getDate();                                   //Get days in D or DD format
+
+        getHours()/getMinutes()/getSeconds()/getMilliseconds()...
+
+        new Date().getDay();                                    //Get days of the week: 0 is Sunday... 6 is Saturday
+
+        new Date().getTime();                                   //Get time in milliseconds
+        new Date().getTimezoneOffset();                         //Get time difference from your local timezone and UTC in MINUTES!!!
+
+### Set date components
+
+- Use it to reset some values in a date created, eg:
+
+        let today = new Date();
+
+        today.setHours(0);
+        console.log(today); // still today, but the hour is changed to 0
+
+- These are the methods:
+
+        setFullYear(year, [month], [date])
+        setMonth(month, [date])
+        setDate(date)
+        setHours(hour, [min], [sec], [ms])
+        setMinutes(min, [sec], [ms])
+        setSeconds(sec, [ms])
+        setMilliseconds(ms)
+        setTime(milliseconds) (sets the whole date by milliseconds since 01.01.1970 UTC)
+
+        Every one of them except setTime() has a UTC-variant, for instance: setUTCHours()
+
+- A common use is the combination of **set** and **get**:
+
+        let date = new Date();
+        date.setSeconds(date.getSeconds() + 70);                //Set(!) the time to 70 seconds after current time (Get(!))
+
+- If we add days to a date, it **autocorrects** it to an existing date:
+
+        let date = new Date(2016, 1, 28);
+        date.setDate(date.getDate() + 2);                       //+2 days are added to 28 Feb, it recognizes it and updates month as well
+
+- Add/subtract dates:
+
+        First, create a timestamp from the date:
+
+        let date = new Date().getTime();                        //Converts current date to a millisecond based timestamp
+        let date = Date.now();                                  //Same as above, but there is no Date object created (=faster)

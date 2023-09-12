@@ -16,3 +16,4 @@
     https://nodejs.dev/en/learn/run-nodejs-scripts-from-the-command-line/
     https://developer.mozilla.org/en-US/docs/Web/API/console/log
 - Learn how reduce works!!! (and add find also)
+- in-place modification (mutable) vs creating nem data (immutable) (eg arr.sort() vs. ar..slice(i1,i2)) - mutable vs immutable

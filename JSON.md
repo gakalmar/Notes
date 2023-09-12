@@ -112,7 +112,7 @@
             Same as:
             const fs = require('fs');
 
-    1. Use `fs.readFile("filename", "utf8, *callback*)` to read it synchronized:
+    1. Use `fs.readFile("filename", "utf8, *callback*)` to read it asynchronized:
 
             fs.readFile('filename.txt', 'utf8', (err, data) => {
                 if (err) {
@@ -146,6 +146,7 @@
             console.log(data);
 
 - **Get simple data from JSON file**:
+    - `JSON.parse(text, [reviver])` method converts `text` into JS value. `Reviver` function is optional, which can be used the return value before returning it.
     - Use `JSON.parse()`:
 
             fs.readFile('filename', 'utf8', (err, data) {
@@ -156,4 +157,28 @@
                 let jsonData = JSON.parse(data);
                 console.log(jsonData);
             })
+
+    - Further examples for data conversion:
+
+            JSON.parse("{}"); // {}
+            JSON.parse("true"); // true
+            JSON.parse('"foo"'); // "foo"
+            JSON.parse('[1, 5, "false"]'); // [1, 5, "false"]
+            JSON.parse("null"); // null
+
+            NB:
+            no trailing commas!     JSON.parse("[1, 2, 3, ]")       //Syntax error
+            no single quotes!       JSON.parse("'hello'")           //Syntax error
+    
+    - Example for the use of the reviver function:
+
+            JSON.parse(
+                '{"p": 5}',
+                (key, value) =>
+                    typeof value === "number"
+                    ? value * 2 // return value * 2 for numbers
+                    : value, // return everything else unchanged
+                );
+                
+            Output will be: { p: 10 }
 

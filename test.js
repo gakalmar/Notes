@@ -12,23 +12,8 @@
 // console.log(numbers);
 
 
-const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const nums = [1, 5, 2, 12, 35, 98, 3, 7, 7, 1, 0, 4, 5, 6, 7, 12, 34, 689, 8, 4, 2, 1, 9, 0];
 
-function doMath(num, mod1, mod2, mod3){
-    return mod3(mod2(mod1(num)));
-}
 
-function doubleVision(num){
-    return parseInt(String(num)+String(num));
-}
-
-function squareNum(num){
-    return num*num;
-}
-
-function addRandom(num){
-    return num+Math.floor(Math.random()*100);
-}
-console.log(doMath(5, doubleVision, squareNum, addRandom));
-console.log(doMath(2, addRandom, squareNum, doubleVision));
-console.log(doMath(3, squareNum, addRandom, doubleVision));
+let date = new Date().getTime();
+console.log(date)

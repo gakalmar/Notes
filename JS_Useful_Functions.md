@@ -222,16 +222,18 @@ Number.isInteger(value)                                 //Chheck if the value is
     arr.indexOf(item, from) / arr.lastIndexOf(item)     //returns the index of the first/last item in the array with value 'item' - 'from' is optional to specify which index to start the searth at
     str.startsWith(str) / str.endsWith(str)             //true - if str starts/ends with substr; false - if not
     
-    arr.sort()                                          //sorts arr's values in an alphabetical number
+    arr.sort()                                          //sorts arr's items in an alphabetical order (based on UTF-16 Unicode values) (in place, so no new array!)
     arr.sort((a, b) => a - b)                           //sort by ascending order
     arr.sort((a, b) => b - a)                           //sort by desending order
     arr.sort(func)                                      //to use it for other that default, you need to add a compare function (compares 2 numbers, which is used by sort algorithm for all the elements autoamtically):
                                                             function compare(a, b){
                                                                 // if result < 0 (negative) -> a is first
                                                                 // if result = 0 -> no change
-                                                                // if result > 0 (positive) -> b is first
+                                                                // if result > 0 (positive) -> b is first 
                                                                 return a-b      //eg a = 10, b = 5 -> a - b = positive, so b (5) will be the first element, and a (10) will come after
                                                             }
+    arr.toSorted()                                      //immutable version of sort() -> this creates a new array
+    arr.sort((a, b) => a.localeCompare(b));             //Sort array with strings including foreign characters (eg. é, á, ü, ó...)
     arr.reverse()                                       //reverses and array in place and returns it (no new array is created!)
     str.charCodeAt(index);                              //returns the ASCII (Unicode) value of a character in a string
 
