@@ -234,6 +234,10 @@ Number.isInteger(value)                                 //Chheck if the value is
                                                             }
     arr.toSorted()                                      //immutable version of sort() -> this creates a new array
     arr.sort((a, b) => a.localeCompare(b));             //Sort array with strings including foreign characters (eg. é, á, ü, ó...)
+    arr.sort((a, b) => {                                //This is needed if we want to set alphabetical order based on object's keys
+        if (a.key < b.key){ return -1}                    (only in a comparison like > or < will we get a numeric conversion to work with, so the basic a - b way doesn't work)
+        if (a.key > b.key){ return 1}
+        return 0;})
     arr.reverse()                                       //reverses and array in place and returns it (no new array is created!)
     str.charCodeAt(index);                              //returns the ASCII (Unicode) value of a character in a string
 
