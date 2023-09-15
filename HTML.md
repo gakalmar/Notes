@@ -159,6 +159,11 @@
             We use the remove() method on the paragraph element to remove it from the DOM.
             We call the removeElement() function.
 
+            Remove just the text content:
+
+            const element = document.getElementById("id");
+            element.textContent = "";            
+
     - Access elements:
         - `getElementById`: retrieve a single elementfrom the DOM with a specific `<id>` attribute:
 
@@ -202,6 +207,10 @@
                     In this example, we log a message to the console when all resources have finished loading.
 
 # HTML TAGS & ATTRIBUTES:
+
+- Complete list:
+    - https://developer.mozilla.org/en-US/docs/Web/HTML/Element
+    - https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes
 
 0. Entity references:
 
