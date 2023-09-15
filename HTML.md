@@ -1,10 +1,15 @@
 # HTML
-- **Backend**:
+- **Backend** *(=Business logic)*:
     - JavaScript, Python, Ruby
+    - Describes how the data is **HANDLED**
     - Operations done for calculation / data handling and manipulation
-- **Frontend**:
+- **Frontend** *(=View or presentation logic)*:
     - HTML, CSS, JavaScript (for rendering the UI and managing interactions)
-    - UI and data display
+    - describes how the data is **DISPLAYED**
+    - UI and data display:
+        - **UI**: A tool through which the user communicates with the computer (eg. Terminal is a UI tool).
+        - **GUI**: *Graphical user interface*, like fore example a website or a phone app.
+    
 
 - **HTML = HyperText Markup Language**
     - **Markup language** - uses tags and elements to describe the structure and presentation of a document (XML and Markdown are also similar lanugages)
@@ -45,7 +50,7 @@
 
 ### ATTRIBUTES
 - Additional pieces of information associated with HTML tags to add detail, modify defaults or control appearance
-- They are defined in the opening tag (typically `name = "value"` pair):
+- They are defined in the opening tag (typically `name="value"` pair (NO SPACES!!!); the value is always enclosed in DOUBLE quotes: "value"):
 
         id:     Assigns a unique identifier to an element, which can be used to reference the element in JavaScript or apply CSS styles.
         class:  Assigns one or more class names to an element, which can be used to group elements and apply CSS styles or JavaScript functionality.
@@ -54,7 +59,14 @@
         alt:    Specifies an alternate text description for an image, which can be displayed if the image cannot be loaded and is used by screen readers for accessibility purposes.
         title:  Specifies extra information about an element, usually displayed as a tooltip when the user hovers over the element.
 
-        Example tag with multiple attributes:
+        Simple example of an HTML element:
+        <h1 id="title" class="heading">Hello</h1>
+
+            h1: tag name
+            id & class: attributes
+            Hello: the data (node) to be displayed/handled
+
+        Example tag with multiple attributes: (add space only to separate them)
         <a href="https://www.example.com" title="Visit our website" class="external-link">Visit Example.com</a>
 
             href: Specifies the URL of the linked page.
@@ -90,13 +102,23 @@
                 </body>
             </html>
 
-            JavaScript (script.js):
+            JavaScript (script.js) - WITHOUT CREATING A FUNCTION:
+
+            document.getElementById("container").insertAdjacentHTML("beforeend", `<p>I am a new paragraph</p>`);
+
+            JavaScript (script.js) - BY CREATING A FUNCTION:
 
             function addElement() {
-                const container = document.getElementById('container');
-                const newParagraph = `<p>I am a new paragraph!</p>`;
-                container.insertAdjacentHTML('beforeend', newParagraph);
+                const container = document.getElementById("container");     //"container" refers to the id we want to place it into
+                const newParagraph = `<p>I am a new paragraph!</p>`;        //newParagraph can be renamed
+                container.insertAdjacentHTML("beforeend", newParagraph);    
             }
+
+                insertAdjacentHTML(position, item) - position options:
+                    "beforebegin"   Before the element. Only valid if the element is in the DOM tree and has a parent element.
+                    "afterbegin"    Just inside the element, before its first child.
+                    "beforeend"     Just inside the element, after its last child.
+                    "afterend"      After the element. Only valid if the element is in the DOM tree and has a parent element.
 
             addElement();
 
@@ -179,3 +201,89 @@
                     When the load event is triggered, the anonymous function inside addEventListener() gets executed.
                     In this example, we log a message to the console when all resources have finished loading.
 
+# HTML TAGS & ATTRIBUTES:
+
+0. Entity references:
+
+        5 special characters in HTML. Use codes next to the to display them, if needed:
+
+        <       &lt;
+        >       &gt;
+        "       &quot;
+        '       &apos;
+        &       &amp;
+
+1. Commenting:
+
+        <!-- COMMENT -->
+        multiple whitespaces are reduced to just one!
+
+2. Basic HTML structure:
+
+        <!doctype html>     //needs to be included for everything else to work right
+        <html>
+            <head> 
+                //non visible content of the webpage//
+
+                <meta charset="utf-8" /> //metadata that can't be represented by HTML (<base>, <link>, <script>, <style>, <title>, <charset>)
+
+                <title>My Title</title>  //the title that goes on the browser tab
+            </head>
+            <body> 
+                //visible content of the webpage//
+            </body>
+        </html>
+
+3. Header and h1-h6 elements:
+
+        <header> 
+            //creates an introductory container on the page// 
+            <h1>Title1</h1>
+            <h2>Title2</h2>
+            ...
+            <h6>Text</h6>
+        </header>
+
+4. Basic text and data:
+
+        <p> //paragraph text// </p>
+
+        </br> break line (closing tag only!)
+
+        <img> adds image (this is a VOID element, with an OPENING tag only!)
+            <img src="link"> //you can add attributes  
+            <img src="link" alt="text to show when hovering">
+
+        <a> adds an anchor (eg a hyperlink)
+            <a href="http://www.index.com"> //text// </a>  //you can add attributes like href, title, target
+            <a ... title="Title of hyperlink">
+            <a ... target="_blank"> (this will display the link in a new tab)
+
+        "text &quot; textinquotest &quot; moretext" //Use this for quotes within quotes
+
+
+5. Basic HTML formatting:
+
+        <em> *italic* </em>
+        <strong> **bold** </strong>
+
+6. Grouping data into division containers:
+    - It's purpose is to be able to apply CSS information to a group of data displayed together
+    - We use it mostly to structure the website into divisions:
+
+            <div> //text/node// </div>
+
+7. Boolean ATTRIBUTES:
+    - if there is an attribute without a written value:
+
+            <input type="text" disabled />  //This is the same as writing disabled="disabled"  /avoids the user of inputting text into an input box (greys it out)
+
+8. Elements:
+
+        <select>
+            <option> //opt1// </option>
+            <option> //opt2// </option>
+            <option> //opt3// </option>
+        </select>
+
+        <button> //name of button// </button>
