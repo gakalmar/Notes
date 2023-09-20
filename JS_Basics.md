@@ -234,14 +234,12 @@
     
 ### 1. Arithmetic operators:
 
-        \+       Works also with strings (old way of doing concatenation), and variables that are numbers (eg. let number = 10, number + 1 = 11)
-        \-       Substraction
-        \*       Multiplication
+        +       Works also with strings (old way of doing concatenation), and variables that are numbers (eg. let number = 10, number + 1 = 11)
+        -       Substraction
+        *       Multiplication
         /       Division
-
+        **      Exponential
         %       Modulo/modulus - returns the 'leftover' or 'remainder' value after a division (eg. 14 % 5 = 4)
-        i++     i = i + 1 | Increment - Add 1 to the current value of the variable 'i' ('i' needs to be declared first)        //To be used only with VARIABLES!
-        i--     i = i - 1 | Decrement - Substract 1 of current value                                                           
 
 ### 2. Assignment operators:
     
@@ -251,6 +249,9 @@
         *=      i = i * x
         /=      i = i / x
     
+        i++     i = i + 1 | Increment - Add 1 to the current value of the variable 'i' ('i' needs to be declared first)        //To be used only with VARIABLES!
+        i--     i = i - 1 | Decrement - Substract 1 of current value                                                           
+
 ### 3. Comparison operators:
 
 - Equality operators:
