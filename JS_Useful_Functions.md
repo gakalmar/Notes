@@ -27,8 +27,8 @@ Number.isInteger(value)                                 //Chheck if the value is
 
     string.slice(firstindex, lastindex)                 //returns the string from first index to last index
 
-    string.StartsWith("strTest")                        //returns true if "string" starts with "strTest"
-    string.EndsWith("strTest")                          //returns true if "string" ends with "strTest"
+    string.startsWith("strTest")                        //returns true if "string" starts with "strTest"
+    string.endsWith("strTest")                          //returns true if "string" ends with "strTest"
 
     array.join("")                                      //joins the elements of an array into a string
 

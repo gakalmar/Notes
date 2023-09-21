@@ -12,8 +12,26 @@
 // console.log(numbers);
 
 
-const nums = [1, 5, 2, 12, 35, 98, 3, 7, 7, 1, 0, 4, 5, 6, 7, 12, 34, 689, 8, 4, 2, 1, 9, 0];
+let nums1 = [1, 5, 9, 0];
 
 
-let date = new Date().getTime();
-console.log(date)
+function logNums(nums, callback){
+    nums.forEach(num => {
+        console.log(num)
+        callback(num);
+    })    
+}
+
+function oddOrEven(number){
+    if (number % 2 === 0){
+        console.log(`${number} is even!`)
+    } else {
+        console.log(`${number} is odd!`)
+    }
+}
+
+logNums(nums1, oddOrEven);
+
+console.log("hello"[0]);
+console.log("hello"[3]);
+console.log("hello"[0, 3]);
