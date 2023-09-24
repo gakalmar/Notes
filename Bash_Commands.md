@@ -20,3 +20,5 @@ ls .a                               //Lists items in Git context
                                     // .. -> refers to parent folder
 
 ps                                  //log running processes (?)
+
+Ctrl + C                            //stop a process

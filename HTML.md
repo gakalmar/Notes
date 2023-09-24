@@ -281,6 +281,7 @@
     - We use it mostly to structure the website into divisions:
 
             <div> //text/node// </div>
+            <section> //text/node// </section>
 
 7. Boolean ATTRIBUTES:
     - if there is an attribute without a written value:

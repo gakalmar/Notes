@@ -33,7 +33,7 @@
                     console.error('Error reading the file:', err);
                     return;
                 }
-                console.log(data);
+                const jsonData = JSON.parse(data);
                 });
 
                 Code breakdown:
