@@ -18,5 +18,6 @@
 - Learn how reduce works!!! (and add find also)
 - in-place modification (mutable) vs creating nem data (immutable) (eg arr.sort() vs. ar..slice(i1,i2)) - mutable vs immutable
 - how does queryselector work - what's the difference from getElementsById
+- Remove duplicates with new SET
 
 - template literals advanced stuff: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals

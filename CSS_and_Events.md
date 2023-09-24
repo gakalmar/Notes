@@ -208,4 +208,165 @@
 - We can overwrite these values with CSS! (`div` -> *make it inline* or `span` -> *make it block*)
 
 ## Position
-- 
+- Position value types:
+    - **Static:**
+        - Default value. Elements are positioned based on the normal flow of the document.
+    - **Relative:**
+        - Positioned relative to their normal position in the document.
+        - Adjust with `top`, `right`, `bottom`, `left` properties
+    - **Absolute:**
+        - Positioned relative to their nearest positioned ancestor (if there is none, then relative to the document body)
+        - Adjust with `top`, `right`, `bottom`, `left` properties
+    - **Fixed:**
+        - Positioned relative to the viewport
+        - They remain in the same position even after scrolling
+        - Adjust with `top`, `right`, `bottom`, `left` properties
+- Example:
+
+        .box {
+            position: relative;         //position relative to it's normal position
+            top: 50px;                  
+            left: 100px;
+        }
+
+## Typography
+
+- Art and technique of arranging type to make written language legible, readable and appealing
+- Basic concepts:
+    - **Typeface:**
+        - a set of characters that share the same design (eg. Arial, Helvetica)
+        - It can include various fonts (blod, italic, egular...)
+    - **Font:**
+        - A specific size weight and style of a typeface (eg. Arial Bold 12pt is considered a font)
+    - **Kerning:**
+        - The adjustment of spaces between letters (eg. "VA" letters)
+    - **Leading:**
+        - The sapce between lines of text.
+    - **Tracking:**
+        - Adjustment of space between groups of letters, word ot lines of text    
+    - **Hierarchy:**
+        - Arrangement of text blocks based on importance
+        - Allows users to quickly gain crucial information first, then get into the details of a specific topic
+    - **Alignment:**
+        - The posiioning of text on a page (*left/right-aligned, centered or justified*)
+    - **White space:**
+        - Empty space around and within elements of a design
+        - Used to create visual balance and create the design more readible, appealing.
+
+- **Typography toolset:**
+    - `font-family`
+        - Set the **font family** for an element.
+        - Specify a list of fonts to use, in order of preference (if the first font is not available, the browser will try the next font in the list).
+
+    - `font-size` 
+        - Set the **size of the font**.
+        - Can be set in pixels, ems, rems, or other units.
+
+    - `line-height` 
+        - Set the **height of a line of text**. 
+        - Can be set as a number, a percentage, or a length value.
+
+    - `font-weight`
+        - Set the **thickness** or **boldness** of the font.
+        - Can be set as a number from 100 to 900, or as the keywords normal or bold.
+
+    - `font-style`
+        - Set the style of the font, such as **italic** or **oblique**.
+
+    - `text-decoration`
+        - Add visual emphasis to text, such as **underlining**, **overlining**, or **striking through**.
+
+    - `text-alignment`
+        - Set the horizontal alignment of text within its container, such as **left**, **right**, **center**, or **justified**.
+     
+## Animation
+
+- Used to create dynamic & visually engaging effects on a web page.
+
+- **Transition:**
+    - `transition` property
+    - create a transition between 2 states of an element
+    - specify which CSS properties should be transitioned, duration of transition and timing (transition speed)
+    - example:
+
+            button {
+                background-color: blue;
+                transition: background-color 0.5s ease-out;         //create a transition effect when the background color of a button changes
+            }
+
+            button:hover {
+                background-color: red;
+            }
+
+- **Animation:**
+    - `animation` property
+    - complex and customizable animations
+    - specify a set of keyframes that define the animation
+    - example:
+
+            img {                                       //create a bouncing animation for an image
+                animation: bounce 2s infinite;
+            }
+
+            @keyframes bounce {
+                0% {
+                    transform: translateY(0);
+                }
+                50% {
+                    transform: translateY(-20px);
+                }
+                100% {
+                    transform: translateY(0);
+                }
+            }
+
+- **Transform:**
+    - `transform` property
+    - used to change the shape, size or position of an element
+    - rotate, skew, translate elements without changing the position in the document flow
+    - example:
+
+            img {                               //rotate an image 45 degrees
+                transform: rotate(45deg);
+            }
+
+## CSS with JavaScript
+- JS can be used to manipulate CSS on a web page by **selecting elements** and **changing their CSS properties**.
+- This can be done with various methods, like:
+    - `querySelector`
+    - `getElementsById`
+    - `style`
+    - `className`
+    - `classList`
+- Example (change the color of a button when it is clicked):
+
+        <button id="myButton">Click me</button>
+        
+        button {                                                    //button element default properties
+            background-color: blue;                                 //starting with blue background & white text
+            color: white;
+        }
+
+        button.clicked {                                            //create a class within the button element
+            background-color: red;
+        }
+
+        const myButton = document.getElementById('myButton');
+
+        myButton.addEventListener('click', function() {             //on click the .clicked class is added to the button element
+            myButton.classList.add('clicked');
+        });
+
+- Direct CSS property manipulation:
+    - It's generally better to modify **classes** and keep the styles in the CSS file, to separate functionality from appearance
+    - By using classes, multiple styles can be applied to elements, so this method is not the best practice!
+    - example (but not to be used!):
+
+            <div id="myDiv">This is my div element.</div>
+            
+            #myDiv {
+                font-size: 16px;
+            }
+
+            const myDiv = document.getElementById('myDiv');
+            myDiv.style.fontSize = '24px';                          //the fontSize property of the myDiv element is directly changed with JavaScript using the style property
