@@ -77,67 +77,135 @@
         - `DOMNodeInserted`, `DOMNodeRemoved`, `DOMAttrModified`
 
 # Design of the View with CSS
-- **CSS:** 
-    - Cascading Style Sheets is a languag used to describe the presentation (visual aspects like colors, fonts) of the document written in HTML or XML
-    - It defines rules that are applied to certain elements:
-        - **Selector:** specifies the elements it should apply to (select by *element type*, *class*, *id*, *attribute values*, *hierarchy*):
-            - Exapmles:
-                - **Element selector:** Selects all elements of a specific type.
-                    - Example: `p` selects all *paragraphs*.
-                - **Class selector:** Selects all elements with a specific class.
-                    - Example: `.my-class` selects all elements with the class *my-class*.
-                - **ID selector:** Selects a single element with a specific ID.
-                    - Example: `#my-id` selects the element with the ID *my-id*.
-                - **Attribute selector:** Selects elements with a specific attribute value.
-                    - Example: `[type="checkbox"]` selects all *checkbox* elements.
-                - **Descendant selector:** Selects elements that are descendants of a specific parent element.
-                    - Example: `ul li` selects all list item elements that are *descendants of a unordered list element*.
-                - **Child selector:** Selects direct children of a specific parent element.
-                    - Example: `ul > li` selects all list item elements that are *direct children of a unordered list element*.
-                - **Pseudo-class selector:** Selects elements based on their state or position in the document. 
-                    - Example: `a:hover` selects all links that *are being hovered over* by the mouse.
-                - **Pseudo-element selector:** Selects and styles specific parts of an element. 
-                    - Example: `p::first-line` selects and styles *the first line of all paragraphs*.
-        
-        - **Declaration block:** 
-            - contains all the **declarations** that should be applied to the 'selected' elements to define style, in a property-value format similar to objects
-            - **values** are the specifications of a declaration, (eg. `red` or `15px`, etc.):
-
-                    p {                                 //selector (p for paragraph)
-                        background-color: yellow;       //all declarations go here
-                        font-size: 16px;
-                    }
+## CSS:
+- Cascading Style Sheets is a languag used to describe the presentation (visual aspects like colors, fonts) of the document written in HTML or XML
+- It defines rules that are applied to certain elements:
+    - **Selector:** specifies the elements it should apply to (select by *element type*, *class*, *id*, *attribute values*, *hierarchy*):
+        - Exapmles:
+            - **Element selector:** Selects all elements of a specific type.
+                - Example: `p` selects all *paragraphs*.
+            - **Class selector:** Selects all elements with a specific class.
+                - Example: `.my-class` selects all elements with the class *my-class*.
+            - **ID selector:** Selects a single element with a specific ID.
+                - Example: `#my-id` selects the element with the ID *my-id*.
+            - **Attribute selector:** Selects elements with a specific attribute value.
+                - Example: `[type="checkbox"]` selects all *checkbox* elements.
+            - **Descendant selector:** Selects elements that are descendants of a specific parent element.
+                - Example: `ul li` selects all list item elements that are *descendants of a unordered list element*.
+            - **Child selector:** Selects direct children of a specific parent element.
+                - Example: `ul > li` selects all list item elements that are *direct children of a unordered list element*.
+            - **Pseudo-class selector:** Selects elements based on their state or position in the document. 
+                - Example: `a:hover` selects all links that *are being hovered over* by the mouse.
+            - **Pseudo-element selector:** Selects and styles specific parts of an element. 
+                - Example: `p::first-line` selects and styles *the first line of all paragraphs*.
     
-    - Apply it by either:
-        - Create a separate CSS file, and link it using the `<link>` tag (better practice):
+    - **Declaration block:** 
+        - contains all the **declarations** that should be applied to the 'selected' elements to define style, in a property-value format similar to objects
+        - **values** are the specifications of a declaration, (eg. `red` or `15px`, etc.):
 
-                <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>My Web Page</title>
-                        <link rel="stylesheet" href="/public/style.css" />      //HERE
-                    </head>
-                    <body>
-                        <p>Hello, world!</p>
-                    </body>
-                    </html>
+                p {                                 //selector (p for paragraph)
+                    background-color: yellow;       //all declarations go here
+                    font-size: 16px;
+                }
 
-        - Directly in HTML using the `<style>` tag:
-                
-                <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>My Web Page</title>
-                        <style>                                                 //HERE
-                            p {
-                                color: red;
-                                font-size: 16px;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <p>Hello, world!</p>
-                    </body>
-                    </html>
+- Apply it by either:
+    - Creating a separate CSS file, and link it using the `<link>` tag (better practice):
 
-- **CSS Units:**
+            <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>My Web Page</title>
+                    <link rel="stylesheet" href="/public/style.css" />      //HERE
+                </head>
+                <body>
+                    <p>Hello, world!</p>
+                </body>
+                </html>
+
+    - Directly in HTML using the `<style>` tag:
+            
+            <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>My Web Page</title>
+                    <style>                                                 //HERE
+                        p {
+                            color: red;
+                            font-size: 16px;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <p>Hello, world!</p>
+                </body>
+                </html>
+
+## CSS Units:
+
+- Unit types:
+    - **Absolute units:** Fixed units that are not affected by the size of the viewprt or the font size:
+        - pixels (px) //margin: 20px;
+        - points (pt) //font-size: 18pt;
+        - inches (in)
+        - millimeters (mm)
+        - centimeters (cm)
+
+    - **Relative units:** Based on the size of other elements & context:
+        - **Viewport units:** Based on the size of the viewport:
+            - vh (viewport height) //height: 80vh;
+            - vw (viewprt width) //width: 90vw;
+        - **Font-relative units:** Based on the size of font size of an element:
+            - em //line-height: 1.5em;
+            - rem //margin-left: 1.5rem;
+        - Based on **general proportion:**
+            - % //background-width: 110%
+
+## Box model:
+- The CSS box model is a concept that describes how HTML elements are represented as rectangular boxes on a web page.
+- Used to make designs work well on different devices and screen sizes.</br>
+    <img src="assets/csspadding.png" width="400" height="250">
+    - 4 components:
+        - **Content:**
+            - the area where text, images and other media are displayed
+            - defined by the height and width of an element
+        - **Padding:**
+            - Space between content and border (`padding` property)
+        - **Border:**
+            - A line that surrounds the content and padding area (`border` property)
+        - **Margin:**
+            - The space between the border and surrounding elements (`margin` property)
+    - Example of the CSS box model:
+
+            .box {
+                width: 300px;
+                height: 200px;
+                padding: 20px;
+                border: 1px solid black;
+                margin: 10px;
+            }
+    - The **actual size of an element** is determined by the sum of its content (padding, border, and margin). 
+        - For example, an element with a width of 300px and a padding of 20px on each side will actually have a total width of 340px (300px + 20px + 20px).
+- Display property values in HTML based on element types:
+    - **Block type:**
+        - **Widht:** Block-level elements take up the full width of their parent container
+        - **Height** determined by the content or specified by developer
+        - **Flow:** new line is created after the element
+        - **Box model:** elements have padding, border, margin
+        - **Child elements:** can contain other block & inline elements
+        - **Display:** Displayed as block-level boxes
+        - *Some examples:*
+            - `div`, `p`, `h1-h6`, `ul`, `ol`, and `form`
+    - **Inline type:**
+        - **Width:** They just take up the necessary width to display 
+        - **Height** determined by line-height and font-size
+        - **Flow:** no new line after the element
+        - **Box model:** elements have padding, border (no margin!)
+        - **Child elements:** can only contain inline elements
+        - **Display:** Displayed as inline boxes
+        - *Some examples:*
+            - `span`, `a`, `img`, `em`, and `strong`
+
+- We can overwrite these values with CSS! (`div` -> *make it inline* or `span` -> *make it block*)
+
+## Position
+- 
