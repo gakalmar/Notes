@@ -290,6 +290,21 @@
 
 8. Elements:
 
+- The HTML <form> element can contain one or more of the following form elements:
+
+        <input id="textBox" type="text" />      //create an input box
+        
+        <label>
+        <select>
+        <textarea>
+        <button>
+        <fieldset>
+        <legend>
+        <datalist>
+        <output>
+        <option>
+        <optgroup>
+
         <select>
             <option> //opt1// </option>
             <option> //opt2// </option>

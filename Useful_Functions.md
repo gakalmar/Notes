@@ -271,4 +271,39 @@ Number.isInteger(value)                                 //Chheck if the value is
                                                                 //Intervals for nested execution start after the first func is executed, while setinterval method timer starts at the beginning of the func execution
     clearTimeout(intervalID);                                   //with a function calling itself again and again, you can stop it after some time with this function
 
+### DOM manipulation
 
+    document.getElementById("id")                               //get an object with a specific id (make it a const to store it)
+    document.getElementsByClassName("myClass")                  //get an object with a specific class (make it an array to store it)
+    document.getElementsByTagName("div")                        //get an object with a specific tag (make it an array to store it)
+
+    document.querySelector(".myClass")                          //get the first object with a specific class (make it a const to store it)
+    document.querySelector("#myID")                             //get the first object with a specific Id (make it a const to store it)
+    document.querySelectorAll("p")                              //get an array of objects with a CSS selector (make it an array to store them)
+    document.querySelectorAll("[data-type]")                    //select all elements that have a "data-type" attribute
+
+    document.querySelectorAll(".container p")                   //select elements within others - For example, to select all <p> elements within a <div> with the class "container"
+
+    item.addEventListener("event", function)                    //register an event handler(listener) to an item, by telling which event it should be triggered with ("event" -> eg. "click", "mouseover" or "focus")
+    item.removeEventListner("event", function)                  //removes "function" from the registered listeners of an item
+    item.addEventListener("event", functionX)                   //when you create functionX, you can add a parameter (eg (e) or (event) or similar, so you can refer to the item itself with e.target -> eg. e.target.style.backgroundColor = "black";)
+                                                                //when you refer to a general object: document.body.style.backgroundColor = "black";
+
+    item.insertAdjacentHTML("where", "what")                    //add HTML to a certain element ("where" -> "afterend", "beforeend", "afterstart", "beforestart")
+    item.innerHTML("<p>text</p>")                               //Gets or sets the HTML content of an element
+    item.textContent = "New text content";                      //replaces/adds new text content to an element (returns `null` for "document" or "doctype")
+                                                                //!!! removes all children first, and then fills it up with just text content!
+
+    item.getAttribute("class")                                  //get the value of an attribute of an element (store it as a constant)
+    item.setAttribute("class", "myClass")                       //"class" attribute's new value will be "myClass"
+    item.removeAttribute("class")                               //removes the attribute from an element
+
+    element.classList.add("active");                            //Allows you to add, remove, or toggle CSS classes on an element
+    element.classList.remove("inactive");
+    element.classList.toggle("highlight");
+
+    element.preventDefault()                                    //prevents default behaviour if it's called on the element 
+    event.stopPropagation()                                     //when called inside an event handler, prevents the event from bubbling up to any other elements
+                                                                //full example here: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events
+                                                                //look for "preventing default behaviour"
+                                                                //look for "video player example"

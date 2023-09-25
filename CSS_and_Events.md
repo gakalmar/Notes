@@ -1,13 +1,38 @@
 # Events of the View
 
-- **Browser events:** actions and reactions that happen in the browser, usually due to user interaction / change of state of the web page.
-- **Event listeners** are used to handle these events. They are functions that get triggered when these events occur.
+- **Browser events:** ACTIONS - They happen in the browser, usually due to user interaction / change of state of the web page.
+- **Event listeners:**  The mechanism that is used to check if these events occur, and trigger the event handler (they work together and are essetinally the same thing). We **register** these, when they are attached to an event 
+- **Event handler:** REACTIONS - These are the actual actions (functions), the listeners only checks for the action that it's waiting for it to be triggered
+- **Event object:** 
+    - When you add an event listener: `button.addEventListener("click", callback);`
+    - Then create a callback function with a parameter: `function callback(e){}`
+    - `e` is the event object we are manipulating, we can refer to it's attributes within the callback:
+        - `e.target.style.backgroundColor = "black"` (see **event target** below)
+        - `console.log(e.composedPath())` could be used to print all parents of the element (composedPath() is a built-in method on `e` event)
+        - `console.log(e.target.textContent)` to log text content through `e` event's object
+        - `console.log(e.target.value)` to log the value of the input box
+        - `console.log(e.target.tagName)` to log just the tag name
+    - And this is how we refer to the document's attributes in general:
+        - `document.body.style.backgroundColor = "black"`
+    - When some events like `keydown` get triggered, a specialized event object gets manipulated 
+        - In this case `KeyboardEvent` object, which has a `key` property that tells you which key was pressed:
+                
+                item.addEventListener("keydown", (event) => {
+                    console.log(`You pressed "${event.key}".`);
+                });
+- **Event target:**
+    - a reference to the object, on which the event happens
+    - read-only target property
+    - `Event.currentTarget` -> this is different, this is when **bubbling** or **capturing** is happening
 
 ## - Main categories:
 - **UI (user interface events):**
     - Triggered by user interactions
     - Examples:
-        - `resize`, `scroll`, `focus`, `blur`
+        - `resize`
+        - `scroll`
+        - `focus` - when the item is focused on
+        - `blur` - when the item is unfocused
 
 - **Keyboard events:**
     - Triggered when using keyboard, allowing developers to react to key presses/releases and combinations
@@ -17,7 +42,11 @@
 - **Mouse events:**
     - Triggered when using mouse, allowing developers to react to pointing, clicking, hovering
     - Examples:
-        - `click`, `dblclick`, `mousedown`, `mousemove`, `mouseup`, `mouseover`, `mouseout`, `contextmenu`
+        - `click`, `dblclick`
+        - `mousedown`, `mousemove`, `mouseup`, 
+        - `mouseover` when hovered over (at entry)
+        - `mouseout` when hovered over (at exit)
+        - `contextmenu`
     
     - 2 ways to handle the `click` event:
         - `addEventListener` method:
@@ -27,6 +56,11 @@
                     document.getElementById('myButton').addEventListener('click', function() {
                         console.log('Button clicked using addEventListener!');
                     });
+
+            - Attach different functions to the same event, on the same object:
+
+                    myElement.addEventListener("click", functionA);
+                    myElement.addEventListener("click", functionB);
 
             - Possibility to add it to multiple elements:
                 - Add it to each element:
@@ -38,7 +72,6 @@
                             console.log('Action button clicked!');
                         });
                         });
-
                 - Add it to the parent element (eg. document object) by using **event delegation** to filter those elements that should get it based on properties (eg., class, tag name, or attributes):</br>
                 *(events in JS bubble up through the DOM tree, which means the action travels (bubbles) up to the parent element, if the child element event happens)*
                 
@@ -50,6 +83,9 @@
                         }
                         });
 
+                >- **Event bubbling** describes how the browser handles events targeted at nested elements
+                >   - avoid it with `event.propagation()` 
+                >   - or `caputre` (see more in Useful functions file and this link: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events)
 
         - `onclick` attribute:
             - Older approach
@@ -75,6 +111,10 @@
     - *Mutation events are considered ***deprecated*** and it's recommended to use ***MutationObserver API*** instead.*
     - Examples:
         - `DOMNodeInserted`, `DOMNodeRemoved`, `DOMAttrModified`
+
+- **Special events:**
+    - some event are only available based on their type, eg:
+        - `play` is only available for `<video>` elements
 
 # Design of the View with CSS
 ## CSS:
@@ -141,7 +181,6 @@
                 </html>
 
 ## CSS Units:
-
 - Unit types:
     - **Absolute units:** Fixed units that are not affected by the size of the viewprt or the font size:
         - pixels (px) //margin: 20px;
