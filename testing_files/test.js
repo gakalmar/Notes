@@ -11,27 +11,6 @@
 // }
 // console.log(numbers);
 
-
-let nums1 = [1, 5, 9, 0];
-
-
-function logNums(nums, callback){
-    nums.forEach(num => {
-        console.log(num)
-        callback(num);
-    })    
-}
-
-function oddOrEven(number){
-    if (number % 2 === 0){
-        console.log(`${number} is even!`)
-    } else {
-        console.log(`${number} is odd!`)
-    }
-}
-
-logNums(nums1, oddOrEven);
-
-console.log("hello"[0]);
-console.log("hello"[3]);
-console.log("hello"[0, 3]);
+console.log(Number.parseInt("42.123"));
+console.log(Number.parseFloat("42.123"));
+console.log(Number("42.312"));

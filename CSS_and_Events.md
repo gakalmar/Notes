@@ -121,7 +121,7 @@
 - Cascading Style Sheets is a languag used to describe the presentation (visual aspects like colors, fonts) of the document written in HTML or XML
 - It defines rules that are applied to certain elements:
     - **Selector:** specifies the elements it should apply to (select by *element type*, *class*, *id*, *attribute values*, *hierarchy*):
-        - Exapmles:
+        - Examples:
             - **Element selector:** Selects all elements of a specific type.
                 - Example: `p` selects all *paragraphs*.
             - **Class selector:** Selects all elements with a specific class.
@@ -224,6 +224,7 @@
             }
     - The **actual size of an element** is determined by the sum of its content (padding, border, and margin). 
         - For example, an element with a width of 300px and a padding of 20px on each side will actually have a total width of 340px (300px + 20px + 20px).
+
 - Display property values in HTML based on element types:
     - **Block type:**
         - **Widht:** Block-level elements take up the full width of their parent container

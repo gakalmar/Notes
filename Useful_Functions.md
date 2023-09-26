@@ -289,6 +289,8 @@ Number.isInteger(value)                                 //Chheck if the value is
     item.addEventListener("event", functionX)                   //when you create functionX, you can add a parameter (eg (e) or (event) or similar, so you can refer to the item itself with e.target -> eg. e.target.style.backgroundColor = "black";)
                                                                 //when you refer to a general object: document.body.style.backgroundColor = "black";
 
+    item.remove()                                               //removes that element
+
     item.insertAdjacentHTML("where", "what")                    //add HTML to a certain element ("where" -> "afterend", "beforeend", "afterstart", "beforestart")
     item.innerHTML("<p>text</p>")                               //Gets or sets the HTML content of an element
     item.textContent = "New text content";                      //replaces/adds new text content to an element (returns `null` for "document" or "doctype")

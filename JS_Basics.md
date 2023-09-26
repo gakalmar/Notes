@@ -1,6 +1,10 @@
 # DATA TYPES
 
-### - Primitives
+### - Primitives = Value types
+- **Immutable:**
+    - Primitive values are immutable, meaning their values cannot be changed once they are declared
+    - Any operation/method that appears to modify a primitive value actually creates a new value
+    - They are directly stored in the memory
 
 1. **String** ("string1" or 'string2')
 
@@ -10,12 +14,10 @@
         \t                              //Horizontal TAB/indent character
         \r                              //Carriage return character ("Text 1 \r Text 2") -> Only "Text 2 will display, because \r makes the cursor go back to the biginning of the line, and start the next print from there.
                                         It's used for exapmle when we do a loading animation, where we have to delete the previously printed line and update it with a new line.
-        `string`                        //Template literal - works a bit different than simple '' or "", for example multi line text within will display as multiline, without a \n newline character 
+        `string`                        //Template literal - works a bit different than simple '' or "", for example multiline text within will display as multiline, without a \n newline character 
         `${CONSTANT}`                   //Works just like a constant, you can use it to include a previously declared constant or variable within a string as text.
                                         With numbers, the value within is evaluated first, then the result is printed (eg. `${a + b}` -> if a=5 and b=10 -> "15 will print", not "5 + 10")
                                         ONLY WORKS WITH BACKTICK! `
-    
-    > Strings are immutable, so applying methods will return new strings instead of modifying the original ones.
 
 2. **Number** (integer or float/fraction)
 
@@ -60,7 +62,7 @@
 - JavaScript attempts to convert the operands into compatible types so that the operation can be performed:
 
             + and -             works both for strings and numbers
-            str * or / num      mathmetical operations like * and / tryes to convert str into a number, if it contains a valid numeric representation (eg. "2" => 2), otherwise it becomes NaN
+            str * or / num      mathmetical operations like * and / tries to convert str into a number, if it contains a valid numeric representation (eg. "2" => 2), otherwise it becomes NaN
 
 ### **Explicit conversion:**
         
@@ -94,7 +96,13 @@
     - Object data types
 
 
-### - Data structures, non-primitives (Objects eg. grouped data)
+### - Data structures, non-primitives (Objects eg. grouped data) = Reference Data types
+
+- **Mutable:**
+    - Reference objects are mutable, meaning their properties and values can be changed after they are created.
+    - This is because you are working with a reference to the same object in memory.
+    - We reference them, so they are not directly stored in the memory as primitives (value types)
+    - objects are stored and copied “by reference”
 
 > All other complex data types are objects, even arrays, but let's go through them separately:
 
@@ -132,35 +140,38 @@
 
 - Common Functions:
 
-        arr.lenght                      //the items within the array
+        arr.length                      //the items within the array
         arr.length-1                    //the last item's index number
 
         arr.push('item1')               //add item to end
-        arr.pop('item2')                //remove item from end
+        arr.pop()                       //remove item from end
         arr.shift('item3')              //add item to start
-        arr.unshift('item4')            //remove item from start
+        arr.unshift()                   //remove item from start
 
         (...arr)                        //spread operator or syntax - creates a set of values from an array (useful with Math.min/max for example)
 
 - Shallow vs Deep copy:
-    - Shallow copy is when you create a copy of an array for example, and making modifications on the new array doesn't affect the original array.
-    - **Deep copy** example:
-
-            let object = {};
-            let list = [1, 2, 3, 4]
-            object.key1 = list;
-            object.key2 = list;
-
-            object.key1.push(5)  //This will update both list and key2 as well!
-
-            const numbersOdd = [1, 3, 5, 7, 9];
-            const numbersEven = [0, 2, 4, 6, 8];
-            const numbersAll = numbersOdd + numbersEven
-
+    - Deep copy/Structured copy is when you create a copy of an array for example, and making modifications on the new array doesn't affect the original array.
     - **Shallow copy** example:
 
+            let nums1 = [1, 2, 3, 4];
+            let nums2 = nums1;      //We ar only creating a new variable with the same reference as nums1's content
+
+            nums2.push(5);         //Will do the operation on the original content of the reference
+
+            console.log(nums1)      // [1, 2, 3, 4, 5]
+            console.log(nums2)      // [1, 2, 3, 4, 5]
+
+    - **Deep copy** example:
+
             const nums = [1, 2, 3, 4];
-            const nums2 = [...nums]  //Spread syntax creates shallow copies of arrays
+            const nums2 = [...nums]  //Spread syntax creates deep copies of arrays, if all elements are primitives
+
+            //Best way:
+            const deepCopy = JSON.parse(JSON.stringify(original));
+
+            //Or:
+            let deepCopy = structuredClone(original);
 
 
 #### 2. Objects
@@ -179,7 +190,7 @@
             }
         }
 
-- Access date inside:
+- Access data inside:
 
         person.Key1 -> This will refer to 'value1'      //DOT NOTATION -> You enter into the data of person object with the dot .
         person["Key1"]                                  //Same thing, just with [] brackets. "" is also needed to refer to the key (Keys are actually strings within
@@ -279,11 +290,11 @@
         >=      greter or equal to
         <=      less than or equal to
 
-### 4. Logical operators (By hierarchy):
+### 4. Logical operators (By hierarchy/precedence):
 
         !   NOT     Inverts true or false values
-        ||  OR      If at least one value is true, it returns true
         &&  AND     If all values are true, it returns true
+        ||  OR      If at least one value is true, it returns true
 
 ### 5. Conditional operators:
 
@@ -391,9 +402,8 @@
             
                 Do-while loops are used when the first iteration is always wanted to be executed, even if the first condition is not true
 
-> #### **BREAK** to be used with loops when you want the code to ***stop immediately***
-> #### **CONTINUE** to be used to ***break current iteration*** and move to the next one (so the rest of the code doesn't run for the current one)
-
+> #### **BREAK** to be used with loops when you want the code to *stop immediately*
+> #### **CONTINUE** to be used to *break current iteration* and move to the next one (so the rest of the code doesn't run for the current one)
 
 # Functions
 
@@ -522,7 +532,7 @@
 
         console.log(funcName(arg1, arg2));  //The return value only gets displayed once it is called with the console log function.
 
-        **return default is undefuned, so even if a function does something (eg. prints something), but the return keyword is not used, it's value will be undefined
+        **return default is undefined, so even if a function does something (eg. prints something), but the return keyword is not used, it's value will be undefined
 
 # Builtin features
 
@@ -744,3 +754,4 @@
 
         let date = new Date().getTime();                        //Converts current date to a millisecond based timestamp
         let date = Date.now();                                  //Same as above, but there is no Date object created (=faster)
+

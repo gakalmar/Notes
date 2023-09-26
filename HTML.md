@@ -8,7 +8,7 @@
     - describes how the data is **DISPLAYED**
     - UI and data display:
         - **UI**: A tool through which the user communicates with the computer (eg. Terminal is a UI tool).
-        - **GUI**: *Graphical user interface*, like fore example a website or a phone app.
+        - **GUI**: *Graphical user interface*, like for example a website or a phone app.
     
 
 - **HTML = HyperText Markup Language**
@@ -34,17 +34,18 @@
         <TAG />
 
 - **Tag types:**
-    1. **Semantic tags:** provide meaning and context to the content to improve user experince:
+    1. **Semantic tags:** provide meaning and context to the content to improve user experience:
 
             <p>         Represents a paragraph of a text.
-            <header>:   Represents the header of a section or a page.
-            <nav>:      Represents a navigation menu or links for navigating the website.
-            <article>:  Represents a self-contained piece of content that can be independently distributed, like a news article or blog post.
-            <section>:  Represents a distinct section of a document, typically with a heading and related content.
-            <footer>:   Represents the footer of a section or a page, usually containing copyright information or contact details.
+            <header>    Represents the header of a section or a page.
+            <nav>       Represents a navigation menu or links for navigating the website.
+            <article>   Represents a self-contained piece of content that can be independently distributed, like a news article or blog post.
+            <section>   Represents a distinct section of a document, typically with a heading and related content.
+            <footer>    Represents the footer of a section or a page, usually containing copyright information or contact details.
     
     2. **Non-semantic HTML tags:** more general purposes, like grouping and formatting elements:
 
+            <section> Represents a high-level container for grouping elements.
             <div>: Represents a generic container for grouping other elements. It does not have any inherent semantic meaning and is often used in conjunction with CSS for styling and layout purposes.
             <span>: Represents an inline container for grouping or applying styles to a portion of text within a larger block of content, such as a paragraph.
 
@@ -271,7 +272,7 @@
         "text &quot; textinquotest &quot; moretext" //Use this for quotes within quotes
 
 
-5. Basic HTML formatting:
+5. Basic HTML formatting: (to be done in CSS!)
 
         <em> *italic* </em>
         <strong> **bold** </strong>
