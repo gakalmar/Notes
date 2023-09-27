@@ -17,4 +17,4 @@
 - what is a wrapper?
 - Sets
 - Organize all methods and functions
-- check if all @@@ topics are completed
+- check if all @@@ topics are completed (hoisting still remaining)

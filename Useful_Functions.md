@@ -291,7 +291,7 @@ Number.isInteger(value)                                 //Chheck if the value is
 
     item.remove()                                               //removes that element
 
-    item.insertAdjacentHTML("where", "what")                    //add HTML to a certain element ("where" -> "afterend", "beforeend", "afterstart", "beforestart")
+    item.insertAdjacentHTML("where", "what")                    //add HTML to a certain element ("where" -> "afterEnd", "beforeEnd", "afterBegin", "beforeBegin")
     item.innerHTML("<p>text</p>")                               //Gets or sets the HTML content of an element
     item.textContent = "New text content";                      //replaces/adds new text content to an element (returns `null` for "document" or "doctype")
                                                                 //!!! removes all children first, and then fills it up with just text content!

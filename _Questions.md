@@ -1,6 +1,9 @@
 # Questions:  
 
-Elméleti kérdések hogy lesznek a PA-n? (vagy csak check workbook?)
+Mikortol lehet jelentkezni?
+Van-e delelotti PA?
+
+Kahoot
 
 
 ### 1 Div within div
