@@ -281,6 +281,9 @@ Number.isInteger(value)                                 //Chheck if the value is
     document.querySelector("#myID")                             //get the first object with a specific Id (make it a const to store it)
     document.querySelectorAll("p")                              //get an array of objects with a CSS selector (make it an array to store them)
     document.querySelectorAll("[data-type]")                    //select all elements that have a "data-type" attribute
+    document.querySelectorAll("div.note, div.alert")            //select elements with a class of either note or alert
+    document.querySelectorAll("div.highlighted > p")            //select <p> elements whose immediate parent element is a <div> with the class highlighted
+                                                                //read more about combinators on CSS and Events file!
 
     document.querySelectorAll(".container p")                   //select elements within others - For example, to select all <p> elements within a <div> with the class "container"
 

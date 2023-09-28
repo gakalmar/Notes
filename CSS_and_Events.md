@@ -118,27 +118,68 @@
 
 # Design of the View with CSS
 ## CSS:
-- Cascading Style Sheets is a languag used to describe the presentation (visual aspects like colors, fonts) of the document written in HTML or XML
+- Cascading Style Sheets is a language used to describe the presentation (visual aspects like colors, fonts) of the document written in HTML or XML
 - It defines rules that are applied to certain elements:
-    - **Selector:** specifies the elements it should apply to (select by *element type*, *class*, *id*, *attribute values*, *hierarchy*):
+    - **Selector:** 
+        - specifies the elements it should apply to (select by *element type*, *class*, *id*, *attribute values*, *hierarchy*):
+        - also used to enable selecting the DOM nodes to return as a `NodeList`
         - Examples:
-            - **Element selector:** Selects all elements of a specific type.
+            - **Element/Type selector:** Selects all elements of a specific type.
                 - Example: `p` selects all *paragraphs*.
+                - Example: `a` selects all *links*.
+                - Example: `div` selects all *divisions*.
             - **Class selector:** Selects all elements with a specific class.
                 - Example: `.my-class` selects all elements with the class *my-class*.
             - **ID selector:** Selects a single element with a specific ID.
                 - Example: `#my-id` selects the element with the ID *my-id*.
-            - **Attribute selector:** Selects elements with a specific attribute value.
+            - **Attribute selector:** Selects elements with a specific attribute.
+                - Example: `[target]` selects all elements with a *target* attribute.
+            - **Attribute value selector:** Selects elements with a specific attribute value.
                 - Example: `[type="checkbox"]` selects all *checkbox* elements.
             - **Descendant selector:** Selects elements that are descendants of a specific parent element.
-                - Example: `ul li` selects all list item elements that are *descendants of a unordered list element*.
+                - Example: *parent child* selects all elements that are *descendants of that element*.
+                - Example: `ul li` selects all list item elements that are *descendants of an unordered list element*.
             - **Child selector:** Selects direct children of a specific parent element.
+                - Example: *parent > child* selects all elements that are *direct children of that element*.
                 - Example: `ul > li` selects all list item elements that are *direct children of a unordered list element*.
             - **Pseudo-class selector:** Selects elements based on their state or position in the document. 
                 - Example: `a:hover` selects all links that *are being hovered over* by the mouse.
+                - Also: `:active`, `:focus`, `:first-child`, `:last-child`, `:checked`, `:disabled`, `:not`, `:empty`
+                - Priority, if we use multiples: 
+                    - **LVHA-order:** :link — :visited — :hover — :active
             - **Pseudo-element selector:** Selects and styles specific parts of an element. 
                 - Example: `p::first-line` selects and styles *the first line of all paragraphs*.
-    
+                - Example: `::before` & `::after` adds something before/after the element (eg. icons)
+                - Example: `::marker` is used to change the appearance of list item markers (dots, dashes)
+                - Also: `::first-line`, `::first-letter`, `::selection`
+            - **Grouping selector:**
+                - Example: `selector1, selector2, selector3`
+                - Example: `h1, h2, h3` selects all *h1, h2, and h3* elements
+            - **Not Selector**
+                - Example: `:not(selector)` Selects elements that do not match a specified selector
+                - Example: `:not(.hide)` selects all elements without the class *"hide"*.
+            - **Empty Pseudo-class** 
+                - Example: `:empty` Selects elements that have no children or contain only whitespace.
+        - Combinator:
+            - allow you to be more precise when selecting elements by enabling selecting elements based on their relationship to other elements
+            - Examples:
+                - `+`   //Adjacent or next sibling combinator
+
+                        Adjacent Sibling Selector (element + element): 
+                        Selects an element that is immediately preceded by a specified sibling element
+                        (e.g., h2 + p selects the first p element immediately following an h2).
+
+                - `>`   //Child combinator
+                - `||`  //Column combinator
+                - `~`   //General or subsequent sibling combinator
+
+                        General Sibling Selector (element ~ element):
+                        Selects elements that share the same parent and are siblings of a specified element
+                        (e.g., h2 ~ p selects all p elements that follow an h2 with the same parent).
+
+                - `" "` //Descendant combinator
+                - `|`   //Namespace separator
+
     - **Declaration block:** 
         - contains all the **declarations** that should be applied to the 'selected' elements to define style, in a property-value format similar to objects
         - **values** are the specifications of a declaration, (eg. `red` or `15px`, etc.):
@@ -183,21 +224,23 @@
 ## CSS Units:
 - Unit types:
     - **Absolute units:** Fixed units that are not affected by the size of the viewprt or the font size:
-        - pixels (px) //margin: 20px;
-        - points (pt) //font-size: 18pt;
-        - inches (in)
-        - millimeters (mm)
-        - centimeters (cm)
+        - pixels (`px`) //margin: 20px;
+        - points (`pt`) //font-size: 18pt;
+        - inches (`in`) (1in = 96px = 2.54cm)
+        - millimeters (`mm`)
+        - centimeters (`cm`)
 
     - **Relative units:** Based on the size of other elements & context:
         - **Viewport units:** Based on the size of the viewport:
-            - vh (viewport height) //height: 80vh;
-            - vw (viewprt width) //width: 90vw;
+            - `vh` (viewport height) //height: 80vh;  //Relative to 1% of the height of the viewport*
+            - `vw` (viewprt width) //width: 90vw;     //Relative to 1% of the width of the viewport*
+            - `vmin`	//Relative to 1% of viewport's* smaller dimension	
+            - `vmax`	//Relative to 1% of viewport's* larger dimension
         - **Font-relative units:** Based on the size of font size of an element:
-            - em //line-height: 1.5em;
-            - rem //margin-left: 1.5rem;
+            - `em` //line-height: 1.5em;  //Relative to the font-size of the element (2em means 2 times the size of the current font)
+            - `rem` //margin-left: 1.5rem;    //Relative to font-size of the root element
         - Based on **general proportion:**
-            - % //background-width: 110%
+            - `%` //background-width: 110%
 
 ## Box model:
 - The CSS box model is a concept that describes how HTML elements are represented as rectangular boxes on a web page.
@@ -244,8 +287,32 @@
         - **Display:** Displayed as inline boxes
         - *Some examples:*
             - `span`, `a`, `img`, `em`, and `strong`
+    - **flex**
+        - used to center box in box for example:
+
+                .class {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }           
+                
+- `border-radius`:
+    - property rounds the corners of an element's outer border edge
+    - the radius applies to the whole background, even if the element has no border
+    - the exact position of the clipping is defined by the `background-clip` property
+    - Examples:
+      
+            element.style {             
+                border-radius: 30px;                //allows one to four values (using 1 applies to all 4)
+                border-radius: 30px 5px 25% 10%;    //top-left / top-right / bottom-right / bottom-left   
+            }
 
 - We can overwrite these values with CSS! (`div` -> *make it inline* or `span` -> *make it block*)
+- **Note:**
+    - You can apply margin, border, padding (inner margin) and width, height to the elements but some of these properties will be ignored if the element is `inline`
+    - `box-sizing`:
+        - if you set the `width` of an element the `padding` and the `border` will be excluded by default (Because elements have `box-sizing: content-box;` by default.)
+        - if you want to include the border and the padding in the width property (which you definitely want to in most cases) you have to set the value of box-sizing to this: `box-sizing: border-box;`
 
 ## Position
 - Position value types:
@@ -269,6 +336,26 @@
             left: 100px;
         }
 
+- Example (center box withing other box witj **flexbox**):
+
+        //HTML file:
+        <div class="container">
+            <div class="item">I am centered!</div>
+        </div>
+
+        //CSS file:
+        .container {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .item {
+            width: 10em;
+        }
+
+
 ## Typography
 
 - Art and technique of arranging type to make written language legible, readable and appealing
@@ -281,7 +368,7 @@
     - **Kerning:**
         - The adjustment of spaces between letters (eg. "VA" letters)
     - **Leading:**
-        - The sapce between lines of text.
+        - The space between lines of text.
     - **Tracking:**
         - Adjustment of space between groups of letters, word ot lines of text    
     - **Hierarchy:**
@@ -318,13 +405,36 @@
 
     - `text-alignment`
         - Set the horizontal alignment of text within its container, such as **left**, **right**, **center**, or **justified**.
-     
+
+## Colours:
+- `rgba()` functional notation expresses a color according to its red, green, and blue components. An optional alpha component represents the color's transparency.
+    - example:
+        - `background-color: rgba(255, 122, 127, 0.8);`
+
 ## Animation
 
 - Used to create dynamic & visually engaging effects on a web page.
 
 - **Transition:**
-    - `transition` property
+    - `transition` property, shorthand for:
+        - `transition-property` (eg. color)
+        - `transition-duration` (eg. 2s)
+        - `transition-timing-function` (eg. ease)
+        - `transition-delay` (eg. 0.5s)
+        - Example:
+ 
+                .target {
+                    font-size: 14px;
+                    color: black;
+                    transition: font-size 4s 1s;                                //EXAMPLE 1
+                    transition: color 1s ease 0s                                //EXAMPLE 2
+                }
+
+                .target:hover {
+                    font-size: 36px;
+                    color: white;
+                }
+ 
     - create a transition between 2 states of an element
     - specify which CSS properties should be transitioned, duration of transition and timing (transition speed)
     - example:
@@ -365,10 +475,20 @@
     - used to change the shape, size or position of an element
     - rotate, skew, translate elements without changing the position in the document flow
     - example:
-
+            
+            // 1
             img {                               //rotate an image 45 degrees
                 transform: rotate(45deg);
             }
+
+            // 2
+            div {
+                border: solid red;
+                transform: translate(30px, 20px) rotate(20deg);
+                width: 140px;
+                height: 60px;
+            }
+
 
 ## CSS with JavaScript
 - JS can be used to manipulate CSS on a web page by **selecting elements** and **changing their CSS properties**.

@@ -253,6 +253,10 @@
             ...
             <h6>Text</h6>
         </header>
+        
+        <main></main>
+
+        <footer></footer>
 
 4. Basic text and data:
 
