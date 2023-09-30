@@ -299,6 +299,7 @@
 ### 5. Conditional operators:
 
         ?:      BOOLEAN ? "valueIfTrue" : "ValueIfFalse"        //This is the TERNARY operator, same as an IF-ELSE statement
+        SWITCH statement
 
 ### **Hierarchy (also called Precedence):** [FULL LIST HERE](https://www.w3schools.com/js/js_precedence.asp)
       
@@ -316,24 +317,63 @@
 >        ||
 >        ?:
 >        = (assignments)             // Lowest priority
+  
+# Conditional statements: 
+- **If-else statement** (Remember to use `else if` between the conditions, not `if else`!)
+           
+        if (cond){
+            CODE IF TRUE;
+        } else if (cond2) {
+            CODE IF ELSE IS TRUE;
+        } else {
+            CODE IF ALL BEFORE ARE FALSE;
+        }
+    - Alternative way: *(=Ternary operator)*
 
-# Conditional statements
-    
-### 1. If-else statement (Remember to use `else if` between the conditions, not `if else`!)
-    
-    if (cond){
-        CODE IF TRUE;
-    } else if (cond2) {
-        CODE IF ELSE IS TRUE;
-    } else {
-        CODE IF ALL BEFORE ARE FALSE;
-    }
+            CONDITION ? ValueIfTrue : ValueIfFalse;
+            eg: 4 !== 5 ? "Yes" : "No";
 
-- Alternative way: *(=Ternary operator)*
+- **Switch statement:**
+    - Replaces multiple `if` checks
+    - It has multiple `case` blocks and an optional default value:
+            
+            switch(x) {
+                case 'value1':  // if (x === 'value1')
+                    ...
+                    [break]     // very importan to break every case, otherwise all the cases will
+                                // executed after the first true case!
 
-        CONDITION ? ValueIfTrue : ValueIfFalse;
-        eg: 4 !== 5 ? "Yes" : "No";
+                case 'value2':  // if (x === 'value2')
+                    ...
+                    [break]
 
+                default:
+                    ...
+                    [break]
+            }
+
+            // grouping cases:
+
+            switch(x) {
+                case 'value1':  // if (x === 'value1')
+                    ...
+                    [break]     // very importan to break every case, otherwise all the cases will
+                                // executed after the first true case!
+                case 'value2':  
+                case 'value3':  // if (x === 'value2' || x === 'value3') //'value2' doesn't have a break, so it will be executed as 'value3'
+                    ...
+                    [break]
+            }
+
+
+            // use it with prompt:
+
+            let x = prompt("Enter a value"); //the value you enter will be the case number that gets executed
+            
+            switch(x) {
+                case 'value1':
+                case 'value2':...
+            }
 ### 2. Loops
 
 #### - **For loop** (Used when you know the number of repetitions):
@@ -445,6 +485,10 @@
             let greet = name => `Hi, ${name}!`  //If there is only one parameter, even the single parenthesis can be left.
 
 ### Inputs:
+- **Interaction inputs:**
+    - `alert`
+    - `prompt`
+    - `confirm`
 
 - **Global and Local scope overview:**
 
@@ -755,3 +799,26 @@
         let date = new Date().getTime();                        //Converts current date to a millisecond based timestamp
         let date = Date.now();                                  //Same as above, but there is no Date object created (=faster)
 
+# SET Object:
+- `Set` is a default object in JS, which is the collection of different unique values
+    - We can declare it like this:
+            const mySet = new Set();
+            const mySet = new Set([array])     //we can instantly create a set from an array, to skip duplicates
+    - We can add & remove items:
+            mySet.add("a");
+            mySet.delete("b");
+    - Check if a value is included already:
+            mySet.has("c");
+    - Check number of values (=length of Set):
+            mySet.size
+    - Convert to array:
+            let arrMySet = Array.from(mySet);
+            let arrMySet = [...mySet];
+    - We can use Object.keys/values/entries as well:
+            mySet.keys() & mySet.values     //they are the same thing in this case
+            mySet.values                    //an array for each key-value pair, which are the same
+- We can also use `for...of` loops or `forEach()` method on it to iterate through all of it's values
+
+# MAP Object: /// ADD LATER ///
+
+// UPDATE PROMPT & OTHER INTERACTION METHODS SECTION!!!

@@ -11,6 +11,11 @@
 // }
 // console.log(numbers);
 
-console.log(Number.parseInt("42.123"));
-console.log(Number.parseFloat("42.123"));
-console.log(Number("42.312"));
+let text = "Indivisibilities";
+
+let textLow = text.toLowerCase();
+let textChars = new Set(textLow.split(""));
+
+console.log(textChars.keys());
+console.log(textChars.values());
+console.log(textChars.entries());
