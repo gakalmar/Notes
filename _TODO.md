@@ -13,8 +13,7 @@
     https://developer.mozilla.org/en-US/docs/Web/API/console/log
 
 - template literals advanced stuff: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
-- switch cases and input (prompt) + colouring in terminal+textBG colouring
+- colouring in terminal+textBG colouring
 - what is a wrapper?
-- Sets
 - Organize all methods and functions
 - check if all @@@ topics are completed (hoisting still remaining)

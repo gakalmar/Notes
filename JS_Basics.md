@@ -64,6 +64,14 @@
             + and -             works both for strings and numbers
             str * or / num      mathmetical operations like * and / tries to convert str into a number, if it contains a valid numeric representation (eg. "2" => 2), otherwise it becomes NaN
 
+            Operation types (+- str & num; */ only nums)
+            10 + "5"            // 10 is converted to string: "10" + "5" = "105"
+            10 * "5"            // 5 is converted to a number: 10 * 5 = 50
+
+            Left to right reading:
+            5 + 10 + "b"        // "15b" (10 + 5 is executed first, as both are numbers, then string conversion happens)
+            "b" + 5 + 10        // "b510" ("b" + "5" happens first, and then "10" is also added as a string)
+
 ### **Explicit conversion:**
         
 - String conversion with String(value):
@@ -487,8 +495,43 @@
 ### Inputs:
 - **Interaction inputs:**
     - `alert`
+        - displays elements in the **modal window**
+        - shows a message, and waits for User/visitor to press 'ok':
+                alert("Click OK to continue!");
     - `prompt`
+        - It shows a **modal window** with a text message, an input field for the User/visitor, and the buttons OK/Cancel.
+                result = prompt(title, [default]);
+
+                // title: the text to show the user
+                // default: Optional parameter, the initial value of the input field
+
+        - User/visitor can type something in the *prompt input field* and press OK -> it becomes *result*
+        - Cancel input by pressing `Esc` -> result becomes `null`
+        - Example:
+                let age = prompt("How old are you?", 30);   //A window pops up asking you "how old are you?" (pre-filled with 30)
+                alert(`You are ${age} years old!`);         //Displays your input, or 30, or null if you pressed Esc during the question
+
+        - Colouring (using ANSI excape codes):
+            - You can set colurs in the terminal in the following way:
+                    "\x1b[31m"      // sets the text color to red. (eg. "\x1b[31mThis text will be red!"])
+                    "\x1b[32m"      // sets the text color to green.
+                    "\x1b[33m"      // sets the text color to yellow.
+                    "\x1b[34m"      // sets the text color to blue.
+                    "\x1b[0m"       // resets the text color back to the default.
+            - You can set different backgrounds:
+                    "\x1b[41m"      // sets the background color to red.
+                    "\x1b[42m"      // sets the background color to green.
+                    "\x1b[43m"      // sets the background color to yellow.
+                    "\x1b[37m"      // sets the text color to white (you can change this to other text colors as needed).
+                    "\x1b[30m"      // sets the text color to black.
+                    "\x1b[34m"      // sets the text color to blue.
+                    "\x1b[0m"       // resets both text and background colors back to the default.
     - `confirm`
+        - The function confirm shows a modal window with a question and two buttons: OK and Cancel.
+        - The result is `true` if OK is pressed and `false` otherwise.
+        - Example:
+                let isBoss = confirm("Are you the boss?");
+                alert( isBoss ); // true if OK is pressed / false if you press cancel
 
 - **Global and Local scope overview:**
 
@@ -577,6 +620,82 @@
         console.log(funcName(arg1, arg2));  //The return value only gets displayed once it is called with the console log function.
 
         **return default is undefined, so even if a function does something (eg. prints something), but the return keyword is not used, it's value will be undefined
+
+# JS file reading process / code execution
+- **Sytax parser:** pre-reads the whole code character by character, and check if the **grammar** is valid (SyntaxError can happen at this stage)
+    - memory space is created for each variable, and `undefined` value gets assigned to variables (but functions don't get a temporary value!) - this is what actually hoisting is, not "lifiting parts of code above the rest"
+- **Lexical scope/environment:** an environment, where a piece of the entire code physically sits
+    - Global scope = window object
+    - Block scope = eg. within a function
+    - Local scope = the current scope we are in
+    - **Scope chain:**
+        - It means that a variable/function created in a bedded block scope is only accessible from the inside, but not from Global level
+        - The other way around it works, so you can reach Global variables/functions from your local scope
+        - Also, if a value is declared on both global scope, and a level further out on another block scope, the current block scope will try to find a variable in the following order:
+            - First it checks if the variable is in it's own local scope
+            - Then moves 1 scope up: if it finds it, it reads it's value from there
+            - If it's still not found, it keeps going up (until it reaches global scope)
+- **Execution context:** container, which manages the code that is currently running
+    - 2 stages:
+        - Creation Stage
+            - Global execution context:
+                - Creates **Global Object** and `this` (equal to *global object* on *global level*):
+                    - This is the **Window Object**, that represents an open window in a web browser
+                    - Any variable/function we create in .js files and is read from the HTML file, gets added to this object as a key:
+
+                            let testVar = "value";
+                            function testFunc(){return null};
+
+                            In DOM:
+                            testVar -> "value" is returned
+                            window.testVar -> "value" is returned
+                            this.testVar -> "value" is returned
+
+                            testFunc()
+                            window.tesFunc()
+                            this.testFunc() -> these will also refer to the same thing
+
+            - on page load, it manages all code that is not inside a function
+            - **Syntax parser** runs (before execution still! values of *variables* is `undefined`)
+        - Execution Stage:
+            - Execute code line by line
+            - Values get assigned
+            - Local scope code gets executed (only true parts of if statements!)
+- Order of execution:
+    - **Execution stack:**
+        - At first, **Global Execution Context** get executed -> `window` & `this` object
+        - Sytax parser runs
+        - Engine starts running line-by-line, L to R
+        - **Execution context** is created for each called function and bedded funtions within
+            - Maximum call stack size: there is a limit for how many levels it can get into!
+- **Hoisting:**
+
+    > *Hoisting is a JavaScript behavior where variable and function declarations</br>
+    > are moved to the top of their containing scope during the compilation phase.</br>
+    > This means that you can use variables and functions before they are declared in your code*
+
+    - **hositing** means *raising* something above (pre-execute). So it's processed at the start of execution:
+        - This is done for variable and function **DECLARATIONS**, but not for their values **ASSIGNMENTS**
+        - So after the hoisting phase, these will have an *undefined* value
+    - Declarations are hoisted, but assignments are not:
+        - The line `var phrase = "Hello"` has two actions in it:
+
+            - Variable *declaration* `var`
+            - Variable *assignment* `=`
+    - 
+- `this` keyword:
+    - refers to Global window object (even from inside declared functions, and even if it's a bedded function in another function)
+    - we change the referenc to local object, if we store a function as a **method** (inside the key of an object):
+
+            let person = {
+                firstname: "John",
+                lastname: "Smith",
+                getFullname: function(){
+                    return t his.firstname + " " + this.lastname;            //in this case it "this" refers to "person" object
+                }
+            }
+    - Note:
+        If we declare a regular function **within a method**, `this` will still refer to **global window object**!!! It doesnt' matter if it's enbedded into a method already
 
 # Builtin features
 
