@@ -118,7 +118,7 @@ Number.isInteger(value)                                 //Chheck if the value is
     array.shift()                                       //remove item from start
     
     array[1]                                            //returns 2nd item in array with index1
-    array.splice(index1, number)                        //removes the number of items from index1
+    array.splice(index1, number, add1, ...addn)         //removes the number of items from index1, then adds all items listed after
 
     array.reverse()                                     //reverses array order in place (it changes the original too!)
 
@@ -139,7 +139,7 @@ Number.isInteger(value)                                 //Chheck if the value is
     pop():                                              //Removes the last element from an array and returns that element.
     shift():                                            //Removes the first element from an array and returns that element.
     unshift(element1, ..., elementN)                    //Adds new elements to the beginning of an array and returns the new length of the array.
-    splice(start[, deleteCount[, item1[, item2[, ...]]]])   //Adds/removes elements from an array and returns the removed elements, if any.
+    splice(start[, deleteCount[, item1[, item2[, ...]]]])   //Removes & then adds elements from an array and returns the removed elements, if any.
     slice(beginIndex[, endIndex])                       //Returns a shallow copy of a portion of an array into a new array.
     concat(array2[, array3, ..., arrayN])               //Merges two or more arrays into a new array.
     indexOf(searchElement[, fromIndex])                 //Returns the first index at which the specified element is found, or -1 if it is not found.
@@ -206,7 +206,8 @@ Number.isInteger(value)                                 //Chheck if the value is
     string.split(" ", 3)                                //The second parameter show how long the return array should be maximum (3 items)
     
     arr.replace                                         //this doesn't exist, only with strings. Use the index number instead to declara a new value to it (eg arr[0] = "New item" => this will be new 0th item in the array)
-    arr.splice(start, end, item1,...itemn)              //remove elements from list from 'start' (included) to 'end'(not included). Then add all the elements listed after it in the parameters
+    arr.splice(start, number, item1,...itemN)           //removes "number" elements from list from 'start' (included). Then add all the elements listed after it in the parameters.
+                                                        //it the also returns a new array with the removed items
     arr.slice(start, end)                               //creates new arraw from "arr", from start (included) to end(not included)
     arr.slice(0, 3)                                     //returns items [0],[1] and [2] in a new array
     arr.slice(-2,)                                      //returns items [-2] (=semi-last) to the last item (because there is no second argument) in a new array
