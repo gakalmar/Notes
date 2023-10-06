@@ -167,7 +167,7 @@ Number.isInteger(value)                                 //Chheck if the value is
     let date2 = new Date(`1986-10-4`);                  
     let age = (date1 - date2)*1000*60*60*24*365         //Substract 2 dates and multiply the result in millisecs until you get years (use Math.floor() to get whole numbers)
 
-# NextGen functions
+# Higher order functions
 
     FOR EACH
     arr.forEach(callback[, thisArg])                    //Executes the provided function once for each array element.
@@ -292,6 +292,7 @@ Number.isInteger(value)                                 //Chheck if the value is
     item.removeEventListner("event", function)                  //removes "function" from the registered listeners of an item
     item.addEventListener("event", functionX)                   //when you create functionX, you can add a parameter (eg (e) or (event) or similar, so you can refer to the item itself with e.target -> eg. e.target.style.backgroundColor = "black";)
                                                                 //when you refer to a general object: document.body.style.backgroundColor = "black";
+                                                                //"event" - "click", "change", "input", "load"
 
     item.remove()                                               //removes that element
 
@@ -313,3 +314,5 @@ Number.isInteger(value)                                 //Chheck if the value is
                                                                 //full example here: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events
                                                                 //look for "preventing default behaviour"
                                                                 //look for "video player example"
+
+    Object.assign -> look this up

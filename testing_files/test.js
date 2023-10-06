@@ -13,10 +13,9 @@
 
 let text = "Indivisibilities";
 
-let textLow = text.toLowerCase();
-let textChars = new Set(textLow.split(""));
-
-console.log("\x1b[31mThis is red text\x1b[0m");
-console.log("\x1b[32mThis is green text\x1b[0m");
-console.log("\x1b[33mThis is yellow text\x1b[0m");
-console.log("\x1b[34mThis is blue text\x1b[0m");
+console.log(42.14267.toFixed(2));
+console.log(42.14267.toPrecision(5));
+let num = 16;
+console.log(num.toString(2))
+console.log(num.toString(3))
+console.log((4).toString(2))
