@@ -11,11 +11,28 @@
 // }
 // console.log(numbers);
 
-let text = "Indivisibilities";
+function apparently(string) {
+    let rtnStr = [];
+    if (!string){
+        return "";
+    } else {
+        string.split(" ").forEach((word, i) => {
+            if (((word === "and") || (word === "but"))){
+                if (word[i+1] !== "apparently"){
+                    rtnStr.push(word);
+                    rtnStr.push("apparently");
+                } else if (word[i+1] === "apparently") {
+                    rtnStr.push(word);
+                }
+            } else {
+                rtnStr.push(word);
+            }
+        });
+        let final = rtnStr.pop();
+        return final.join(" ");
+    }
+}
 
-console.log(42.14267.toFixed(2));
-console.log(42.14267.toPrecision(5));
-let num = 16;
-console.log(num.toString(2))
-console.log(num.toString(3))
-console.log((4).toString(2))
+console.log(apparently(""));
+console.log(apparently("apparently"));
+console.log(apparently("It was great and I have never been on live television before but sometimes I dont watch this."));
