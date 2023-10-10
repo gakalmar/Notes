@@ -11,28 +11,13 @@
 // }
 // console.log(numbers);
 
-function apparently(string) {
-    let rtnStr = [];
-    if (!string){
-        return "";
-    } else {
-        string.split(" ").forEach((word, i) => {
-            if (((word === "and") || (word === "but"))){
-                if (word[i+1] !== "apparently"){
-                    rtnStr.push(word);
-                    rtnStr.push("apparently");
-                } else if (word[i+1] === "apparently") {
-                    rtnStr.push(word);
-                }
-            } else {
-                rtnStr.push(word);
-            }
-        });
-        let final = rtnStr.pop();
-        return final.join(" ");
-    }
-}
+let numbersString = "1, 3, 5, 76, 53, 231, 12, 0"
 
-console.log(apparently(""));
-console.log(apparently("apparently"));
-console.log(apparently("It was great and I have never been on live television before but sometimes I dont watch this."));
+const hECMAthlon = {};
+hECMAthlon.getMaxValue = (input) => {
+    return [`${(input.split(",")).reduce((max, current) => {
+        return parseInt(current) > parseInt(max) ? [parseInt(current)] : [parseInt(max)];
+    }, [0])}`];
+};
+
+console.log(hECMAthlon.getMaxValue(numbersString));
