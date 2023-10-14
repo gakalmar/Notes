@@ -19,3 +19,7 @@ Issue with button clicks -> it seems to be counting the clicks, but only takes a
 - click on load beers
 - then click on sort by score a couple of times
 - then on the strong IPAs button -> it will display reset button a lot of times
+
+### 5
+
+Nasa API - too many requests error (van ilyen, vagy valami mas volt a hiba?)

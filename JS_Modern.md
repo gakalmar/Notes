@@ -8,7 +8,7 @@
     - It's intended to ensure the interoperability of web pages across different web browsers.
     - Standardized by ECMA International in document ECMA-262:
         - Specifies lanugage syntax
-        - Specifies the semantics of the ore **API** (=*application programming interface*)
+        - Specifies the semantics of the core **API** (=*application programming interface*)
 
 ### **1. Variable scopes:**
 - They refer to the area of the code/program, where they can be accessed.

@@ -17,6 +17,7 @@
 - Organize all methods and functions
 - Add MAP object
 - Object.assign -> look this up with DOM manipulation methods
+- URLSearchPArams object and methods
 
 - Read links that I missed:
     - VIDEO: https://www.youtube.com/watch?v=NCwa_xi0Uuc&ab_channel=ProgrammingwithMosh
@@ -25,3 +26,9 @@
     - functional programming: https://www.geeksforgeeks.org/functional-programming-paradigm/
     - Object.assign() copying: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
     - function vs arrow function: https://dmitripavlutin.com/differences-between-arrow-and-regular-functions/
+    - Promises https://dev.to/lydiahallie/javascript-visualized-promises-async-await-5gke
+    - Events https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif
+    - Async Await https://blog.bitsrc.io/understanding-javascript-async-and-await-with-examples-a010b03926ea
+
+- Later:
+    - CSS algorithms https://www.joshwcomeau.com/css/understanding-layout-algorithms/
