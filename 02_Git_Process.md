@@ -78,3 +78,9 @@ GIT INIT METHOD / Not recommended as the repo still needs to be created on GitHu
     6 Create repo on GitHub & get SSH
     7 git remote add origin git@branchLocation.git  //add GitHub repo to your initialized folder as remote
     8 git push -u origin master (or main?)          //push changes; -u means it creates upstream branch, so now the GitHub will be the source (?)
+
+INITIALIZE PULL REQUEST: Ask someone else to merge your new branch into the project's branch (eg into main) = "request someone else to pull your branch"
+
+    1 git checkout -b <new-branch>                  //create new local branch and switch to it
+    2 git push --set-upstream origin <new-branch>   //add brach to remote git repo, and create pull request
+    3 complete pull request on GitHub

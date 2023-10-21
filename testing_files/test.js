@@ -11,13 +11,13 @@
 // }
 // console.log(numbers);
 
-let numbersString = "1, 3, 5, 76, 53, 231, 12, 0"
+const url = new URL('https://example.com/some-page?param1=value1&param2=value2&param3=value3');
+const params = new URLSearchParams(url.search);
+const allParameters = {};
+for (const param of params) {
+    const [name, value] = param;
+    allParameters[name] = value;
+}
 
-const hECMAthlon = {};
-hECMAthlon.getMaxValue = (input) => {
-    return [`${(input.split(",")).reduce((max, current) => {
-        return parseInt(current) > parseInt(max) ? [parseInt(current)] : [parseInt(max)];
-    }, [0])}`];
-};
-
-console.log(hECMAthlon.getMaxValue(numbersString));
+console.log(params);
+console.log(...params);

@@ -272,6 +272,22 @@ Number.isInteger(value)                                 //Chheck if the value is
                                                                 //Intervals for nested execution start after the first func is executed, while setinterval method timer starts at the beginning of the func execution
     clearTimeout(intervalID);                                   //with a function calling itself again and again, you can stop it after some time with this function
 
+### JSON
+
+    import * as fs from 'node:fs';
+    fs.readFile('filename.txt', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            return;
+        }
+        try {
+            let jsonData = JSON.parse(data);
+        } catch (err){
+            console.error(`Error parsing the JSON data: `, err);
+        }
+    });
+    fs.readFile("data.json", "utf8", dataRead)
+
 ### DOM manipulation
 
     document.getElementById("id")                               //get an object with a specific id (make it a const to store it)
@@ -288,22 +304,22 @@ Number.isInteger(value)                                 //Chheck if the value is
 
     document.querySelectorAll(".container p")                   //select elements within others - For example, to select all <p> elements within a <div> with the class "container"
 
-    item.addEventListener("event", function)                    //register an event handler(listener) to an item, by telling which event it should be triggered with ("event" -> eg. "click", "mouseover" or "focus")
-    item.removeEventListner("event", function)                  //removes "function" from the registered listeners of an item
-    item.addEventListener("event", functionX)                   //when you create functionX, you can add a parameter (eg (e) or (event) or similar, so you can refer to the item itself with e.target -> eg. e.target.style.backgroundColor = "black";)
+    element.addEventListener("event", function)                 //register an event handler(listener) to an item, by telling which event it should be triggered with ("event" -> eg. "click", "mouseover" or "focus")
+    element.removeEventListner("event", function)               //removes "function" from the registered listeners of an item
+    element.addEventListener("event", functionX)                //when you create functionX, you can add a parameter (eg (e) or (event) or similar, so you can refer to the item itself with e.target -> eg. e.target.style.backgroundColor = "black";)
                                                                 //when you refer to a general object: document.body.style.backgroundColor = "black";
                                                                 //"event" - "click", "change", "input", "load"
 
-    item.remove()                                               //removes that element
+    element.remove()                                            //removes that element
 
-    item.insertAdjacentHTML("where", "what")                    //add HTML to a certain element ("where" -> "afterEnd", "beforeEnd", "afterBegin", "beforeBegin")
-    item.innerHTML = "<p>text</p>";                             //Gets or sets the HTML content of an element
-    item.textContent = "New text content";                      //replaces/adds new text content to an element (returns `null` for "document" or "doctype")
+    element.insertAdjacentHTML("where", "what")                 //add HTML to a certain element ("where" -> "afterEnd", "beforeEnd", "afterBegin", "beforeBegin")
+    element.innerHTML = "<p>text</p>";                          //Gets or sets the HTML content of an element
+    element.textContent = "New text content";                   //replaces/adds new text content to an element (returns `null` for "document" or "doctype")
                                                                 //!!! removes all children first, and then fills it up with just text content!
 
-    item.getAttribute("class")                                  //get the value of an attribute of an element (store it as a constant)
-    item.setAttribute("class", "myClass")                       //"class" attribute's new value will be "myClass"
-    item.removeAttribute("class")                               //removes the attribute from an element
+    element.getAttribute("class")                               //get the value of an attribute of an element (store it as a constant)
+    element.setAttribute("class", "myClass")                    //"class" attribute's new value will be "myClass"
+    element.removeAttribute("class")                            //removes the attribute from an element
 
     element.classList.add("active");                            //Allows you to add, remove, or toggle CSS classes on an element
     element.classList.remove("inactive");
@@ -315,4 +331,72 @@ Number.isInteger(value)                                 //Chheck if the value is
                                                                 //look for "preventing default behaviour"
                                                                 //look for "video player example"
 
-    Object.assign -> look this up
+    event.target ->                                             //use this instead of "element" when inside event handler function
+
+    Object.assign:
+        const target = { a: 1, b: 2 };
+        const source = { b: 4, c: 5 };
+
+        const returnedTarget = Object.assign(target, source);   // target object will be updated to include all updates from "source", if any keys are overlapping, they get overwritten. 
+                                                                // returnedTarget === target -> true !!!
+
+# URL update/query
+
+    // Get current URL:
+    let currentURL = window.location.href;
+    const urlObj = new URL(currentURL);
+    
+    // Get any parameters (specific!):
+    const parameters = urlObj.searchParams;
+    const cc = parameters.get("paramName");
+    
+    // Get ALL parameters (non-specific!):
+    const url = new URL('https://example.com/some-page?param1=value1&param2=value2&param3=value3');
+    const params = Object.fromEntries(url.searchParams.entries());
+
+    // Or like this:
+    const url = new URL('https://example.com/some-page?param1=value1&param2=value2&param3=value3');
+    const params = new URLSearchParams(url.search);
+    const allParameters = {};
+    for (const param of params) {
+        const [name, value] = param;
+        allParameters[name] = value;
+    }
+
+    // Update URL:
+    const newURL = `?paramName=${paramValue}`;
+    window.history.pushState(null, '', newURL);
+
+    // Reload the current page
+    window.location.reload();
+
+    // ALTERNATIVE: (?)
+    URLSearchPArams
+
+### Fetch:
+    const functionName = async(url) => {                // General fetch
+        try{
+            const response = await fetch(url);
+            const data = await response.json();
+            // WORK HERE WITH FETCHED DATA
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    let newArr = myArr.map(item => {                    // Promise.all is used for higher order functions
+        return funcName(item);
+    });
+    newArr = await Promise.all(newArr);
+
+### Date object:
+
+    // Get today's value in ISOstring format ("YYYY-MM-DD"):
+    const today = new Date();
+    const todayFormatted = today.toISOString().slice(0, 10);
+                
+    // Get previous/next day:
+    const displayedDate = new Date (datePickerElement.value);       // Current date inside date picker element
+    displayedDate.setDate(displayedDate.getDate() -/+ 1);           // Once converted to Date object, we can subtract/add 1 day
+    const prevDay = new Date (displayedDate);                       // Create new Date object with new date 
+    const prevDayFormatted = prevDay.toISOString().slice(0, 10);    // Create ISOstring from it

@@ -919,7 +919,7 @@
         let date = Date.now();                                  //Same as above, but there is no Date object created (=faster)
 
 # SET Object:
-- `Set` is a default object in JS, which is the collection of different unique values
+- `Set` is a default object in JS, which is the collection of different unique values (a simpler type of the Map object - see below)
     - We can declare it like this:
             const mySet = new Set();
             const mySet = new Set([array])     //we can instantly create a set from an array, to skip duplicates
@@ -938,6 +938,102 @@
             mySet.values                    //an array for each key-value pair, which are the same
 - We can also use `for...of` loops or `forEach()` method on it to iterate through all of it's values
 
-# MAP Object: /// ADD LATER ///
+# MAP Object:
 
-// UPDATE PROMPT & OTHER INTERACTION METHODS SECTION!!!
+- Map is a collection of keyed data items, just like an Object. But the main difference is that Map allows keys of any type.
+- Unlike objects, keys are not converted to strings. Any type of key is possible!
+- Methods and properties are:
+
+        new Map() – creates the map.
+        map.set(key, value) – stores the value by the key.
+        map.get(key) – returns the value by the key, undefined if key doesn’t exist in map.
+        map.has(key) – returns true if the key exists, false otherwise.
+        map.delete(key) – removes the element (the key/value pair) by the key.
+        map.clear() – removes everything from the map.
+        map.size – returns the current element count.
+
+- Simple example:
+
+        let map = new Map();
+
+        map.set('1', 'str1');           // a string key
+        map.set(1, 'num1');             // a numeric key
+        map.set(true, 'bool1');         // a boolean key
+
+        // Same as this:
+        let map = new Map([
+            ['1',  'str1'],
+            [1,    'num1'],
+            [true, 'bool1']
+        ]);
+
+        // Access them: (Map keeps the type, so these 2 are different!)
+        map.get(1);                     // 'num1'
+        map.get('1');                   // 'str1'
+
+- Keys as objects example:
+
+        let john = { name: "John" };
+        let ben = { name: "Ben" };
+
+        // for every user, let's store their visits count
+        let visitsCountMap = new Map();
+
+        // john is the key for the map
+        visitsCountMap.set(john, 123);
+        visitsCountMap.set(ben, 14);
+
+        console.log(visitsCountMap.get(john));      // 123
+        console.log(visitsCountMap.get(ben));       // 14
+
+- We can create a map from an object like this:
+
+        let obj = {
+            name: "John",
+            age: 30
+        };
+
+        let map = new Map(Object.entries(obj));     // Object.entries returns the array of key/value pairs: [ ["name","John"], ["age", 30] ]. That’s what Map needs.
+
+        alert( map.get('name') ); // John
+
+        // The opposite: Object from Map:
+        let prices = Object.fromEntries([
+            ['banana', 1],
+            ['orange', 2],
+            ['meat', 4]
+        ]);
+
+- Every map.set call returns the map itself, so we can “chain” the calls:
+
+        map.set('1', 'str1')
+           .set(1, 'num1')
+           .set(true, 'bool1');
+
+- For looping over a map, there are 3 methods: (Map preserves order, unlike a regular Object)
+
+        map.keys() – returns an iterable for keys,
+        map.values() – returns an iterable for values,
+        map.entries() – returns an iterable for entries [key, value], it’s used by default in for..of.
+
+        // Example:
+        let recipeMap = new Map([
+            ['cucumber', 500],
+            ['tomatoes', 350],
+            ['onion',    50]
+        ]);
+
+        // iterate over keys (vegetables)
+        for (let vegetable of recipeMap.keys()) {
+            alert(vegetable); // cucumber, tomatoes, onion
+        }
+
+        // iterate over values (amounts)
+        for (let amount of recipeMap.values()) {
+            alert(amount); // 500, 350, 50
+        }
+
+        // iterate over [key, value] entries
+        for (let entry of recipeMap) { // the same as of recipeMap.entries()
+            alert(entry); // cucumber,500 (and so on)
+        }

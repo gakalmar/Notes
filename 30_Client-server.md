@@ -7,7 +7,7 @@
     - **Web server** - programs that run on any computer (but mostly on a VPS)
 - Steps in communication:
     1. Browser sends a request to the server using a protocol called **HTTP** (*=Hypertext Transfer Protocol*):
-        - information such as theURL of the file or any additional parameters are included
+        - information such as the URL of the file or any additional parameters are included
     2. Server receives the request and processes it, to check if it's valid and if the file exists
     3. If all checks are done and in order:
         - Server sends the file back  in chunks, using protocol **TCP** (*=Transmition Control Protocol*)
@@ -35,7 +35,12 @@
     - By **selecting an activity**, we can check the details under the *Header* tab, the *Response Headers*, and under the *Response* tab we can see the responses sent
     - **Filter activities:** eg. by *resource type* (such as images, scripts, or XHR requests), *status code* (such as 200 OK or 404 Not Found)
 
-## URL
+## URL 
+(more: https://javascript.info/url)
+
+0. **Components:**
+<br>![ulr componenets](image.png)
+
 1. **Scheme/Protocol:**
     - The first part of the URL, that specifies the protocol used:
         - **HTTP** / **HTTPS** (*=HyperText Transfer Protocol Secure*) are the most common
@@ -44,6 +49,25 @@
             - **FTP** (File Transfer Protocol)
             - **SMTP** (Simple Mail Transfer Protocol)
             - **SSH** (Secure Shell)
+
+    - URL object in JS:
+
+            new URL(url, [base])
+
+            // These 2 are the same, constructed without/with base parameter:
+            let url1 = new URL('https://javascript.info/profile/admin');
+            let url2 = new URL('/profile/admin', 'https://javascript.info');
+
+            console.log(url1);                  // https://javascript.info/profile/admin
+            console.log(url2);                  // https://javascript.info/profile/admin
+
+            // Examples:
+            let url = new URL('https://javascript.info/url');
+
+            alert(url.protocol);                // https:
+            alert(url.host);                    // javascript.info
+            alert(url.pathname);                // /url
+
 2. **Domain Name:**
     - The second part of a URL, that specifies the domain name of the website or web server hosting the resource
     - The domain name is often preceded by `www.` and followed by a **top-level domain (TLD)** like `.com`.
@@ -58,9 +82,11 @@
                     - `:80` for *HTTP* and `:443` for *HTTPS* are default preserved ports for HTTP communication
                     - when a request arrives at a server, it automatically uses these ports to process requests (that's why we don't have to specify them)
                     - when we run a **web server** on **our comupter** we use another port (eg. `9000`), and that's why we specify it then
+
 3. **Path:**
     - The third part of a URL, that specifies the path to the specific resource on the web server.
     - Contains one ore more directory names separated with `/` (eg. `https://www.example.com/blog/post.html`)
+
 4. **Query string:**
     - optional part of a URL
     - allows parameters to be passed to the server with the request
@@ -68,6 +94,7 @@
         - eg. `https://www.example.com/search?q=example&sort=asc` passes two parameters to the server: 
             - *q* with a value of *example*
             - *sort* with a value of *asc*
+
 5. **Fragment identifier:**
     - optional part of a URL
     - allows specific sections of a web page to be linked to directly
@@ -219,3 +246,11 @@
                 - When a *Promise* is **fulfilled**, it returns a `value` -> this is called the **result**.
                     - Can be any value (object, array, string)
                 - When a *Promise* is **rejected**, it returns an `error` -> returns an Error object or any other type of value.
+        - **NB:**
+            - Higher order functions are not async functions, so if you want to wait for the promises, you need to use Promise object:
+            
+                    let newArr = myArr.map(item => {
+                        return funcName(item);
+                    });
+
+                    newArr = await Promise.all(newArr);

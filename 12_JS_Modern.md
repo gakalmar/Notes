@@ -93,6 +93,12 @@
         const name = person.name;
         const age = person.age;
 
+        // Use it as function parameters for example:
+        function funcName ({ name, age }){ FUNC BODY}
+        
+        Then call it like this:
+        funcName(person);                   // Since person is an object with the keys "name" and "age", it will create those 2 variables, and we can use them like that inside the function
+
 - With **Objects** we have to name them the same way as the object's original keys!
 - For **Arrays** it's a bit different, the important here is to maintain the original order:
 
@@ -235,3 +241,14 @@
         - **ES6** is a read-only live import (updates in export module will be reflected when imported)
         - **CommonJS** copies the values when importing
 - (*Babel* and *Webpack* are some examples of module convertors)
+
+
+# Functional programming:
+- A programming is a coding style, that treats functions as the main blocks of out code.
+- Focuses on immutability, and avoids side effects, leading to more predictable and maintainable code.
+- Main concepts:
+    - Pure functions - 1 function does exacly one thing (First class functions/Higher order functions)
+    - Immutability - nothing is changed after creation
+    - Focus on the goal, not the subrasks (call a function when you want to do something. That function will include other sub-functions that do the tasks required)
+    - Avoid repetitions, reuse code
+    - Recursion used instead of loops (functions recall themselves until the result is reached - like reduce() method)

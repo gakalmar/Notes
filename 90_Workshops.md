@@ -21,7 +21,6 @@
 - Be constructive  
 - Bring up an example  
 
-### 2A. TIME MANAGEMENT (WORKSHOP)
 ### 2B. TIME MANAGEMENT (SI WEEK)
 
 - 2 minute rule: If you can do it in 2 minutes, do it NOW
@@ -81,3 +80,30 @@
         > **Side panel:** You can check here the progress of the code as it updates from line to line  
         > **Watch:** You can trace expressions here (type in the name and :)
     - Debug in browser - click on sources tab, and then on the file you are debugging (then the same process)
+
+### 4. GIT & GITHUB - PULL REQUEST
+
+### 5. AGILE & SCRUM
+    https://docs.google.com/document/d/1X1iES5VSVvpTmb8kaNU1P38ikbgOPUpQH27Z9DjMC8E/edit#heading=h.16im0yasoixh
+
+    Agilis fejlesztes - rugalmasan igazodunk a valtozasokhoz (pl uj programnyelv) -> a metoduson van a hangsuly
+
+    SCRUM - elorehaladas ciklikusan
+        - iterations / sprints:
+            - 2-4 week periods
+            - BUILD - MEASURE - LEARN:
+                - development / coding
+                - get early feedback concept
+                - learn and refactor for next loop
+        - Backlog (a list of future tasks):
+            - a list created after the LEARN phase, which includes all the elements required to improve the product / project
+            - an element is a single project unit, that can be assigned to developers
+            - derived from the roadmap and its requirements
+            - items in priority order
+        - The smallest elements of the task (=subtasks) are called epics or user stories (sg that can be done in under 1 day)
+    
+    GITHUB PROJECTS
+        - A tool for team management
+        - Independent from repos, but repos can be assigned (uses tags, so very lightweight) -> users need to be added to both the repo AND the project!
+        - Can create tickets and assign people to them
+        - Can create project timeline
