@@ -83,6 +83,8 @@
 
 ### 4. GIT & GITHUB - PULL REQUEST
 
+    review of basic commands & pull request method was learned
+
 ### 5. AGILE & SCRUM
     https://docs.google.com/document/d/1X1iES5VSVvpTmb8kaNU1P38ikbgOPUpQH27Z9DjMC8E/edit#heading=h.16im0yasoixh
 

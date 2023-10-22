@@ -39,7 +39,7 @@
 (more: https://javascript.info/url)
 
 0. **Components:**
-<br>![ulr componenets](image.png)
+<br>![ulr componenets](./assets/image.pngimage.png)
 
 1. **Scheme/Protocol:**
     - The first part of the URL, that specifies the protocol used:
@@ -227,6 +227,7 @@
                 7. fetchData function is called with the URL argument to initiate the fetch and DOM update process.
 
 - **Promise:**
+    - visualized: https://dev.to/lydiahallie/javascript-visualized-promises-async-await-5gke
     - `.then` and `await` are methods that wait for the response before continuing the execution of the code
     - **Promises:**
         - handle **async** operations (eg. fetching data from an API or reading a file)
@@ -247,7 +248,7 @@
                     - Can be any value (object, array, string)
                 - When a *Promise* is **rejected**, it returns an `error` -> returns an Error object or any other type of value.
         - **NB:**
-            - Higher order functions are not async functions, so if you want to wait for the promises, you need to use Promise object:
+            - Higher order functions are not async functions, so if you want to wait for the promises, you need to use Promise object, or do it with a traditional for loop:
             
                     let newArr = myArr.map(item => {
                         return funcName(item);

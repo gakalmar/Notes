@@ -325,6 +325,8 @@ Number.isInteger(value)                                 //Chheck if the value is
     element.classList.remove("inactive");
     element.classList.toggle("highlight");
 
+    element.disabled = false / true;                            //use this to disable an element (eg button). true - disabled // false - enabled
+
     element.preventDefault()                                    //prevents default behaviour if it's called on the element 
     event.stopPropagation()                                     //when called inside an event handler, prevents the event from bubbling up to any other elements
                                                                 //full example here: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events

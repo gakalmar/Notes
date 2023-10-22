@@ -21,7 +21,7 @@
         - can't be accessed if we move "outside" of the functions, but we can access them in any **enbedded** function
     - **Block:**
         - declared inside a loop or an if statement
-        - can't be accessed if we move "outside" of the functions, but we can access them in any **enbedded** function
+        - can't be accessed if we move "outside" of the functions, but we can access them in any **enbedded** block
         - `var` variables declared in a block can still be accessed outside the block, this is what caused the issues in the past (but not with function scope!!!)
 
 ### **2. Arrow functions:**
@@ -252,3 +252,43 @@
     - Focus on the goal, not the subrasks (call a function when you want to do something. That function will include other sub-functions that do the tasks required)
     - Avoid repetitions, reuse code
     - Recursion used instead of loops (functions recall themselves until the result is reached - like reduce() method)
+
+# "this" keyword in functions:
+- Based on where the function is created and called(invoked), the `this` keyword refers to differenct things:
+    1. Basic function creation:
+
+            function myFunction() {
+                console.log(this);
+            }
+
+            // Simple invocation
+            myFunction(); // logs global object (window) as the value of "this"
+    
+    2. Function created as **method**:
+
+            const myObject = {
+                method() {
+                    console.log(this);
+                }
+            };
+
+            // Method invocation
+            myObject.method(); // logs myObject as the value of "this"
+
+- With **arrow functions** it's different:
+    - The arrow function doesn't define its own execution context but resolves to the one from the outer function:
+
+            const myObject = {
+                myMethod(items) {
+                    console.log(this);              // logs myObject
+                    const callback = () => {
+                        console.log(this);          // logs myObject (the parent!)
+                    };
+                    items.forEach(callback);
+                }
+            };
+
+            // "this" value inside the arrow function callback() equals "this" of the outer function myMethod().
+
+    
+    
