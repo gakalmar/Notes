@@ -9,6 +9,8 @@
 
 # To check & add:
 
+- Create a summary code for all methods (GET etc)
+
 - New material related:
     - https://github.com/raberik98/CC_Express_Endpoints
     - Send data to server in jounrey: ask for help

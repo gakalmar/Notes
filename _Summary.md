@@ -354,7 +354,7 @@ Number.isInteger(value)                                 //Chheck if the value is
     
     // Get ALL parameters (non-specific!):
     const url = new URL('https://example.com/some-page?param1=value1&param2=value2&param3=value3');
-    const params = Object.fromEntries(url.searchParams.entries());
+    const params = Object.fromEntries(urlObj.searchParams.entries());
 
     // Or like this:
     const url = new URL('https://example.com/some-page?param1=value1&param2=value2&param3=value3');
