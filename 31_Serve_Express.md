@@ -1,3 +1,92 @@
+# Overview WORKSHOP (23.10.25)
+- Express is an NPM tool
+- JSON file is created:
+    - shows info about the project and the dependencies
+- What does express do?
+    - Express is a popular and minimalist web application framework for Node.js.
+    - It provides a set of features and tools for building web and mobile applications, APIs, and other server-side applications.
+
+- **Process:**
+
+    1. `npm init`            // Create JSON file (keep clicking ENTER)
+    2. add `"type": "module"` to package.json file ("module" means modern JS (ES6 syntax), "common.js" means classic JS (before ES6))
+        // alternatively name files *.mjs -> this means modulJavaScript, it will use "modul" as default
+    3. `"scripts"` in package.json:
+        add `"start": "node index.js"` -> you can do `"npm start"` instead of `"node index.js"`
+        you need to a name from the list (Ctrl + SPACE to see the list inside "")
+    4. `npm i express` -> adds express to package.json dependencies
+            Creates also node_modules folder (exclude in .gitignore!)
+        (`npm i` by default downloads and installs all **dependencies** and **devdependencies** inside the pakcage.json file)
+        
+    5. `npm i --save-d nodemon` Now we can start with nodemon instead of node
+
+    6. **index.js** file:
+    
+            import express from "express";
+            import fs from "fs";
+            const app = express();
+
+            app.use(express.json()); // express won't parse body, so we need an express middleware
+            app.use(express.text()); // we can add other formats too 
+
+            app.get("/getAllData", (req, res) => {          //req -> the client sent it; res -> what we are sending
+                fs.readFile("./data/data/json", "utf-8", (err, data) => {
+                    if (err){ 
+                        return res.json({message: "Error occured!"})
+                    }
+                    return res.json(JSON.parse(data));  // json response is specified to be sent
+                    return res.send(JSON.parse(data));  // no format is specified, tries to guess
+                })
+                res.send("Hello");
+            })
+
+            app.get("/SpecificDataById/:id/:name", (req, res) => { //flexible endpoint, where we can add a parameter in the URL
+                console.log(req.params.id);
+                console.log(req.params.name);
+                try{
+                    fs.readFile("./data/data.json", "utf-8", (err, data) => {
+                        if (err) return res.status(500).json({message: "Error occured!"});
+
+                        let allData = JSON.pars(data);
+                        let requestedData = addData.find(nextData => nextData.id == req.params.id)
+
+                        if(!requestedData) return res.status(404),json({message: "Data not found!"})
+                        
+                        res.json(requestedData);
+                    })
+                } catch (error){
+                    console.log(error);
+                    return res.status(500).json({message: "Error occured!"});
+                }
+
+            });
+
+            app.post("/registerNewPerson", (req, res) => {
+                try{
+                    fs.readFile("./data/data.json", "utf-8", (err, data) => {
+                        if (err) return res.status(500).json({message: "Error occured!"});
+
+                        let allData = JSON.pars(data);
+                        let name = req.body.name;
+                        
+                        if (typeof req.body.name !== "string"){return res.status(406).json({message: "Error occured!"})};
+
+                        allData.push({ id: allData.length, name: req.body.name });
+
+                        fs.writeFile("./data/data/json", JSON.stringify(allData), (err) => {
+                            if (err) return res.status(500).json({message: "Error occured!"});
+                            res.status(201).json({message: "Success!"});
+                        })
+                    })
+                } catch (err){
+
+                }
+            })
+
+            app.listen(3000, () => {
+                console.log("the app is running on port 3000");     //The port needs to be opened to the real world (another topic), to make it a real server (DNS server is the dictionary that translates domain names into ip addresses)
+            })
+    
 # Serve (=responding to GET requests)
 - The opposite of downloading -> serving = providing/uploading data using a web server (Express.js JS library)
 - Very important not to mix Frontend (client) and Backend (server) code, they should go in separate folders

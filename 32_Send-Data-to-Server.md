@@ -373,3 +373,4 @@
         - In the main/load functions body, we set it to true (replace exising line that's almost the same without the true value):
 
                 root.insertAdjacentHTML("beforeend", formHTML({id: 0, name: ""}, true));
+

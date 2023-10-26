@@ -314,6 +314,7 @@ Number.isInteger(value)                                 //Chheck if the value is
 
     element.insertAdjacentHTML("where", "what")                 //add HTML to a certain element ("where" -> "afterEnd", "beforeEnd", "afterBegin", "beforeBegin")
     element.innerHTML = "<p>text</p>";                          //Gets or sets the HTML content of an element
+    element.outerHTML                                           //Makes reference to the whole element (eg a div has the id="container", document.getElementsById("container").outerHTML will be the whole <div> element)
     element.textContent = "New text content";                   //replaces/adds new text content to an element (returns `null` for "document" or "doctype")
                                                                 //!!! removes all children first, and then fills it up with just text content!
 

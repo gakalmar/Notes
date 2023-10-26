@@ -13,6 +13,7 @@
 
 - New material related:
     - https://github.com/raberik98/CC_Express_Endpoints
+    - https://github.com/raberik98/CC_Express_Guide
     - Send data to server in jounrey: ask for help
 
 - Material visualizations (reread before PA):

@@ -530,3 +530,25 @@
 
             const myDiv = document.getElementById('myDiv');
             myDiv.style.fontSize = '24px';                          //the fontSize property of the myDiv element is directly changed with JavaScript using the style property
+
+# CSS TRICKS:
+- Amazing flexbox video: https://www.youtube.com/watch?v=phWxA89Dy94&ab_channel=SlayingTheDragon
+    - Code summary:
+
+            .container {
+                display: flex;
+                flex-direction: column / row;
+                justify-content: space-evenly...etc;
+                align-items: flesx-start...etc;
+                flex-wrap: wrap;
+                align-content: flex-start;
+                gap: 1em;
+            }
+
+            .item {
+                flex-grow: 1;
+                flex-shrink: 0;
+                flex-basis: 0;
+                flex: 1;
+                align-self: center; //overwirtes containers alignment for current item only
+            }

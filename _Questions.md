@@ -8,6 +8,11 @@ what is the best way to keep updating the url and opening a page based on what i
 
 Form -> rossz a hadnleClick function (atnezni miert nem mukodik)
 
+what is a response body?
+
+API endpoints, when we create a new page?
+API data endpoint vs opening a new page?
+
 ### Consultation topics:
 
 URL handling (URLSearchParams, get current, update to new url based on parameters)
