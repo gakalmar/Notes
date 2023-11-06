@@ -38,6 +38,40 @@
         5. Make the task more achievable (break it down to smaller, more achievable steps)
 
 
+### HOW TO GIVE FEEDBACK
+
+- Focus on the positive feedaback (helps against burnout)
+    "Catch someone doing something well!"
+- Understand that the feedback is for you to be better
+- "Opinion based": start with "In my opinion...", "For me...", "I think that..."
+- Get to know your blindspots
+    - Others will be able to see you better (from a different angle)
+
+- In real life: understanding the brief of a project (the later we discuss, the more expensive the change will be)
+    - Feedback from client
+    - Feedback to teammates
+    
+- How to give feedback:
+    - Focus on the positive
+    - Be specific
+    - Offer alternative
+    - Behaviour based: Don't judge the personality, but focus on the specific behaviour in a situation
+    - Expanded: Get into details for a better understanding
+
+- STOP DOING / START DOING / KEEP DOING
+
+- Receiving feedback:
+    - Assume that the other wants to improve you
+    - Thank the feedback, it's not to offend you!
+
+- Profession specific:
+    - Pull requests:
+        - Identify errors
+        - Suggest simplification
+        - Asking for explanation
+        - Debate coding style
+        - Brainstorming
+
 # PART B - 'TECHNICALS'
 
 ### 1. CHATGPT
@@ -109,3 +143,5 @@
         - Independent from repos, but repos can be assigned (uses tags, so very lightweight) -> users need to be added to both the repo AND the project!
         - Can create tickets and assign people to them
         - Can create project timeline
+
+### 6. BACKEND & FRONTEND CONSULTATION:

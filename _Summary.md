@@ -294,6 +294,13 @@ Number.isInteger(value)                                 //Chheck if the value is
     document.getElementsByClassName("myClass")                  //get an object with a specific class (make it an array to store it)
     document.getElementsByTagName("div")                        //get an object with a specific tag (make it an array to store it)
 
+    element.previousElementSibling                              //access elements relative to another element or the target element
+    element.nextElementSibling
+    element.parentElement
+    element.firstElementChild
+    element.lastElementChild
+    element.children
+
     document.querySelector(".myClass")                          //get the first object with a specific class (make it a const to store it)
     document.querySelector("#myID")                             //get the first object with a specific Id (make it a const to store it)
     document.querySelectorAll("p")                              //get an array of objects with a CSS selector (make it an array to store them)

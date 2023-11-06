@@ -1,17 +1,20 @@
 # Questions:  
 
-### 1 Serve
+### 1
+
+JSON parsing during fetch - what should I parse, how should I send responses?
+what is the difference between response.json() and JSON.stringify()?
 
 encodeURIComponent() and decodeURIComponent() ?
 what is the best way to keep updating the url and opening a page based on what is typed in?
     (https://journey.study/v2/learn/courses/252/modules/23402/units/7/SOLO/57203 - last optional)
 
 Form -> rossz a hadnleClick function (atnezni miert nem mukodik)
+Promise object displayed
 
-what is a response body?
+click on form / click on puls button
 
-API endpoints, when we create a new page?
-API data endpoint vs opening a new page?
+import using HTML script line cs import/export with modul type
 
 ### Consultation topics:
 
