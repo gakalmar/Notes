@@ -1,26 +1,10 @@
 # NEXT WEEK SUMMARY:
 ADD FEEDBACK TO ERIK!
 
-Start with workbook update!
-
-review this:
-    https://docs.google.com/document/d/17Sng1zIGAot7iOTkIaeLxLzHBa8JYwvg7P2jkb3xYMk/edit
-
-dont use:
-    npx create-react-app <name>
-use instead:
-    npm create vite@latest <name>
-
-no more innerhtml etc., use suggeste instead
-
-react components:
-    - class based component -> still used, but leave it for now
-    - function based component -> mainstream
-
-HELP:
-    https://www.youtube.com/watch?v=KEoMvroP-r4&list=PLRrX6S8UZpZlFTtdo9RONPO3rYi_UAqmD
-
 Facultative project!!! (peter's AI project)
+
+review this and add to workbook what is important:
+    https://docs.google.com/document/d/17Sng1zIGAot7iOTkIaeLxLzHBa8JYwvg7P2jkb3xYMk/edit
 
 # Regular tasks to make progress on:
 

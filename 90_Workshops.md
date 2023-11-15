@@ -144,4 +144,4 @@
         - Can create tickets and assign people to them
         - Can create project timeline
 
-### 6. BACKEND & FRONTEND CONSULTATION:
+### 6. INTRODUCTION TO REACT:

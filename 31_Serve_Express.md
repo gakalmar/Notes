@@ -205,6 +205,20 @@
         // This is how we expect the URL to be called:
         http://127.0.0.1:3000/math/divide?x=10&y=2
 
+- Response methods:
+
+        Method                  Description
+
+        res.download()	        Prompt a file to be downloaded.
+        res.end()	            End the response process.
+        res.json()	            Send a JSON response.
+        res.jsonp()	            Send a JSON response with JSONP support.
+        res.redirect()	        Redirect a request.
+        res.render()	        Render a view template.
+        res.send()	            Send a response of various types.
+        res.sendFile()	        Send a file as an octet stream.
+        res.sendStatus()	    Set the response status code and send its string representation as the response body.
+
 ## Serving data from JSON file:
 - Import both `express` and `fs`:
 
@@ -320,3 +334,83 @@
         };
 
         window.addEventListener("load", main);
+
+## Chaining multiple functions in one:
+- We can add optional `next` parameter to move to the next function like this:
+
+        app.get('/example/b', (req, res, next) => {
+            console.log('the response will be sent by the next function ...')
+            next()
+        }, (req, res) => {
+            res.send('Hello from B!')
+        })
+
+- We can even use an array to do it like this:
+
+        const cb0 = function (req, res, next) {
+            console.log('CB0')
+            next()
+        }
+
+        const cb1 = function (req, res, next) {
+            console.log('CB1')
+            next()
+        }
+
+        const cb2 = function (req, res) {
+            res.send('Hello from C!')
+        }
+
+        app.get('/example/c', [cb0, cb1, cb2])
+
+## **Routing:**
+- We can chain multiple methods to one endpoint with `app.route()`:
+
+        app.route('/book')
+            .get((req, res) => {
+                res.send('Get a random book')
+            })
+            .post((req, res) => {
+                res.send('Add a book')
+            })
+            .put((req, res) => {
+                res.send('Update the book')
+            })
+
+- We can create separate file to handle specific endpoints related to specific pages only (better structure of project)
+- For this we use `express.Router`:
+    - In the main `app.js` file we create the routers:
+
+            import express from "express";
+            import exampleRouter from './exampleRouter';
+            
+            const app = express();
+
+            app.use(express.json()); // Middleware for parsing JSON
+
+            app.use('/example', exampleRouter);     // Redirection to 'example.js' file -> endpoints created there will be added the this path (/example)
+
+            app.listen(3000, () => {
+            console.log('Server is running on port 3000');
+            });
+    
+    - Then we can create 'example.js' file with the actual endpoint:
+
+            import express from 'express';
+
+            const exampleRouter = express.Router();
+
+            // Root path:
+            exampleRouter.get('/', (req, res) => {
+                res.json("This message comes from path '/example/')
+            })
+
+            // About path:
+            exampleRouter.get('/about', (req, res) => {
+                res.json("This message comes from path '/example/about')
+            })
+
+            export default catApiRouter;
+    
+    - We can create these files in a **/routes** folder, but we would have to update the import path then too!
+
