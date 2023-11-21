@@ -2,6 +2,13 @@
 ### **Getting Started:**
 - BACKEND:
     - `npm init` -> initialize project (creates package.json file)
+    - Add further dependencies:
+        - `npm i express`   // if we will be using express
+        - `npm i -D nodemon`   // only needed on backend
+            - add to "scripts" line `"start": "nodemon App.js"` to package.json file (React has default initializer, so this is only needed if we don't use React!)
+            - or as a dev if you install with `-D`: `"dev": "nodemon index.js"`
+            - add `"type": "module"` line as well
+
 - FRONTEND:
 - After cloning or creating the repo and navigating into it, initialize the React app with VITE:
 
@@ -12,14 +19,65 @@
     - Select REACT, then JS + SWC framework
     - Then run `npm i` to install any dependencies
 
-- Add further dependencies:
-    - `npm i express`   // if we will be using express
-    - `npm i nodemon`   // not sure if required
-        - add "start": "nodemon App.js" to package.json file (React has default initializer, so this is only needed if we don't use React!)
-
 - Add "type: module" line to package.json file to be able to work with modern JS (import-export) // Already included in vite
 
-- **WORKSHOP:**
+- Add proxy exception to `vite.confing.js` file:
+
+        import { defineConfig } from 'vite'
+        import react from '@vitejs/plugin-react'
+
+        // https://vitejs.dev/config/
+        export default defineConfig({
+            plugins: [react()],
+            server: {
+                proxy: {
+                "/api" : "http://localhost:3000"    // all fetches starting with "/api" will now be routed to the backend server
+                }
+            }
+        })
+
+- **Clean up file:**
+    - Delete body in `App.jsx` file
+    - Delete logo imports from the same file
+    - Delete logo from assets folder
+
+- **Folder structure:**
+
+        | BACKEND
+        |   | server.js
+        |   | package.json
+        |   | data.json
+        | FRONTEND
+        |   | SRC
+        |   | SRC   | ASSETS 
+        |   | SRC   | ASSETS            | IMAGES
+        |   | SRC   | COMPONENTS 
+        |   | SRC   | COMPONENTS        | Component1.jsx
+        |   | SRC   | COMPONENTS        | Component2.jsx
+        |   | SRC   | PAGES or VIEWS 
+        |   | SRC   | PAGES or VIEWS    | A FOLDER for each view with: 
+        |   | SRC   | PAGES or VIEWS    | PageName.css 
+        |   | SRC   | PAGES or VIEWS    | PageName.jsx 
+        |   | SRC   | SERVICES  (fetching functions) 
+        |   | SRC   | UTILS     (reusable small functions) 
+        |   | SRC   | FEATURES  (single but large functions) 
+        |   | SRC   Additional files:
+        |   | SRC   
+        |   |       | package.json   
+        |   |       | package-lock.json   
+        |   |       | vite-config.js   
+        |   |       | index.html
+        |   |       | .gitignore.html !!! Add node_modules after initialization
+
+- **Start project** with `npm run dev`
+
+- **Routing:**
+    - first we need to install this as well:
+
+            npm i react-router-dom
+    
+    - Use `BrowserRouter` from **React-router-dom** to handle multiple pages, instead of conditional rendering
+    - You can specify which file should be read on each route in the main.jsx file:
 
         import React from 'react';
         import ReactDOM from 'react-dom/client';
@@ -33,34 +91,56 @@
         root.render(
         <React.StrictMode>
             <BrowserRouter>
-            <Routes>
-                <Route path="/" element={< LandingPage/>}/>
-                <Route path="/info" element={< Info/>}/>
-                
-            </Routes>
+                <Routes>
+                    <Route path="/" element={<LandingPage />}/>
+                    <Route path="/info" element={<Info />}/>
+                    <Route path='/areas/:name' element={<Areas />} />
+                </Routes>
             </BrowserRouter>
         </React.StrictMode>
         );
+    
+    - Now we can use `useNavigate` to create different routes (returns a function!):
 
-- **Clean up file:**
-    - Delete body in `App.jsx` file
-    - Delete logo imports from the same file
-    - Delete logo from assets folder
+            import { useNavigate } from 'react-router-dom';
 
-- **Start project** with `npm run dev`
+            const navigate = useNavigate();
 
-- Create "components" folder inside "src" folder
-    - Add component:
-        - Create a file with the component's name (make sure it's **Capitalized!**)
-        - Add your component to the file under the same name as a function (make sure it's **Capitalized!**)
-        - Export it from the component's file with:
+            // Then use ot for example as the onClick attribute of a button:
+            <button onClick={() => navigate("/main")}>Back to Main Page</button>
 
-                export default InputField
+    - We can also use `useLocation` to get query parameters from the URL: (eg from "http://.../search?paramName=paramValue")
 
-        - Import it into App.jsx file with:
+            import { useLocation } from 'react-router-dom';
 
-                import InputField from './components/InputField'
+            const queryParams = new URLSearchParams(location.search);
+            const param = queryParams.get('paramName');
 
+    - Or we can use `useParams` hook as well for URL parameters: (eg from "http://.../user/:userId") - dynamic segments
+
+            // If you have a dynamic route like this, you can use the parameters in the page/view's .jsx file:
+                    
+                    // This is in the main.jsx file:
+                    <Route path="/user/:userId" element={<UserProfile />} />
+
+                    // Now in the UserProfile page (or component), we can access "userId" parameter like this:
+                    
+                    import React from 'react';
+                    import { useParams } from 'react-router-dom';
+
+                    const UserProfile = () => {
+                        // Access the userId parameter from the URL
+                        const { userId } = useParams();
+
+                        return (
+                            <div>
+                                <h2>User Profile</h2>
+                                <p>User ID: {userId}</p>
+                            </div>
+                        );
+                    };
+
+                    export default UserProfile;
 
 
 ### **Introduction:**
@@ -125,6 +205,7 @@
         In the "App" component, we render three Greeting components with different name props
 
 ### **Component** (*=same as a function in JS, but with a capital initial letter - creates content for HTML*)
+- Keyboard shortcut to create one from template: **rfc**
 - a `component` is a reusable piece of UI that encapsulates the functionality and presentation of a portion of the user interface (eg. button or form)
 - a `component` can include other components, and each can have their own `state` (can be updated and passed to it's children)
 - `components` are created using either `classes` or `functions` (use latter, as that is the newer and also recommended for now, and also more lightweight and fast!)
@@ -354,7 +435,7 @@
 
 ### **Fetch in React:**
 - **fetching** happens using `useEffect`
-- Another example (the one if Effect was the first one):
+- Another example (the one in Effect was the first one):
 
         import React, { useState, useEffect } from 'react';
 
@@ -423,6 +504,74 @@
     - **JSX code is executed at runtime:** JSX code is executed at runtime when the component is rendered, unlike HTML which is executed at the time of loading.
     - One of the major differences between HTML and JSX is that in JSX, you **must return a single parent element**, or it won't compile. It means you need to return something in our return statement, it can be an empty <div> or anything.
 
+- More to add later:
+    - Add {Link} and {Outlet}
+        - Export/Import: with default there is no destructuring required when importing
+    - useState -> Add what we want to see later
+    - if we add something outside a hook it will re-render every time there is a change
+
+- Export a project:
+    - `npm run build`:
+        - copy dist folder to backend folder
+        - in server file create endpoint for static file serving:
+            - `/dist/index.html`
+        - static middleware -> set it to `/dist`:
+
+                app.use(express.static('dist'));
+        
+        - `yarn build` also does this (is this a better/newer way?)
+            - we can then use **Railway** to deploy it to production:
+                - we need to create a github repo first for the project
+
+# **Creating context:**
+    - `useContext`:
+    - Used for consuming the values of a React context. Context provides a way to **pass data through the component tree without having to pass props manually at every level**.
+    - Example:
+
+            import React, { createContext, useContext } from 'react';
+
+            // Step 1: Create a context
+            const ThemeContext = createContext();
+
+            // Step 2: Create a provider component
+            const ThemeProvider = ({ children }) => {
+                // You can provide any value you want to share with child components
+                const theme = 'light';
+
+                return (
+                    <ThemeContext.Provider value={theme}>
+                        {children}
+                    </ThemeContext.Provider>
+                );
+            };
+
+            // Step 3: Use the context in a child component
+            const ThemedComponent = () => {
+
+                // Consume the context using useContext
+                const theme = useContext(ThemeContext);
+
+                return <div style={{ background: theme === 'light' ? '#fff' : '#333', color: theme === 'light' ? '#333' : '#fff' }}>Themed Content</div>;
+            };
+
+            // Step 4: Wrap your components with the provider
+            const App = () => {
+                return (
+                    <ThemeProvider>
+                        <ThemedComponent />
+                    </ThemeProvider>
+                );
+            };
+
+            export default App;
+
+            // Code breakdown:
+            We create a ThemeContext using createContext.
+            We create a ThemeProvider component that provides a value (in this case, a theme) to its children using the ThemeContext.Provider.
+            We create a ThemedComponent that consumes the theme value using useContext(ThemeContext).
+            Finally, in the App component, we wrap our components with the ThemeProvider to make the theme value available to ThemedComponent and any other nested components.
+
+
 # **FURTHER RESOURCES:**
 
 Links to add to this topic:
@@ -445,7 +594,7 @@ https://marketplace.visualstudio.com/items?itemName=dsznajder.es7-react-js-snipp
 More snippets:
 https://github.com/ults-io/vscode-react-javascript-snippets/blob/HEAD/docs/Snippets.md
 
-Erki's suggestions:
+Erik's suggestions:
 dont use:
     npx create-react-app <name>
 use instead:

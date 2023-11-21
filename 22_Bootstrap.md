@@ -1,0 +1,21 @@
+# **Bootstrap**
+
+- Add these lines to the index.html file to import bootstrap:
+
+        <!doctype html>
+        <html lang="en">
+
+        <head>
+            <meta charset="UTF-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+            <title>App title</title>
+            <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+        </head>
+
+        <body>
+            <div id="root"></div>
+            <script type="module" src="./node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
+            <script type="module" src="/src/main.jsx"></script>
+        </body>
+
+        </html>

@@ -1,7 +1,6 @@
 # NEXT WEEK SUMMARY:
 ADD FEEDBACK TO ERIK!
 
-Facultative project!!! (peter's AI project)
 
 review this and add to workbook what is important:
     https://docs.google.com/document/d/17Sng1zIGAot7iOTkIaeLxLzHBa8JYwvg7P2jkb3xYMk/edit
