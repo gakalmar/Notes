@@ -1,9 +1,13 @@
 # NEXT WEEK SUMMARY:
-ADD FEEDBACK TO ERIK!
 
-
-review this and add to workbook what is important:
-    https://docs.google.com/document/d/17Sng1zIGAot7iOTkIaeLxLzHBa8JYwvg7P2jkb3xYMk/edit
+- Finish WORKBOOK
+✅ Watch React videos (Autrian guy)
+- Watch React videos (youtube quick guides)
+- Watch React Router video (youtube quick guides) https://www.youtube.com/playlist?list=PLC3y8-rFHvwjkxt8TOteFdT_YmzwpBlrG
+- Complete last task from Express module (cat API or football API?) - Or create your won database to practice Mongo?
+- Create bootstrap quick setup file with most useful commands
+- Watch a mongoDB youtube video x in y mins
+- Redo Pokemon API project to practice
 
 # Regular tasks to make progress on:
 
@@ -11,8 +15,6 @@ review this and add to workbook what is important:
 - Updating Workbook regularly
 - Practicing Codewars
 - Do separate courses of each project (eg. look up topics on javascript.info, watch video tutorials)
-- Practice:
-    - reduce()
 
 # To check & add:
 
@@ -39,3 +41,6 @@ review this and add to workbook what is important:
 - CSS:
     - CSS algorithms https://www.joshwcomeau.com/css/understanding-layout-algorithms/
     - install Bootstrap & watch basic tutorial
+
+- FAQ doc:
+    - https://docs.google.com/document/d/17Sng1zIGAot7iOTkIaeLxLzHBa8JYwvg7P2jkb3xYMk/edit

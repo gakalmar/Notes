@@ -77,8 +77,26 @@
                 console.log('User created successfully:', user);
             }
         });
+    
+    - Or in 1 step:
+
+        async function createUser() {
+            const user = await User.create({ name: "Kyle", age: 26 })   // No need for save as it's included in the create method
+        }
 
 2. **READ**
+    - Find All items:
+
+            app.get("/api/todo", async (req, res) => {
+                try {
+                    const todos = await Todo.find()
+                    res.json(todos);
+                } catch (error) {
+                    console.error(error);
+                    res.status(500).send({ message: "Failed to get todos!"})
+                }
+            })
+
     - Retrieve documents using `model.find` and `model.findOne`:
         
             // First we find all the documents:
@@ -98,6 +116,37 @@
                     console.log('Found user:', user);
                 }
             })
+    
+    - Another way of doing this is `findById`:
+
+            // Modern JS syntax
+            async function findBook(id) {
+                try {
+                    const book = await Book.findById(id)
+                    console.log(book);
+                } catch (err) {
+                    console.eroor(err);
+                }
+            }
+
+            // Traditional JS syntax:
+            Book.findById("655cdc894ce749f386209890")
+                .then(book => {
+                    console.log(book)
+                });
+    
+    - Use complex queries:
+
+            async function findItem() {
+                try {
+                    const user = await User.where("age")        // use .where() method to start adding queries
+                        .gt(12)                                 // .gt() means greater than (gt, gte, lt, lte)
+                        .where("name")                          // chain another condition (by default it's &&)
+                        .equals("Kyle")
+                        .limit(2)                               // limit the number of results
+                        .select("age")                          // only return the "age" field of the matching documents
+                }
+            }
 
 3. **UPDATE**
     - Modify an existing document unsing `model.findOneAndUpdate` and `model.updateMany`:
@@ -128,6 +177,32 @@
                     }
                 }
             );
+    
+    - Update by ID:
+
+            // Modern JS syntax:
+            async function findBookAndUpdateTitle(id, newTitle) {
+                try {
+                    const book = await Book.findById(id);
+                    book.title = newTitle;
+                    return book.save();
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+
+            // Traditional way:
+            Book.findById("655cdc894ce749f386209890")
+                .then(book => {
+                    book.title = 'New Fancy Title';
+                    return book.save();
+                })
+                .then(book => {
+                    console.log(book);
+                })
+                .catch(error => {
+                    console.error(error);
+                });
 
 4. **DELETE**
     - Remove documents using `model.findOneAndDelete` and `model.deleteMany`:
@@ -149,6 +224,12 @@
                     console.log('Users deleted successfully:', deleteResult);
                 }
             });
+    
+    - Delete with `model.deleteOne()`:
+        - The difference:
+            - `deleteOne()` returns an object with the property deletedCount indicating how many documents were deleted
+            - `deleteMany()` returns an object with the property deletedCount containing the number of documents deleted
+            - `findOneAndDelete()` returns the deleted document
 
 ### **Same Origin Policy, Proxies and CORS errors**
 - **Short summary:**
@@ -215,6 +296,10 @@
     - The main alternative to NoSQL is SQL (Structured Query Language) databases which follows a relational model.
 
 # RESOURCES & LINKS:
+- VIDEO SUMMARY:
+    - Mongoose: https://www.youtube.com/watch?v=DZBGEVgL2eE&ab_channel=WebDevSimplified
+    - MongoDB:  https://www.youtube.com/watch?v=ofme2o29ngU&ab_channel=WebDevSimplified
+    
 - Getting started with Atlas: https://www.mongodb.com/docs/atlas/getting-started/
 - Getting started with MongoDB: https://www.mongodb.com/developer/languages/javascript/getting-started-with-mongodb-and-mongoose/ ***BEST RESOURCE!
 - List of all queries: https://mongoosejs.com/docs/queries.html
@@ -223,3 +308,4 @@
 - FindOneAndDelete: https://mongoosejs.com/docs/api/model.html#Model.findOneAndDelete()
 - Update an Object: https://mongoosejs.com/docs/tutorials/findoneandupdate.html
 - Update or remove data: https://www.mongodb.com/developer/languages/javascript/getting-started-with-mongodb-and-mongoose/#update-data
+

@@ -18,6 +18,7 @@
 - Installation:
     - Select REACT, then JS + SWC framework
     - Then run `npm i` to install any dependencies
+    - `npm i react-router-dom` - this will very likely be needed too
 
 - Add "type: module" line to package.json file to be able to work with modern JS (import-export) // Already included in vite
 
@@ -498,6 +499,11 @@
         - serves the application's **frontend** code (React + JSX + JS)
         - important to note that the **development server** is not the same thing as a **backend server**:
             - A backend server is responsible for handling the application's data and business logic, and it usually communicates with a database and other services.
+
+# **VIDEO COURSE ADDITIONAL MATERIALS:**
+- Link: https://www.youtube.com/watch?v=KEoMvroP-r4&list=PLRrX6S8UZpZlFTtdo9RONPO3rYi_UAqmD&ab_channel=MarkoCodes
+
+
 - **Differences in HTML syntax:**
     - **Self-closing tags:** Tags can self-close in JSX. That is, it is possible to have <div>...</div> as <div ... /> and <span>...</span> as <span ... />. It's not necessary, but you may come across one in the future.
     - **Class and classname:** In JSX, the class attribute is called className.
