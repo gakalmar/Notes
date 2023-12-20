@@ -111,11 +111,13 @@
             <button onClick={() => navigate("/main")}>Back to Main Page</button>
 
     - We can also use `useLocation` to get query parameters from the URL: (eg from "http://.../search?paramName=paramValue")
+        - More info here: (React side use: https://scientyficworld.org/how-to-use-query-parameters-with-react-router/)
 
-            import { useLocation } from 'react-router-dom';
+                import { useLocation } from 'react-router-dom';
 
-            const queryParams = new URLSearchParams(location.search);
-            const param = queryParams.get('paramName');
+                const queryParams = new URLSearchParams(location.search);
+                const param = queryParams.get('paramName');
+
 
     - Or we can use `useParams` hook as well for URL parameters: (eg from "http://.../user/:userId") - dynamic segments
 

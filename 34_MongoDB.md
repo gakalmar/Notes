@@ -295,6 +295,239 @@
     - NoSQL databases are designed to handle large amounts of unstructured and semi-structured data, and they are often used in modern web applications, real-time big data analytics, and mobile applications.
     - The main alternative to NoSQL is SQL (Structured Query Language) databases which follows a relational model.
 
+# WORKSHOP: https://github.com/raberik98/CC_MongoDB_Mongoose
+- In Atlas web: https://cloud.mongodb.com/v2/655c8baad36a28180beb10a1#/overview
+    - Database Access - create users
+    - Network Access - set up IP address (set it to 0.0.0.0/0 if you just want to practice)
+- Cluster > Databases > Collections (JS Array-like) > Records (JS object-like)
+- .env (environmental variables):   // There's more info about this above!
+    - write here everything that is delicate information
+    - dotenv should be installed (npm i dotenv) -> adds it to depencdencies
+    - .env should be added to gitignore
+- Connect to Atlas:
+    - Cluster -> Connect (Compass)
+    - Connection string:
+        - `"mongodb+srv://gakalmar:xSOg0wVrGRFEwwFi@cluster0.ihsvu61.mongodb.net/"` - connect to cluster (by default calls it "test")
+        - `"mongodb+srv://gakalmar:xSOg0wVrGRFEwwFi@cluster0.ihsvu61.mongodb.net/newdb"` - connect to Database called "newdb"
+    
+    - Connect from server.js file:
+
+            mongoose.connect(process.env.connectionString).then(() => {
+                console.log("Succesful connection!");
+                app.listen(3000, () => {                                    // Only connect if the connection was successful!
+                    console.log("Server is running at port: 3000");
+                }).catch((err) => {
+                    console.log(err);
+                })
+            })
+
+- Create models folder:
+    - ./models/Testmodel -> we can refer to a collection: collection name will be "tesmodels" inside a database (it will be created if it doesn't exist yet)
+    - inside the file:
+
+            import mongoose from "mongoose"
+
+            const tesmodelSchema = new mongoose.Schema({
+                // key-value pairs go here:
+                key1: {                     // This is called a FIELD
+                    type: String,
+                    required: true,
+                },
+                key2: {
+                    type: Date,
+                    default: Date.now()
+                },
+                key3: {
+                    type: Array // [String] // [{key: String}],
+                    default: []
+                }
+            });
+
+            export default mongoose.model("Testmodel", testmodelSchema) -> tesmodels collection will be created automatically
+            export default mongoose.model("Testmodel", testmodelSchema, "anotherCollection") -> specify which collection to connect to
+
+- Now create endpoints in server.js file:
+
+        app.get("/api/v1/getQuestions", async (req, res) => {
+            try {
+                const data = await Question.find();
+
+                const returnData = data.map((item) => {         // we narrow the return object, so the sensible data isn't sent back
+                    return {
+                        questionTitle: item.questionTitle,
+                        questionDescription: item.questionDescription,
+                        answers: item.answers
+                    }
+                })
+
+                if (data.length > 0) {
+                    res.json(returnData);           // We could also return "data" directly, but then all keys will be sent
+                } else {
+                    res.status(404).json({ message: "No matching data found!" })
+                }
+            } catch (error) {
+                console.error(error); // There should be an error message logger software used for this instead!
+                res.status(500).json({ message: "Unexpected error occurred!" })
+            }
+        })
+
+        app.post("/api/v1/askQuestion", async (erq, res) => {
+            try {
+                let object = {                                  // In this object we specify exactly what fields should be updated
+                    questionTitle: req.body.questionTitle,
+                    questionDescription: req.body.questionDescription,
+                }
+                await Question.create(obj)      // This field creates a new object with all themissing keys as well, if there was a default vaule    
+                                                // await makes the error run into the catch branch
+                res.status(201).json("Question registered!");
+            } catch (error) {
+                console.error(error); // There should be an error message logger software used for this instead!
+                res.status(500).json({ message: "Unexpected error occurred!" })
+            }
+        })
+
+        app.get("/api/v1/getSingleQuestion/:id", async (req, res) => {
+            try {
+                const data = await Question.findOne({_id: "req.params.id" });   // or findById
+
+                if (data.length > 0) {
+                    res.json(data);           // Send back original object from DB directly, without modifications
+                } else {
+                    res.status(404).json({ message: "No matching data found!" })
+                }
+            } catch (error) {
+                console.error(error); // There should be an error message logger software used for this instead!
+                res.status(500).json({ message: "Unexpected error occurred!" })
+            }
+        })
+
+        app.patch("/api/v1/editQuestionTitle/:id", async (req, res) => {
+            try {
+                const editedData = await Question.findOneAndUpdate(req.params.id, {questionTitle: req.body.questionTitle}, {new:true})  // add params to be overwrittem in second argument
+            } catch (error) {
+                console.error(error); // There should be an error message logger software used for this instead!
+                res.status(500).json({ message: "Unexpected error occurred!" })
+            }
+        })
+
+        // Another way:
+        app.patch("/api/v1/editQuestionTitle/:id", async (req, res) => {            Added to URL /id?what=title
+            try {
+                const query = req.query.what        // checks if there are query params 
+                if (query === "title"){
+                    const editedData = await Question.findOneAndUpdate(req.params.id, {questionTitle: req.body.questionTitle}, {new:true});
+                    res.json(editedData);
+                } else if (query === "description"){
+                    const editedData = await Question.findOneAndUpdate(req.params.id, {questionDescription: req.body.questionDescription}, {new:true});
+                    res.json(editedData);
+                } else {
+                    const editedData = await Question.findOneAndUpdate(req.params.id, {questionTitle: req.body.questionTitle}, {new:true});
+                    res.json(editedData);
+                }
+                const editedData = await Question.findOneAndUpdate(req.params.id, {questionTitle: req.body.questionTitle})  // add params to be overwrittem in second argument
+            } catch (error) {
+                console.error(error); // There should be an error message logger software used for this instead!
+                res.status(500).json({ message: "Unexpected error occurred!" })
+            }
+        })
+
+        app.delete("/api/v1/deleteQuestion/:id", async (req. res) => {
+            try {
+                await Question.findByIdAndDelete(req.params.id);
+                res.json({ message: "Question deleted!"});
+            } catch (error) {
+                console.error(error); // There should be an error message logger software used for this instead!
+                res.status(500).json({ message: "Unexpected error occurred!" })
+            }
+        })
+
+        app.put("/api/v1/postAnswer/:id", async (req. res) => {
+            try {
+                const answer = {answer: req.body.answer, user: req.body.user};
+                const selectedQuestion = await Question.findById(req.params.id)
+
+                selectedQuestion.answer.push(answer);
+                await selectedQuestion.save();
+
+                // Alternative solution
+                const selectedQuestion = await Question.findByIdAndUpdate(
+                    req.params.id,
+                    {$push: {answers: answer}}      // C++ syntax! ($pull is alternative)
+                    { new: true }
+                )
+
+                res.json({ message: "Answer successfully posted!" })
+            }catch (error) {
+                console.error(error); // There should be an error message logger software used for this instead!
+                res.status(500).json({ message: "Unexpected error occurred!" })
+            }
+        })
+
+- Backup folder on backend:
+    - createBackup.js file inside:
+
+            import mongoose from "mongoose"
+            import Question from "./models/Question.js"
+            import env from "dotenv";
+            import fs from "fs"
+
+            env.config();
+
+            async function Main () {
+                await mongoose.connect(process.env.CONSTRING)
+                console.log("Connected to database!");
+
+                const questions = await Question.find();
+                console.log("Fetched all data from the database!")
+
+                fs.writeFile("./Backup/Questions/json", JSON.stringify(questions), "utf-8", (err) => {
+                    if (err) {
+                        console.log("Failed to create a backup!")
+                        console.log(err);
+
+                        await mongoose.disconnect();
+                        consol.elog("Disconnected from database!")
+                    } else {
+                        console.log("Backup created!");
+
+                        await mongoose.disconnect();
+                        consol.elog("Disconnected from database!")
+                    }
+                })
+            }
+
+# TEST REQUESTS:
+- Create separate file, where you collect your test endpoints:
+    - name it `test.http`. If you have **REST CLient** installed as a VS code extension, it will automatically generate clickable laboels above each request:
+
+            ***clickable request button gets generated here*** 
+            GET http://localhost:8080/api/employees/
+
+            ***clickable request button gets generated here*** 
+            ###
+            POST http://localhost:8080/api/employees/
+            Content-Type: application/json
+
+            {
+            "name": "Valaki",
+            "level": "Godlike",
+            "position": "Joker"
+            }
+
+            ***clickable request button gets generated here*** 
+            ###
+            DELETE http://localhost:8080/api/employees/63fc6e4bca1cb463caa21779
+
+            ***clickable request button gets generated here*** 
+            ###
+            PATCH http://localhost:8080/api/employees/63fc6e4bca1cb463caa21779
+            Content-Type:  application/json
+
+            {
+            "name": "asd"
+            }
+
+
 # RESOURCES & LINKS:
 - VIDEO SUMMARY:
     - Mongoose: https://www.youtube.com/watch?v=DZBGEVgL2eE&ab_channel=WebDevSimplified
@@ -309,3 +542,84 @@
 - Update an Object: https://mongoosejs.com/docs/tutorials/findoneandupdate.html
 - Update or remove data: https://www.mongodb.com/developer/languages/javascript/getting-started-with-mongodb-and-mongoose/#update-data
 
+- **Erik's cheatsheet:**
+
+        show dbs  								                        show all databases
+        use [NAME_OF_THE_DATABASE] 						                use one of the databases, or create a new one
+        show collections
+        db.dropDatabase()
+        cls									                            clear the screen
+        exit
+        db.users.insertOne({})
+        db.users.find({name: {$eq: "name1"}})					        here eq means equal 
+        db.users.find({name: {$ne: "name1"}})					        not equal
+        db.users.find({name: {$in: ["name1","name2"]}}) 			    in this case I can give an array of options for the name property
+        db.users.find({name: {$nin: ["name1","name2"]}}) 			    in this case it means not in, so we will find everyone who isn't name1 or name2
+        db.users.find({age:{$gt: 18}})						            greater than
+        db.users.find({age:{$gte: 18}})						            greater than or equal to
+        db.users.find({age:{$lte: 18}})						            less than or equal to
+        db.users.find({age:{$lt: 18}})						            less than
+        db.users.find({age:{$exists: true}})					        we find where the record has an age property, it will only check if the key exists
+        db.users.find({age:{$gte: 18, lte:40}, name: {"name1"}})		greater than or equal to 18 and less than or equal to 40, and the name is name1
+        db.users.find({$and: [{age:26}, {name:"name1"}]})			    both requirements must be meet
+        db.users.find({$or: [{age: {$tle: 20}}, {name:"name1"}]})		one of the requirements must be meet
+        db.users.find({age: {$not:{$lte:20}}})					        here I can find where the requirement is NOT meet (sidenote: when age=null it will be selected too because of $not)
+        db.users.find({$expr: {$gt: ["$dept","$balance"]}})			    expr=expression  and I can check if the dept property is greater than the balance property
+                                                                        (sidenote: when I put a $ there I let mongodb know that I am compering the properties and not two strings)
+        db.users.find({"parents.father.name": {$not:"parentName1"}})    this is how we can use nested objects in a query
+
+        db.users.countDocuments({age:{$gt: 18}})				        simple, it counts the amount of records that metch the requirement(s)
+
+        db.users.updateOne({age:25}, {$set: {age: 26}})				                                    an alternative way to update a singular property
+        db.users.updateOne({_id: ObjectId("asd123asd123asd123")}, {$inc: {age: 3}})			            here we increment the found record's age property by 3
+        db.users.updateOne({_id: ObjectId("asd123asd123asd123")}, {$rename: {name: firstName}}) 		here we can rename a property to something else
+        db.users.updateOne({_id: ObjectId("asd123asd123asd123")}, {$unset: {age: ""}})			        here we can unset/remove a property from the record
+        db.users.updateOne({_id: ObjectId("asd123asd123asd123")}, {$push: {hobbies: {"coding"}}}) 	    here we can push data into an array
+        db.users.updateOne({_id: ObjectId("asd123asd123asd123")}, {$pull: {hobbies: {"coding"}}}) 	    here we can pull/delete data from an array
+
+        db.users.replace({_id: ObjectId("asd123asd123asd123")}, {name:"newName", age: 30, hobbies: ["coding, swimming"]})	fully replaces the record to what we give as the second argument
+
+        db.users.find({name: {$regex: /^Robert/}})  				    I just simply use a regex here (sidenote: you could write /^Robert/g as well but in this context it makes no difference)
+
+        const regex = new RegExp(`^${req.params.value}`, 'i');
+        MyModel.find({ name: { $regex: regex } }, function(err, result) {
+        // handle the result
+        });
+
+        //Update an object in an array of objects
+        [{
+            _id: ObjectId("654e00d3245af970a66fa9dd"),
+            name: 'Kitten',
+            smyptons: [ { sname: 'sim2' }, { sname: 'sim3' } ],
+            symptons: { '0': { sname: 'sim2' } }
+        }]
+
+        updateOne({name: "Kitten", "smyptons.sname": "sim1"},{$set: {"smyptons.$.sname": "sim3"}});
+
+
+- David's extra code:
+
+        app.patch("/api/todo/:id", async (req, res) => {
+            try {
+                const id = req.params.id
+                const { toEdit, value } = req.body
+                console.log("request came in");
+
+                if (toEdit && value) {
+                    console.log(toEdit, value);
+                    const todoToEdit = await ToDo.findByIdAndUpdate(id, { [toEdit]: value })
+                    console.log(todoToEdit);
+                    return res.status(201).json(
+                        {
+                            status: "updated",
+                            message: Todo with id: ${id} was updated. Updated property name: ${toEdit}, value: ${value}
+                        })
+                } else {
+                    console.log("Invalid request");
+                    return res.status(422).json({ status: "Invalid request" })
+                }
+            } catch (error) {
+                console.error(error);
+                return res.status(500).json({ status: "Internal server error" })
+            }
+        })

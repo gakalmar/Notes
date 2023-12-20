@@ -8,7 +8,7 @@
 ### **Client-side routing:**
 - **React Router** is a library for managing navigation and handling routing in SPAs:
     - No need for full page reloads
-    -  handles the rendering of components based on the URL and browser history
+    - handles the rendering of components based on the URL and browser history
 
 - How to use:
     1. Install `npm i react-router-dom`
@@ -84,7 +84,7 @@
 
             import { useNavigate } from 'react-router-dom'
             ...
-            export default function View() {
+            export default function About() {
                 const navigate = useNavigate();
                 ...
                 return <button onClick={() => navigate('/about')}>Go to About</button>
@@ -94,7 +94,7 @@
 
             import { useParams } from 'react-router-dom'
             ...
-            export default function View() {
+            export default function About() {
                 const { id } = useParams();
                 ...
                 return <div>The user's ID is: {id}</div>
@@ -117,7 +117,7 @@
 
                 module.exports = router;
 
-                // app.js
+                // server.js
                 import express from "express";
                 const userRoutes = require("./routes/user");
 
@@ -158,7 +158,7 @@
 
                 module.exports = errorHandler;
 
-                // app.js
+                // server.js
                 import errorHandler from "./errorHandlingMiddleware";
                 // ...
                 app.use(errorHandler);

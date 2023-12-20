@@ -1,24 +1,18 @@
 # Questions:  
 
-### 1
+WORKBOOK 55-56 mi a kulonbseg a prop es a state update kozt
+62 useRef with uncontrolled, useState with controlled
 
-JSON parsing during fetch - what should I parse, how should I send responses?
-what is the difference between response.json() and JSON.stringify()?
+EmployeeList.jsx -> filter functionality filters everything correctly (level, position), but when I delete a character with backspace, it can't go back - how to fix this issue?
+Also when clicking on "HOME" button (employees), the full list doesn't come back - how to deal with this? re-fetch?
+
+Assign equipment to employee feladat (using populate endpoint)
+Assign brand to each employee feladat
+Pagination feladat
+
+issues with install of last project (also error when running frontend)
+
+### Older questions:
 
 encodeURIComponent() and decodeURIComponent() ?
-what is the best way to keep updating the url and opening a page based on what is typed in?
-    (https://journey.study/v2/learn/courses/252/modules/23402/units/7/SOLO/57203 - last optional)
-
-Form -> rossz a hadnleClick function (atnezni miert nem mukodik)
-Promise object displayed
-
-click on form / click on puls button
-
-import using HTML script line cs import/export with modul type
-
-### Consultation topics:
-
-URL handling (URLSearchParams, get current, update to new url based on parameters)
-Fetching .then vs async await?
 Event bubbling - how and when to use stopPropagation() ?
-Date object

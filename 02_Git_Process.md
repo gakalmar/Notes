@@ -37,7 +37,7 @@ WORKING WITH BRANCHES:
     git branch newbranchname                //create new branch
     git checkout branchname                 //switch to an existing branch
     git checkout -b branchname              //create new branch and switch to it
-
+gk  
     git merge branchname                    //merge a branch into the active branch
     git merge sourcebranch targetbranch     //merge a branch into the target branch
 
@@ -51,13 +51,15 @@ WORKING WITH BRANCHES:
     
     WORK ON YOUR OWN BRANCH PROCESS:
 
-        1 git branch -b newbranch           //create new branch and switch to it
+        1 git checkout -b newbranch         //create new branch and switch to it
         2 do the work
         3 git checkout development          //switch back to development
         4 git pull                          //maybe it would be a good idea to pull at this stage?
         5 git merge newbranch               //merge your branch into development
         6 git branch -d newbranch           //delete newbrach branch
         7 git add- & commmit & push
+
+        +1 git push origin --delete branch_name     // If you pushed your branch to GitHub, you can delete it from GitHub with this command
 
 OTHER USEFUL COMMANDS:
 
