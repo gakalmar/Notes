@@ -1,66 +1,14 @@
 # NEXT WEEK SUMMARY:
 
-- Finish WORKBOOK
-✅ Watch React videos (Autrian guy)
-- Watch React videos (youtube quick guides)
-- Watch React Router video (youtube quick guides) https://www.youtube.com/playlist?list=PLC3y8-rFHvwjkxt8TOteFdT_YmzwpBlrG
-- Complete last task from Express module (cat API or football API?) - Or create your own database to practice Mongo?
-- Create bootstrap quick setup file with most useful commands
-✅ Watch a mongoDB youtube video x in y mins
-- Redo Pokemon API project to practice
-- Fetch responses
-- .env workflow (environmental variables)
-
-- Add to notes:
-    - useStyles (otherwise you will have 1 generated global CSS)
-    - @mui Material UI (instead of Bootstrap?)
-    - React Router - Outlet, Link, Routes/Route enbedded -> index === path{="/"} use this to have a default page, use Layout to do it like this
-    - React phases https://docs.google.com/presentation/d/1-qi_PGlNdoUKZYAc1VtOXzJiKrU4AF7lf46AFc4nbEo/edit#slide=id.p
-    - controlled vs uncontrolled: (fully working code in employee task before PA)
-        - also check how it's done with select/option input types!
-        
-<!-- - 
-=== Controlled ===
-
-const [state1, setState1] = useState()
-const [state2, setState2] = useState()
-
-<input value={state1} onChange={(e) => setState1(e.target.value)}>{something}</input>
-<input value={state2} onChange={setState2}/>
-...
-
-onSubmit() {
-  const newObject = {
-    key1: state1,
-    key2: state2,
-  }
-
-  fetch(url, {
-    method: 'POST',
-    headers: ...,
-    body: JSON.stringify(newObject)
-  })
-}
-
-<select value={selectedOption} onChange={(e)=>{//e.target.value === x}}>
-  <option value={x}
-</select>
-
-=== Uncontrolled ===
-
-onSubmit = (e) => {
-  e.preventDefault();
-  e.target.value = // {
-    key1: 
-  }
-}
-
-<form onSubmit={} action='url'>
-  <input defaultValue={} name='key1'></input>
-  <input name='key1'></input>
-  <button></b
-
--->
+- Take notes from this article:
+    https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/object-oriented/
+- Take notes from the last article in the first lesson:
+    https://www.geeksforgeeks.org/difference-between-compiled-and-interpreted-language/
+- Continue 2-part tutorial:
+    https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/classes
+    https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/oop
+- Finish 2nd part of video tutorials:
+    https://www.youtube.com/playlist?list=PLdo4fOcmZ0oVxKLQCHpiUWun7vlJJvUiN
 
 # Regular tasks to make progress on:
 
