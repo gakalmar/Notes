@@ -1,16 +1,12 @@
 # Questions:  
 
-WORKBOOK 55-56 mi a kulonbseg a prop es a state update kozt
-62 useRef with uncontrolled, useState with controlled
+GitHub commit (too many files - where is the gitignore, and what should I add to it?)
+How to set up/clone properly?
 
-EmployeeList.jsx -> filter functionality filters everything correctly (level, position), but when I delete a character with backspace, it can't go back - how to fix this issue?
-Also when clicking on "HOME" button (employees), the full list doesn't come back - how to deal with this? re-fetch?
+Model folder - ide egy enum-ot tettunk a kartyas feladatban, de a deliverysben model class-t kell letrehozni. Ezeket is a Model konyvtarba masoljuk?
 
-Assign equipment to employee feladat (using populate endpoint)
-Assign brand to each employee feladat
-Pagination feladat
-
-issues with install of last project (also error when running frontend)
+Traditional C# environment vs Rider environment (how are the SI week tasks structured?)
+    We are using Main method in the Program.cs file/class. Isn't this supposed to be alreadty the default in the new Rider environment?
 
 ### Older questions:
 

@@ -1,47 +1,17 @@
-# NEXT WEEK SUMMARY:
+# LIST OF THINGS TO DO IN ORDER:
 
-- Take notes from this article:
-    https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/object-oriented/
 - Take notes from the last article in the first lesson:
     https://www.geeksforgeeks.org/difference-between-compiled-and-interpreted-language/
-- Continue 2-part tutorial:
-    https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/classes
-    https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/oop
-- Finish 2nd part of video tutorials:
+- Complete 2 final tasks in SI01:
+    https://journey.study/v2/learn/courses/252/modules/12602/units/3/SOLO/52563
+    https://journey.study/v2/learn/courses/252/modules/12602/units/3/SOLO/52659
+
+# Not urgent:
+
+- Watch Linq tutorial on MSFT:
     https://www.youtube.com/playlist?list=PLdo4fOcmZ0oVxKLQCHpiUWun7vlJJvUiN
 
-# Regular tasks to make progress on:
-
-- SI week progress / Team week tasks
-- Updating Workbook regularly
-- Practicing Codewars
-- Do separate courses of each project (eg. look up topics on javascript.info, watch video tutorials)
-
-# To check & add:
-
-- Create a summary code for all methods (GET etc)
-
-- New material related:
-    - https://github.com/raberik98/CC_Express_Endpoints
-    - https://github.com/raberik98/CC_Express_Guide
-    - Send data to server in jounrey: ask for help
-
-    - https://developer.mozilla.org/en-US/docs/Web/API/Request
-    - https://developer.mozilla.org/en-US/docs/Web/API/Response
-    - https://developer.mozilla.org/en-US/docs/Web/API/ReadableStream
-
-- Material visualizations (reread before PA):
-    - **Q&A doc:** https://docs.google.com/document/d/17Sng1zIGAot7iOTkIaeLxLzHBa8JYwvg7P2jkb3xYMk/edit
-
-    - Promises https://dev.to/lydiahallie/javascript-visualized-promises-async-await-5gke
-    - Events https://dev.to/lydiahallie/javascript-visualized-event-loop-3dif
-    - Async Await https://blog.bitsrc.io/understanding-javascript-async-and-await-with-examples-a010b03926ea
-    - Event bubbling https://www.freecodecamp.org/news/event-bubbling-in-javascript/
-        (code in hou-web channel!)
 
 - CSS:
     - CSS algorithms https://www.joshwcomeau.com/css/understanding-layout-algorithms/
     - install Bootstrap & watch basic tutorial
-
-- FAQ doc:
-    - https://docs.google.com/document/d/17Sng1zIGAot7iOTkIaeLxLzHBa8JYwvg7P2jkb3xYMk/edit
