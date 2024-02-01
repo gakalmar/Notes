@@ -1,17 +1,18 @@
 # LIST OF THINGS TO DO IN ORDER:
 
-- Take notes from the last article in the first lesson:
-    https://www.geeksforgeeks.org/difference-between-compiled-and-interpreted-language/
-- Complete 2 final tasks in SI01:
-    https://journey.study/v2/learn/courses/252/modules/12602/units/3/SOLO/52563
-    https://journey.study/v2/learn/courses/252/modules/12602/units/3/SOLO/52659
+- finish codecademy tutorial https://www.codecademy.com/learn/learn-c-sharp
+
+- All links to check:
+    - Unit testing video: https://www.youtube.com/watch?v=uvqAGchg8bc&ab_channel=MatthiWare
+    - NUnit cheatsheet: https://www.automatetheplanet.com/nunit-cheat-sheet/
+    - NUnit annotations: https://www.blazemeter.com/blog/nunit-annotations
+
+    - Watch Linq tutorial on MSFT: https://www.youtube.com/playlist?list=PLdo4fOcmZ0oVxKLQCHpiUWun7vlJJvUiN
+    - +1 LINQ: https://www.youtube.com/watch?v=1UqjUgcdq6g&ab_channel=JamieKing
+
+Additional moq examples: https://docs.educationsmediagroup.com/unit-testing-csharp/moq/quick-glance-at-moq
 
 # Not urgent:
 
-- Watch Linq tutorial on MSFT:
-    https://www.youtube.com/playlist?list=PLdo4fOcmZ0oVxKLQCHpiUWun7vlJJvUiN
-
-
 - CSS:
     - CSS algorithms https://www.joshwcomeau.com/css/understanding-layout-algorithms/
-    - install Bootstrap & watch basic tutorial

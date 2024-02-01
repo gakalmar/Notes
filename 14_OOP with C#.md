@@ -1,40 +1,37 @@
 # C#
 
+## Useful keyboard shortcuts:
+Alt + Insert - Generate Code
+
+Alt + <- / -> - Go Back / Forward
+Ctrl + LClick - Jump into method / Class
+
+Alt + Shift + F - reformat code
+Ctrl + Alt + I - Auto indent
+Ctrl + Shift + R - Refactor selected (eg. extract class)
+
 ## Resources:
 - **Theorical:**
-    - ✔️ Principles of OOP: https://journey.study/v2/learn/materials/oop-principles-1q2023
-    - ✔️ What is .NET? https://journey.study/v2/learn/materials/pages/tools/about-dotnet.md
-    - ✔️ C# vs JS: https://www.educba.com/c-sharp-vs-js/
-    - ✔️ Overview of Classes, Structs abd Records: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/object-oriented/
-    - ❌ Compiled vs Interpreted lanugages: https://www.geeksforgeeks.org/difference-between-compiled-and-interpreted-language/
     - ❌ Type system in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/
-    - ❌ Full list of C# types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types
-    - ❌ Numbers:
-        - Integral types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/integral-numeric-types
-        - Floating-point types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types
-    - ❌ Strings: https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/strings/
-    - ❌ Arrays: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/arrays
-    - ❌ Collections: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/collections
     - ❌ Nullable references: https://learn.microsoft.com/en-us/dotnet/csharp/nullable-references
-    
-    - ❌ Properties: https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/properties
-    - ❌ Constructors: https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/constructors
 
-    - ❌ Clean Code Principles: https://journey.study/v2/learn/materials/cc-csharp-1q2023
-    - ❌ Architecture checklist: https://journey.study/v2/learn/materials/arch-checklist-csharp-1q2023
+    - ❌ Attributes: (eg. [Test]) https://learn.microsoft.com/en-us/dotnet/csharp/advanced-topics/reflection-and-attributes/
+
 - **Tutorials:**
-    - ✔️ Setting up a project in Rider: https://journey.study/v2/learn/materials/pages/tools/csharp-helloworld-rider                      
-    - ❌ .NET tutorials: https://dotnet.microsoft.com/en-us/learn
-    - ✔️ Step-by step tutorial inside browser: https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/tutorials/hello-world?tutorial-step=1
-    - ✔️ Microsoft basic tutorial: https://learn.microsoft.com/en-gb/shows/csharp-101/?wt.mc_id=educationalcsharp-c9-scottha
-    - ✔️ Collection of tutorials: https://learn.microsoft.com/en-us/dotnet/csharp/tour-of-csharp/tutorials/
     - ❌ Another basic C# free tutorial on codeacademy: https://www.codecademy.com/learn/learn-c-sharp
-    - ✔️ Classes and Objects bank account tuts:    https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/classes
-                                                https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/oop
+    - ✔️ Setting up a project in Rider: https://journey.study/v2/learn/materials/pages/tools/csharp-helloworld-rider                      
+    - ✔️ Microsoft basic tutorial: https://learn.microsoft.com/en-gb/shows/csharp-101/?wt.mc_id=educationalcsharp-c9-scottha
+    - ✔️ More MSFT tuts (more in sidebar in the link!):    https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/classes
+
 - ⏳ (LINQ part still not watched!) Full Microsoft video course: https://www.youtube.com/playlist?list=PLdo4fOcmZ0oVxKLQCHpiUWun7vlJJvUiN
 
 - **Further reads (non-mandatory):**
     - 💭 Memory management: https://endjin.com/blog/2022/07/understanding-the-stack-and-heap-in-csharp-dotnet
+    - 💭 Naming conventions: https://github.com/ktaranov/naming-convention/blob/master/C%23%20Coding%20Standards%20and%20Naming%20Conventions.md
+    - 💭 NUnit cheatsheet: https://www.automatetheplanet.com/nunit-cheat-sheet/
+    - 💭 LINQ cheatsheet: https://www.tutorialsteacher.com/linq
+    - 💭 Clean Code Principles: https://journey.study/v2/learn/materials/cc-csharp-1q2023
+    - 💭 Architecture checklist: https://journey.study/v2/learn/materials/arch-checklist-csharp-1q2023
 
 ## FUNDAMENTALS AND BASIC CONCEPTS:
 - Introduction to C#:
@@ -214,15 +211,17 @@
                 - Overwrite `Equals` & `GetHashCode` methods inherited from `Object` *base class* (see tutorial at the end)
                 - After override, we should compare not with `==`, but with `obj1.Equals(obj2)` method
 
-- **(Custom) TYPES - Classes, Structs and Records:**
-    - the definition of a **type** is like a blueprint that specifies what the **type** can do (a **class**, **struct**, or **record**)
-    - A class or struct can specify how accessible each of its members is to code outside of the class or struct:
-        - Methods and variables that aren't intended to be used from outside of the class or assembly can be hidden
-    - **Type MEMBERS:**
+- **TYPES - (Custom) TYPES - Classes, Structs and Records:**
+    - **DEFINITION:**
+        - the definition of a **type** is like a blueprint that specifies what the **type** can do (a **class**, **struct**, or **record**)
+        - A class or struct can specify how accessible each of its members is to code outside of the class or struct:
+            - Methods and variables that aren't intended to be used from outside of the class or assembly can be hidden
+
+    - **MEMBERS:**
         - The members of a type include all fields, properties, methods, constructors and more
         - In C#, there are no global variables or methods as there are in some other languages:
             - Even a program's entry point, the Main method, must be declared within a class or struct
-        - Members that may be declared in a class, struct, or record:
+        - **Members types:**
             - **Fields** (eg `public string name`)
                 - a field stores a piece of data within an object (acts just like a variable)
                 - can have a number of modifiers, including: `public`, `private`, `static`, and `readonly`
@@ -427,7 +426,8 @@
             - Indexers
             - Operators
             - Nested Types
-    - **Type ACCESSIBILITY:**
+    
+    - **ACCESSIBILITY:**
         - *Client code:* Meant to be accessed from outside the class or struct
         - By default, fields, properties, and methods are `private`, and classes are `public`.
         - Access modifiers:
@@ -437,7 +437,8 @@
             - protected internal
             - private
             - private protected
-    - **Type INHERITANCE:**
+    
+    - **INHERITANCE:**
         - To organize your classes and create class hierarchies:
             - We use it when we have a class with some functionality, and we need another class which is very similar but has some additional or slightly different behaviour (eg car -> electric car)
         - Classes (but not structs!) can "inherit"
@@ -482,10 +483,11 @@
                     Pet pet = new Pet();
                     Dog dog = (Pet)pet;         // "Pet" type instead of "Dog", so it won't work
 
-    - **Type INTERFACE:**
+    - **INTERFACE:**
         - An interface contains definitions for a group of related functionalities that a non-abstract class or a struct *must* implement
         - To implement from an interface means that the type implements *all the methods* defined in the interface
-    - **Type CONVERSION:**
+
+    - **CONVERSION:**
         - **implicit:** happens automatically, if there is no data loss (eg. `int` can be converted to `double`, but not the other way around)
         - **explicit:** requires operator to create transformation:
 
@@ -497,30 +499,30 @@
                 string favNumber = Console.ReadLine();
                 int favNum = Convert.ToInt32(favNumber);
 
-    - **Generic types:** 
-        - Classes, structs, and records can be defined with one or more type parameters
-        - When creating an instance from the class `List<T>` by passing it a parameter: `List<string>` or `List<int>`
-    - **Static types:** (ream more in **Anatomy of a method** section)
-        - Classes (but not structs or records) can be declared as static
-        - A static class can contain only static members and can't be instantiated with the new keyword
-        - Classes, structs, and records can contain static members
-    - **Nested types:**
-        - Nested within another **type**
-    - **Partial types:**
-        - You can define part of a class, struct, or method in one code file and another part in a separate code file
-    - **Anonymous tpyes:**
-        - Anonymous types are defined by their named data members
-        - In situations where it isn't convenient or necessary to create a named class you use anonymous types
+    - **TYPE types:**
+        - **Generic types:** 
+            - Classes, structs, and records can be defined with one or more type parameters
+            - When creating an instance from the class `List<T>` by passing it a parameter: `List<string>` or `List<int>`
+        - **Static types:** (ream more in **Anatomy of a method** section)
+            - Classes (but not structs or records) can be declared as static
+            - A static class can contain only static members and can't be instantiated with the new keyword
+            - Classes, structs, and records can contain static members
+        - **Nested types:**
+            - Nested within another **type**
+        - **Partial types:**
+            - You can define part of a class, struct, or method in one code file and another part in a separate code file
+        - **Anonymous types:**
+            - Anonymous types are defined by their named data members
+            - In situations where it isn't convenient or necessary to create a named class you use anonymous types
 
-    - **Object initializer:**
-        - You can instantiate and initialize class or struct objects, and collections of objects, by assigning values to its properties
-    - **Extension methods:**
-        - You can "extend" a class without creating a derived class by creating a separate type.
-        - That type contains methods that can be called as if they belonged to the original type.
-    - **Implicitly Typed Local Variables:**
-        - Within a class or struct method, you can use implicit typing to instruct the compiler to determine a variable's type at compile time
+    - **MORE on Types:**
+        - **Object initializer:**
+            - You can instantiate and initialize class or struct objects, and collections of objects, by assigning values to its properties
+        - **Implicitly Typed Local Variables:**
+            - Within a class or struct method, you can use implicit typing to instruct the compiler to determine a variable's type at compile time
     
-    - **RECORDS:** ***(=an immutable data type with value-based equality)***
+    - **RECORDS: *(=an immutable data type with value-based equality)***
+        - *It's just a class that you don't want to change later*
         - You can add the record modifier to a `class` or a `struct` (`record class` or `record struct`)
         - Records are types with built-in behavior for value-based equality, with the following features:
             - Concise syntax for creating a reference type with immutable properties.
@@ -577,7 +579,57 @@
                     }
                 }
 
-- **TYPES - REFERENCE vs VALUE:**
+- **TYPES - BASIC types:** *Full list of C# types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types*
+    - **Built-in types (*=primitives*):**
+        - Numbers:
+            - `int` - range from -2,147,483,648 to 2,147,483,648 (because it's stored on 32bits, so 2^31-1, or 4,294,967,295)
+            - `short` - a 16-bit signed number, so it's range is -32,768 to 32,767
+            - `long` - a 64-bit number, so the range is -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
+            - `float` - A single precision floating point number
+            - `double` - A double-precision floating point number (Double-precision is a relative term that describes the numbers of binary digits used to store the value)
+            - `decimal` number type has a larger range as `int`, but not as big as `double`. In return, they store a lot more precision. There is also a letter `m` at the end of the number
+        - Text: (implemented with an iterator, so it is possible to iterate a string like you would do with a collection)
+            - `char`
+            - `string` 
+        - `bool`
+        - `byte`
+    - **Framework types:**
+        - `Array`:
+            - a simple data structure in which you can store multiple variables of the same type
+            - They represent a contiguous area in the memory, where the elements are placed next to each other
+            - The size of the array (the number of elements it holds) needs to be specified at creation (different from JS!), so it's **not dynamic**!
+            - The base class they inherit from is `System.Array`
+            - Declaration example:
+                    int[] array1 = { 4, 8, 15, 16, 23, 42};     // Create instantly
+                    int[] array2 = new int[5];                  // Create placeholder by specifying number of elements (eg. 5) , and add them later
+
+                    // Or initialize, then fill:
+                    string[] favSongs;
+                    favSongs = new string[]
+                    {
+                        "item1",
+                        "item2",
+                        ...
+                        "itemn"
+                    };
+
+        - `List<T>`:
+            - It's an indexable collection
+            - Very similar to arrays, but it's **dynamic**, so in most cases it's prefered to use a list
+            - `<T>` refers to the type of items it stores
+        - `Console`:
+            - Derived from the `System.Console` class
+            - It's a `static` class
+            - All the functionality is realted to console in and output (since we will be working with Console Applications, the main user interactions happens through the console)
+        - `DateTime`:
+            - Anything date related can be created with it
+        - `Random`:
+            - Generates random numbers
+        - `Thread`:
+            - A `thread` is a unit of execution (in this module we are only working in a singlethreaded environment) -> so we will only have 1 thread, the **main thread**
+            - `Thread.Sleep` method can be used to defer (delay?) the execution of the current thread by 'x' milliseconds
+
+- **TYPES - REFERENCE vs VALUE:** 
     - The **reason** we can store types differently is that it helps to reduce the occurrance of runtime exceptions:
         - a **value type** can never be `null` -> the will never throw a `NullReferenceException` (one of the most common exceptions in OOP languages)
 
@@ -691,55 +743,6 @@
                     {
                         return num + 1;             // The returned value will be a new integer
                     }
-- **TYPES - BASIC types:**
-    - **Built-in types (*=primitives*):**
-        - Numbers:
-            - `int` - range from -2,147,483,648 to 2,147,483,648 (because it's stored on 32bits, so 2^31-1, or 4,294,967,295)
-            - `short` - a 16-bit signed number, so it's range is -32,768 to 32,767
-            - `long` - a 64-bit number, so the range is -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
-            - `float` - A single precision floating point number
-            - `double` - A double-precision floating point number (Double-precision is a relative term that describes the numbers of binary digits used to store the value)
-            - `decimal` number type has a larger range as `int`, but not as big as `double`. In return, they store a lot more precision. There is also a letter `m` at the end of the number
-        - Text: (implemented with an iterator, so it is possible to iterate a string like you would do with a collection)
-            - `char`
-            - `string` 
-        - `bool`
-        - `byte`
-    - **Framework types:**
-        - `Array`:
-            - a simple data structure in which you can store multiple variables of the same type
-            - They represent a contiguous area in the memory, where the elements are placed next to each other
-            - The size of the array (the number of elements it holds) needs to be specified at creation (different from JS!), so it's **not dynamic**!
-            - The base class they inherit from is `System.Array`
-            - Declaration example:
-                    int[] array1 = { 4, 8, 15, 16, 23, 42};     // Create instantly
-                    int[] array2 = new int[5];                  // Create placeholder by specifying number of elements (eg. 5) , and add them later
-
-                    // Or initialize, then fill:
-                    string[] favSongs;
-                    favSongs = new string[]
-                    {
-                        "item1",
-                        "item2",
-                        ...
-                        "itemn"
-                    };
-
-        - `List<T>`:
-            - It's an indexable collection
-            - Very similar to arrays, but it's **dynamic**, so in most cases it's prefered to use a list
-            - `<T>` refers to the type of items it stores
-        - `Console`:
-            - Derived from the `System.Console` class
-            - It's a `static` class
-            - All the functionality is realted to console in and output (since we will be working with Console Applications, the main user interactions happens through the console)
-        - `DateTime`:
-            - Anything date related can be created with it
-        - `Random`:
-            - Generates random numbers
-        - `Thread`:
-            - A `thread` is a unit of execution (in this module we are only working in a singlethreaded environment) -> so we will only have 1 thread, the **main thread**
-            - `Thread.Sleep` method can be used to defer (delay?) the execution of the current thread by 'x' milliseconds
 
 ## DATA TYPES and BUILDING BLOCKS OF CODE:
 - **BASICS:**
@@ -839,8 +842,123 @@
                     }
         - **Dictionaries:**
             - `Dictionary<TKey, TValue>`: A collection of key-value pairs.
+                - Use:
+
+                        // Create new dictionary syntax:
+                        Dictionary<string, int> myDictionary = new Dictionary<string, int>();
+
+                        // Add items:
+                        myDictionary.Add("apple", 1);
+                        myDictionary.Add("banana", 2);
+
+                        // Remove items:
+                        myDictionary.Remove("apple");
+                        
+                        // Refer to items by key:
+                        int value = myDictionary["apple"]; // value will be 1
+
+                        // Check for existance:
+                        if (myDictionary.ContainsKey("apple"))
+                        {
+                            int value = myDictionary["apple"];
+                        }
+
+                        // Update an item:
+                        myDictionary["apple"] = 5; // Updates the value associated with "apple" to 5
+
+                        // Retrieving Items
+                            - By Key: Iterate through all keys using `myDictionary.Keys`.
+                            - By Value: Iterate through all values using `myDictionary.Values`.
+
+                        // Or iterate through all Key-Value pairs:
+                        foreach (KeyValuePair<string, int> kvp in myDictionary)
+                        {
+                            Console.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}");
+                        }
+
+                - Other commonly used methods:
+                    - `myDictionary.TryGetValue()`: attempts to get the value associated with a specified key (If the key is found, it returns true and assigns the value to the out parameter, otherwise returns false)
+
+                            // Initial setup for all method examples:
+                            Dictionary<string, int> myDictionary = new Dictionary<string, int>
+                            {
+                                {"apple", 5},
+                                {"banana", 3},
+                                {"orange", 2}
+                            };
+
+                            // TryGetValue:
+                            if (myDictionary.TryGetValue("apple", out int appleCount))
+                            {
+                                Console.WriteLine($"The count of apples is {appleCount}.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Apple key not found.");
+                            }
+
+                    - `myDictionary.ContainsKey()`: checks if a specified key exists in the dictionary
+
+                            if (myDictionary.ContainsKey("banana"))
+                            {
+                                Console.WriteLine("The dictionary contains the key 'banana'.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("The key 'banana' is not in the dictionary.");
+                            }
+
+
+                    - `myDictionary.ContainsValue()`: checks if a specific value exists in the dictionary
+
+                            if (myDictionary.ContainsValue(2))
+                            {
+                                Console.WriteLine("There is a fruit with a quantity of 2.");
+                            }
+                            else
+                            {
+                                Console.WriteLine("No fruit has a quantity of 2.");
+                            }
+
+                    - `myDictionary.Clear` - Removes all key-value pairs
+
+                - There are 4 types of dictionaries:
+                    - Dictionary            
+                    - Hashtable             // returns an object (boxing and unboxing concept)
+                    - ConcurrentDictionary  // try methods (working with API delayed execution ?)
+                    - ImmutableDictionary   // use it if you don't want to update data inside
+
         - **HashSet:**
             - `HashSet<T>`: A set of unique elements.
+                - only stores unique elements and doesn't store key-value pairs
+                - It's mainly used for **checking the presence or absence** of elements
+
+                - Use:
+
+                        // Initial setup:
+                        HashSet<string> myHashSet = new HashSet<string>
+                        {
+                            "apple",
+                            "banana",
+                            "orange"
+                        };
+
+                        // Add elements:
+                        myHashSet.Add("grape");     // Returns bool if (true if item wasn't yet in HashSet and was added successfully)
+
+                        // Remove an item:
+                        myHashSet.Remove("apple");  // Returns bool if (true if item was found and removed)
+
+                        // Contains - check if something is in it:
+                        if (myHashSet.Contains("banana"))
+                        {
+                            Console.WriteLine("The HashSet contains 'banana'.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("'Banana' is not in the HashSet.");
+                        }
+
         - **Queue & Stack:**
             - `Queue<T>`:
                 - follows the First-In-First-Out (FIFO) principle
@@ -860,7 +978,6 @@
 
                             string first = queue.Dequeue();  // Removes and returns "Apple"
                             string next = queue.Peek();      // Returns "Banana" without removing it
-
 
             - `Stack<T>`:  
                 - follows the Last-In-First-Out (LIFO) principle:
@@ -896,7 +1013,7 @@
                 - `Clear`: Removes all items from the collection.
                 - `Contains`: Determines whether the collection contains a specific item.
                 - `CopyTo`: Copies the elements of the collection to an array, starting at a particular index.
-
+        
     - **Enum:**
         - "Enumeration":
             - It's a **value type** that helps you define a group of named constants (*represent a fixed set of distinct values*)
@@ -943,7 +1060,7 @@
                     Winter      // 3
                 }
 
-                // Save a specific into a variable of it's own type:
+                // Save a specific Enum into a variable of it's own type:
                 Season a = Season.Autumn;
                 or
                 var a = (Season)2;
@@ -959,7 +1076,8 @@
                 // Determine the length of an enum:
                 int numberOfSeasons = Enum.GetNames(typeof(Season)).Length      // Get the length of "Season" enum
 
-        - `IEnumerable` interface:
+        - `IEnumerable`: (*more here: https://www.youtube.com/watch?v=UfT-st9dl8Q&ab_channel=AngelSix*)
+            - interface (within `System.Collections` namespace):
             - provides a single unified access to any built-in collection in C# (so you can use it with any type of collection)
             - defines a standard way to iterate over a collection of items
             - perform operations such as filtering, sorting, and mapping
@@ -973,6 +1091,8 @@
                 - `IEnumerator` object (instance) -> has 2 methods:
                     - `MoveNext()`: moves the iterator to the next item in the collection and returns a bool value indicating whether there are more items to be traversed.
                     - `Reset()`: resets the iterator to its initial position
+                    - `Current { get; }`
+
                 - This is all built in into C# (so using foreach or a LINQ method means you are implicitly using `IEnumerable`):
 
                         List<int> numbers = new List<int> {1,2,3,4,5}; // List<T> implements `IEnumerable`
@@ -981,6 +1101,16 @@
                         {
                             Console.WriteLine(number);
                         }
+
+                        // Behind the scenes, when calling a foreach on an array, this is what happens really:
+                        
+                        var enumerator = array.GetEnumerator();
+                        
+                        while(enumerator.MoveNext())                // meaning: do this while there is a next item
+                        {
+                            Console.WriteLine(enumerator.Current);
+                        }
+                
             - **Best practices:**
                 - IEnumerable in method parameters:
                     - generally a good idea to have the input parameter as `IEnumerable` (unless you need more specific properties)
@@ -1077,6 +1207,7 @@
         - `break;` - end the loop and carry on with the code
         - `continue;` - end the current loop and carry on with the next one (skip code from within the loop)
         - `return` - break out of a method completely (not just loops!). If it's inside a loop, the loop will also end (even multiple loops!)
+
 ## METHODS:
 - **Overview:**
     - In C# methods and functions are the same
@@ -1204,6 +1335,7 @@
     - **method signature:** 
         - the method's name and the parameters together `MethodName(parameters)` -> this is a unique identifier of the method (name is with Capital letter! *PascalCase*)
         - `void` is not part of it, which is important because of **member/method overloading** 
+
 - **Method/member overloading:**
     - it means creating multiple elements with the same name, which only differ in the numbers of parameters
     - the return type **MUST** be the same for all members/methods!
@@ -1224,6 +1356,7 @@
             }
 
             // In this case, the type of the argument will determine which method will be invoked
+
 - **Instance vs. Static methods:**
     - `static` methods are the ones that are called inside `Main()`, or we have to specifiy the Class name as well:
         - Access them through the **CLASS**
@@ -1277,23 +1410,72 @@
             bool isEven(int num) => num % 2 == 0;
 
 - **Lambda expression:** same as an anonymous function written directly as a parameter of a method:
+    - Expressions used to create **anonymous functions** in C#
+    - Very commonly used with LINQ methods
 
-        // Traditional way:
-        bool makesContact = Array.Exists(spaceRocks, HitGround);
+    - Simple examples:
 
-        static bool HitGround(string s)
-        {
-        return s == "meteorite";
-        }
+            // Traditional way:
+            bool makesContact = Array.Exists(spaceRocks, HitGround);
 
-        // Same with Lambda expression:
-        bool makesContact = Array.Exists(spaceRocks, (string s) => s == "meteorite");
+            static bool HitGround(string s)
+            {
+                return s == "meteorite";
+            }
 
-        // We can make it even shorter:
-        bool hasEvenNumbers = Array.Exists(numbers, num => num % 2 == 0 );      // since % returns a number, the type can be omitted. Also if we only have 1 argument, we can also omit () 
+            // Same with Lambda expression:
+            bool makesContact = Array.Exists(spaceRocks, (string s) => s == "meteorite");
+
+            // We can make it even shorter:
+            bool hasEvenNumbers = Array.Exists(numbers, num => num % 2 == 0 );      // since % returns a number, the type can be omitted. Also if we only have 1 argument, we can also omit ()
+    
+    - **Delegates:**
+        - Functions: First class citizens in C# (means we can create a function, then assign it to a variable)
+        - `delegate`: 
+            - a type that represents references to methods with a particular parameter list and return type
+            - built in type in .NET, that encapsulates a function
+
+                    // Let's declare a function
+                    private int Square(int x)
+                    {
+                        return x * x;
+                    }
+
+                    // Elsewhere
+                    Func<int, int> square = Square;
+
+                    // We can now invoke the Square function through the square delegate like this:
+                    int squareOfTwo = square(2);
+            
+            - `Func<int, int>`: 
+                - this is a `delegate` type, that gets 1 **input** (`int`) and **returns** another value (`int`)
+                - the last parameter is always the **return** value, and we can have up to 16 **input** values (eg. `Func<int, int, double>` get 2 params (int, int), and returns a double value)
+                - we can also create a parameterless one: `Func<int>`, which will return an `int` but require no input parameters
+    
+    - **Using lambdas:**
+        - To create a lambda expression, you specify **input parameters** on the *left side* of the lambda operator `=>` and an **expression or a statement block** on the *other side*:
+
+                // Simple in-line version
+                Func<int, int> square = x => x * x;     // We don't need to specify the type of 'x', because we are using "Func". If we used "var", then we would have to specify
+
+                // Or with statement body (for more complex calculations):
+                Func<int,int> square = x =>
+                {
+                    return x * x;
+                };
+        
+        - We can even create lambdas without any parameters:
+
+                var hello = () => "Hello";              // We can use "var" here, beacause there is no return value (the var type will be Func<string> )
+                var square = (int x) => x * x;          // When we use a param with "var", we also need to specify its type (as opposed to "x" when using Func)
+
 
 - **Extension method:**
-    - a language feature in C#, that lets you add functionality to a class, struct, enum, interface, or a record without modifying its original source code.
+    - From basics:
+        - You can "extend" a class without creating a derived class by creating a separate type
+        - That type contains methods that can be called as if they belonged to the original type
+
+    - An **extension method** is a language feature in C#, that lets you add functionality to a class, struct, enum, interface, or a record without modifying its original source code.
     - Let's see the process through an example:
         - A Method created to determine if a Date is between 2 other dates:
 
@@ -1571,17 +1753,24 @@
 
 - **SOLID** Design Principles:
     - **S**: The Single Responsibility Principle (SRP)
+        - **Summarized:**  
+            - Every class and method inside should only do 1 thing
         - A class should have only one reason to change, meaning it should have only one job or responsibility.
         - Apply also *inheritance vs. composition principles* (see above)
         - **Example:** A `User` class handles user `properties` but delegates logging user `activities` to a separate *UserActivityLogger* class.
     - **O**: The Open/Closed Principle (OCP)
+        - **Summarized:**
+            - We create `base-classes` for the classes we would need to update later, so instead of modifying a class, we leave the `base-class` untouched and we only create a new `sub-class` that uses it
         - Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.
         - **Example:** A `ReportGenerator` class can be extended to support different report formats (CSV, PDF) without changing its existing code (eg. through the use of interfaces or abstract classes.)
     - **L**: The Liskov Substitution Principle (LSP)
         - Functions that use pointers or references to base classes must be able to use objects of derived classes without knowing it.
         - Objects of a superclass should be replaceable with objects of its subclasses without affecting the correctness of the program.
         - **Example:**  If `Bird` is a superclass and `Duck` is a subclass, then you should be able to replace `Bird` with `Duck` without altering the program's behavior, assuming they share behaviors like `fly()`.
-    - **I**: The Interface Segregation Principle (ISP)
+    - **I**: The Interface Segregation Principle (ISP):
+        - **Summarized:**
+            - use interfaces for classes
+            - subdivide interfaces: if we have a class that uses `method-A`, and another that only uses `method-B`, then `method-A & B` need to be in **separate** interfaces
         - Clients should not be forced to depend upon interfaces that they do not use.
         - An `interface` is an abstract type in C# that defines a contract:
             - Any class or struct that implements an interface must provide an implementation of the members defined in the interface.
@@ -1602,6 +1791,9 @@
             - They can have default implementations, but the usual case for them is to only define the method signatures, and leave the actual implementation to classes that implement the interface.
         - **Example:** Instead of one large `IWorker` interface with methods like `Work`, `Eat`, and `Rest`, have separate interfaces like `IWorkable`, `IEatable`, and `IRestable`, and implement them as needed in *different worker classes*.
     - **D**: The Dependency Inversion Principle (DIP)
+        - **Summarized:**
+            - The dependency instances should be created in the Program class
+            - The dependencies should be added to their constuctors
         - Depend upon abstractions, concretes:
             - High-level modules should not depend on low-level modules; both should depend on abstractions. 
             - Also, abstractions should not depend on details, but details (concrete implementations) should depend on abstractions.
@@ -1615,7 +1807,7 @@
                     - dependency injection is an instance-based technique - you can't really inject static members (technically you can, but it does not make sense architecturally).
         - **Example:** A `PaymentProcessor` class depends on an `IPaymentGateway` interface rather than a concrete `CreditCardPaymentGateway` class, allowing for different payment methods to be introduced without changing the `PaymentProcessor`'s code.
 
-- In practice:
+- **Step-by-step:**
     1. Apply **SRP:**
         - `Program` class should only run the program, nothing more
         - Organize classes by role/layer:
@@ -1654,6 +1846,215 @@
             - Create the implementing classes too! (`ConsoleLogger.cs` & `FileLogger.cs`)
             - Add logging capability to specific classes using constructor injection (eg CardGenerator class) - remove static from methods if you use dependency injection (?)
             - Create a logger instance in `Program.cs` file, so we can inject it into any other class that needs logging functionality
+    
+    4. Apply **OCP:** *(example https://code-maze.com/open-closed-principle/ )*
+        - Avoid the need of overwriting previous code when an update is needed
+        - **Example 1:**
+            - Create required model class(es):
+
+                    public class DeveloperReport
+                    {
+                        public int Id { get; set; }
+                        public string Name { get; set; }
+                        public string Level { get; set; }
+                        public int WorkingHours { get; set; }
+                        public double HourlyRate { get; set; }
+                    }
+
+            - Create an abstract class, eg:
+
+                    public abstract class BaseSalaryCalculator
+                    {
+                        protected DeveloperReport DeveloperReport { get; private set; }     // "Developer" type Property
+                        public BaseSalaryCalculator(DeveloperReport developerReport)        // Constructor
+                        {
+                            DeveloperReport = developerReport;
+                        }
+                        public abstract double CalculateSalary();                           // Public, ABSTRACT method (we can override it in the classes that inherit from this one)
+                    }
+            
+            - Then for the separate functionalities, we can create classes that inherit from this:
+
+                    // Senior Developer calculator:
+                    public class SeniorDevSalaryCalculator : BaseSalaryCalculator
+                    {
+                        public SeniorDevSalaryCalculator(DeveloperReport report)
+                            :base(report)
+                        {
+                        }
+
+                        public override double CalculateSalary() => DeveloperReport.HourlyRate * DeveloperReport.WorkingHours * 1.2;        // This is the only line, where there is a difference in the 2 classes (calculation method)
+                    }
+
+                    // Junior Developer Calculator:
+                    public class JuniorDevSalaryCalculator : BaseSalaryCalculator
+                    {
+                        public JuniorDevSalaryCalculator(DeveloperReport developerReport)
+                            :base(developerReport)
+                        {
+                        }
+
+                        public override double CalculateSalary() => DeveloperReport.HourlyRate * DeveloperReport.WorkingHours;              // This is the only line, where there is a difference in the 2 classes (calculation method)
+                    }
+
+            - Now we can create a class that handles the calculation:
+
+                    // Without using OCP (original code for comparison):
+                    public class SalaryCalculator
+                    {
+                        private readonly IEnumerable<DeveloperReport> _developerReports;
+
+                        public SalaryCalculator(List <DeveloperReport> developerReports)
+                        {
+                            _developerReports = developerReports;
+                        }
+
+                        public double CalculateTotalSalaries()
+                        {
+                            double totalSalaries = 0D ;
+
+                            foreach (var devReport in _developerReports)
+                            {
+                                totalSalaries += devReport.HourlyRate * devReport.WorkingHours;
+                            }
+
+                            return totalSalaries;
+                        }
+                    }                
+
+                    // Updated code using OCP principles:
+                    public class SalaryCalculator
+                    {
+                        private readonly IEnumerable<BaseSalaryCalculator> _developerCalculation;
+
+                        public SalaryCalculator(IEnumerable<BaseSalaryCalculator> developerCalculation)
+                        {
+                            _developerCalculation = developerCalculation;
+                        }
+
+                        public double CalculateTotalSalaries()
+                        {
+                            double totalSalaries = 0D;
+
+                            foreach (var devCalc in _developerCalculation)
+                            {
+                                totalSalaries += devCalc.CalculateSalary();
+                            }
+
+                            return totalSalaries;
+                        }
+                    }
+            
+            - our `SalaryCalculator` class is now **closed for modification and opened for an extension**, which is exactly what OCP states. Now we just need to write the `Program` class:
+                    
+                    class Program
+                    {
+                        static void Main(string[] args)
+                        {
+                            var devCalculations = new List<BaseSalaryCalculator>
+                            {
+                                new SeniorDevSalaryCalculator(new DeveloperReport {Id = 1, Name = "Dev1", Level = "Senior developer", HourlyRate = 30.5, WorkingHours = 160 }),
+                                new JuniorDevSalaryCalculator(new DeveloperReport {Id = 2, Name = "Dev2", Level = "Junior developer", HourlyRate = 20, WorkingHours = 150 }),
+                                new SeniorDevSalaryCalculator(new DeveloperReport {Id = 3, Name = "Dev3", Level = "Senior developer", HourlyRate = 30.5, WorkingHours = 180 })
+                            };
+
+                            var calculator = new SalaryCalculator(devCalculations);
+                            Console.WriteLine($"Sum of all the developer salaries is {calculator.CalculateTotalSalaries()} dollars");
+                        }
+                    } 
+
+        - **Example 2:**
+            - Initial parameters:
+
+                    public enum MonitorType
+                    {
+                        OLED,
+                        LCD,
+                        LED
+                    }
+
+                    public enum Screen
+                    {
+                        WideScreen,
+                        CurvedScreen
+                    }
+
+                    public class ComputerMonitor
+                    {
+                        public string Name { get; set; }
+                        public MonitorType Type { get; set; }
+                        public Screen Screen { get; set; }
+                    }
+
+            - Start by creating a couple of interfaces:
+
+                    public interface ISpecification<T>
+                    {
+                        bool isSatisfied(T item);
+                    }
+
+                    public interface IFilter<T>
+                    {
+                        List<T> Filter(IEnumerable<T> monitors, ISpecification<T> specification);
+                    }
+
+                    // With the ISpecification interface, we can determine whether or not our criterion is satisfied and we can send it to the Filter method from the IFilter interface.
+            
+            - Separate class for the monitor type specification:
+
+                    public class MonitorTypeSpecification: ISpecification<ComputerMonitor>
+                    {
+                        private readonly MonitorType _type;
+
+                        public MonitorTypeSpecification(MonitorType type)
+                        {
+                            _type = type;
+                        }
+
+                        public bool isSatisfied(ComputerMonitor item) => item.Type == _type;        // This is the filter (checks if the types are the same)
+                    }
+
+            - Write a class that implements IFilter interface:
+
+                    public class MonitorFilter : IFilter<ComputerMonitor>       // The monitorfilter will be a sub-class of IFilter interface
+                    {
+                        public List<ComputerMonitor> Filter(IEnumerable<ComputerMonitor> monitors, ISpecification<ComputerMonitor> specification) =>
+                            monitors.Where(m => specification.isSatisfied(m)).ToList();
+                    }
+
+            - Finally create the `Program` class:
+
+                    var filter = new MonitorFilter();
+
+                    var lcdMonitors = filter.Filter(monitors, new MonitorTypeSpecification(MonitorType.LCD));
+                    Console.WriteLine("All LCD monitors");
+                    foreach (var monitor in lcdMonitors)
+                    {
+                        Console.WriteLine($"Name: {monitor.Name}, Type: {monitor.Type}, Screen: {monitor.Screen}");
+                    }
+            
+            - At this point we can extend our `MonitorFilter` class without modifying it:
+
+                    public class ScreenSpecification : ISpecification<ComputerMonitor>
+                    {
+                        private readonly Screen _screen;
+
+                        public ScreenSpecification(Screen screen)
+                        {
+                            _screen = screen;
+                        }
+
+                        public bool isSatisfied(ComputerMonitor item) => item.Screen == _screen;        // We added new filter criteria to this line
+                    }
+            
+            - And now we can also filter for this condition:
+
+                    Console.WriteLine("All WideScreen Monitors");
+                    var wideScreenMonitors = filter.Filter(monitors, new ScreenSpecification(Screen.WideScreen));
+                    foreach (var monitor in wideScreenMonitors)
+                    {
+                        Console.WriteLine($"Name: {monitor.Name}, Type: {monitor.Type}, Screen: {monitor.Screen}");
+                    }
 
 ## EXCEPTION HANDLING:
 - The basic logic:
@@ -1690,11 +2091,11 @@
             // CODE THAT GETS EXCECUTED IN ALL CASES
         }
 
-## LINQ:
+## LINQ: 
 - Basics:
-    - LINQ is a set of language and framework features for writing queries on collection types
+    - LINQ is a set of language and framework features (libraries) for writing queries on collection types
     - useful for selecting, accessing, and transforming data in a dataset
-    - import it with `using Syste.Linq;`
+    - import it with `using Syste.Linq;` (already part of defaul Program!)
 - Values are stored in `var`, because the type of an executed LINQ query is not always known:
         
         var custQuery = from cust in customers
@@ -1713,265 +2114,364 @@
                 where cust.City == "London"  
                 select cust;
 
-- `Where` operator:
-    - used to select certain elements from a sequence:
-        - It expects an expression that evaluates to a boolean value.
-        - Every element satisfying the condition will be included in the resulting query.
-        - It can be used in both method syntax and query syntax.
-
-                List<Customer> customers = new List<Customer>
+- **Imperative vs Declarative programming style:**
+    - **imperative** -> focus on the *how*:
+        - Filtering example:
+                
+                public IEnumerable<int> FilterForSmallerThan(int number, IEnumerable<int> enumerable)
                 {
-                new Customer("Bartleby", "London"),
-                new Customer("Benjamin", "Philadelphia"),
-                new Customer("Michelle", "Busan" )
-                };
+                    List<int> smaller = new();
+                    foreach(int num in enumerable)
+                    {
+                        if (num < number)
+                        {
+                            smaller.Add(num);
+                        }
+                    }
 
-                // Query syntax
-                var custQuery =  
-                    from cust in customers  
-                    where cust.City == "London"  
-                    select cust;
+                    return smaller;
+                }
 
-                // Method syntax
-                var custQuery2 = customers.Where(cust => cust.City == "London");
+    - **declarative** -> focus on th *what*
+        - Using filtering with LINQ (declarative):
 
-                // Result: Customer("Bartleby", "London")       
+                public IEnumerable<int> FilterForSmallerThan(int number, IEnumerable<int> enumerable)
+                {
+                    return enumerable.Where(e => e < number>);
+                }
 
-- `From` operator (only used in query syntax):
-    - declares a range variable that is used to traverse the sequence
+                // Or with a true one-liner:
+                public IEnumerable<int> FilterForSmallerThan(int number, IEnumerable<int> enumerable) => enumerable.Where(e => e < number);
 
-            string[] names = { "Hansel", "Gretel", "Helga", "Gus" };
+- **Deferred execution:**
+    - LINQ methods always return an `IEnumerable` squence and never modify the original
+    - Using `List` operations, if we create a `var` for the return query:
 
-            var query =
-                from n in names
-                where n.Contains("a")
-                select n;
+            var query = names.Where(n => n.Contains("a"));      // it's important to note that at this point, the query has not actually been executed!    
+            
+    - LINQ uses **deferred execution**, meaning that the query is only executed when its results are enumerated (for example, by using a `foreach` loop, calling `ToList()`, or `ToArray()`, etc.).
 
-            // Result: Hansel, Helga
+            // It only gets executed if we use it in a context like below:
+            query.Count();
+            query.ToList();
+            foreach(var item in query){};
 
-- `Select` operator:
-    - determines what is returned for each element in the resulting query
+- **Method chaining:**
+    - Very easy to chain function calls:
 
-            string[] trees = { "Elm", "Banyon", "Rubber" };
+            // Get the sum of the numbers that are smaller than the input parameter
+            int SumSmallerThan(int number, IEnumerable<int> enumerable) => enumerable.Where(e => e < number).Sum(e =>e);
 
-            // Query syntax
-            var treeQuery =
-                from t in trees
-                select t.ToUpper();
+            // Now we can add a step inbetween, to first
+            int SquareSumForSmallerThan(int number, IEnumerable<int> enumerable) => enumerable.Where(e => e < number).Select(e => e * e).Sum(e =>e);
 
-            // Method syntax
-            var treeQuery2 = names.Select(t => t.ToUpper());
+- `IGrouping<TKey, TElement>` LINQ integrated interface:
+    - represents a collection of objects that have a common key (implements `IEnumerable` interface)
+    - used to group elements in a sequence into subsets based on a specified key
+    - **Key-Value Structure:**
+        - `TKey`: Represents the **type of the key** by which the elements are grouped.
+        - `TElement`: Represents **the type of the elements** in each group.
+    - `GroupBy` method in LINQ:
+        - returns a collection of `IGrouping<TKey, TElement>` objects
+        - Each `IGrouping` object contains a **sequence of objects** (the group) and a **key** that these objects share.
+    - **Example:**
 
-            // Result: ELM, BANYON, RUBBER
+            IEnumerable<IGrouping<string, Person>> groupedPeople = people.GroupBy(person => person.Department);
 
-- Using `List` operations, if we create a `var` for the return query:
+            foreach (var group in groupedPeople)
+            {
+                Console.WriteLine($"Department: {group.Key}");
+                foreach (var person in group)
+                {
+                    Console.WriteLine($" - {person.Name}");
+                }
+            }
 
-        var query = names.Where(n => n.Contains("a"));      // This will be a List or Array (?);
 
-        query.Count();
-        foreach(var item in query){};
+## READ / WRITE TO FILE:
+- `System.IO.File`: 
+    - provides static methods to create, delete, copy and move files
+    - open a file for reading or writing
+    - perform a single action on a file without keeping it open
+- `System.IO.StreamReader` and `System.IO.StreamWriter`
+    - Used for reading/writing text from/to a file
+    - Used for larger files, because they read/write data in a buffered manner ???
+- +3:
+    - `System.IO.FileStream`: write to any location in a file
+    - `System.IO.BinaryReader/Writer`: read/write data as binary values (eg. image files)
+    - `System.IO.MemoryStream`: used to store data temporarily as bytes
 
-# SPECIFIC METHODS:
-### **Console methods:**
-- Display information:
-        Console.WriteLine();                        // Write something and jump to next line
-        Console.WriteLine();                        // Write something and stay in the line
+- Example:
 
-        Console.ReadLine();                         // Wait for input followed by the ENTER key (It stores values as strings! Conversion is needed for numbers)
-        Console.ReadKey();                          // Wait for 1 key to be pressed
-
-        Console.Clear()                             // Clears the console screen
-        Console.Title                               // Sets the title of the console window
-
-- Get information (eg user input):
-
-        Console.Write("Enter your name: ");
-        string name = Console.ReadLine();
-        Console.WriteLine($"Hello {name}!");
-
-- Appearance:
-
-        Console.ForegroundColor = ConsoleColor.Green;       // Changes the text to green
-        Console.BackgroundColor = ConsoleColor.White;       // Changes the background to white
-        Console.ResetColor();                               // Reset to default colors
-
-### **String formatting:**
-- Specific characters in strings:  
-
-        \t      // to add a tab
-        \n      // to add a new line
-
-- Create a table:
-
-        Console.WriteLine("{0,-10} {1,-5} {2,-10}", "Name", "Age", "City");         // 2nd par represents min width (eg -10 or -5), negative value shows LEFT alignment
-        Console.WriteLine("{0,-10} {1,-5} {2,-10}", "Alice", "23", "New York");
-        Console.WriteLine("{0,-10} {1,-5} {2,-10}", "Bob", "30", "Los Angeles");
-
-- Padding:
-
-        string name = "Alice";
-        Console.WriteLine(name.PadRight(10) + "23".PadRight(5) + "New York".PadRight(10));
-
-- Formatting numbers:
-
-        Console.WriteLine("{0:C2}", 123.456); // Currency format with 2 decimal places
-        Console.WriteLine("{0:N0}", 1234567); // Number with thousands separator and no decimals
-
-### **String methods:** (link to string methods: https://learn.microsoft.com/en-us/dotnet/api/system.string.clone?view=net-8.0)
-- Trim:
-        greeting.Trim();
-        greeting.TrimStart();
-        greeting.TrimEnd();
-
-- Substring():
-        string name = "Codecademy"; 
-        int start = 2;
-        int length = 6;
-        string substringName = name.Substring(start, length); // returns 'decade'
-
-- Replace:
-        string sayhello = "Hello World!"
-        sayHello.Replace("Hello", "Greetings")      // "Hello World!" -> "Greetings World!" 
-        sayHello.ToUpper()                          // "Hello World!" -> "HELLO WORLD!" 
-        sayHello.ToLower()                          // "Hello World!" -> "hello world!"
-
-- Search:
-        string songLyrics = "You say goodbye, and I say hello";
-        songLyrics.Contains("goodbye")              // True
-        songLyrics.Contains("greetings")            // False
-
-        songLyrics.StarsWith("You")                 // True
-        songLyrics.EndsWith("Me")                   // False
-
-        string plantName = "Cactaceae, Cactus"; 
-        int charPosition = plantName.IndexOf("Cactus");                     // returns 11
-
-- ToUpper(), ToLower():
-        string shouting = "I'm not shouting, you're shouting".ToUpper();    // returns "I'M NOT SHOUTING, YOU'RE SHOUTING!"
-        string whispering = "I'M WHISPERING NOW".ToLower();                 // returns "i'm whispering now"
-
-- Convert:
-        int num = Convert.ToInt32("45");            // Convert an stinrg into an integer 
-
-### **Numbers methods:**
-- Basic Math operations: + - / * %
-- Math class methods:
-        Math.PI
-        int.MaxValue;
-        int.MinValue;
-
-### **Array-List-Collection methods:**  (link to methods: https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.add?view=net-8.0)
-- Indexing:
-        names[0] -> refers to the first element
-        names[names.Count - 1] -> refers to the last element
-- Add/remove elements:
-        names.Add("Bill");
-        names.Remove("Ana");
-- Length of a list:
-        names.Count
-- Searching:
-        var index = names.IndexOf("Felipe");        // Returns -1 if it doesn't find something
-
-        // So it's a good practice to add an if statement, to do the action only if the item is found:
-        if (index != -1)
+        // Write:
+        using (StreamWriter writer = new StreamWriter("example.txt"))
         {
-            Console.WriteLine($"The name {names[index]} is at index {index}");
+            writer.WriteLine("Hello, world!");
         }
-- Sort (modifies items in place, so modifies the original list):
-        names.Sort();                               // Recognizes the data type, and uses Quicksort/Introsort to sort data (so numbers in an ascending order, strings alphabetically)
-        foreach (var name in names)                 // This will go through the already sorted list
+
+        // Read:
+        using (StreamReader reader = new StreamReader("example.txt"))
         {
-            Console.WriteLine($"Hello {name.ToUpper()}!");
+            string line = reader.ReadLine();
+            Console.WriteLine(line);
         }
-- Find
-        int[] plantHeights = { 3, 6, 4, 1, 6, 8 };
-        int firstHeight = Array.Find(ArrayToSearch, bool Method());         // the first arg should be the array we are searching, then we add a function that should return a bool value
-        int firstHeight = Array.Find(plantHeights, height => height > 5);   // Finds the first occurence of a plant height that is greater than 5 inches
 
-### **DateTime:**
-- `System.DateTime` in .NET
-- Creating instances:
+        // Example logger:
 
-        DateTime now = DateTime.Now;                                            // Current date and time
-        DateTime today = DateTime.Today;                                        // Current date with time set to midnight
-        DateTime specificDate = new DateTime(2024, 1, 18);                      // Specific date (year, month, day)
-        DateTime specificDateTime = new DateTime(2024, 1, 18, 14, 30, 0);       // Specific date and time (year, month, day, hour, minute, second)
+                private void LogMessage(string message, string type)
+                {
+                    var entry = $"[{DateTime.Now}] {type}: {message}";
+                    using var streamWriter = File.AppendText(_logFile);     // we add "using" within the method here!
+                    streamWriter.WriteLine(entry);
+                }
 
-- Properties  
-    - Year, Month, Day, Hour, Minute, Second - Get individual components. (eg. today.Year -> 2024)
-    - DayOfWeek - Day of the week (e.g., DayOfWeek.Monday).
-    - DayOfYear - Day of the year (1-366).
+## UNIT TESTING:
+- Workshop quick notes:
+    - functionally works?
+    - Is it fast enough?
+    - maintainability
 
-- Methods:
-    - Adding/Subtracting Time:
-        - `AddDays`, `AddMonths`, `AddYears`, `AddHours`, `AddMinutes`, `AddSeconds` - Add time to a DateTime instance:
+    - Provide quality of software
+    - szabvanyok -> mit, hogyan kell letesztelni CMM 1-5
 
-                date.AddDays(5);        // Adds 5 days
+    - Unit test writing:    
+        - write test for `public` methods only, `privates` are supposedly included
+        - `public` class is an API
 
-        - Subtracting is done by adding a negative amount:
-                
-                date.AddDays(-5)        // Subtracts 5 days
+    - Levels:
+        - Unit test
+        - Component test (this is what the developer does, to check how classes work together)
+        - "Black box" testing - only input and output is imprtant (what's inside is unknown)
+
+    - Coverage:
+        - nCover based:
+            - functions (80% required)
+            - line coverage (70% required)
+
+    - Mutation analysis: test not being effective enough (?)
+
+    - `System.Reflection` -> this is what we will be using a lot
+
+    - **FIRST** guidelines:
+        - **F**: Fast
+        - **I**: Isolated - classes should be testable independently ("class mocking" (?))
+        - **R**: Repeatable & Stabile
+        - **S**: Self (?) what was the reason why we failed?
+        - **T**: Throughout - cover all edge cases - equivalency partition (input type variety eg. pos num, 0, and negative num for numbers)
+
+    - Framework: NUnit
+    - validation / verification:
+        - Is the product good?
+        - Is it well designed?
+        - weight of the bug / issue (small typo vs. cash machine not outputting money)
+
+    - Release notes: known errors to fix for next release / guidebook of use
+
+    - Process:
+        1. Add new project (Unit test pr.) - add name+Test
+        2. Delete sample class (test1)
+        3. Add new class: classNameTest
+            - new method:
+
+                    public void Test_metohd_NormalValue
+            
+            - add dependency: RClick on solution -> add reference (the project we are testing)
+            - Assert line (?)
+            - [Test] -> add this before the methods we want to test, only these will run
+        
+        4. Run All Tests -> if unsuccessful, fix issue and rerun, repeat
+        5. Now new value testing -> Normalvalue -> Nullvalue, etc.
+
+- **The purpose of unit testing:**
+    -   **Unit testing In general:**
+        - we use unit testing to validate the functional correctness of individual **units** of code:
+            - **unit:** the smallest testable part of an application, usually a `function` or a `method`.
+        - **the purpose:** catch errors early in the development process, when they are cheaper and easier to fix
+        - in OOP we usually write test for a whole class
+        - We test a unit in **isolation**, before they cause errors on a larger scale
+        - A unit test also serves as a form of documentation (by clearly specifying the expected behaviour)
+        - **C# testing frameworks:** `NUnit`, `xUnit`, or `MSTest`
+
+    - **Advantages:**
+        - **Improved code quality:** 
+            - ensure that code is of high quality, by identifying and fixing errors early on
+            - it can also encourage developers to write more modular and reusable code.
+        - **Reduced debugging time:** 
+            - By catching bugs early, unit testing can reduce the amount of time spent debugging and troubleshooting.
+        - **Easier refactoring:** 
+            - When code is well-tested, it is easier to make changes or refactor it without introducing new bugs or breaking existing functionality.
+        - **Faster development:** 
+            - By catching issues early and reducing debugging time, unit testing can lead to faster development and deployment.
+        - **Improved collaboration:** 
+            - Unit tests provide a common language and understanding of how a system works, which can improve collaboration and communication among team members.
     
-    - Comparison:
-        - Compare two DateTime objects using `DateTime.Compare()`:
+    - **Drawbacks:**
+        - **Time-consuming**
+        - **False sense of security:**
+            - Passing unit tests does not necessarily mean that a system is bug-free or meets all requirements
+            - It is still important to perform other forms of testing, such as integration testing and acceptance testing
+            - it is possible that we fail to cover some cases
+    
+    - **TDD** (*=Test driven development*)
+        - **Definition:** 
+            - A software development method in which the requirements are converted into *test cases* and these **tests get written before the actual implementation**. 
+            - It basically reverses the classic way of developing a class then writing test for it, into *developing the tests cases for a class* **then** *writing the implementation of the class*.
+
+- **NuGet:**
+    - a **package manager** designed specifically for .NET projects. It is similar to `npm` in `Javascript`, or `pip` in `Python`.
+        - simplifies the process of managing third-party libraries and dependencies within your C# projects.
+        - helps you easily add, remove, and update external libraries to your project
+    - `NuGet` packages are essentially collections of files and metadata that provide functionality to your project (eg. `Mailkit` for sending mails)
+    - Integrated both into VSCode and Rider
+
+- **Adding unit tests to a solution:**
+    1. Add a Unit Test Project:
+        - Click on explorer - `Add -> New Project...` (.Net Core / Unit Test Project) & name the project (eg. "SampleProjectTest")
+        - We use `NUnit` in this course as the testing framework (it gets added to the project's dependencies)
+    2. Reference the source project:
+        - `RClick` on the test project in the explorer, then `Add -> Add Reference` -> select source project (it gets added to the `.csproj` file)
+        - Alternatively when you start writing the testing methods and it can't see a reference, Rider will automatically offer to import it
+        - Remove generated UnitTest1.cs file!
+    3. Create a file for testing:
+        - Call it eg. `CardGeneratorTest`, the "Test" version of the **class** we are testing
+        - The goal is to test the class's public methods
+        - **Dependencies of a class:**
+            - The rule of unit testing is that we should **test in isolation** (independent of any other classes)
+            - The technique we will use for more complex dependency handling is `mocking` (see later, also with `mocking libraries`)
+    4. Start writing methods, that check the values:
+        - Above the method write `[Test]` attribute, so the framework knows, which methods to run
+        - use AAA structure, that ends each method with some kind of `Assert`
+        - cover all base cases by using expected inputs (eg. number categories - negative, positive, zero)
+        - try to cover all edge cases (eg. null)
+        - if a method was unsuccessful, we should fix the original, then rerun the test (and repeat until we pass)
+    5. Change basic tests to **parameterized** where applicable, to quickly be able to test for different data
+    6. Use **mocking** if/where needed
+
+- **Parameterized unit test:** (*Journey link: https://journey.study/v2/learn/materials/param-unit-tests-csharp-1q2023* )
+    - Create tests that work with parameters: Benefit of avoiding having to write multiple tests for each input type
+    - In `NUnit` we have `TestCase` and `TestCaseSource` attributes for this:
+        - Using `TestCase`:
+            - add `[TestFixture]` attribute before the class (not the methods, but the whole testing class!)
+            - instead of creating the parameters separately, we create the inputs with `[Testcase( params )]`, inline, also adding the `ExpectedResult` (otside the test methods!):
+
+                    [TestCase(new[] { 2, 3, 4 }, new[] { "J", "Q", "K" }, new[] { "Hearts", "Diamonds" }, ExpectedResult = 12)]
+                    [TestCase(new[] { 1, 2 }, new[] { "A", "B" }, new[] { "Clubs", "Spades" }, ExpectedResult = 8)]
+
+            - add the required params now to the methods signature:
+                    public int GenerateCardsReturnsExpectedNumberOfCards(int[] numbers, string[] symbols, string[] suits)       // We also changed the return value (void -> int)
+                    {
+                        // Arrange
+                        // Act
+                        // Assert
+                    }
+            
+            - This is also valid:
+
+                    [TestCase(0, 50)]
+                    [TestCase(20, 21)]
+                    [TestCase(10, 50)]
+                    [TestCase(100, 500)]
+                    public void FunctionTest(int par1, int par2){};
+
+        - Using `TestCaseSource`:
+            - we us this instead of each individual `[TestCase( params )]` line (written in the testing class, but before the unit test methods):
+
+                    private static readonly object[] TestCases =
+                    {
+                        new object[] { new[] { 2, 3, 4 }, new[] { "J", "Q", "K" }, new[] { "Hearts", "Diamonds" }, 12 },
+                        new object[] { new[] { 1, 2 }, new[] { "A", "B" }, new[] { "Clubs", "Spades" }, 8 }
+                    };
+
+                    [TestCaseSource(nameof(TestCases))]
+
+            - then the signature of the test method also changes, since we include the `expected` result also as a param at the end:
+
+                    public void GenerateCardsReturnsExpectedNumberOfCards(int[] numbers, string[] symbols, string[] suits, int expectedCardCount)       // 3 original params + expected
+
+- **Unit testing using mocking:**
+    - Basic rule of unit testing: Test in isolation!
+        - We need to be able to **handle and set up dependencies** for this
+        - We can use `mocking`, through libraries that specifically implement this behaviour (`mocking libraries`):
+            - We can set up fake objects and code our expectations in just a few lines
+        
+    - `Moq` library: (*https://github.com/devlooped/moq*)
+        1. Open `NuGet` in Rider to import `Moq` library -> import to test project
+        2. Add a `Mock` dependency like this to the test class:
+
+                private Mock<ICardGenerator> _cardGeneratorMock;        // This creates an ICardGenerator Mock (nothing assigned to it yet!)
+
+        3. Add `[Setup]` attribute to run the following method before everything else:
+
+                [Setup]
+                public void SetUp()
+                {
+                    _cardGeneratorMock = new Mock<ICardGenerator>();        // This is where we actually create the Mock object
+                    _deckDescriptor = new DeckDescriptor(Array.Empty<int>(), Array.Empty<string>(), Array.Empty<string>());     // This is just an initializer, but not important at the moment
+                }
+                
+        4. Then inside the test method:
+
+                [Test]
+                public void CreateDeck_ReturnsNewDeckWithGeneratedCards()
+                {
+                    // Arrange
+                    var cards = new List<Card>{ new Card("Ace", "Spades"), new Card("Ace", "Hearts")};
+                    _cardGeneratorMock.Setup(x => x.Generate(_deckDescriptor)).Returns(cards.ToList()); // Here, we set up that the mock should return a copy of the cards list that we specified.
+                    var deckBuilder = new DeckBuilder(_cardGeneratorMock.Object, _deckDescriptor);
+
+                    // Act
+                    var deck = deckBuilder.CreateDeck();
+
+                    // Assert
+                    var drawn = deck.DrawOne();
+                    while (drawn != null)
+                    {
+                        Assert.That(cards, Does.Contain(drawn)); // Here we compare to the original non-mutated cards list from Arrange. 
+                        drawn = deck.DrawOne();
+                    }
+                }
+        
+        5. `_mockInstance.Object` is how we refer to the actual object we need (but it's a dummy!)
+
+- **NUnit:**
+    - a **unit testing framework** for the .NET ecosystem
+    - How it works:
+        - you write tests, that make calls to the original source code's public methods
+        - then it checks the results using **assertions**:
+
+                class MyCalculatorTests {
+
+                    private readonly Calculator _calculator = new Calculator();
+
+                    [Test]                         
+                    public void AdditionTest()
+                    {
+                        int number1 = 2;                                    // Arrange
+                        int number2 = 3;
+
+                        int result = _calculator.Sum(number1, number2)      // Act
+
+                        Assert.That(result, Is.EqualTo(5))                  // Assert
+                    }
+
+                }
+
+            - `[Test]` tells the framework, that the method is a unit test method, that needs to be executed by the `NUnit Test Runner`
+            - This is called the `AAA` structure *(Arrange, Act, Assert)*:
+                - **Arrange:** intital setup (eg. create a new instance, create variables, etc.).
+                - **Act:** we execute some kind of state change or calculation. (A good unit test only has 1 calculation/action)
+                - **Assert:**  *(ALL ASSERTIONS: https://docs.nunit.org/articles/nunit/writing-tests/constraints/Constraints.html )*
+                    - *Pass* if result is what is specified as *expected*
+                    - *Fail* if result is *not what was expected*
+                    - A good unit test only has one assertion and only tests a single state of change!
+                    - Old (*classic*) vs. new way (*constraint model*) of assert syntax:
+
+                            ClassicAssert.AreEqual(4, 2 + 2);       // old
+                            Assert.That(2 + 2, Is.EqualTo(4));      // new
                     
-                DateTime date1 = new DateTime(2024, 1, 18);
-                DateTime date2 = new DateTime(2024, 1, 20);
+                    - Covered assert methods:
 
-                int result = DateTime.Compare(date1, date2);    // Returns an integer(-1, 0, 1), so we can determine if it's the same/earlier/after
-
-                if (result < 0)
-                    Console.WriteLine("date1 is earlier than date2");
-                else if (result == 0)
-                    Console.WriteLine("date1 is the same as date2");
-                else
-                    Console.WriteLine("date1 is later than date2");
-
-
-        - `Equals` & `CompareTo`                                // Instance methods for comparison
-
-                // Equals:
-                date1.Equals(date2)                             // Returns bool value
-                
-                // CompareTo (same as Compare, but diff. syntax)
-                date1.CompareTo(date2)                          // Returns an integer(-1, 0, 1)
-    
-    - Formatting:
-
-            date.ToString()                                     // Convert to a string with default format
-            date.ToString("yyyy-MM-dd")                         // Custom format (e.g., "2024-01-18")
-    
-    - Parsing and Converting
-
-            DateTime.Parse(string)                              // Converts a string to a DateTime
-            DateTime.TryParse(string, out DateTime result)      // Tries to parse a string, returns true if successful
-    
-    - Using `Timespan`:
-        - Represents the duration between 2 dates:
-
-                TimeSpan duration = endDate - startDate;
-        
-        - Properties/Components of TimeSpan:
-            - `Days`, `Hours`, `Minutes`, `Seconds`:
-
-                    DateTime start = new DateTime(2024, 1, 1);
-                    DateTime end = new DateTime(2024, 1, 18);
-                    TimeSpan duration = end - start;
-
-                    Console.WriteLine($"Duration is {duration.Days} days");     // use properties to specify the time unit
-        
-        - Create a TimeSpan:
-                
-                new TimeSpan(1, 0, 0)       // it represents 1 hour (2nd par is min, 3rd is sec)
-                TimeSpan.FromDays(1)        // represents 1 day
-                TimeSpan.FromSeconds(30)    // represents 30 seconds
-
-                interval.TotalHours         // gives you the TOTAL number of hours represented by the TimeSpan (eg. 1.5 h)
-                interval.Hours              // gives you the WHOLE number of hours represented by the TimeSpan (eg. 1 h)
-
-        - Example:
-
-                DateTime now = DateTime.Now;
-                DateTime inOneWeek = now.AddDays(7);
-                DateTime startOfMonth = new DateTime(now.Year, now.Month, 1);
-                TimeSpan duration = inOneWeek - startOfMonth;
+                            Assert.That(cards.Count, Is.EqualTo(expectedCardCount));        // the quantity is the same (collections - collections, it checks if they are equal in both content and order)
+                            Assert.That(expected, Is.EquivalentTo(actual));                 // used for collections, where the contents matter, but the order doesn't
+                            CollectionAssert.AreEqual(expectedCards, cards);                // they contain exactly the same items
+                            CollectionAssert.IsEmpty(cards);                                // check that a collection is empty
