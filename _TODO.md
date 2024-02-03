@@ -7,7 +7,6 @@
     - NUnit cheatsheet: https://www.automatetheplanet.com/nunit-cheat-sheet/
     - NUnit annotations: https://www.blazemeter.com/blog/nunit-annotations
 
-    - Watch Linq tutorial on MSFT: https://www.youtube.com/playlist?list=PLdo4fOcmZ0oVxKLQCHpiUWun7vlJJvUiN
     - +1 LINQ: https://www.youtube.com/watch?v=1UqjUgcdq6g&ab_channel=JamieKing
 
 Additional moq examples: https://docs.educationsmediagroup.com/unit-testing-csharp/moq/quick-glance-at-moq

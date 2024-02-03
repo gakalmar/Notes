@@ -1,19 +1,29 @@
 # Questions:  
 
-If I have a class, that uses multiple interfaces, and I use that as a dependency, can I initialize it as a class?       // TW2 task example
+
+// INTERFACES
+
+1. If I have a class, that uses multiple interfaces, and I use that as a dependency, can I initialize it as a class?
     (otherwise there is no interface I can create, because they are all partial interfaces of the class)
+    `Ehotelbuffet task` or `SeasonalProductDiscounter` in SI3
 
-Unit testing project: dependencies in test class - I created them in the refactored section - Is this the correct way? 
 
-mocking - the process explained ( https://journey.study/v2/learn/materials/mocking-csharp-1q2023 )
+// FILE LOGGER
 
-what is the difference between using a [SetUp] method or a constuctor, to create initial members?
+2. What is sync and async reading?
+
+
+// EXCEPTION HANDLING / TRY-CATCH BLOCKS
+
+When to start using this?
+
+
+// WORKBOOK
 
 Workbook questions (marked with ???)
 
-**  IEnumerable, ICollection - how to use it? (simplified example)
 
-( LATER: exception handling and try-catch blocks ing C# )
+
 
 ### Older questions:
 

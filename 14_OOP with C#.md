@@ -2189,40 +2189,155 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
 
 
 ## READ / WRITE TO FILE:
-- `System.IO.File`: 
-    - provides static methods to create, delete, copy and move files
-    - open a file for reading or writing
-    - perform a single action on a file without keeping it open
-- `System.IO.StreamReader` and `System.IO.StreamWriter`
-    - Used for reading/writing text from/to a file
-    - Used for larger files, because they read/write data in a buffered manner ???
-- +3:
-    - `System.IO.FileStream`: write to any location in a file
-    - `System.IO.BinaryReader/Writer`: read/write data as binary values (eg. image files)
-    - `System.IO.MemoryStream`: used to store data temporarily as bytes
+- **Streams in general:**
+    - Input & output in C# is based on **streams**. A `Stream` is an *abstract base class* of all streams.
+        - **stream:** an abstraction of a sequence of bytes (eg. a file, an input/output device, an inter-process communication pipe, or a TCP/IP socket)
+    - `Stream`:
+        - Provides a generic interface to the types of input and output
+        - `MemoryStream`: works with data located in the memory
+        - `FileStream`: works with data in files
+    - `System.IO.File`: 
+        - provides static methods to create, delete, copy and move files
+        - open a file for reading or writing
+        - perform a single action on a file without keeping it open
+    - `System.IO.StreamReader` and `System.IO.StreamWriter`
+        - Used for reading/writing text from/to a file
+        - Used for larger files, because they read/write data in a buffered manner ???
+    - +3:
+        - `System.IO.FileStream`: write to any location in a file
+        - `System.IO.BinaryReader/Writer`: read/write data as binary values (eg. image files)
+        - `System.IO.MemoryStream`: used to store data temporarily as bytes
 
-- Example:
+- **Use:**    
+    - We can refer like this to the Working directory in `Program` class:
 
-        // Write:
-        using (StreamWriter writer = new StreamWriter("example.txt"))
-        {
-            writer.WriteLine("Hello, world!");
-        }
+            private static readonly string WorkDir = AppDomain.CurrentDomain.BaseDirectory;
+    
+    - And then refer to a file like this:
 
-        // Read:
-        using (StreamReader reader = new StreamReader("example.txt"))
-        {
-            string line = reader.ReadLine();
-            Console.WriteLine(line);
-        }
+            var file = $"{WorkDir}\\Resources\\german-example.txt";
+    
+    - Create a new directory (unless it already exists):
 
-        // Example logger:
+            // Inside Main() function for example:
+            string path = @"c:\MyDir";
 
-                private void LogMessage(string message, string type)
+            try
+            {
+                // Determine whether the directory exists.
+                if (Directory.Exists(path))
                 {
-                    var entry = $"[{DateTime.Now}] {type}: {message}";
-                    using var streamWriter = File.AppendText(_logFile);     // we add "using" within the method here!
-                    streamWriter.WriteLine(entry);
+                    Console.WriteLine("That path exists already.");
+                    return;
+                }
+
+                // Try to create the directory.
+                DirectoryInfo di = Directory.CreateDirectory(path);
+                Console.WriteLine("The directory was created successfully at {0}.", Directory.GetCreationTime(path));
+
+                // Delete the directory.
+                di.Delete();
+                Console.WriteLine("The directory was deleted successfully.");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("The process failed: {0}", e.ToString());
+            }
+        
+    - Routes of directory:
+        - To create the directory `C:\Users\User1\Public\Html` when the current directory is `C:\Users\User1` (use any of these):
+                
+                Directory.CreateDirectory("Public\\Html");
+                Directory.CreateDirectory("\\Users\\User1\\Public\\Html");
+                Directory.CreateDirectory("c:\\Users\\User1\\Public\\Html");
+
+
+- **Write into a file:**    *(examples: https://zetcode.com/csharp/writetext/ )*
+    - Example `WriteLine`:
+
+            // Write:
+            using (StreamWriter writer = new StreamWriter("example.txt"))
+            {
+                writer.WriteLine("Hello, world!");
+            }
+
+            // Read:
+            using (StreamReader reader = new StreamReader("example.txt"))
+            {
+                string line = reader.ReadLine();
+                Console.WriteLine(line);
+            }
+
+            // Example logger:
+
+                    private void LogMessage(string message, string type)
+                    {
+                        var entry = $"[{DateTime.Now}] {type}: {message}";
+                        using var streamWriter = File.AppendText(_logFile);     // "using" keyword used to automatically release the file resource when the sw variable goes out of scope
+                        streamWriter.WriteLine(entry);
+                    }
+
+    - Example `WriteAllText`:
+        - creates a new file, writes the contents to the file, and then closes the file
+        - if the target file already exists, it is overwritten
+
+                var path = "data.txt";
+
+                string text = "old falcon";
+                File.WriteAllText(path, text);      // Optional 3rd param is encoding (UTF8 set to default)
+
+                Console.WriteLine("text written");
+
+        - `WriteAllLines` is very similar, but we pass an array of strings to be printed:
+
+                var path = "data.txt";
+
+                string[] lines = {"old falcon", "deep forest", "golden ring"};
+                File.WriteAllLines(path, lines);
+
+                Console.WriteLine("lines written to file");
+        
+        - We also have an option to write text `asynchronously` with `WriteAllTextAsync`:
+
+                var path = "data.txt";
+
+                string text = "an old falcon";
+                await File.WriteAllTextAsync(path, text);
+
+                Console.WriteLine("text written");
+
+- **Reading a file:**
+    - When an instance of `StreamReader` is created, you provide the relative or absolute path to a file
+    - **Sync reading:**
+
+            try
+            {
+                // Open the text file using a stream reader.
+                using (var sr = new StreamReader("TestFile.txt"))
+                {
+                    // Read the stream as a string, and write the string to the console.
+                    Console.WriteLine(sr.ReadToEnd());
+                }
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("The file could not be read:");
+                Console.WriteLine(e.Message);
+            }
+
+    - **Async reading:**
+        - Assuming a `TestFile.txt` already exists:
+
+                try
+                {
+                    using (var sr = new StreamReader("TestFile.txt"))
+                    {
+                        ResultBlock.Text = await sr.ReadToEndAsync();
+                    }
+                }
+                catch (FileNotFoundException ex)
+                {
+                    ResultBlock.Text = ex.Message;
                 }
 
 ## UNIT TESTING:
@@ -2468,10 +2583,3 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
 
                             ClassicAssert.AreEqual(4, 2 + 2);       // old
                             Assert.That(2 + 2, Is.EqualTo(4));      // new
-                    
-                    - Covered assert methods:
-
-                            Assert.That(cards.Count, Is.EqualTo(expectedCardCount));        // the quantity is the same (collections - collections, it checks if they are equal in both content and order)
-                            Assert.That(expected, Is.EquivalentTo(actual));                 // used for collections, where the contents matter, but the order doesn't
-                            CollectionAssert.AreEqual(expectedCards, cards);                // they contain exactly the same items
-                            CollectionAssert.IsEmpty(cards);                                // check that a collection is empty

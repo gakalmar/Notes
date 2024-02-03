@@ -51,6 +51,9 @@
         greeting.TrimStart();
         greeting.TrimEnd();
 
+        // Add special characters:
+        string.Trim(new char[] { ' ', '?' })        // Add as many as needed
+
 - Substring():
         string name = "Codecademy"; 
         int start = 2;
@@ -79,7 +82,12 @@
         string whispering = "I'M WHISPERING NOW".ToLower();                 // returns "i'm whispering now"
 
 - Convert:
-        int num = Convert.ToInt32("45");            // Convert an stinrg into an integer 
+        int num = Convert.ToInt32("45");            // Convert an stinrg into an integer
+
+- `Split()`:
+    - slightly different from JS:
+
+            var words = text.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
 ### **Numbers methods:**
 - Basic Math operations: + - / * %
@@ -314,43 +322,98 @@
 
                 var sortedPeople = people
                     .OrderBy(p => p.Department)
-                    .ThenBy(p => p.Name);    
+                    .ThenBy(p => p.Name);
+
+- **Aggregation/Statistical operators**
+    - `Sum`
+    - `Average`
+        - Get the average value from a set of data:
+
+                // Simple data:
+                numbers.Average();                              // Should return the average of a List<int>
+                _products.Average(p => p.Price);                // Get average price of products
+    - `Min` & `Max`:
+        - Find the smallest value in a collection: (To return the whole object, use `MinBy` & `MaxBy`)
+
+                // Simple data:
+                var minNum = products.Min();
+                var minPrice = products.Min(p => p.Price);      // Returns only the price, not the whole object!
+    
+    - `MaxBy` & `MinBy`:
+        - Get the first / last item of a sorted list, based on a specific condition:
+
+                var cheapestItem = _products.MinBy(p => p.Price);
+
+    - `Count`
+    - `Aggregate`
 
 - **Set operators**
     - `Distinct`
     - `Union`
     - `Intersect`
-    - `Except`      
-- **Aggregation/Statistical operators**
-    - `Sum`
-    - `Average`
-    - `Min`
-    - `Max`
-    - `Count`
-    - `Aggregate`
+    - `Except`   
+
 - **Quantifiers**
     - `Any`
+        - Without any input parameters (predicate) - Check if the sequence is empty:
+
+                List<int> numbers = new List<int> { 1, 2, 3 };
+                bool hasAnyNumbers = numbers.Any(); // True, because the list is not empty
+        
+        - Checks if any of the elements satisfy the condition (returns true if at least 1 element satisfies the condition):
+
+                bool hasEvenNumbers = numbers.Any(n => n % 2 == 0); // True, because there are even numbers in the list
+
     - `All`
-    - `Contains`             
+    - `Contains`   
+
 - **Partitioning operators**
     - `Take`
-    - `Skip`
-    - `TakeWhile`
-    - `SkipWhile`             
-- **Generation operators**
-    - `Range`
-    - `Repeat`
-    - `Empty`             
-- **Element operators**
-    - `First`: returns the first element
+        - used to select the first N elements from a sequence:
 
-    - `FirstOrDefault`
-    - `Last`
-    - `LastOrDefault`
+                var numbers = new List<int> { 1, 2, 3, 4, 5 };
+                var firstThree = numbers.Take(3); // Takes the first 3 elements: {1, 2, 3}
+
+    - `Skip`
+        - skips the first "n" elements of a list and returns the rest:
+
+                var allButFirstThree = numbers.Skip(3); // Skips the first 3 elements: {4, 5}
+
+    - `TakeWhile`
+        - used to take elements from the start of a sequence, until a certain criteria is met:
+
+                // With numbers:
+                var firstUntilGreaterThanThree = numbers.TakeWhile(n => n <= 3); // {1, 2, 3}
+
+                // With strings:
+                List<string> words = new List<string> { "apple", "banana", "cherry", "date", "elderberry", "fig", "grape" };
+                var wordsStartingWithAorB = words.TakeWhile(word => word.StartsWith('a') || word.StartsWith('b'));          // This will take "apple", "banana"
+    
+    - `SkipWhile`
+        - bypaskips elements in a sequence as long as a specified condition is true and then returns the remaining elements:
+
+                // With numbers:
+                var skipUntilGreaterThanThree = numbers.SkipWhile(n => n <= 3); // {4, 5}
+
+                // With strings:
+                var longerWords = words.SkipWhile(word => word.Length < 6);     // This will skip "apple", "banana", "cherry", "date" and include "elderberry", "fig", "grape"
+
+- **Element operators**
+    - `First` / `Last`: returns the first / last element in a collection
+        - Throws `InvalidOperationException` if there are no items in the collection
+    
+    - `FirstOrDefault` / `LastOrDefault`: returns the first / last element in a collection
+        - we use it when the collection is OK to be empty
+        - returns the default value of the `type`:
+            - `null` for reference types
+            - `0` for value types (if numbers)
+            - `false` for value types (if bool)
+
     - `ElementAt`
     - `ElementAtOrDefault`
     - `Single`
-    - `SingleOrDefault`             
+    - `SingleOrDefault`  
+
 - **Grouping operators**
     - `GroupBy`
         - group elements in a collection based on a specified key
@@ -392,10 +455,22 @@
                         Console.WriteLine($" - {person.Name}");
                     }
                 }
+        
+        - `GroupBy` into personalized categories:
+
+                List<Product> products = // ... your list of products ...
+
+                var categorizedProducts = products.GroupBy(product =>
+                {
+                    if (product.Price < 20) return "Cheap";
+                    if (product.Price >= 20 && product.Price < 100) return "Average";
+                    return "Expensive";
+                });
 
 - **Join operators**
     - `Join`
-    - `GroupJoin`   
+    - `GroupJoin`
+
 - **Conversion operators**
     - `.ToList` & `.ToArray`
         - If the query returns with a bool value, but we still want to store the values in a variable, we need to use `.ToList` to be able to do this (eg with `Select` method):
@@ -403,10 +478,46 @@
                 List<int> numbers = new List<int> { 1, 2, 3, 4 };
                 var squaredNumbers = numbers.Select(number => number * number).ToList();            // squaredNumbers will be { 1, 4, 9, 16 }
 
-    - `ToDictionary`
+    - `ToDictionary`:
+        - convert a collection into a `Dictionary<TKey, TValue>`:
+                
+                // Sample collection:
+                List<Person> people = new List<Person>
+                {
+                    new Person { Name = "Alice", Age = 30 },
+                    new Person { Name = "Bob", Age = 25 },
+                    new Person { Name = "Charlie", Age = 35 }
+                };
+
+                // Conversion:
+                var dictionary = people.ToDictionary(
+                    person => person.Name,  // The Name property is the key
+                    person => person.Age    // The Age property is the value
+                );
+
+                // Result:
+                {
+                    ["Alice"] = 30,
+                    ["Bob"] = 25,
+                    ["Charlie"] = 35
+                }
+
+        - combining it with `GroupBy`:
+
+                Dictionary<string, double> productNameAvg = products
+                    .GroupBy(p => p.Name)                           // Create a collection of groups
+                    .ToDictionary(
+                        g => g.Key,                                 // The product's name
+                        g => g.Average(p => p.Price)                // The avg price of the products with this name
+                    );
+
     - `AsEnumerable`   
 - **Concatenation operators**
     - `Concat`   
+- **Generation operators**
+    - `Range`
+    - `Repeat`
+    - `Empty` 
 - **Equality operators**
     - `SequenceEqual`   
 - **Exception Handling operators**
@@ -425,7 +536,20 @@
 
                 // Result: Hansel, Helga
 
+## NUnit
+- Assertiong methods:
+    - `Assert.That(expected, Is.EqualTo(actual));`
+        - checks if the values are equal
+        - Collections: checks if the elements AND the order are the same
+    - `Assert.That(expected, Is.EquivalentTo(actual));`
+        - Collections: checks if the elements are the same (order doesn't matter!)
+    - `CollectionAssert.AreEqual(expected, actual);`
+        - checks if 2 collection contain exactly the same items
+    - `CollectionAssert.IsEmpty(actual); `
+        - check if a collection is empty
 
+    - `Assert.That(collection, Does.Contain(item));`
+        - check if an **item** is inside a **collection**
             
 
 
