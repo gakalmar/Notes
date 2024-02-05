@@ -1,7 +1,7 @@
 # C#
 
 ## Useful keyboard shortcuts:
-Alt + Insert - Generate Code
+Alt + Insert - Generate Code (constructor, overwites!)
 
 Alt + <- / -> - Go Back / Forward
 Ctrl + LClick - Jump into method / Class
@@ -821,7 +821,111 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
     - **Arrays:**
         - Arrays are the most basic form of collection in C#.
         - They are fixed-size, zero-indexed, and strongly typed.
-        - Syntax: int[] numbers = new int[5];
+        - Syntax: 
+                
+                // Declare:
+                int[] numbers = new int[5];
+
+                // Declare and set array element values.
+                int[] array2 = new int[] { 1, 2, 3, 4, 5, 6 };
+                int[] array2 = { 1, 2, 3, 4, 5, 6 };        // For simple arrays we can omit the 2nd "new int[]", because the compiler already knows (for 3D we need to keep this!)
+
+        - **Multidimensional arrays:**
+            - 2 dimensions:
+
+                    // Declare like this: (means that there are 4 elements, each of them can have 2 more elements inside)
+                    int[,] array2DDeclaration = new int[4, 2];
+
+                    // Initialization:
+                    int[,] array2DInitialization = {       // 4 elements, 2 items in each
+                        { 1, 2 },
+                        { 3, 4 },
+                        { 5, 6 },
+                        { 7, 8 }
+                    };      
+
+                    // Access elements:
+                    System.Console.WriteLine(array2DInitialization[0, 1]);      // gets 2
+                    System.Console.WriteLine(array2DInitialization[1, 0]);      // gets 3
+
+                    // Iteration throught elements:
+                    int[,] numbers2D = { { 9, 99 }, { 3, 33 }, { 5, 55 } };
+
+                    foreach (int i in numbers2D)
+                    {
+                        System.Console.Write($"{i} ");
+                    }
+
+                    // Output: 9 99 3 33 5 55
+
+                    // Iteration using a nested loop:
+                    for (int i = 0; i < myArray.GetLength(0); i++)      // Iterating through rows
+                    {
+                        for (int j = 0; j < myArray.GetLength(1); j++)  // Iterating through columns
+                        {
+                            Console.Write(myArray[i, j] + " ");
+                        }
+                    }
+
+            
+            - 3 dimensions:
+
+                    // Declare:
+                    int[,,] array3DDeclaration = new int[4, 2, 3];      // 4 arrays, consisting 2 arrays with 3 items in each
+
+                    // Initialize:
+                    int[,,] array3D = new int[,,] {     // Additional "new int[,,] required!
+                        { 
+                            { 1, 2, 3 },                // 3 items in 2 items in 4 items
+                            { 4, 5, 6 }
+                        },
+                        {
+                            { 7, 8, 9 },
+                            { 10, 11, 12 }
+                        },
+                        {
+                            { 13, 14, 15 },                
+                            { 16, 17, 18 }
+                        },
+                        {
+                            { 19, 20, 21 },
+                            { 22, 23, 24 }
+                        }
+                    };
+
+                    // Access elements:
+                    System.Console.WriteLine(array3D[1, 0, 1]);     // gets 8
+                    System.Console.WriteLine(array3D[1, 1, 2]);     // gets 12
+
+                    // Iteration throught elements (better to use a nested loop, for better control):
+                    for (int i = 0; i < array3D.GetLength(0); i++)
+                    {
+                        for (int j = 0; j < array3D.GetLength(1); j++)
+                        {
+                            for (int k = 0; k < array3D.GetLength(2); k++)
+                            {
+                                System.Console.Write($"{array3D[i, j, k]} ");
+                            }
+                            System.Console.WriteLine();
+                        }
+                        System.Console.WriteLine();
+                    }
+
+                    // Output (including blank lines): 
+                    // 1 2 3
+                    // 4 5 6
+                    // 
+                    // 7 8 9
+                    // 10 11 12
+                    //
+                    // 13 14 15
+                    // 16 17 18
+                    //
+                    // 19 20 21
+                    // 22 23 24
+                    //
+            
+            // Add rank, GetLowerBound, GetUpperBound, GetLength(dimension)
 
     - **Collections**
         - In general, Collections belong to the `System.Collections` or `System.Collections.Generic` namespace, and can be of different types:
@@ -2509,7 +2613,8 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         - We can use `mocking`, through libraries that specifically implement this behaviour (`mocking libraries`):
             - We can set up fake objects and code our expectations in just a few lines
         
-    - `Moq` library: (*https://github.com/devlooped/moq*)
+    - `Moq` library: *( example: https://docs.educationsmediagroup.com/unit-testing-csharp/moq/quick-glance-at-moq
+                        library: https://github.com/devlooped/moq )*
         1. Open `NuGet` in Rider to import `Moq` library -> import to test project
         2. Add a `Mock` dependency like this to the test class:
 
@@ -2548,7 +2653,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         
         5. `_mockInstance.Object` is how we refer to the actual object we need (but it's a dummy!)
 
-- **NUnit:**
+- **NUnit:** *(cheatsheet: https://www.automatetheplanet.com/nunit-cheat-sheet/)*
     - a **unit testing framework** for the .NET ecosystem
     - How it works:
         - you write tests, that make calls to the original source code's public methods

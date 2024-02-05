@@ -550,6 +550,6 @@
 
     - `Assert.That(collection, Does.Contain(item));`
         - check if an **item** is inside a **collection**
-            
+- Annotations (eg. `[TEST]`): *(link: https://www.blazemeter.com/blog/nunit-annotations)*
 
 
