@@ -37,9 +37,12 @@ WORKING WITH BRANCHES:
     git branch newbranchname                //create new branch
     git checkout branchname                 //switch to an existing branch
     git checkout -b branchname              //create new branch and switch to it
-gk  
     git merge branchname                    //merge a branch into the active branch
     git merge sourcebranch targetbranch     //merge a branch into the target branch
+
+    CREATE NEW BRANCH AND PUSH IT INSTANTLY TO BE A REMOTE BRANCH ON GITHUB:
+        1 git checkout -b newbranch         //create new branch locally
+        2 git push -u origin newbranch      //push it to GitHub (-u means upstream)
 
     MERGE INTO MASTER PROCESS:
 

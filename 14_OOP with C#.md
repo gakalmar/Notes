@@ -59,14 +59,18 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         
         - Hiding the internal state and functionality of an object and only allowing access through a public set of functions.
         - Allowing access to its properties through a public set of functions
-        - eg.: `public` vs `private` access
+        - eg.: `public` vs `private` access, or by creating a `readonly` collection
 
     - **Inheritance**   
         - Ability to create new abstractions based on existing abstractions
+        - we can inherit from only 1 class, but from multiple interfaces
         - eg.: `car` superclass is used to create `electricCar` sub-class:
             
     - **Polymorphism**  
         - Ability to implement inherited properties or methods in different ways across multiple abstractions
+        - types
+            - static polymorphism (=overloading based on constructor's parameters)
+            - dynamic polymorphism (=overwriting using `virtual`) 
         - eg.: `Chef` class has a `virtual` function called `MakeSpecialDish()`, which its sub-class can `overwrite` and define a different function body for the same signature
 
 - What is **.NET** ?
@@ -433,7 +437,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         - Access modifiers:
             - public
             - protected
-            - internal
+            - internal  (means that the method is not available after the assembly)
             - protected internal
             - private
             - private protected
@@ -1335,6 +1339,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                 - Since *inside static methods* we don't have an object reference of the enclosing type (in this case, Program), we can only call other static methods from it.
             - `static` **method**:
                 - eg. `Math.Sqrt(144)` -> we can use it without creating a separate object ( `Math` is a static class - can't even create an instance of it!)
+            - `static` methods can't be overwritten
             - `static` **constructor**:
                 - is run once per type, not per instance
                 - must be parameterless
@@ -1844,7 +1849,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
     
     7. Add functionality (behaviour methods)
 
-## PROCESS OF MODELING PART II
+## CLASSES / PROCESS OF MODELING PART II
 - Organize the code in 3 different layers:
     - **MODEL** or **DATA** for describing and getting the data
     - **SERVICE** that contains functinality to transform the data according to the business logic
@@ -1951,7 +1956,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
             - Add logging capability to specific classes using constructor injection (eg CardGenerator class) - remove static from methods if you use dependency injection (?)
             - Create a logger instance in `Program.cs` file, so we can inject it into any other class that needs logging functionality
     
-    4. Apply **OCP:** *(example https://code-maze.com/open-closed-principle/ )*
+    4. Apply **OCP:** *(example https://code-maze.com/open-closed-principle/ ); (example2 with shapes: https://exceptionnotfound.net/simply-solid-the-open-closed-principle/ )*
         - Avoid the need of overwriting previous code when an update is needed
         - **Example 1:**
             - Create required model class(es):
@@ -2159,6 +2164,122 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                     {
                         Console.WriteLine($"Name: {monitor.Name}, Type: {monitor.Type}, Screen: {monitor.Screen}");
                     }
+
+    5. Apply **LSP:** *(example: https://medium.com/@alexandre.malavasi/liskov-substitution-principle-in-c-1f4bdff2b92f )*
+        - the main objective is to avoid throwing exceptions in a system when inheritance is not used in a recommended way
+        
+        - Example:
+            - a Streaming Service platform system has initially two types of account types for users: premium and standard
+            - the standard and premium accounts have things in common and it is natural to create a **base class** that would be the parent class (virtual methods represent the common functionalities, and we could also have some base properties):
+
+                    public class BaseSubscriber
+                    {
+                        public string FullName { get; set; }
+                        public string Email { get; set; }
+                        public string Password { get; set; }
+
+                        public virtual void GiveAccessToFamilyMembers()
+                        {
+                            Console.WriteLine("Access granted!");
+                        }
+
+                        public virtual void AccessToLimitedMovies()
+                        {
+                            Console.WriteLine("Access granted to LIMITED only!");
+                        }
+
+                        public virtual void AccessToUnlimitedMovies()
+                        {
+                            Console.WriteLine("Access granted to UNLIMITED!");
+                        }
+
+                    }
+
+            - The child classes would inherit from the parent class and we could overwrite the methods (to restrict access, it could be a good solution to throw `InvalidOperationException` when trying to call these methods without access):
+
+                    public class StandardSubscriber : BaseSubscriber
+                        {
+                            public override void AccessToLimitedMovies()
+                            {
+                                base.AccessToUnlimitedMovies();
+                            }
+
+                            public override void AccessToUnlimitedMovies()
+                            {
+                                throw new InvalidOperationException("Method not allowed!");
+                            }
+
+                            public override void GiveAccessToFamilyMembers()
+                            {
+                                throw new InvalidOperationException("Method not allowed!");
+                            }
+                        }
+            
+            - if a child class (premium class for instance) cannot replace the parent class perfectly and vice-versa, it is a strong indication that something needs to reviewed in the model. In this casee we can:
+                - Specify in the parent class only the common properties and methods, leaving any specialization to the child classes:
+
+                        public class BaseSubscriber
+                        {
+                            public string FullName { get; set; }
+                            public string Email { get; set; }
+                            public string Password { get; set; }
+                        }
+
+                        public class StandardSubscriber : BaseSubscriber
+                        {
+                            public virtual void AccessToLimitedMovies()
+                            {
+                                Console.WriteLine("Access granted to LIMITED only!");
+                            }
+                        }
+
+                        public class PremiumSubscriber : BaseSubscriber
+                        {
+                            public virtual void GiveAccessToFamilyMembers()
+                            {
+                                Console.WriteLine("Access granted!");
+                            }
+
+                            public virtual void AccessToUnlimitedMovies()
+                            {
+                                Console.WriteLine("Access granted to UNLIMITED!");
+                            }
+                        }
+
+                - Segregate the parent class in multiple interfaces that will be implemented by the underlying proper child classes:
+
+                        public class BaseSubscriber : IUserSubscriber
+                        {
+                            public string FullName { get; set; }
+                            public string Email { get; set; }
+                            public string Password { get; set; }
+                        }
+
+                        public class StandardSubscriber : IUserSubscriber, IStandardSubscriber
+                        {
+                            public void AccessToLimitedMovies()
+                            {
+                            }
+                        }
+
+                        public class PremiumSubscriber : IUserSubscriber, IPremiumSubscriber
+                        {
+                            public void GiveAccessToFamilyMembers()
+                            {
+                            }
+
+                            public void AccessToUnlimitedMovies()
+                            {
+                            }
+                        }
+
+                - if there is a single property or method in the parent class that is not applicable to a child class, it is time to review it!
+
+                - with `ILogger` this was the hierarchy:
+                    - `ILogger` ->
+                        - `LoggerBase` inherit from `ILogger` (abstract class with common functionality & protected methods that can't be overwritten, but sub-classes can use) ->
+                            - `ConsoleLogger` inherit from `LoggerBase` (overwirte abstract methods, private methods stay here!) &
+                            - `FileLogger` inherit from `LoggerBase` (overwirte abstract methods, private methods stay here!)
 
 ## EXCEPTION HANDLING:
 - The basic logic:
@@ -2688,3 +2809,36 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
 
                             ClassicAssert.AreEqual(4, 2 + 2);       // old
                             Assert.That(2 + 2, Is.EqualTo(4));      // new
+
+## ADVANCED ARCHITECTURE:
+
+- **Desing Patterns:** *(design patterns catalog: https://refactoring.guru/design-patterns/catalog )*
+    - **General:**
+        - a set of software architectural solutions that became standardized
+        - no design pattern will ever replace geniune thinking and problem solving -> don't try to fit a pattern! (overengineering issue)
+            - every pattern introduces *additional complexity* to the application, so there is a cost associated with their usege
+            - there should always be a *cost-benefit analysis* attached to the decision of **introducing a pattern**
+    - **Benefits:**
+        - it's easier to communiacate using their names:
+            - eg. "let's use the *Singleton* pattern for this problem!"
+        - Commonly used patterns:
+            - **The Factory** and **Abstract Factory**
+            - **The Builder**
+            - **The Singleton**
+            - **The Observer**
+        - Slighlty less common, but still important:
+            - **The Composite**
+            - **The Decorator**
+            - **The State**
+    - Specific design patterns in detail:
+        - **The Factory method/pattern:** *(https://refactoring.guru/design-patterns/factory-method/csharp/example#lang-features )*
+            - solves the problem of creating product objects without specifying their concrete classes
+            - should be used for creating objects instead of using a direct constructor call (`new` operator):
+                - use interfaces or abstract objects (eg "Furniture")
+                - each product is a sub-class of this (eg "Chair", "Table")
+                - define an "object creator" abstract class or interface (eg "FurnitureFactory"), with a method like `createFurniture`
+                - Use subclasses for "FurnitureFactory" that deliver specific objects (eg. "ChairFactory")
+                - This way we only need to update the factory classes when we introduce a new product
+                
+            - useful when you need to provide a **high level of flexibility** for your code
+            - the *return type* of the factory methods is usually declared as either an abstract class or an interface

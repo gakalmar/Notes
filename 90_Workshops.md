@@ -145,3 +145,10 @@
         - Can create project timeline
 
 ### 6. INTRODUCTION TO REACT:
+
+### 7. ASSERTIVE COMMUNICATION:
+https://journey.study/v2/learn/materials/pages/softskills/assertive-communication-communication-styles.md
+
+### 8. EMPATHY:
+https://journey.study/v2/learn/materials/pages/general/what-is-empathy
+https://journey.study/v2/learn/materials/pages/general/empathy-at-work

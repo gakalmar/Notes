@@ -1,0 +1,140 @@
+# SQL
+
+## Introduction: *(SQLBolt: https://sqlbolt.com/lesson/introduction )*
+- **SQL:**
+    - *Structured Language Query* is a language that is used to work with **relational databases**
+    - Supported by many databases (SQLite, MySQL, Postgres, Oracle, Microsoft SQL Server)
+- **Relational database:**
+    - represents a **collection**(!) of related tables (2D), that is similar to an Excel table (fixed number of named **columns/attributes** and **rows/data**)
+    - a collection is like a `type` in C#, and each row represents an `object/instance`, and the columns are the common properties
+
+## QUERIES:
+- **QUERY:**
+    - a statement that declares:
+        - the data we are looking for (`SELECT` + column name)
+        - where to find it (`FROM` + database/collection name)
+        - how to transform it before it's returned (eg. `WHERE` + condition, `ORDER BY` + criteria)
+
+- **Specify location and what you are looking for:**
+    - `SELECT` & `FROM`
+        - Used to retieve data from a database (a `SELECT` statement is basically a query):
+
+                // Select all the data in a table:
+                SELECT *
+                FROM mytable;
+
+                // Select a range only:
+                SELECT column, another_column       // these refer to the name of the column
+                FROM mytable;
+
+                // Result:
+                2D set of rows and columns with the specified range (a copy of the original table)
+
+- **Apply initial filters:**
+    - `WHERE`
+        - Used for filtering through the rows:
+
+                SELECT column, another_column, …
+                FROM mytable
+                WHERE condition
+                    AND/OR another_condition        // eg.: `num_wheels >= 4 AND doors <= 2`
+                    AND/OR …;
+        
+        - **Commonly used operators in SQL:**
+            - Standard numerical operators:
+                - `=`, `!=`, `<`, `<=`, `>`, `>=`
+                - Example: 
+                
+                        col_name != 4
+
+            - Ranges:
+                - `BETWEEN ... AND ... `, `NOT BETWEEN ... AND ... `
+                - Example:      
+
+                        col_name BETWEEN 1.5 AND 10.5
+                        col_name NOT BETWEEN 1 AND 10
+            
+            - Exists/doesn't exist in a list:
+                - `IN (...)`, `NOT IN (...)`
+                - Example:
+
+                        col_name IN (2, 4, 6)
+                        col_name IN ("A", "B", "C")         // Strings must be quoted!
+
+                        col_name NOT IN (1, 3, 5)
+                        col_name NOT IN ("D", "E", "F")     // Strings must be quoted!
+            
+            - Case insensitive comparison & wild-card matching (?):
+
+                - `=` case sensitive "exact string" comparison:
+
+                        col_name = "abc"
+                
+                - `!=` or `<>` case sensitive inequality comparison:
+
+                        col_name != "abcd"
+                
+                - `LIKE` case insensitive exact string comparison:
+
+                        col_name LIKE "ABC"         // "abc" will also be included
+                
+                - `NOT LIKE` case insensitive exact sting inequality comparison:
+
+                        col_name NOT LIKE "ABCD"    // "abcd" will not be included either
+
+                - `%` Used anywhere in a string to match a sequence of zero or more characters (only with `LIKE` or `NOT LIKE`):
+
+                        col_name LIKE "%AT%"        // matches "AT", "ATTIC", "CAT" or even "BATS"
+                
+                - `_` Used anywhere in a string to match a single character (only with `LIKE` or `NOT LIKE`):
+
+                        col_name LIKE "AN_"         // matches "AND", but not "AN"
+    
+- **More filtering to refine return data:**
+    - `DISTINCT`:
+        - Used to filter unique elements only (eg we filter the movies release years, but we only want each year to be included once)
+
+                SELECT DISTINCT column, another_column, …
+                FROM mytable
+                WHERE condition(s);
+        
+    - `GROUP BY`:
+        - Suppose you have a table named **Orders** with the following columns: 
+                
+                OrderId | CustomerId | OrderDate | Amount
+        
+        - If you want to get a list of *unique customers* who have placed orders, along with the *count* of their orders, you might use a query like this:
+
+                SELECT CustomerId, COUNT(OrderId) AS NumberOfOrders
+                FROM Orders
+                GROUP BY CustomerId;
+
+                // Discards duplicate `CustomerId` entries and gives you the count of orders for each unique customer
+    
+    - `ORDER BY`:
+        - Most data in relational databases is added in no particular order, so we need a way to be able to sort it by something:
+
+                SELECT column, another_column, …
+                FROM mytable
+                WHERE condition(s)
+                ORDER BY column ASC/DESC;       // Sorting happens alpha-numerically, based on the column's value
+
+                // Collation: better sort data with international text
+
+    - `LIMIT`
+        - We could also restrain the number of columns returned:
+
+            SELECT column1, column2, ...
+            FROM table_name
+            LIMIT number;
+    
+    - `OFFSET`
+        - used with `LIMIT`, determines where the limited return should start (like a page number)
+
+                SELECT column, another_column, …
+                FROM mytable
+                WHERE condition(s)
+                ORDER BY column ASC/DESC
+                LIMIT num_limit OFFSET num_offset;  // Generally `LIMIT` and `OFFSET` are the last in the query
+            
+## MULTI-TABLE QUERIES: https://sqlbolt.com/lesson/select_queries_with_joins
