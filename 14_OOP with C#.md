@@ -45,34 +45,6 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
     - **Dynamic:** You create data and the tpye is defined later, based on it's content (Javascript, Python)
     - **Static:** You need to define the type of the data when you create it (C, C++, C#, Java)
 
-- C# is an object-oriented programming language. The four basic principles of object-oriented programming contribute to writing more testable, flexible, and maintainable code, and they are:
-    - **Abstraction**
-        - Modeling the relevant attributes and interactions of entities as classes to define an abstract representation of a system. (Contract -> Concretion)
-        - Representing the problem domain with a simplified model (The process of creating an `instance` is called **instantiation**.)
-        - eg. creating a `Class` that represents a `car`
-
-        - `abstract` is not the same as **Abstraction**! (see later with method Anatomy)
-
-    - **Encapsulation**
-        - The process of bundling related data and methods into a type is called encapsulation, and it makes code easier to organize and reuse. (?) ***Which definition is the correct one?***
-        - eg.: Creating a `Class` with **members**, **properties** and **methods**
-        
-        - Hiding the internal state and functionality of an object and only allowing access through a public set of functions.
-        - Allowing access to its properties through a public set of functions
-        - eg.: `public` vs `private` access, or by creating a `readonly` collection
-
-    - **Inheritance**   
-        - Ability to create new abstractions based on existing abstractions
-        - we can inherit from only 1 class, but from multiple interfaces
-        - eg.: `car` superclass is used to create `electricCar` sub-class:
-            
-    - **Polymorphism**  
-        - Ability to implement inherited properties or methods in different ways across multiple abstractions
-        - types
-            - static polymorphism (=overloading based on constructor's parameters)
-            - dynamic polymorphism (=overwriting using `virtual`) 
-        - eg.: `Chef` class has a `virtual` function called `MakeSpecialDish()`, which its sub-class can `overwrite` and define a different function body for the same signature
-
 - What is **.NET** ?
     - a framework (=a set of tools and libraries) developed & maintained by Microsoft
     - Besides the libraries that support these use cases, the platform also includes:
@@ -215,538 +187,6 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                 - Overwrite `Equals` & `GetHashCode` methods inherited from `Object` *base class* (see tutorial at the end)
                 - After override, we should compare not with `==`, but with `obj1.Equals(obj2)` method
 
-- **TYPES - (Custom) TYPES - Classes, Structs and Records:**
-    - **DEFINITION:**
-        - the definition of a **type** is like a blueprint that specifies what the **type** can do (a **class**, **struct**, or **record**)
-        - A class or struct can specify how accessible each of its members is to code outside of the class or struct:
-            - Methods and variables that aren't intended to be used from outside of the class or assembly can be hidden
-
-    - **MEMBERS:**
-        - The members of a type include all fields, properties, methods, constructors and more
-        - In C#, there are no global variables or methods as there are in some other languages:
-            - Even a program's entry point, the Main method, must be declared within a class or struct
-        - **Members types:**
-            - **Fields** (eg `public string name`)
-                - a field stores a piece of data within an object (acts just like a variable)
-                - can have a number of modifiers, including: `public`, `private`, `static`, and `readonly`
-                - If no access modifier is provided, a field is `private` by `default`.
-                - eg.: "name", "size" are typical fields
-
-                - **Initialize** static fields either via **inline initialization** (directly where they are declared) or using a **static constructor:**
-                    - **inline initialization:**
-                        - `StaticValue` is a static field of `MyClass`, and it's assigned a value of `5` directly at its **declaration**
-                        - The values are assigned **before** the constructor (so we could perform operations with these in the constructor?)
-                                
-                                public class MyClass
-                                {
-                                    public static int StaticValue = 5; // Inline initialization
-
-                                    // Other members of the class...
-                                }
-
-                    - **static constructor:**
-                        - A static constructor is used to initialize static fields or to perform a particular action that needs to be executed once for the type. 
-                        - It's called automatically before the first instance is created or any static members are referenced.
-
-                                public class MyClass
-                                {
-                                    public static int StaticValue;
-
-                                    static MyClass() // Static constructor
-                                    {
-                                        StaticValue = 5;
-                                    }
-
-                                    // Other members of the class...
-                                }
-
-                    - **Combined use:**
-                            
-                            public class MyClass
-                            {
-                                // Inline initialization of static fields
-                                public static int StaticValue1 = 5;
-                                public static int StaticValue2 = 10;
-
-                                // Static constructor
-                                static MyClass()
-                                {
-                                    // You can use StaticValue1 and StaticValue2 here
-                                    int sum = StaticValue1 + StaticValue2;
-
-                                    // Perform operations
-                                    Console.WriteLine($"Sum of static values: {sum}");
-                                }
-
-                                // Other members of the class...
-                            }
-
-            - **Properties** (eg `Name`, `Bank Account Number` or `Owner`)
-                - a property is a member of an object that controls how one field may be accessed and/or modified
-                - a way to define what values are valid and disallow those that are not
-                - good practice to make **fields** `private` and **properties** `public` (part of the encapsulation process)
-                - A property defines two methods: 
-                    - a `get()` method that describes how a field can be accessed
-                    - a `set()` method that describes how a field can be modified
-                - We name it the same as the `field` we want to access/set value, but with a Capital letter:
-                        
-                        public class Freshman
-                        {
-                            private string firstName;           // note lowercase naming!
-
-                            public string FirstName             // note Capitalized naming!
-                            {
-                                get { return firstName; }       // No ";" after setters/getters or method definitions!
-                                set { firstName = value; }
-                            }
-                        }
-
-                - Auto-Implemented property:
-                    - Reads and writes to a private field, like other properties, but it does not require explicit definitions for the accessor methods nor the field
-                    - Used with the `{ get; set; }` syntax:
-
-                            public class HotSauce
-                            {
-                            public string Title
-                            { get; set; }
-
-                            public string Origin
-                            { get; set; }
-                            }
-                
-                - 
-
-            - **Methods** (eg `MakeDeposit()` ):
-                - They are functions attached to the object
-                - Special methods: 
-                    - `get;` and `set;` are methods to control access of the object's properties
-                    - when we create a property and set it to `private`, we can specify a getter and a setter separately inside a property:
-                            // Inside the class:
-                            private int _age;
-
-                            public int Age              // Create custom getter and setter for _age property
-                            {
-                                get { return _age; }    // `get` gets executed when we call the _age property
-                                set { _age = value; }   // `set` gets executed when we try to assign a new value to _age
-                            }
-
-                            // or add complexity:
-                                set {
-                                    if (value > 0)
-                                    { 
-                                        _age = value;   // "value" is the placeholder for our input;
-                                    }
-                                    else
-                                    {
-                                        _age = 0;       // if the value we are trying to set is a negative number, the default will be 0
-                                    }
-                                }
-                    - We then also have to update the initial "_age" property in the constructor to "Age", so the constructor calls the getter, and that sets the value
-
-                            // Properties with auto-properties and mutable values:
-                            public class Card {
-                                public Suit Suit { get; set; }                  // use "init" instead of "set" if you want to make it immutable, or just remove "set"
-                                public string Symbol { get; set; }
-                            }
-
-            - **Constructors** (has the same name as the class and assigns the initial values to a new object created from eg. the *BankAccount* type, using `new` keyword)
-                - We can by default create a class without a constructor, by assigning values to it's properties later:
-                        
-                        // Book.cs class file:
-                        class Book
-                        {
-                            public string title;
-                            public string author;
-                            public int releasDate;
-                        }
-
-                        // Program.cs file:
-                        Book book1 = new Book();            // create an instance with empty parentheses
-                        book1.title = "Lord of the Rings";
-                        book1.author = "JRR Tolkien";
-                        book1.releasDate = 1954;
-
-                - Create book with constructor:
-                        
-                        // Add a method to the class with it's own name as the method's name:
-                        class Book
-                        {
-                            public string title;
-                            public string author;
-                            public int releasDate;
-
-                            public Book(string title, string author, int releaseDate)
-                            {
-                                this.title = title;                 // "this." can be omitted as it works without it as well
-                                this.author = author;
-                                this.releaseDate = releaseDate;
-                            }
-                        }
-
-                - derived class constructor: If you want to create a derived class, you need to add a default constructor
-                - `this`: The `this` qualifier is only required when a local variable or parameter has the same name as that field or property:
-                        
-                        // Inside the constructor, where name is an initial parameter:
-                        this.Owner = name;
-                        
-                        // same as:
-                        Owner = name
-
-                        // But we can also use it to avoid duplication of code in overloading constructors:
-                        public Forest(int area, string country)
-                        { 
-                            this.Area = area;
-                            this.Country = country;
-                        }
-
-                        public Forest(int area)
-                        { 
-                            this.Area = area;
-                            this.Country = "Unknown";
-                        }
-
-                        // Avoid writing "this.Area = area;" twice in the code:
-                        public Forest(int area, string country)
-                        { 
-                            this.Area = area;
-                            this.Country = country;
-                        }
-
-                        public Forest(int area) : this(area, "Unknown")     // using "this" we call the first constructor with name and "Unknown" arguments
-                        { 
-                            Console.WriteLine("Country property not specified. Value defaulted to 'Unknown'.");
-                        }
-
-                        // Or if possible, use default values instead:
-                        public Forest(int area, string country = "Unknown")
-                        {
-                            this.Area = area;
-                            this.Country = country;
-                        }
-
-            - Constants       
-            - Events
-            - Finalizers
-            - Indexers
-            - Operators
-            - Nested Types
-    
-    - **ACCESSIBILITY:**
-        - *Client code:* Meant to be accessed from outside the class or struct
-        - By default, fields, properties, and methods are `private`, and classes are `public`.
-        - Access modifiers:
-            - public
-            - protected
-            - internal  (means that the method is not available after the assembly)
-            - protected internal
-            - private
-            - private protected
-    
-    - **INHERITANCE:**
-        - To organize your classes and create class hierarchies:
-            - We use it when we have a class with some functionality, and we need another class which is very similar but has some additional or slightly different behaviour (eg car -> electric car)
-        - Classes (but not structs!) can "inherit"
-        - Classes can inherit attributes (**properties**) and behaviour (**methods**) from other classes:
-            - A class derived from a **Base class** will automatically get all the `public`, `protected` and `internal` members of the base class, **except its constructors and finalizers** (so `private` members are excluded!)
-        - The class which inherits is called a *subclass*, *derived class*, or *child class* and the class from which we are inheriting is called the *superclass*, *base class* or *parent class* (in C# there can be only one base class!)
-        - Abstract class: one or more of their methods have no implementation -> the derived class will provide the missing implementation
-        - Sealed class: A class that doesn't allow inheriting
-            
-        - The **Object** base class:
-            - It's a special built-in class located in `System` namespace
-            - It's the base class of any new class created, so these 2 are equivalent:
-                    
-                    public class Card 
-                    {
-                        //...
-                    }
-
-                    public class Card : Object      // The ":" means the class in inheriting from "Object" class (but it's unnecessary, as this is the default)
-                    {
-                        //...
-                    }
-        - **Upcasting vs Downcasting:**
-            - **upcasting:** creating an inherited superclass or implemented interface reference from a subclass reference:
-                    
-                    Laptop lap = new Laptop();
-                    IPortable portable = lap;       // We create "portable" from another Class's instance
-
-            - **downcasting:** creating a subclass reference from a superclass or interface reference
-                    
-                    Dog dog = new Dog();
-                    Pet pet = dog;
-                    Dog puppy = (Dog)pet;       // "Dog" type correctly
-
-                    // can lead to runtime errors if the superclass cannot be cast to the specified subclass:
-                    
-                    // Dog inherits from Pet. An implicit downcast throws a compile-time error:
-                    Pet pet = new Pet();
-                    Dog dog = pet;
-
-                    // Every downcast must be explicit, using the cast operator, like (TYPE). This fixes the compile-time error but raises a new runtime error.
-                    Pet pet = new Pet();
-                    Dog dog = (Pet)pet;         // "Pet" type instead of "Dog", so it won't work
-
-    - **INTERFACE:**
-        - An interface contains definitions for a group of related functionalities that a non-abstract class or a struct *must* implement
-        - To implement from an interface means that the type implements *all the methods* defined in the interface
-
-    - **CONVERSION:**
-        - **implicit:** happens automatically, if there is no data loss (eg. `int` can be converted to `double`, but not the other way around)
-        - **explicit:** requires operator to create transformation:
-
-                // simple conversion:
-                double myDouble = 3.2;
-                int myInt = (int)myDouble;
-
-                // using Convert class methods:
-                string favNumber = Console.ReadLine();
-                int favNum = Convert.ToInt32(favNumber);
-
-    - **TYPE types:**
-        - **Generic types:** 
-            - Classes, structs, and records can be defined with one or more type parameters
-            - When creating an instance from the class `List<T>` by passing it a parameter: `List<string>` or `List<int>`
-        - **Static types:** (ream more in **Anatomy of a method** section)
-            - Classes (but not structs or records) can be declared as static
-            - A static class can contain only static members and can't be instantiated with the new keyword
-            - Classes, structs, and records can contain static members
-        - **Nested types:**
-            - Nested within another **type**
-        - **Partial types:**
-            - You can define part of a class, struct, or method in one code file and another part in a separate code file
-        - **Anonymous types:**
-            - Anonymous types are defined by their named data members
-            - In situations where it isn't convenient or necessary to create a named class you use anonymous types
-
-    - **MORE on Types:**
-        - **Object initializer:**
-            - You can instantiate and initialize class or struct objects, and collections of objects, by assigning values to its properties
-        - **Implicitly Typed Local Variables:**
-            - Within a class or struct method, you can use implicit typing to instruct the compiler to determine a variable's type at compile time
-    
-    - **RECORDS: *(=an immutable data type with value-based equality)***
-        - *It's just a class that you don't want to change later*
-        - You can add the record modifier to a `class` or a `struct` (`record class` or `record struct`)
-        - Records are types with built-in behavior for value-based equality, with the following features:
-            - Concise syntax for creating a reference type with immutable properties.
-            - Value equality: Two variables of a record type are equal if they have the same type, and if, for every field, the values in both records are equal. 
-              Classes use reference equality: two variables of a class type are equal if they refer to the same object.
-            - Concise syntax for nondestructive mutation. A `with` expression lets you create a new record instance that is a copy of an existing instance but with specified property values changed.
-            - Built-in formatting for display. The `ToString` method prints the record type name and the names and values of public properties.
-            - Support for inheritance hierarchies in record classes. Record `classes` support inheritance. Record `structs` don't support inheritance.
-            - You can add methods, properties and other members to a records just as you would to a class. You can even add mutable properties
-    
-    - **STRUCTS:**
-        - They are "light-versioned" classes
-        - They are value types and can be used to create objects that behave like built-in types
-        - Characteristics & comparison:
-            - Struct cannot have a default constructor (a constructor without parameters) or a destructor.
-            - Structs are value types and are copied on assignments.
-            - Structs are value types, while classes are reference types.
-            - Structs can be instantiated without using a new operator.
-            - A struct cannot inherit from another struct or class, and it cannot be the base of a class. All structs inherit directly from the System.ValueType, which inherits from System.Object.
-            - Struct cannot be a base class. So, Struct types cannot abstract and are always implicitly sealed.
-            - Abstract and sealed modifiers are not allowed, and struct members cannot be protected or protected internals.
-            - Function members in a struct cannot be abstract or virtual, and the override modifier is allowed only to the override methods inherited from the System.ValueType.
-            - Struct does not allow the instance field declarations to include variable initializers. However, static fields of a struct are allowed to include variable initializers.
-            - A struct can implement interfaces.
-            - A struct can be used as a nullable type and can be assigned a null value.
-        - Comparison chart: </br>
-        ![structs v classes](./assets/struct-vs-class.png)
-
-        - Example code:
-                
-                struct Location
-                {
-                    public int x, y;
-
-                    public Location(int x, int y)
-                    {
-                        this.x = x;
-                        this.y = y;
-                    }
-                }
-
-                class Program
-                {
-                    static void Main(string[] args)
-                    {
-                        Location a = new Location(20, 20);
-                        Location b = a;
-                        a.x = 100;
-
-                        // Print the value of b.x
-                        Console.WriteLine(b.x);
-
-                        // Output: 20
-                    }
-                }
-
-- **TYPES - BASIC types:** *Full list of C# types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types*
-    - **Built-in types (*=primitives*):**
-        - Numbers:
-            - `int` - range from -2,147,483,648 to 2,147,483,648 (because it's stored on 32bits, so 2^31-1, or 4,294,967,295)
-            - `short` - a 16-bit signed number, so it's range is -32,768 to 32,767
-            - `long` - a 64-bit number, so the range is -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
-            - `float` - A single precision floating point number
-            - `double` - A double-precision floating point number (Double-precision is a relative term that describes the numbers of binary digits used to store the value)
-            - `decimal` number type has a larger range as `int`, but not as big as `double`. In return, they store a lot more precision. There is also a letter `m` at the end of the number
-        - Text: (implemented with an iterator, so it is possible to iterate a string like you would do with a collection)
-            - `char`
-            - `string` 
-        - `bool`
-        - `byte`
-    - **Framework types:**
-        - `Array`:
-            - a simple data structure in which you can store multiple variables of the same type
-            - They represent a contiguous area in the memory, where the elements are placed next to each other
-            - The size of the array (the number of elements it holds) needs to be specified at creation (different from JS!), so it's **not dynamic**!
-            - The base class they inherit from is `System.Array`
-            - Declaration example:
-                    int[] array1 = { 4, 8, 15, 16, 23, 42};     // Create instantly
-                    int[] array2 = new int[5];                  // Create placeholder by specifying number of elements (eg. 5) , and add them later
-
-                    // Or initialize, then fill:
-                    string[] favSongs;
-                    favSongs = new string[]
-                    {
-                        "item1",
-                        "item2",
-                        ...
-                        "itemn"
-                    };
-
-        - `List<T>`:
-            - It's an indexable collection
-            - Very similar to arrays, but it's **dynamic**, so in most cases it's prefered to use a list
-            - `<T>` refers to the type of items it stores
-        - `Console`:
-            - Derived from the `System.Console` class
-            - It's a `static` class
-            - All the functionality is realted to console in and output (since we will be working with Console Applications, the main user interactions happens through the console)
-        - `DateTime`:
-            - Anything date related can be created with it
-        - `Random`:
-            - Generates random numbers
-        - `Thread`:
-            - A `thread` is a unit of execution (in this module we are only working in a singlethreaded environment) -> so we will only have 1 thread, the **main thread**
-            - `Thread.Sleep` method can be used to defer (delay?) the execution of the current thread by 'x' milliseconds
-
-- **TYPES - REFERENCE vs VALUE:** 
-    - The **reason** we can store types differently is that it helps to reduce the occurrance of runtime exceptions:
-        - a **value type** can never be `null` -> the will never throw a `NullReferenceException` (one of the most common exceptions in OOP languages)
-
-    - **REFERENCE types:**
-        - These **don't hold data directly**, but hold a *reference* or *pointer* to a **memory location** on the **heap**, where the actual object is stored
-        - All **class types** are reference types (eg the `string` and `object` class is a reference type, but also `Arrays` and `Strings`, although the last one is special as it's immutable)
-        - A `null` is also a reference type, but it has no value referenced (?)
-        - Declaring multiple variables that point to the same object makes it possible to modify that object through multiple variables, if it's **mutable**.<br>
-          (if it's set to **immutable**, like strings, we can't modify them, all modifications will create a new object):
-
-                int[] numbers1 = {1,2,3};       // "Array" is a mutable reference type, so it is possible to change its elements after it's been created
-                int[] numbers2 = numbers1;      // numbers1 is a variable that contains a reference to an int[] object, which is what will be copied to numbers2 as well! (so they reference the same memory location)
-
-                numbers2[0] = 0;
-                numbers1[1] = 0;
-
-                Console.WriteLine(String.Join(",", numbers1)); //Prints 0,0,3
-                Console.WriteLine(String.Join(",", numbers2)); //Prints 0,0,3
-
-                Console.ReadKey();
-        
-        - Object reference:
-            - we also refer to reference to a class's `superclass`:
-
-                    // Woman inherits from Human, which inherits from Animal, and it implements IPerson:
-                    class Human : Animal
-                    class Woman : Human, IPerson
-
-                    // All of these references are valid:
-                    Woman eve = new Woman();
-                    Human h = eve;
-                    Animal a = eve;
-                    IPerson p = eve;
-
-    - **VALUE types:**
-        - These **hold their data directly** and are **stored on the stack**
-        - All built-in numeric types (`int`, `double`, `decimal`) and `bool`, `char`, `byte`, `enum` and even `DateTime` are value types.
-        - To create a new `value` type, we need to use the `struct` keyword istead of `class` (the object reference will behave as a value type)
-        - If you assign a value type variable to another, the value itself will be copied, and they both live on separately:
-
-                int number1 = 0;
-                int number2 = number1;          // number1's value gets copied as the value of number2, but they will live independently
-
-                number1++;
-
-                Console.WriteLine(number1); //Prints 1
-                Console.WriteLine(number2); //Prints 0
-
-                Console.ReadKey();
-    
-    - **Method parameters:**
-        - When passing parameters into methods, de default behaviour is **pass by value**:
-            - For **reference types** -> the reference is passed (because the reference type's value is the reference itself) -> we can make modifications to them inside the method:
-
-                    int[] numbers = { 1, 2 };
-
-                    PrintNumbers(numbers);      // Prints 1, 2
-
-                    ChangeToZero(numbers);
-                    PrintNumbers(numbers);      // Prints 0, 0 -> the modification was successful!
-
-                    private void ChangeToZero(int[] arr)
-                    {
-                        arr[0] = 0;
-                        arr[1] = 0;
-                    }
-
-                    private void PrintNumbers(int[] arr)
-                    {
-                        Console.WriteLine(String.Join(", ", arr));
-                    }
-
-            - For **value types** -> the actual value is passed -> we can't use it the same way:
-
-                    int counter = 0;
-            
-                    Increment(counter);
-                    
-                    Console.WriteLine(counter);     // Prints 0, so the modification was unsuccessful (because we were trying to modify the original value)
-                    Console.ReadKey();
-                    
-                    private static void Increment(int num)
-                    {
-                        num += 1;
-                    }
-
-                    // So we can modify the code with the "ref" keyword:
-
-                    int counter = 0;
-                    
-                    Increment(ref counter);         // ref also needs to be specified by the caller
-                    
-                    Console.WriteLine(counter);     // Prints 1
-                    Console.ReadKey();
-
-                    private static void Increment(ref int num)
-                    {
-                        num += 1;
-                    }
-
-                    // But a more realistic scenario is to just return a value from the local method (which will be a new integer):
-
-                    int counter = 0;
-
-                    counter = Increment(counter);   // We assign it a new value, not try to modify the original
-                    
-                    Console.WriteLine(counter);     // Prints 1
-                    Console.ReadKey();
-
-                    private static int Increment(int num)
-                    {
-                        return num + 1;             // The returned value will be a new integer
-                    }
 
 ## DATA TYPES and BUILDING BLOCKS OF CODE:
 - **BASICS:**
@@ -791,6 +231,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                     2. It won't throw any exceptions, but it will still give you information that the operation has failed (the program execution can continue)
                     3. If the parse operation is successful, the method will return true, and the parsed value will be assigned to the out parameter, in our case called number
                     4. The "out" modifier is quite similar to the "ref" modifier, in that it causes the parameter to be passed by reference. The "out" variable however does not have to be initialized, as in the case of "ref".
+
 - **NUMBERS:**
     - Creating numbers:
             int number = 6;                                     // Integer division always results in an integer! (So it only returns the whole part of the result)
@@ -1316,95 +757,397 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         - `continue;` - end the current loop and carry on with the next one (skip code from within the loop)
         - `return` - break out of a method completely (not just loops!). If it's inside a loop, the loop will also end (even multiple loops!)
 
-## METHODS:
-- **Overview:**
-    - In C# methods and functions are the same
-    - They are the most basic **building blocks** of the code after the loops and conditionals
-    - The main roles are:
-        - Avoid code repetition by reusing code blocks
-        - Make the code more readable for humans
-- **Anatomy of a method/Modifyiers:** 
-    - `private`, `static` and `void` are all additional keywords we use to describe the details of our method:
-        - Access modifiers like `private`, `public` or `protected` control the access to the Class's data:
-            - `private`: means that the method can only be invoked from within the `Program` class
-            - `protected`: a protected member can be accessed by the current class and any class that inherits from it (any other class doesn't have access)
-        - Return value:
-            - `void` refers to what it returns 
-            - it could also be `string` or `int`
-        - `static`:
-            - the method belongs to the class itself (and won't be created in objects created from the class) 
-            - therefore it can't be invoked through an object reference, only by the class name (eg. `Program.method()`)
-                - invoke it/ call it by specifying the class name: `Program.Main();` instead of calling it from the instance (eg. `Song.songCount` instead of `song1.songCount`);
-                - if we want to call something from the `Main()` method, we need to make it `static` (because `Main` is also `static`, and it's the compiler's reqirement).
-                - Since *inside static methods* we don't have an object reference of the enclosing type (in this case, Program), we can only call other static methods from it.
-            - `static` **method**:
-                - eg. `Math.Sqrt(144)` -> we can use it without creating a separate object ( `Math` is a static class - can't even create an instance of it!)
-            - `static` methods can't be overwritten
-            - `static` **constructor**:
-                - is run once per type, not per instance
-                - must be parameterless
-                - is invoked before the type is instantiated or a static member is accessed
-                - eg.:
-                        class Forest
+## TYPES:
+- **CLASSES, STRUCTS AND RECORDS (CUSTOM TYPES):**
+    - **DEFINITION:**
+        - the definition of a **type** is like a blueprint that specifies what the **type** can do (a **class**, **struct**, or **record**)
+        - A class or struct can specify how accessible each of its members is to code outside of the class or struct:
+            - Methods and variables that aren't intended to be used from outside of the class or assembly can be hidden
+
+    - **MEMBERS:**
+        - The members of a type include all fields, properties, methods, constructors and more
+        - In C#, there are no global variables or methods as there are in some other languages:
+            - Even a program's entry point, the Main method, must be declared within a class or struct
+        - **Members types:**
+            - **Fields** (eg `public string name`)
+                - a field stores a piece of data within an object (acts just like a variable)
+                - can have a number of modifiers, including: `public`, `private`, `static`, and `readonly`
+                - If no access modifier is provided, a field is `private` by `default`.
+                - eg.: "name", "size" are typical fields
+
+                - **Initialize** static fields either via **inline initialization** (directly where they are declared) or using a **static constructor:**
+                    - **inline initialization:**
+                        - `StaticValue` is a static field of `MyClass`, and it's assigned a value of `5` directly at its **declaration**
+                        - The values are assigned **before** the constructor (so we could perform operations with these in the constructor?)
+                                
+                                public class MyClass
+                                {
+                                    public static int StaticValue = 5; // Inline initialization
+
+                                    // Other members of the class...
+                                }
+
+                    - **static constructor:**
+                        - A static constructor is used to initialize static fields or to perform a particular action that needs to be executed once for the type. 
+                        - It's called automatically before the first instance is created or any static members are referenced.
+
+                                public class MyClass
+                                {
+                                    public static int StaticValue;
+
+                                    static MyClass() // Static constructor
+                                    {
+                                        StaticValue = 5;
+                                    }
+
+                                    // Other members of the class...
+                                }
+
+                    - **Combined use:**
+                            
+                            public class MyClass
+                            {
+                                // Inline initialization of static fields
+                                public static int StaticValue1 = 5;
+                                public static int StaticValue2 = 10;
+
+                                // Static constructor
+                                static MyClass()
+                                {
+                                    // You can use StaticValue1 and StaticValue2 here
+                                    int sum = StaticValue1 + StaticValue2;
+
+                                    // Perform operations
+                                    Console.WriteLine($"Sum of static values: {sum}");
+                                }
+
+                                // Other members of the class...
+                            }
+
+            - **Properties** (eg `Name`, `Bank Account Number` or `Owner`)
+                - a property is a member of an object that controls how one field may be accessed and/or modified
+                - a way to define what values are valid and disallow those that are not
+                - good practice to make **fields** `private` and **properties** `public` (part of the encapsulation process)
+                - A property defines two methods: 
+                    - a `get()` method that describes how a field can be accessed
+                    - a `set()` method that describes how a field can be modified
+                - We name it the same as the `field` we want to access/set value, but with a Capital letter:
+                        
+                        public class Freshman
                         {
-                        static Forest()
+                            private string firstName;           // note lowercase naming!
+
+                            public string FirstName             // note Capitalized naming!
+                            {
+                                get { return firstName; }       // No ";" after setters/getters or method definitions!
+                                set { firstName = value; }
+                            }
+                        }
+
+                - Auto-Implemented property:
+                    - Reads and writes to a private field, like other properties, but it does not require explicit definitions for the accessor methods nor the field
+                    - Used with the `{ get; set; }` syntax:
+
+                            public class HotSauce
+                            {
+                                public string Title { get; set; }
+                                public string Origin { get; set; }
+                            }
+                
+            - **Methods** (eg `MakeDeposit()` ):
+                - They are functions attached to the object
+                - Special methods: 
+                    - `get;` and `set;` are methods to control access of the object's properties
+                    - when we create a property and set it to `private`, we can specify a getter and a setter separately inside a property:
+                            // Inside the class:
+                            private int _age;
+
+                            public int Age              // Create custom getter and setter for _age property
+                            {
+                                get { return _age; }    // `get` gets executed when we call the _age property
+                                set { _age = value; }   // `set` gets executed when we try to assign a new value to _age
+                            }
+
+                            // or add complexity:
+                                set {
+                                    if (value > 0)
+                                    { 
+                                        _age = value;   // "value" is the placeholder for our input;
+                                    }
+                                    else
+                                    {
+                                        _age = 0;       // if the value we are trying to set is a negative number, the default will be 0
+                                    }
+                                }
+                    - We then also have to update the initial "_age" property in the constructor to "Age", so the constructor calls the getter, and that sets the value
+
+                            // Properties with auto-properties and mutable values:
+                            public class Card {
+                                public Suit Suit { get; set; }                  // use "init" instead of "set" if you want to make it immutable, or just remove "set"
+                                public string Symbol { get; set; }
+                            }
+
+            - **Constructors** (has the same name as the class and assigns the initial values to a new object created from eg. the *BankAccount* type, using `new` keyword)
+                - We can by default create a class without a constructor, by assigning values to it's properties later:
+                        
+                        // Book.cs class file:
+                        class Book
+                        {
+                            public string title;
+                            public string author;
+                            public int releasDate;
+                        }
+
+                        // Program.cs file:
+                        Book book1 = new Book();            // create an instance with empty parentheses
+                        book1.title = "Lord of the Rings";
+                        book1.author = "JRR Tolkien";
+                        book1.releasDate = 1954;
+
+                - Create book with constructor:
+                        
+                        // Add a method to the class with it's own name as the method's name:
+                        class Book
+                        {
+                            public string title;
+                            public string author;
+                            public int releasDate;
+
+                            public Book(string title, string author, int releaseDate)
+                            {
+                                this.title = title;                 // "this." can be omitted as it works without it as well
+                                this.author = author;
+                                this.releaseDate = releaseDate;
+                            }
+                        }
+
+                - derived class constructor: If you want to create a derived class, you need to add a default constructor
+                - `this`: The `this` qualifier is only required when a local variable or parameter has the same name as that field or property:
+                        
+                        // Inside the constructor, where name is an initial parameter:
+                        this.Owner = name;
+                        
+                        // same as:
+                        Owner = name
+
+                        // But we can also use it to avoid duplication of code in overloading constructors:
+                        public Forest(int area, string country)
                         { 
-                            Console.WriteLine("Type Initialized");  // This will run every time we intialize a forest object, so we could count the number of objects created fro example with this
+                            this.Area = area;
+                            this.Country = country;
                         }
+
+                        public Forest(int area)
+                        { 
+                            this.Area = area;
+                            this.Country = "Unknown";
                         }
 
-                        Forest f = new Forest();        // This line triggers the static method
+                        // Avoid writing "this.Area = area;" twice in the code:
+                        public Forest(int area, string country)
+                        { 
+                            this.Area = area;
+                            this.Country = country;
+                        }
 
-        - `virtual` keyword indicates a method in the *base class*, that the *derived class* can overwrite (you can only change the content, not the signature or the return type!):
-            - If a *base class* has a `virtual` method, it means it will check first if the *derived class* we are pointing to or referencing has that method, and implement that instead. If it doesn't, it will use the definition in the *base class*
-            - These are the methods in `Object` class, that we can consider overwriting, when creating a derived class:
-                - `Equals`: By default, equlaity is checked by reference, but we can override this to check for its attributes
-                - `GetHashCode`: used when the object is placed in a hash map like collection, for example the `Dictionary`
-                - `ToString`
-                - (`Finalize`)
-            - How to use it:
-                - Parent class:
+                        public Forest(int area) : this(area, "Unknown")     // using "this" we call the first constructor with name and "Unknown" arguments
+                        { 
+                            Console.WriteLine("Country property not specified. Value defaulted to 'Unknown'.");
+                        }
 
-                        public virtual void Method()
+                        // Or if possible, use default values instead:
+                        public Forest(int area, string country = "Unknown")
                         {
-                            // CODE
+                            this.Area = area;
+                            this.Country = country;
                         }
 
-                - Derived class:
-
-                        public override void Method()
-                        {
-                            // NEW CODE
-                        }
-        - `abstract` keyword (modifier) describes an incomple Class, that the subclass needs to complete it on implementation:
-            - Use the `abstract` modifier in a class declaration to indicate that *a class is intended only to be a base class* of other classes, not instantiated on its own.
-            - The complete implementation of an `abstract` member must be marked with `override`:
-
-                    abstract class Shape
-                    {
-                        public abstract int GetArea();
-                    }
-
-                    class Square : Shape
-                    {
-                        int side;
-                        public Square(int n) => side = n;
-
-                        // GetArea method is required to avoid a compile-time error.
-                        public override int GetArea() => side * side;
-                    }
+            - **OTHER:**
+                - Constants       
+                - Events
+                - Finalizers
+                - Indexers
+                - Operators
+                - Nested Types
+    
+    - **ACCESSIBILITY:**
+        - *Client code:* Meant to be accessed from outside the class or struct
+        - By default, fields, properties, and methods are `private`, and classes are `public`.
+        - Access modifiers:
+            - public
+            - protected
+            - internal  (means that the method is not available after the assembly)
+            - protected internal
+            - private
+            - private protected
+    
+    - **INHERITANCE:**
+        - To organize your classes and create class hierarchies:
+            - We use it when we have a class with some functionality, and we need another class which is very similar but has some additional or slightly different behaviour (eg car -> electric car)
+        - Classes (but not structs!) can "inherit"
+        - Classes can inherit attributes (**properties**) and behaviour (**methods**) from other classes:
+            - A class derived from a **Base class** will automatically get all the `public`, `protected` and `internal` members of the base class, **except its constructors and finalizers** (so `private` members are excluded!)
+        - The class which inherits is called a *subclass*, *derived class*, or *child class* and the class from which we are inheriting is called the *superclass*, *base class* or *parent class* (in C# there can be only one base class!)
+        - Abstract class: one or more of their methods have no implementation -> the derived class will provide the missing implementation
+        - Sealed class: A class that doesn't allow inheriting
             
-            - **Class** -> can't be instantiated
-            - **Method** -> a function without a body (`abstract` MUST be overwritten in subclass! // vs. // `virtual` -> CAN be overwritten)
+        - The **Object** base class:
+            - It's a special built-in class located in `System` namespace
+            - It's the base class of any new class created, so these 2 are equivalent:
+                    
+                    public class Card 
+                    {
+                        //...
+                    }
+
+                    public class Card : Object      // The ":" means the class in inheriting from "Object" class (but it's unnecessary, as this is the default)
+                    {
+                        //...
+                    }
+        - **Upcasting vs Downcasting:**
+            - **upcasting:** creating an inherited superclass or implemented interface reference from a subclass reference:
+                    
+                    Laptop lap = new Laptop();
+                    IPortable portable = lap;       // We create "portable" from another Class's instance
+
+            - **downcasting:** creating a subclass reference from a superclass or interface reference
+                    
+                    Dog dog = new Dog();
+                    Pet pet = dog;
+                    Dog puppy = (Dog)pet;       // "Dog" type correctly
+
+                    // can lead to runtime errors if the superclass cannot be cast to the specified subclass:
+                    
+                    // Dog inherits from Pet. An implicit downcast throws a compile-time error:
+                    Pet pet = new Pet();
+                    Dog dog = pet;
+
+                    // Every downcast must be explicit, using the cast operator, like (TYPE). This fixes the compile-time error but raises a new runtime error.
+                    Pet pet = new Pet();
+                    Dog dog = (Pet)pet;         // "Pet" type instead of "Dog", so it won't work
+
+    - **CONVERSION:**
+        - **implicit:** happens automatically, if there is no data loss (eg. `int` can be converted to `double`, but not the other way around)
+        - **explicit:** requires operator to create transformation:
+
+                // simple conversion:
+                double myDouble = 3.2;
+                int myInt = (int)myDouble;
+
+                // using Convert class methods:
+                string favNumber = Console.ReadLine();
+                int favNum = Convert.ToInt32(favNumber);
+
+    - **CATEGORIES:**
+        - **Generic types:** 
+            - Classes, structs, and records can be defined with one or more type parameters
+            - When creating an instance from the class `List<T>` by passing it a parameter: `List<string>` or `List<int>`
+        - **Static types:** (read more in **Anatomy of a method** section)
+            - Classes (but not structs or records) can be declared as static
+            - A static class can contain only static members and can't be instantiated with the new keyword
+            - Classes, structs, and records can contain static members
+        - **Nested types:**
+            - Nested within another **type**
+        - **Partial types:**
+            - You can define part of a class, struct, or method in one code file and another part in a separate code file
+        - **Anonymous types:**
+            - Anonymous types are defined by their named data members
+            - In situations where it isn't convenient or necessary to create a named class you use anonymous types
+
+    - **ININITIALIZING AN OBJECT:**
+        - **Object initializer:**
+            - You can instantiate and initialize class or struct objects, and collections of objects, by assigning values to its properties
+        - **Implicitly Typed Local Variables:**
+            - Within a class or struct method, you can use implicit typing to instruct the compiler to determine a variable's type at compile time (specify type instead of using `var`)
+    
+    - **RECORDS: *(=an immutable data type with value-based equality)***
+        - *It's just a class that you don't want to change later*
+        - You can add the record modifier to a `class` or a `struct` (`record class` or `record struct`)
+        - Records are types with built-in behavior for value-based equality, with the following features:
+            - Concise syntax for creating a reference type with immutable properties.
+            - Value equality: Two variables of a record type are equal if they have the same type, and if, for every field, the values in both records are equal. 
+              Classes use reference equality: two variables of a class type are equal if they refer to the same object.
+            - Concise syntax for nondestructive mutation. A `with` expression lets you create a new record instance that is a copy of an existing instance but with specified property values changed.
+            - Built-in formatting for display. The `ToString` method prints the record type name and the names and values of public properties.
+            - Support for inheritance hierarchies in record classes. Record `classes` support inheritance. Record `structs` don't support inheritance.
+            - You can add methods, properties and other members to a records just as you would to a class. You can even add mutable properties
+    
+    - **STRUCTS:**
+        - They are "light-versioned" classes
+        - They are value types and can be used to create objects that behave like built-in types
+        - Characteristics & comparison:
+            - Struct cannot have a default constructor (a constructor without parameters) or a destructor.
+            - Structs are value types and are copied on assignments.
+            - Structs are value types, while classes are reference types.
+            - Structs can be instantiated without using a new operator.
+            - A struct cannot inherit from another struct or class, and it cannot be the base of a class. All structs inherit directly from the System.ValueType, which inherits from System.Object.
+            - Struct cannot be a base class. So, Struct types cannot abstract and are always implicitly sealed.
+            - Abstract and sealed modifiers are not allowed, and struct members cannot be protected or protected internals.
+            - Function members in a struct cannot be abstract or virtual, and the override modifier is allowed only to the override methods inherited from the System.ValueType.
+            - Struct does not allow the instance field declarations to include variable initializers. However, static fields of a struct are allowed to include variable initializers.
+            - A struct can implement interfaces.
+            - A struct can be used as a nullable type and can be assigned a null value.
+        - Comparison chart: </br>
+        ![structs v classes](./assets/struct-vs-class.png)
+
+        - Example code:
+                
+                struct Location
+                {
+                    public int x, y;
+
+                    public Location(int x, int y)
+                    {
+                        this.x = x;
+                        this.y = y;
+                    }
+                }
+
+                class Program
+                {
+                    static void Main(string[] args)
+                    {
+                        Location a = new Location(20, 20);
+                        Location b = a;
+                        a.x = 100;
+
+                        // Print the value of b.x
+                        Console.WriteLine(b.x);
+
+                        // Output: 20
+                    }
+                }
+
+    - **INTERFACES:**                
         - `interface`:
-            - contains definitions for a group of related functionalities that a class can implement:
-                - The Interface defines all the members that the class that implements it has (similar to a virtual method in a baseclass)
-                - The implementing class defines how these members should behave (similar to an override of a virtual method) 
-            - Benefits:
+            - **Overview:**
+                - **Definition:** An interface is a contract that defines how different parts of a program communicate with each other
+                - It is an abstract type in C# that defines a **contract**:
+                    - Any class or struct that implements an interface must provide an implementation of the members defined in the interface.
+                - The interface is then used to facilitate communication between objects.
+                - Instead of using a reference of a concrete type, the objects talk to each other via this interface.
+                - This will lead `Components` to depend on **abstractions** rather than **implementations*
+                    - They can have default implementations, but the usual case for them is to only define the method signatures, and leave the actual implementation to classes that implement the interface.
+                    - They don't have any constructors, as interfaces are abstract types - they cannot be instantiated.
+                - We should rather have many smaller, more specific interfaces, as opposed to one huge interface with many operations. (very similar to SRP!)
+                    - But it doesn't mean that each interface should only have 1 method, but that the methods should be related to the same functionality
+                
+                - contains definitions for a group of related functionalities that a class can implement:
+                    - The Interface defines all the members that the class that implements it has (similar to a virtual method in a baseclass)
+                    - The implementing class defines how these members should behave (similar to an override of a virtual method) 
+                    - An interface can contain methods and properties, but they can not declare instance data such as fields, auto-implemented properties, or property-like events. 
+                - Create one by using `interface` keyword, and naming should be something like `ICardGenerator`:
+
+                        public interface ICardGenerator
+                        {
+                            List<Card> Generate(int[] numbers, string[] symbols, string[] suits);
+                        }
+            
+            - **Benefits:**
                 - they guarantee how a class behaves and helps organize and modularize components of software (a class can implement multiple interfaces)
-                - You can inherit multiple intefaces
+                - You can inherit multiple intefaces (but only one class!)
                 - extra security
-            - It is best practice to start the name of an interface with “I”:
+            - **Example:**
 
                     // The IAutomobile interface has three properties. Any class that implements this interface must have these three properties:
                     interface IAutomobile
@@ -1441,9 +1184,256 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                         // If multiple interfaces are implemented, you should also implements all the members from that one!
                     }
 
-    - **method signature:** 
+- **BASIC TYPES:** *Full list of C# types: https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/built-in-types*
+    - **Built-in types (*=primitives*):**
+        - Numbers:
+            - `int` - range from -2,147,483,648 to 2,147,483,648 (because it's stored on 32bits, so 2^31-1, or 4,294,967,295)
+            - `short` - a 16-bit signed number, so it's range is -32,768 to 32,767
+            - `long` - a 64-bit number, so the range is -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807
+            - `float` - A single precision floating point number
+            - `double` - A double-precision floating point number (Double-precision is a relative term that describes the numbers of binary digits used to store the value)
+            - `decimal` number type has a larger range as `int`, but not as big as `double`. In return, they store a lot more precision. There is also a letter `m` at the end of the number
+        - Text: (implemented with an iterator, so it is possible to iterate a string like you would do with a collection)
+            - `char`
+            - `string` 
+        - `bool`
+        - `byte`
+    - **Framework types:**
+        - `Array`:
+            - a simple data structure in which you can store multiple variables of the same type
+            - They represent a contiguous area in the memory, where the elements are placed next to each other
+            - The size of the array (the number of elements it holds) needs to be specified at creation (different from JS!), so it's **not dynamic**!
+            - The base class they inherit from is `System.Array`
+            - Declaration example:
+                    int[] array1 = { 4, 8, 15, 16, 23, 42};     // Create instantly
+                    int[] array2 = new int[5];                  // Create placeholder by specifying number of elements (eg. 5) , and add them later
+
+                    // Or initialize, then fill:
+                    string[] favSongs;
+                    favSongs = new string[]
+                    {
+                        "item1",
+                        "item2",
+                        ...
+                        "itemn"
+                    };
+
+        - `List<T>`:
+            - It's an indexable collection
+            - Very similar to arrays, but it's **dynamic**, so in most cases it's prefered to use a list
+            - `<T>` refers to the type of items it stores
+        - `Console`:
+            - Derived from the `System.Console` class
+            - It's a `static` class
+            - All the functionality is realted to console in and output (since we will be working with Console Applications, the main user interactions happens through the console)
+        - `DateTime`:
+            - Anything date related can be created with it
+        - `Random`:
+            - Generates random numbers
+        - `Thread`:
+            - A `thread` is a unit of execution (in this module we are only working in a singlethreaded environment) -> so we will only have 1 thread, the **main thread**
+            - `Thread.Sleep` method can be used to defer (delay?) the execution of the current thread by 'x' milliseconds
+
+- **REFERENCE vs VALUE TYPES:** 
+    - The **reason** we can store types differently is that it helps to reduce the occurrance of runtime exceptions:
+        - a **value type** can never be `null` -> the will never throw a `NullReferenceException` (one of the most common exceptions in OOP languages)
+
+    - **REFERENCE types:**
+        - These **don't hold data directly**, but hold a *reference* or *pointer* to a **memory location** on the **heap**, where the actual object is stored
+        - All **class types** are reference types (eg the `string` and `object` class is a reference type, but also `Arrays` and `Strings`, although the last one is special as it's immutable)
+        - A `null` is also a reference type, but it has no value referenced (?)
+        - Declaring multiple variables that point to the same object makes it possible to modify that object through multiple variables, if it's **mutable**.<br>
+          (if it's set to **immutable**, like strings, we can't modify them, all modifications will create a new object):
+
+                int[] numbers1 = {1,2,3};       // "Array" is a mutable reference type, so it is possible to change its elements after it's been created
+                int[] numbers2 = numbers1;      // numbers1 is a variable that contains a reference to an int[] object, which is what will be copied to numbers2 as well! (so they reference the same memory location)
+
+                numbers2[0] = 0;
+                numbers1[1] = 0;
+
+                Console.WriteLine(String.Join(",", numbers1)); //Prints 0,0,3
+                Console.WriteLine(String.Join(",", numbers2)); //Prints 0,0,3
+
+                Console.ReadKey();
+        
+        - Object reference:
+            - we also refer to reference to a class's `superclass`:
+
+                    // Woman inherits from Human, which inherits from Animal, and it implements IPerson:
+                    class Human : Animal
+                    class Woman : Human, IPerson
+
+                    // All of these references are valid:
+                    Woman eve = new Woman();
+                    Human h = eve;
+                    Animal a = eve;
+                    IPerson p = eve;
+
+    - **VALUE types:**
+        - These **hold their data directly** and are **stored on the stack**
+        - All built-in numeric types (`int`, `double`, `decimal`) and `bool`, `char`, `byte`, `enum` and even `DateTime` are value types.
+        - To create a new `value` type, we need to use the `struct` keyword istead of `class` (the object reference will behave as a value type)
+        - If you assign a value type variable to another, the value itself will be copied, and they both live on separately:
+
+                int number1 = 0;
+                int number2 = number1;          // number1's value gets copied as the value of number2, but they will live independently
+
+                number1++;
+
+                Console.WriteLine(number1); //Prints 1
+                Console.WriteLine(number2); //Prints 0
+
+                Console.ReadKey();
+    
+    - **Method parameters:**
+        - When passing parameters into methods, de default behaviour is **pass by value**:
+            - For **reference types** -> the reference is passed (because the reference type's value is the reference itself) -> we can make modifications to them inside the method:
+
+                    int[] numbers = { 1, 2 };
+
+                    PrintNumbers(numbers);      // Prints 1, 2
+
+                    ChangeToZero(numbers);
+                    PrintNumbers(numbers);      // Prints 0, 0 -> the modification was successful!
+
+                    private void ChangeToZero(int[] arr)
+                    {
+                        arr[0] = 0;
+                        arr[1] = 0;
+                    }
+
+                    private void PrintNumbers(int[] arr)
+                    {
+                        Console.WriteLine(String.Join(", ", arr));
+                    }
+
+            - For **value types** -> the actual value is passed -> we can't use it the same way:
+
+                    int counter = 0;
+            
+                    Increment(counter);
+                    
+                    Console.WriteLine(counter);     // Prints 0, so the modification was unsuccessful (because we were trying to modify the original value)
+                    Console.ReadKey();
+                    
+                    private static void Increment(int num)
+                    {
+                        num += 1;
+                    }
+
+                    // So we can modify the code with the "ref" keyword:
+
+                    int counter = 0;
+                    
+                    Increment(ref counter);         // ref also needs to be specified by the caller
+                    
+                    Console.WriteLine(counter);     // Prints 1
+                    Console.ReadKey();
+
+                    private static void Increment(ref int num)
+                    {
+                        num += 1;
+                    }
+
+                    // But a more realistic scenario is to just return a value from the local method (which will be a new integer):
+
+                    int counter = 0;
+
+                    counter = Increment(counter);   // We assign it a new value, not try to modify the original
+                    
+                    Console.WriteLine(counter);     // Prints 1
+                    Console.ReadKey();
+
+                    private static int Increment(int num)
+                    {
+                        return num + 1;             // The returned value will be a new integer
+                    }
+
+
+## METHODS:
+- **Overview:**
+    - In C# methods and functions are the same
+    - They are the most basic **building blocks** of the code after the loops and conditionals
+    - The main roles are:
+        - Avoid code repetition by reusing code blocks
+        - Make the code more readable for humans
+
+- **Anatomy of a method/Modifyiers:** 
+    - **Method signature:** 
         - the method's name and the parameters together `MethodName(parameters)` -> this is a unique identifier of the method (name is with Capital letter! *PascalCase*)
-        - `void` is not part of it, which is important because of **member/method overloading** 
+    - **Modifiers:**
+        - Access modifiers like `private`, `public` or `protected` control the access to the Class's data:
+            - `private`: means that the method can only be invoked from within the `Program` class
+            - `protected`: a protected member can be accessed by the current class and any class that inherits from it (any other class doesn't have access)
+        - Return value:
+            - `void` refers to what it returns 
+            - it could also be `string` or `int`
+        - Other keywords:
+            - `static`:
+                - the method belongs to the class itself (and won't be created in objects created from the class) 
+                - therefore it can't be invoked through an object reference, only by the class name (eg. `Program.method()`)
+                    - invoke it/ call it by specifying the class name: `Program.Main();` instead of calling it from the instance (eg. `Song.songCount` instead of `song1.songCount`);
+                    - if we want to call something from the `Main()` method, we need to make it `static` (because `Main` is also `static`, and it's the compiler's reqirement).
+                    - Since *inside static methods* we don't have an object reference of the enclosing type (in this case, Program), we can only call other static methods from it.
+                - `static` **method**:
+                    - eg. `Math.Sqrt(144)` -> we can use it without creating a separate object ( `Math` is a static class - can't even create an instance of it!)
+                - `static` methods can't be overwritten
+                - `static` **constructor**:
+                    - is run once per type, not per instance
+                    - must be parameterless
+                    - is invoked before the type is instantiated or a static member is accessed
+                    - eg.:
+                            class Forest
+                            {
+                            static Forest()
+                            { 
+                                Console.WriteLine("Type Initialized");  // This will run every time we intialize a forest object, so we could count the number of objects created fro example with this
+                            }
+                            }
+
+                            Forest f = new Forest();        // This line triggers the static method
+
+            - `virtual` keyword indicates a method in the *base class*, that the *derived class* can overwrite (you can only change the content, not the signature or the return type!):
+                - If a *base class* has a `virtual` method, it means it will check first if the *derived class* we are pointing to or referencing has that method, and implement that instead. If it doesn't, it will use the definition in the *base class*
+                - These are the methods in `Object` class, that we can consider overwriting, when creating a derived class:
+                    - `Equals`: By default, equlaity is checked by reference, but we can override this to check for its attributes
+                    - `GetHashCode`: used when the object is placed in a hash map like collection, for example the `Dictionary`
+                    - `ToString`
+                    - (`Finalize`)
+                - How to use it:
+                    - Parent class:
+
+                            public virtual void Method()
+                            {
+                                // CODE
+                            }
+
+                    - Derived class:
+
+                            public override void Method()
+                            {
+                                // NEW CODE
+                            }
+            - `abstract` keyword (modifier) describes an incomple Class, that the subclass needs to complete it on implementation:
+                - Use the `abstract` modifier in a class declaration to indicate that *a class is intended only to be a base class* of other classes, not instantiated on its own.
+                - The complete implementation of an `abstract` member must be marked with `override`:
+
+                        abstract class Shape
+                        {
+                            public abstract int GetArea();
+                        }
+
+                        class Square : Shape
+                        {
+                            int side;
+                            public Square(int n) => side = n;
+
+                            // GetArea method is required to avoid a compile-time error.
+                            public override int GetArea() => side * side;
+                        }
+                
+                - **Class** -> can't be instantiated
+                - **Method** -> a function without a body (`abstract` MUST be overwritten in subclass! // vs. // `virtual` -> CAN be overwritten)
 
 - **Method/member overloading:**
     - it means creating multiple elements with the same name, which only differ in the numbers of parameters
@@ -1629,211 +1619,36 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
 
                 var isBetween = input.IsBetween(start, end);        // We are calling it now on "input", not on "DateTimeUtils"
 
-## CLASSES / PROCESS OF MODELING:
-- Process of modeling (simplified summary):
-    1. Analize object's attributes
-    2. Filter these attributes to only include the relevant ones
-    3. Decide which data types to use for the attributes
-    4. Create Object from Class
 
-- Creating Classes:
-    0. Create enum if there will be a property that is restricted to certain values:
+
+## ARCHITECTURE PRINCIPLES:
+- **The 4 basic OOP principles:**
+    - C# is an object-oriented programming language. The four basic principles of object-oriented programming contribute to writing more testable, flexible, and maintainable code, and they are:
+    - **Abstraction**
+        - Representing a real world entity with a simplified model by creating the relevant attributes and interactions only.
+        - The process of creating an `instance` is called **instantiation** aka. **példányosítás**.
+        - eg. creating a `Class` that represents a `car`
+
+        - `abstract` is not the same as **Abstraction**! (see later with method Anatomy)
+
+    - **Encapsulation**
+        - Collect a set of members (Properties, methods, etc.) into a class to create an entity
+        - Hiding the internal state and functionality of an object and only allowing access through a public set of functions.
+        - eg.: Creating a `Class` with **members**, **properties** and **methods**, then setting access with `public` or `private` keywords, or by creating a `readonly` collection
+
+    - **Inheritance**   
+        - Ability to create new abstractions based on existing abstractions (**sub-class** inherits from **base-class**)
+        - we can inherit from only 1 class, but from multiple interfaces!
+        - eg.: `car` superclass is used to create `electricCar` sub-class
             
-            // In separate "Model" folder:
-            namespace Codecool.PlayingCards.Model;
+    - **Polymorphism**  
+        - Ability to implement inherited properties or methods in different ways across multiple abstractions
+        - types
+            - static polymorphism (=overloading based on constructor's parameters)
+            - dynamic polymorphism (=overwriting using `virtual` or `abstract` keywords) 
+        - eg.: `Chef` class has a `virtual` function called `MakeSpecialDish()`, which its sub-class can `overwrite` and define a different function body for the same signature
 
-            public enum Suit {
-                Diamonds,
-                Clubs,
-                Hearts,
-                Spades,
-            }
-
-    1. Add properties:
-        - **Auto properties** are properties that don't require the old way of creating a private field, then using another public field to get/set these values, instead this process is automatically generated in the background
-
-                // The old way:
-                private int _age;
-
-                public int Age              // Create custom getter and setter
-                {
-                    get { return _age; }    // `get` gets executed when we call the _age property
-                    set { _age = value; }   // `set` gets executed when we try to assign a new value to _age
-                }
-
-                // Properties with auto-properties and mutable values:
-                public class Card {
-                    public Suit Suit { get; set; }                  // use "init" instead of "set" if you want to make it immutable, or just remove "set"
-                    public string Symbol { get; set; }
-                }
-
-    2. Add a constructor:
-
-            public class Card {
-
-                public Suit Suit { get; init; }                 // gets values from the enum we created for it
-                public string Symbol { get; init; }             // value needs to be specified on initialization as string value
-                public string Title => $"{Symbol} of {Suit}"    // This is a computed property with the arrow syntax, but we could add it to the constructor instead
-
-                public Card(string symbol, Suit suit)           // Add constructor
-                {
-                    Suit = suit;                                // We use capital letters here because of the getter and the setter
-                    Symbol = symbol;
-                }
-            }
-
-    3. Change default inherited method definitions `Equals` and `GetHashCode`, then also `ToString`:
-        - `Alt + Insert` hotkey, or right *click + generate* in `Card.cs` Class file, to add the following:
-                
-                protected bool Equals(Card other)
-                {
-                    return Suit == other.Suit && Symbol == other.Symbol;
-                }
-
-                public override bool Equals(object? obj)            // "override" keyword is used to override a "virtual" class from the parent class
-                {
-                    if (ReferenceEquals(null, obj)) return false;
-                    if (ReferenceEquals(this, obj)) return true;
-                    if (obj.GetType() != this.GetType()) return false;
-                    return Equals((Card)obj);
-                }
-
-                public override int GetHashCode()
-                {
-                    return HashCode.Combine((int)Suit, Symbol);
-                }
-        
-        - After overwriting, we should check for equality with the following method, not the `==` operator (this would only call `ReferenceEquals` methods again):
-
-                Card card1 = new Card("Ace", Suit.Spades);
-                Card card2 = new Card("Ace", Suit.Spades);
-
-                Console.WriteLine(card1.Equals(card2)); // Prints True    
-        
-        - Update `ToString` as well:
-
-                public override string ToString()
-                {
-                    return Title;
-                }
-
-                // So now instead of printing "PlayingCards.Card", it will print the Title attribute's value "Ace of Spades"
-                Card card1 = new Card("Ace", Suit.Spades);
-
-                Console.WriteLine(card1); // Prints Ace of Spades
-
-    4. Create single object from Class in Program.cs file:
-
-            Card card = new Card("Ace", Suit.Spades);
-
-            // Use or call its attributes:
-            Console.WriteLine(card.Title);
-
-            // If it's mutable, we can overwrite its attributes after initializeation:
-            card.Symbol = "King"
-            card.Suit = Suit.Hearts;
-    
-    5. Generate the full deck:
-        - In `Program.cs` file we create a new method called `GenerateFrenchDeck`:
-                
-                static Card[] GenerateFrenchDeck()
-                {   
-                    // Create initial data for deck:
-                    Card[] deck = new Card[52];
-                    int index = 0;
-
-                    // Iterate through the suits:
-                    foreach (var suit in Enum.GetValues<Suit>())
-                    {
-                        AddNumberedCards(deck, ref index, suit);        // Note "ref" keyword! This is to avoid passing paramters into methods "by value", which means a new memory storage is created for each method call 
-                        AddCourtCards(deck, ref index, suit);           // ref keyword!
-                    }
-
-                    return deck;
-                }
-
-                // Generate numbered cards:
-                static void AddNumberedCards(Card[] deck, ref int index, Suit suit)     // ref keyword!
-                {
-                    for (int i = 2; i <= 10; i++)
-                    {
-                        Card card = new Card(i.ToString(), suit);
-                        deck[index] = card;
-                        index++;
-                    }
-                }
-
-                // Generate court cards:
-                static void AddCourtCards(Card[] deck, ref int index, Suit suit)        // ref keyword!
-                {
-                    string[] courtSymbols = { "Jack", "Queen", "King", "Ace" };
-
-                    foreach (var courtSymbol in courtSymbols)
-                    {
-                        Card card = new Card(courtSymbol, suit);
-                        deck[index] = card;
-                        index++;
-                    }
-                }
-
-                // Then we can add these lines to the `Main` method to actually generate the cards:
-                Card[] deck = GenerateFrenchDeck();
-
-                for (int i = 0; i < deck.Length; i++)
-                {
-                    Console.WriteLine($"{i + 1} - {deck[i]}");
-                }
-
-                Console.ReadKey();
-
-        - The same code using `List` (to avoid dealing with `index` and `ref`):
-
-                static List<Card> GenerateFrenchDeck()
-                {
-                    // Create initial data for deck:
-                    List<Card> deck = new List<Card>();
-
-                    // Iterate through the suits:
-                    foreach (var suit in Enum.GetValues<Suit>())
-                    {
-                        AddNumberedCards(deck, suit);
-                        AddCourtCards(deck, suit);
-                    }
-
-                    return deck;
-                }
-
-                // Generate numbered cards:
-                static void AddNumberedCards(List<Card> deck, Suit suit)
-                {
-                    for (int i = 2; i <= 10; i++)
-                    {
-                        Card card = new Card(i.ToString(), suit);
-                        deck.Add(card);
-                    }
-                }
-
-                // Generate court cards:
-                static void AddCourtCards(List<Card> deck, Suit suit)
-                {
-                    string[] courtSymbols = { "Jack", "Queen", "King", "Ace" };
-
-                    foreach (var courtSymbol in courtSymbols)
-                    {
-                        Card card = new Card(courtSymbol, suit);
-                        deck.Add(card);
-                    }
-                }
-
-                // Then call it like this:
-                List<Card> deck = GenerateFrenchDeck();
-
-                for (int i = 0; i < deck.Count; i++)
-                {
-                    Console.WriteLine($"{i + 1} - {deck[i]}");
-                }                
-    
-    6. Decide between **simplicity** or **robustness**:
+- **Simplicity** or **Robustness**:
         - **Robustness**:
             - using inheritance (or enums) by creating sub-classes and a base-class
             - better scalability
@@ -1846,78 +1661,246 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
             - better performance
             - easier to maintain
             - might lead to incorrect use of class
-    
-    7. Add functionality (behaviour methods)
-
-## CLASSES / PROCESS OF MODELING PART II
-- Organize the code in 3 different layers:
-    - **MODEL** or **DATA** for describing and getting the data
-    - **SERVICE** that contains functinality to transform the data according to the business logic
-    - **PRESENTATION** or **UI** has the role to handle user interactions and display the data
 
 - **Composition vs Inheritance:**
     - When deciding between **composition** and **inheritance**, you can use the following paradigm:
-        - If the relationship between the classes/objects can be described with the term **'is a(n)'**, it's probably an **inheritance**. For example, a car **is a** vehicle.
-        - If the relationship between the classes/objects can be described with the term **'has a(n)'**, it's a **composition**. A car **has an** engine.
+        - If the relationship between the classes/objects can be described with the term **'is a(n)'**, it's probably an **inheritance**. 
+            - Eg. a car **is a** vehicle: **Base class** is `Car` and **Sub-class** is `ElectricCar`
+        - If the relationship between the classes/objects can be described with the term **'has a(n)'**, it's a **composition**.
+            - Eg. a car **has an** engine: `Car` class will have a **Property** called `Engine`
 
-- **SOLID** Design Principles:
+- **SOLID** Design Principles Summary:
+
     - **S**: The Single Responsibility Principle (SRP)
-        - **Summarized:**  
+        - **Summary:**  
             - Every class and method inside should only do 1 thing
-        - A class should have only one reason to change, meaning it should have only one job or responsibility.
-        - Apply also *inheritance vs. composition principles* (see above)
-        - **Example:** A `User` class handles user `properties` but delegates logging user `activities` to a separate *UserActivityLogger* class.
-    - **O**: The Open/Closed Principle (OCP)
-        - **Summarized:**
-            - We create `base-classes` for the classes we would need to update later, so instead of modifying a class, we leave the `base-class` untouched and we only create a new `sub-class` that uses it
-        - Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.
-        - **Example:** A `ReportGenerator` class can be extended to support different report formats (CSV, PDF) without changing its existing code (eg. through the use of interfaces or abstract classes.)
-    - **L**: The Liskov Substitution Principle (LSP)
-        - Functions that use pointers or references to base classes must be able to use objects of derived classes without knowing it.
-        - Objects of a superclass should be replaceable with objects of its subclasses without affecting the correctness of the program.
-        - **Example:**  If `Bird` is a superclass and `Duck` is a subclass, then you should be able to replace `Bird` with `Duck` without altering the program's behavior, assuming they share behaviors like `fly()`.
-    - **I**: The Interface Segregation Principle (ISP):
-        - **Summarized:**
-            - use interfaces for classes
-            - subdivide interfaces: if we have a class that uses `method-A`, and another that only uses `method-B`, then `method-A & B` need to be in **separate** interfaces
-        - Clients should not be forced to depend upon interfaces that they do not use.
-        - An `interface` is an abstract type in C# that defines a contract:
-            - Any class or struct that implements an interface must provide an implementation of the members defined in the interface.
-            - The interface is then used to facilitate communication between objects.
-            - Instead of using a reference of a concrete type, the objects talk to each other via this interface.
-            - This will lead `Components` to depend on **abstractions** rather than **implementations**
-            - We should rather have many smaller, more specific interfaces, as opposed to one huge interface with many operations. (very similar to SRP!)
-                - But it doesn't mean that each interface should only have 1 method, but that the methods should be related to the same functionality
-            - Create one by using `interface` keyword, and naming should be something like `ICardGenerator`:
+            - Organize your code by functionality (Model, Service, UI, Utils)
+            - *Inheritance* vs. *Composition* principles
+        - **Definition:**
+            - A class or method should have only one reason to change, meaning it should have only one job or responsibility.
+        - **Example:** 
+            - A `User` class handles user `properties` but delegates logging user `activities` to a separate *UserActivityLogger* class.
 
-                    public interface ICardGenerator
+    - **O**: The Open/Closed Principle (OCP)
+        - **Summary:**
+            - We create `base-classes` for the classes we would need to update later, so instead of modifying a class, we leave the `base-class` untouched and we only create a new `sub-class` that uses it
+        - **Definition:** 
+            - Software entities (classes, modules, functions, etc.) should be open for extension, but closed for modification.
+        - **Example:** 
+            - We have a class, that can calculates the area of a rectangle. If we later introduce other shapes as well, the AreaCalculator should still be able to work (so we create a `Shape` base `abstract`(!) class with `abstract` Calculation method, and each shape will have their own sub-class, with the Calculation method being `overwritten` for each shape)
+    
+    - **L**: The Liskov Substitution Principle (LSP)
+        - **Summary:**
+            - Whenever we create a model of something, we should see what else will we groping it with and create a baseclass for it first (eg. `Shape` -> `Circle`, `Rectangle`; `Animal` -> `Cow`, `Dog`, `Cat`) 
+            - You learn how to drive a `Car`, not how to drive a `Ford`. This is the principle's main purpose
+        - **Definition:** 
+            - objects of a superclass/baseclass should be replaceable with objects of its subclasses without affecting the flow of the program (eg. when we make a `List<IAnimal>`, we should be able to add any class that was based upon this (eg. `ICow`, `IDog`, `ICat`))
+        - **Example:**  
+            - If `Bird` is a base class and `Duck` is a subclass, then you should be able to replace `Bird` with `Duck` without altering the program's behavior, assuming they share behaviors like `fly()`.
+            - You learn how to drive a `Car`, not how to drive a `Ford` - this is the principle you should remember
+    
+    - **I**: The Interface Segregation Principle (ISP):
+        - **Summary:**
+            - use interfaces for classes whenever possible, but only implement what is really used by the class (avoid forcing the implementation of unused methods!)
+            - Subdivide interfaces by functionality if you implement them into multiple different classes
+        - **Definition:** 
+            - Clients (eg. a class) should not be forced to depend on methods it does not use (means shouldn't implement methods, that are not used by the class)
+        - **Example:** 
+            - Instead of one large `IWorker` interface with methods like `Work`, `Eat`, and `Rest`, have separate interfaces like `IWork`, `IEat`, and `IRest`, and implement them as needed in *different worker classes*.
+    
+    - **D**: The Dependency Inversion Principle (DIP)
+        - **Summary:**
+            - Dependencies of a class should be instances of interfaces, and should be created in the Program class. (this means passing the control to the Program class or later an external IoC container or framework)
+            - The dependencies should be added to their constuctors (constructor injection)        
+        - **Definition:**
+            - the principle of having high-level modules, low-level modules and details depend on abstractions rather than on concrete implementations (through the use of interfaces)
+            - Consists of 2 sub elements:
+                - **Inversion of Control (IOC)**: transfering the control of an object/instance to the program/container
+                - **Dependency Injection (DI)**: a technique that helps to achieve IoC, by adding dependencies to a class's constuctor (when we instantiate, we pass an instnace of the dependency as well!)
+        - **Example:** 
+            - A `PaymentProcessor` class depends on an `IPaymentGateway` interface rather than a concrete `CreditCardPaymentGateway` class, allowing for different payment methods to be introduced without changing the `PaymentProcessor`'s code.
+            - A `NotificationManager` class depends on an `INotificationService` interface rather than a concrete `EmailNotificationService` class, allowing for different message types to be introduced without changing the `NotificationManager`'s code. (see example in details)
+
+- **Desing Patterns:** *(design patterns catalog: https://refactoring.guru/design-patterns/catalog )*
+    - **Overview:**
+        - a set of software architectural solutions that became standardized
+        - no design pattern will ever replace geniune thinking and problem solving -> don't try to fit a pattern! (overengineering issue)
+            - every pattern introduces *additional complexity* to the application, so there is a cost associated with their usege
+            - there should always be a *cost-benefit analysis* attached to the decision of **introducing a pattern**
+        - **Benefits:**
+            - it's easier to communiacate using their names:
+                - eg. "let's use the *Singleton* pattern for this problem!"
+        - Commonly used patterns:
+            - **The Factory** and **Abstract Factory**
+            - **The Builder**
+            - **The Singleton**
+            - **The Observer**
+        - Slighlty less common, but still important:
+            - **The Composite**
+            - **The Decorator**
+            - **The State**
+
+    - **Design patterns in detail:**
+        - **THE FACTORY PATTERN:** *(https://refactoring.guru/design-patterns/factory-method/csharp/example#lang-features )*
+            - solves the problem of creating product objects without specifying their concrete classes (compiled at runtime)
+            - works very well with the Liskov Substitution Principle (LSP), which states that a baseclass and its subclasses should be interchangeable
+            - should be used for creating objects instead of using a direct constructor call (`new` operator):
+                - use interfaces or abstract objects (eg "Furniture")
+                - each product is a sub-class of this (eg "Chair", "Table")
+                - define an "object creator" abstract class or interface (eg "FurnitureFactory"), with a method like `createFurniture`
+                - Use subclasses for "FurnitureFactory" that deliver specific objects (eg. "ChairFactory")
+                - This way we only need to update the factory classes when we introduce a new product
+                
+            - useful when you need to provide a **high level of flexibility** for your code
+            - the *return type* of the factory methods is usually declared as either an abstract class or an interface
+
+            - **Example:**
+
+                    // Create a base abstract class to be able to group the subclasses:
+                    public abstract class Animal        // We could also use IAnimal interface instead, depends on the situation
                     {
-                        List<Card> Generate(int[] numbers, string[] symbols, string[] suits);
+                        public abstract string Speak();
                     }
 
-            - An interface can contain methods and properties, but they can not declare instance data such as fields, auto-implemented properties, or property-like events. 
-            - They don't have any constructors, as interfaces are abstract types - they cannot be instantiated.
-            - They can have default implementations, but the usual case for them is to only define the method signatures, and leave the actual implementation to classes that implement the interface.
-        - **Example:** Instead of one large `IWorker` interface with methods like `Work`, `Eat`, and `Rest`, have separate interfaces like `IWorkable`, `IEatable`, and `IRestable`, and implement them as needed in *different worker classes*.
-    - **D**: The Dependency Inversion Principle (DIP)
-        - **Summarized:**
-            - The dependency instances should be created in the Program class
-            - The dependencies should be added to their constuctors
-        - Depend upon abstractions, concretes:
-            - High-level modules should not depend on low-level modules; both should depend on abstractions. 
-            - Also, abstractions should not depend on details, but details (concrete implementations) should depend on abstractions.
-        - In more detail:
-            - Create an an architecture in which components can be easily swapped, should the need arise to do so, because they depend on abstractions rather than concrete implementations.
-            - The specific mechanism through which it appears in code is called **Inversion of Control (IoC)** and its more specific version **Dependency Injection (DI)**.
-                - **Inversion of Control (IOC)**: refers to transferring the control of objects and their dependencies from the main program to a container or framework.
-                    - In this module we will not use a proper IoC container/framework, but simulate it by creating all dependencies in the `Program.cs` file
-                - **Dependency Injection (DI)**: is a technique that allows objects to be separated from the objects they depend upon.
-                    - Use *constructor injection*, which means to declare the dependencies in the class's constructor
-                    - dependency injection is an instance-based technique - you can't really inject static members (technically you can, but it does not make sense architecturally).
-        - **Example:** A `PaymentProcessor` class depends on an `IPaymentGateway` interface rather than a concrete `CreditCardPaymentGateway` class, allowing for different payment methods to be introduced without changing the `PaymentProcessor`'s code.
+                    public class Dog : Animal
+                    {
+                        public override string Speak()
+                        {
+                            return "Bark!";
+                        }
+                    }
 
-- **Step-by-step:**
-    1. Apply **SRP:**
+                    public class Cat : Animal
+                    {
+                        public override string Speak()
+                        {
+                            return "Meow!";
+                        }
+                    }
+
+                    // Create a factory class, that instantiates these animals:
+                    public class AnimalFactory
+                    {
+                        public Animal CreateAnimal(string type)
+                        {
+                            switch (type.ToLower())
+                            {
+                                case "dog":
+                                    return new Dog();
+                                case "cat":
+                                    return new Cat();
+                                case "bird":
+                                    return new Bird();
+                                default:
+                                    throw new ArgumentException("Invalid animal type");
+                            }
+                        }
+                    }         
+
+                    // Now in the program class we can create them in a generic way:
+                    AnimalFactory factory = new AnimalFactory();
+
+                    Animal dog = factory.CreateAnimal("dog");
+                    Animal cat = factory.CreateAnimal("cat");
+
+                    Console.WriteLine(dog.Speak()); // Output: Bark!
+                    Console.WriteLine(cat.Speak()); // Output: Meow!
+
+                    // To see better its purpose, here's a more complex example:
+                    AnimalFactory factory = new AnimalFactory();
+                    List<string> animalTypes = new List<string> { "dog", "cat", "bird", "dog", "cat" }; // This could be generated dynamically
+
+                    foreach (string type in animalTypes)
+                    {
+                        try
+                        {
+                            Animal animal = factory.CreateAnimal(type);
+                            Console.WriteLine($"Created a {type}: {animal.Speak()}");
+                        }
+                        catch (ArgumentException ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
+                    }
+
+            - Should I use IAnimal or Animal abstract class?
+                - Use an Interface (`IAnimal`) when:
+                    - Multiple Inheritance: **Interfaces allow for multiple inheritance**. If an Animal needs to implement multiple behaviors (like IAnimal and IMovable), interfaces are the way to go.
+                    - Loose Coupling: Interfaces provide a very high level of decoupling between implementation and interface, which can be beneficial for developing modular, testable code.
+                    - Contract Definition: If you are defining a contract that various classes should adhere to without dictating any form of implementation, an interface is appropriate.
+                    - Flexibility: When you want to ensure that implementing classes are not burdened with potentially unnecessary methods or properties from an abstract class.
+                - Use an `abstract` Class (`Animal`) when:
+                    - Shared Code: **Abstract classes allow you to define some shared behavior** (method implementations) that subclasses can inherit or override. This can reduce code duplication.
+                    - Control Over Inheritance: With abstract classes, you can control the inheritance hierarchy. Subclasses are tightly coupled to the abstract class, which can be both an advantage and a disadvantage depending on the context.
+                    - Base Behavior and Properties: If you have common fields or base behavior (methods) that should be shared across all subclasses, an abstract class can be a good choice.
+                    - Future Extensions: If you anticipate that your base class will need to add new methods or properties in the future, an abstract class is a safer bet, as adding new methods to an interface would break existing implementations.
+
+## PROCESS OF MODELING:
+- **Process of modeling overview:**
+    ### PHASE 1 - Writing code:
+    1. **Preparation and strucutre**
+        - **Understand the Problem:** 
+            - Before writing any code, understand the problem domain and what the application is supposed to achieve.
+        - **Identify Key Entities**
+            - eg. *customers*, *orders*, *products* in an e-commerce app
+        - **Identify Classes and Objects:**
+            - Based on the entities, identify potential classes and objects (classes like `Product`, `Order`, `Customer`, etc.)
+        - **Visualize relationships and interactions**
+            - use UML Diagrams to better understand relationships, application flow and connections
+
+    2. **Implementing Abstraction and Encapsulation**
+        - **Abstraction:**
+            - For each class, define attributes and methods and only the relevant ones.
+        - **Encapsulation:**
+            - Use access modifiers (`public`, `private`, `protected`) to encapsulate the data, exposing only what is necessary to other parts of the application (`public` should cover the main functionality).
+        - **Inheritance:**
+            - Identify common features among classes to create `base (abstract) classes` or `interfaces`. For example, a `User` class can be a base class for `Customer` and `Admin`.
+        - **Polymorphism:**
+            - Use method `overriding` and `interfaces` to achieve polymorphism. This allows objects to be treated as instances of their base type, enhancing flexibility.
+
+    3. **Organize your files/data in a layered Architecture**
+        - **Model/Data Layer:** 
+            - Includes classes that represent **data** (like `Product`, `Order`) and **data access logic** (like `ProductRepository`).
+        - **Service/Business Layer:**
+            - Includes classes that process data, perform calculations, and create rules for the application's functionality (like `OrderService`).
+        - **Presentation/UI Layer:**
+            - Includes classes that handle **user interaction** and **display data**. It could be a web UI, desktop application, or even a console application in C#.
+
+    4. **Dependency Management and Interfaces**
+        - **Use Interfaces**
+            - `Interfaces` allow for loose coupling and easier testing.
+        - **Use Dependency Injection**
+            - helps manage dependencies between classes.
+        - **Apply design patterns**
+            - Try to implement any design patterns (eg `Factory Pattern`)
+
+    ### PHASE 2 - Testing & Finalizing code:
+    5. **Testing**
+        - **Unit Testing:**
+            - Write unit tests for individual classes and methods to ensure they work as expected (try to achieve basic coverage on all relevant methods).
+        - **Integration Testing:** 
+            - Test how different parts of the application work together.
+
+    8. **Refactoring and Code Review**
+        - **Refactor Code:**
+            - Continuously refactor the code to improve efficiency, readability, and maintainability.
+        - **Code Review:**
+            - Regularly review code with peers to catch issues and learn from each other.
+
+    9. **Documentation and Maintenance**
+        - **Document the Code:**
+            - Proper documentation is crucial for maintenance and future development.
+        - **Maintain and Update:**
+            - Regularly update the application with new features, bug fixes, and performance improvements.
+
+    10. **Deployment**
+        - **Deployment:**
+            - Deploy the application to a production environment.
+        - **Monitor and Update:**
+            - Monitor the application for issues and deploy updates as needed.
+
+- **Detailed process of applying SOLID principles:**
+    1. Apply **SRP:** (Single Responsibility Principle)
         - `Program` class should only run the program, nothing more
         - Organize classes by role/layer:
             - **Service (Factories, Builders, Generators):**
@@ -1940,15 +1923,87 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
     2. Apply **DIP:**
         - create all dependencies that are required for an object initialization in `Program.cs` (only in this module, later this should be a proper IoC container/framework)
         - Avoid hiding dependencies of classes by adding them (injecting) to their base constructor's parameters (this makes the class unit testable)
+        - Depend upon abstractions, concretes:
+            - High-level modules should not depend on low-level modules; both should depend on abstractions. 
+            - Also, abstractions should not depend on details, but details (concrete implementations) should depend on abstractions.
+        - In more detail:
+            - Create an an architecture in which components can be easily swapped, should the need arise to do so, because they depend on abstractions rather than concrete implementations.
+            - The specific mechanism through which it appears in code is called **Inversion of Control (IoC)** and its more specific version **Dependency Injection (DI)**.
+                - **Inversion of Control (IOC)**: refers to transferring the control of objects and their dependencies from the main program to a container or framework.
+                    - In this module we will not use a proper IoC container/framework, but simulate it by creating all dependencies in the `Program.cs` file
+                - **Dependency Injection (DI)**: is a technique that allows objects to be separated from the objects they depend upon.
+                    - Use *constructor injection*, which means to declare the dependencies in the class's constructor
+                    - dependency injection is an instance-based technique - you can't really inject static members (technically you can, but it does not make sense architecturally).
+        
+        - Example: "Notification System design":
+            1. Define an Abstraction (Interface) for Notification:
+
+                    public interface INotificationService
+                    {
+                        void Send(string message);
+                    }
+
+            2. Implement the **Interface** for Email Notification:
+
+                    public class EmailNotificationService : INotificationService    // implement this interface in a concrete class for email notifications
+                    {
+                        public void Send(string message)
+                        {
+                            // Logic to send email notification
+                            Console.WriteLine("Email sent: " + message);
+                        }
+                    }
+
+                    // We can later add other implementations of this interface, like SmsNotificationService for example
+            
+            3. Create a **High-Level Module** that Uses the Notification Service:
+
+                    public class NotificationManager
+                    {
+                        private readonly INotificationService _notificationService;
+
+                        public NotificationManager(INotificationService notificationService)      // Constructor with dependency injection
+                        {
+                            _notificationService = notificationService;
+                        }
+
+                        public void Notify(string message)
+                        {
+                            _notificationService.Send(message);
+                        }
+                    }
+
+                    // NotificationManager depends on the INotificationService abstraction, not on the concrete EmailNotificationService. This is the essence of DIP!
+            
+            4. We inject the dependency in the Program class:
+            
+                    class Program
+                    {
+                        static void Main(string[] args)
+                        {
+                            INotificationService notificationService = new EmailNotificationService();      // We instantiate notificationService, that is the dependency
+                            NotificationManager manager = new NotificationManager(notificationService);     // We instantiate notificationManager, that depends on INotificationService INTERFACE, not EmailNorificationService CLASS 
+                            
+                            manager.Notify("Hello, this is a test email notification!");
+                        }
+                    }
+
+                    // Not how we are still using EmailNotificationService() to create the instance of the INotificationService interface!
+                    // Decoupling: The high-level module (NotificationManager) is not dependent on the low-level modules (EmailNotificationService, SmsNotificationService, etc.). It only depends on the INotificationService interface.
+
+
+
     
     3. Apply **ISP:**
+            - eg the `CardGenerator` references to `ICardGenerator` in the deck builders (french and german...)
+        - We should rather have many smaller, more specific interfaces, as opposed to one huge interface with many operations. (very similar to SRP!)
+                    - But it doesn't mean that each interface should only have 1 method, but that the methods should be related to the same functionality
         - Use `interface`s whenever possible! (it's an abstract type in C#, that defines a contract)
             - This will lead `Components` to depend on **abstractions** rather than **implementations**
             - Use as many interfaces as possible, separating them by their functionality
         - Make a **builder class** implement the **interface** (similar `:` used as with inheritance)
             - the class must implement all members of the interface, otherwise the code won't compile!
         - Change the original references of the builder class to the interface:
-            - eg the `CardGenerator` references to `ICardGenerator` in the deck builders (french and german...)
         
         - Add a logger:
             - Create a single `ILogger` interface, that is able to handle all logging, and we can swap the implementations depending on the circumstances (eg. info, or error)
@@ -2280,6 +2335,205 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                         - `LoggerBase` inherit from `ILogger` (abstract class with common functionality & protected methods that can't be overwritten, but sub-classes can use) ->
                             - `ConsoleLogger` inherit from `LoggerBase` (overwirte abstract methods, private methods stay here!) &
                             - `FileLogger` inherit from `LoggerBase` (overwirte abstract methods, private methods stay here!)
+
+- **Detailed process of creating Classes:**
+    0. Create enum if there will be a property that is restricted to certain values:
+            
+            // In separate "Model" folder:
+            namespace Codecool.PlayingCards.Model;
+
+            public enum Suit {
+                Diamonds,
+                Clubs,
+                Hearts,
+                Spades,
+            }
+
+    1. Add properties:
+        - **Auto properties** are properties that don't require the old way of creating a private field, then using another public field to get/set these values, instead this process is automatically generated in the background
+
+                // The old way:
+                private int _age;
+
+                public int Age              // Create custom getter and setter
+                {
+                    get { return _age; }    // `get` gets executed when we call the _age property
+                    set { _age = value; }   // `set` gets executed when we try to assign a new value to _age
+                }
+
+                // Properties with auto-properties and mutable values:
+                public class Card {
+                    public Suit Suit { get; set; }                  // use "init" instead of "set" if you want to make it immutable, or just remove "set"
+                    public string Symbol { get; set; }
+                }
+
+    2. Add a constructor:
+
+            public class Card {
+
+                public Suit Suit { get; init; }                 // gets values from the enum we created for it
+                public string Symbol { get; init; }             // value needs to be specified on initialization as string value
+                public string Title => $"{Symbol} of {Suit}"    // This is a computed property with the arrow syntax, but we could add it to the constructor instead
+
+                public Card(string symbol, Suit suit)           // Add constructor
+                {
+                    Suit = suit;                                // We use capital letters here because of the getter and the setter
+                    Symbol = symbol;
+                }
+            }
+
+    3. Change default inherited method definitions `Equals` and `GetHashCode`, then also `ToString`:
+        - `Alt + Insert` hotkey, or right *click + generate* in `Card.cs` Class file, to add the following:
+                
+                protected bool Equals(Card other)
+                {
+                    return Suit == other.Suit && Symbol == other.Symbol;
+                }
+
+                public override bool Equals(object? obj)            // "override" keyword is used to override a "virtual" class from the parent class
+                {
+                    if (ReferenceEquals(null, obj)) return false;
+                    if (ReferenceEquals(this, obj)) return true;
+                    if (obj.GetType() != this.GetType()) return false;
+                    return Equals((Card)obj);
+                }
+
+                public override int GetHashCode()
+                {
+                    return HashCode.Combine((int)Suit, Symbol);
+                }
+        
+        - After overwriting, we should check for equality with the following method, not the `==` operator (this would only call `ReferenceEquals` methods again):
+
+                Card card1 = new Card("Ace", Suit.Spades);
+                Card card2 = new Card("Ace", Suit.Spades);
+
+                Console.WriteLine(card1.Equals(card2)); // Prints True    
+        
+        - Update `ToString` as well:
+
+                public override string ToString()
+                {
+                    return Title;
+                }
+
+                // So now instead of printing "PlayingCards.Card", it will print the Title attribute's value "Ace of Spades"
+                Card card1 = new Card("Ace", Suit.Spades);
+
+                Console.WriteLine(card1); // Prints Ace of Spades
+
+    4. Create single object from Class in Program.cs file:
+
+            Card card = new Card("Ace", Suit.Spades);
+
+            // Use or call its attributes:
+            Console.WriteLine(card.Title);
+
+            // If it's mutable, we can overwrite its attributes after initializeation:
+            card.Symbol = "King"
+            card.Suit = Suit.Hearts;
+    
+    5. Generate the full deck:
+        - In `Program.cs` file we create a new method called `GenerateFrenchDeck`:
+                
+                static Card[] GenerateFrenchDeck()
+                {   
+                    // Create initial data for deck:
+                    Card[] deck = new Card[52];
+                    int index = 0;
+
+                    // Iterate through the suits:
+                    foreach (var suit in Enum.GetValues<Suit>())
+                    {
+                        AddNumberedCards(deck, ref index, suit);        // Note "ref" keyword! This is to avoid passing paramters into methods "by value", which means a new memory storage is created for each method call 
+                        AddCourtCards(deck, ref index, suit);           // ref keyword!
+                    }
+
+                    return deck;
+                }
+
+                // Generate numbered cards:
+                static void AddNumberedCards(Card[] deck, ref int index, Suit suit)     // ref keyword!
+                {
+                    for (int i = 2; i <= 10; i++)
+                    {
+                        Card card = new Card(i.ToString(), suit);
+                        deck[index] = card;
+                        index++;
+                    }
+                }
+
+                // Generate court cards:
+                static void AddCourtCards(Card[] deck, ref int index, Suit suit)        // ref keyword!
+                {
+                    string[] courtSymbols = { "Jack", "Queen", "King", "Ace" };
+
+                    foreach (var courtSymbol in courtSymbols)
+                    {
+                        Card card = new Card(courtSymbol, suit);
+                        deck[index] = card;
+                        index++;
+                    }
+                }
+
+                // Then we can add these lines to the `Main` method to actually generate the cards:
+                Card[] deck = GenerateFrenchDeck();
+
+                for (int i = 0; i < deck.Length; i++)
+                {
+                    Console.WriteLine($"{i + 1} - {deck[i]}");
+                }
+
+                Console.ReadKey();
+
+        - The same code using `List` (to avoid dealing with `index` and `ref`):
+
+                static List<Card> GenerateFrenchDeck()
+                {
+                    // Create initial data for deck:
+                    List<Card> deck = new List<Card>();
+
+                    // Iterate through the suits:
+                    foreach (var suit in Enum.GetValues<Suit>())
+                    {
+                        AddNumberedCards(deck, suit);
+                        AddCourtCards(deck, suit);
+                    }
+
+                    return deck;
+                }
+
+                // Generate numbered cards:
+                static void AddNumberedCards(List<Card> deck, Suit suit)
+                {
+                    for (int i = 2; i <= 10; i++)
+                    {
+                        Card card = new Card(i.ToString(), suit);
+                        deck.Add(card);
+                    }
+                }
+
+                // Generate court cards:
+                static void AddCourtCards(List<Card> deck, Suit suit)
+                {
+                    string[] courtSymbols = { "Jack", "Queen", "King", "Ace" };
+
+                    foreach (var courtSymbol in courtSymbols)
+                    {
+                        Card card = new Card(courtSymbol, suit);
+                        deck.Add(card);
+                    }
+                }
+
+                // Then call it like this:
+                List<Card> deck = GenerateFrenchDeck();
+
+                for (int i = 0; i < deck.Count; i++)
+                {
+                    Console.WriteLine($"{i + 1} - {deck[i]}");
+                }                
+    
+    7. Add functionality (behaviour methods)
 
 ## EXCEPTION HANDLING:
 - The basic logic:
@@ -2812,33 +3066,3 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
 
 ## ADVANCED ARCHITECTURE:
 
-- **Desing Patterns:** *(design patterns catalog: https://refactoring.guru/design-patterns/catalog )*
-    - **General:**
-        - a set of software architectural solutions that became standardized
-        - no design pattern will ever replace geniune thinking and problem solving -> don't try to fit a pattern! (overengineering issue)
-            - every pattern introduces *additional complexity* to the application, so there is a cost associated with their usege
-            - there should always be a *cost-benefit analysis* attached to the decision of **introducing a pattern**
-    - **Benefits:**
-        - it's easier to communiacate using their names:
-            - eg. "let's use the *Singleton* pattern for this problem!"
-        - Commonly used patterns:
-            - **The Factory** and **Abstract Factory**
-            - **The Builder**
-            - **The Singleton**
-            - **The Observer**
-        - Slighlty less common, but still important:
-            - **The Composite**
-            - **The Decorator**
-            - **The State**
-    - Specific design patterns in detail:
-        - **The Factory method/pattern:** *(https://refactoring.guru/design-patterns/factory-method/csharp/example#lang-features )*
-            - solves the problem of creating product objects without specifying their concrete classes
-            - should be used for creating objects instead of using a direct constructor call (`new` operator):
-                - use interfaces or abstract objects (eg "Furniture")
-                - each product is a sub-class of this (eg "Chair", "Table")
-                - define an "object creator" abstract class or interface (eg "FurnitureFactory"), with a method like `createFurniture`
-                - Use subclasses for "FurnitureFactory" that deliver specific objects (eg. "ChairFactory")
-                - This way we only need to update the factory classes when we introduce a new product
-                
-            - useful when you need to provide a **high level of flexibility** for your code
-            - the *return type* of the factory methods is usually declared as either an abstract class or an interface

@@ -550,6 +550,15 @@
 
     - `Assert.That(collection, Does.Contain(item));`
         - check if an **item** is inside a **collection**
-- Annotations (eg. `[TEST]`): *(link: https://www.blazemeter.com/blog/nunit-annotations)*
+    - `Assert.That(expression, Is.True);`
+    - `Assert.That(expected, Is.Not.EqualTo(actual));`
+    
+    - `Assert.That(user.password.Length, Is.AtMost(maxPasswordLength));`
 
+- Annotations (eg. `[TEST]`): *(link: https://www.blazemeter.com/blog/nunit-annotations)*
+    - `[TestFixture]` goes before class
+    - `[Test]` before a basic test
+    - `[TestCase(...)]` goes before a test, with a single parameter
+    - `[TestCaseSource(...)]` used when we also have test cases pre-defined
+    - `[SetUp]` is used to do something prior to EACH test (similar to a constructor, but the constructor is only called once, and can change between test cases!)
 

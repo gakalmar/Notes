@@ -22,6 +22,7 @@ WORKING PROCESS AFTER PULL/CLONE:
     git add filename                        //Add file or all files to staging area
     git add --all
     git add -A
+    git add .
     
     git restore --staged <file>             //Use this to unstage a file
     git restore <file>                      //Use this to revert to last pull
@@ -30,39 +31,51 @@ WORKING PROCESS AFTER PULL/CLONE:
 
     git push                                //Send to GitHub
 
+STASHING:
+
+    git stash                               //Revert to last commit by creating a temporary save from your current progress
+    git stash pop                           //Get back your stash
+
 WORKING WITH BRANCHES:
 
     git branch -a                           //list branches
     git branch -d branchname                //delete branch
     git branch newbranchname                //create new branch
+
     git checkout branchname                 //switch to an existing branch
     git checkout -b branchname              //create new branch and switch to it
+
     git merge branchname                    //merge a branch into the active branch
     git merge sourcebranch targetbranch     //merge a branch into the target branch
 
     CREATE NEW BRANCH AND PUSH IT INSTANTLY TO BE A REMOTE BRANCH ON GITHUB:
+        
         1 git checkout -b newbranch         //create new branch locally
         2 git push -u origin newbranch      //push it to GitHub (-u means upstream)
 
-    MERGE INTO MASTER PROCESS:
-
-        1 git checkout master
-        2 git pull origin master                  //not necessary
-        3 git merge development                   //merge development into active (master)
-        4 git commit -m "Merge into master"       
-        5 git push origin master                  //push changes into remote master branch
-    
     WORK ON YOUR OWN BRANCH PROCESS:
 
         1 git checkout -b newbranch         //create new branch and switch to it
-        2 do the work
-        3 git checkout development          //switch back to development
-        4 git pull                          //maybe it would be a good idea to pull at this stage?
-        5 git merge newbranch               //merge your branch into development
-        6 git branch -d newbranch           //delete newbrach branch
-        7 git add- & commmit & push
+        2 git push -u origin newbranch      //push it to GitHub (-u means upstream)
+        ...
+        3 git add & commmit & push          //push new branch content
+        // AT THIS POINT WE CAN CREATE A PULL REQUEST ON GITHUB TO MERGE INTO AN EXISTING BRANCH
+        ...
+        5 git checkout development          //switch back to development
+        6 git pull                          //pull latest changes
 
+        MERGE LOCALLY:
+        7 git merge newbranch               //merge your branch into development
+        8 git add & commmit & push          //push merged changes to development branch
+
+        9 git branch -d newbranch           //delete newbrach branch
         +1 git push origin --delete branch_name     // If you pushed your branch to GitHub, you can delete it from GitHub with this command
+    
+    INITIALIZE PULL REQUEST: Ask someone else to merge your new branch into the project's branch (eg into main) = "request someone else to pull your branch"
+
+        1 git checkout -b <new-branch>                  //create new local branch and switch to it
+        2 git push --set-upstream origin <new-branch>   //add brach to remote git repo, and create pull request
+        3 complete pull request on GitHub
 
 OTHER USEFUL COMMANDS:
 
@@ -71,9 +84,9 @@ OTHER USEFUL COMMANDS:
     git stash                               //move all changes into a temporary folder
     git stash clear                         //remove all stashed entries
     git stash list                          //list all stashed entries
-    git stash pop stach@{index}             //restores changes to stashed data at the chosen index, and deletes stash data
+    git stash pop stash@{index}             //restores changes to stashed data at the chosen index, and deletes stash data
 
-GIT INIT METHOD / Not recommended as the repo still needs to be created on GitHub
+GIT INIT METHOD / Not recommended as the repo still needs to be created on GitHub (Better to create the repo first on GitHub, and then clone it!)
 
     1 Create a folder on your PC, and open it in VS
     2 Open Terminal
@@ -84,8 +97,3 @@ GIT INIT METHOD / Not recommended as the repo still needs to be created on GitHu
     7 git remote add origin git@branchLocation.git  //add GitHub repo to your initialized folder as remote
     8 git push -u origin master (or main?)          //push changes; -u means it creates upstream branch, so now the GitHub will be the source (?)
 
-INITIALIZE PULL REQUEST: Ask someone else to merge your new branch into the project's branch (eg into main) = "request someone else to pull your branch"
-
-    1 git checkout -b <new-branch>                  //create new local branch and switch to it
-    2 git push --set-upstream origin <new-branch>   //add brach to remote git repo, and create pull request
-    3 complete pull request on GitHub
