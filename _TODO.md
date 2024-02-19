@@ -2,14 +2,20 @@
 
 - finish codecademy tutorial https://www.codecademy.com/learn/learn-c-sharp
 
-- Find out more about IDisposable: 
-    https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/using-objects
-    https://learn.microsoft.com/en-us/dotnet/api/system.idisposable?view=net-7.0
-
 - check out params modeifier:
     https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/method-parameters#params-modifier
 
+- what are tuples:
+    https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/value-tuples
+
 - complete optional part of optional health risk calculatot SI_03 week task!
+
+- how to create a DB from command line? (`BruteForce` task semi-last task)
+
+- add to SQL authenticator guide:
+    - password hashing
+    - parameterized queries to address SQL injection vulnerability
+    - keep only string or only Sqliteconnection method (find out which is better!)
 
 - Add multidim array methods:
 // Add rank, GetLowerBound, GetUpperBound, , GetLength(dimension)

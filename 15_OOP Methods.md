@@ -365,8 +365,8 @@
                 bool hasEvenNumbers = numbers.Any(n => n % 2 == 0); // True, because there are even numbers in the list
 
     - `All`
-    - `Contains`   
-
+    - `Contains`
+    
 - **Partitioning operators**
     - `Take`
         - used to select the first N elements from a sequence:

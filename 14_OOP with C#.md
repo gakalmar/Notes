@@ -13,8 +13,6 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
 ## Resources:
 - **Theorical:**
     - ❌ Type system in C#: https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/types/
-    - ❌ Nullable references: https://learn.microsoft.com/en-us/dotnet/csharp/nullable-references
-
     - ❌ Attributes: (eg. [Test]) https://learn.microsoft.com/en-us/dotnet/csharp/advanced-topics/reflection-and-attributes/
 
 - **Tutorials:**
@@ -22,8 +20,6 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
     - ✔️ Setting up a project in Rider: https://journey.study/v2/learn/materials/pages/tools/csharp-helloworld-rider                      
     - ✔️ Microsoft basic tutorial: https://learn.microsoft.com/en-gb/shows/csharp-101/?wt.mc_id=educationalcsharp-c9-scottha
     - ✔️ More MSFT tuts (more in sidebar in the link!):    https://learn.microsoft.com/en-us/dotnet/csharp/fundamentals/tutorials/classes
-
-- ⏳ (LINQ part still not watched!) Full Microsoft video course: https://www.youtube.com/playlist?list=PLdo4fOcmZ0oVxKLQCHpiUWun7vlJJvUiN
 
 - **Further reads (non-mandatory):**
     - 💭 Memory management: https://endjin.com/blog/2022/07/understanding-the-stack-and-heap-in-csharp-dotnet
@@ -167,6 +163,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
             - Used to store data that needs to survive through the specific method calls.
             - This area of the memory is managed by the **Garbage Collector**.
             - By default, any `reference types` you create gets allocated on the heap.
+    
     - **Equality overriding:**
         - By default, equality is checked by reference (so it checks if a variable and another variable point to the same reference in the memory), so:
 
@@ -186,7 +183,43 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
             - This is a design choice that we need to think about when creating the model class:
                 - Overwrite `Equals` & `GetHashCode` methods inherited from `Object` *base class* (see tutorial at the end)
                 - After override, we should compare not with `==`, but with `obj1.Equals(obj2)` method
+    
+    - `using` keyword:
+        - `using` as a Directive:
+            - used at the beginning of a C# file to import namespaces, eg.: `using System;`
+                - lets youuse these namespaces directly, without typing the whole "route" before calling a resource
+        - `using` as a Statement:
+            - The `using` statement is used to **define a scope at the end of which an object will be disposed automatically**
+            - a key practice in resource management and avoiding resource leaks in .NET applications
 
+                    using (var streamReader = new StreamReader("file.txt"))     // StreamReader implements `IDisposable`
+                    {
+                        // Use streamReader here
+                    }
+                    // streamReader is automatically disposed here, even if an exception is thrown. (= streamReader.Dispose() method is called)
+            - **When to use it?**
+                - Particularly useful for **managing the lifecycle** of objects that implement the `IDisposable` interface, such as **file streams**, **database connections**, etc.
+                - When working with resources that need explicit cleanup (files, network connections, or database connections).
+                - To ensure resources are disposed of properly, even in the case of an error or exception.
+    
+    - `IDisposable` interface:
+        - The `IDisposable` interface in C# is used for implementing the `Dispose` pattern:
+            - This pattern is all about providing a mechanism for **releasing unmanaged resources** held by an object, such as **file streams**, **database connections**, or resources allocated directly from the operating system:
+                - Classes in the `Microsoft.Data.Sqlite` namespaces, such as `SqliteConnection` or `SqliteCommand` implement the `IDisposable` interface
+        - The primary purpose of `IDisposable` is to free unmanaged resources that are not handled by the garbage collector in .NET (prevent resource leaks in applications)
+        - **How it works:**
+            - The `IDisposable` interface declares a single method: void `Dispose()`
+            - You can put them in a `using` block or statement, and the `Dispose` method is automatically called on them when they go out of scope:
+
+                    using (var resourceHolder = new ResourceHolder())
+                    {
+                        // Use the resource
+                    }
+                    // Dispose is automatically called when exiting the using block
+
+            - When an object implements `IDisposable`, it is indicating that it **holds resources that need explicit cleanup**
+                - The `Dispose` method contains calls that free up used resources, for example in the case of `SqliteConnection` it calls the `Close` method to close the connection properly.
+            - If a class implements `IDisposable`, always make sure to call `Dispose` or use them through a `using` block.
 
 ## DATA TYPES and BUILDING BLOCKS OF CODE:
 - **BASICS:**
@@ -760,6 +793,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
 ## TYPES:
 - **CLASSES, STRUCTS AND RECORDS (CUSTOM TYPES):**
     - **DEFINITION:**
+        - `Class`: A class in C# is a **blueprint** from which objects are created. It defines a type by **encapsulating data and behavior** (methods) that operate on the data. (**bundles data** (fields, properties) and methods (functions) together.)
         - the definition of a **type** is like a blueprint that specifies what the **type** can do (a **class**, **struct**, or **record**)
         - A class or struct can specify how accessible each of its members is to code outside of the class or struct:
             - Methods and variables that aren't intended to be used from outside of the class or assembly can be hidden
@@ -853,7 +887,52 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                                 public string Title { get; set; }
                                 public string Origin { get; set; }
                             }
-                
+
+                - **Read-only:**
+                    - A property that can only be read, not set (except in the constructor or initialization context).
+                    - It ensures that the property can't be modified with external code:
+
+                            public class Person
+                            {
+                                public string Name { get; }
+
+                                public Person(string name)
+                                {
+                                    Name = name;
+                                }
+                            }
+
+                - **Init-only:**
+                    - allow properties to be settable at the time of object creation but immutable thereafter with the `init` accessor
+                    - more flexible way of read-only, because we can set the initial value at each object initialization:
+
+                            public class Person
+                            {
+                                public string Name { get; init; }
+                            }
+
+                            // Usage:
+                            var person1 = new Person { Name = "Alice" };
+                            var person2 = new Person { Name = "Goeorge" };
+
+                            // This won't work:
+                            person1.Name = "Bob"; // This line would cause a compile-time error
+
+                - **Computed properties:**
+                    - They don't store a value directly, but a calculation, that returns a value (based on other fields' or propery values):
+
+                            public class Rectangle
+                            {
+                                public double Width { get; set; }
+                                public double Height { get; set; }
+
+                                // Computed property
+                                public double Area
+                                {
+                                    get { return Width * Height; }
+                                }
+                            }
+
             - **Methods** (eg `MakeDeposit()` ):
                 - They are functions attached to the object
                 - Special methods: 
@@ -1005,26 +1084,50 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                         //...
                     }
         - **Upcasting vs Downcasting:**
-            - **upcasting:** creating an inherited superclass or implemented interface reference from a subclass reference:
-                    
-                    Laptop lap = new Laptop();
-                    IPortable portable = lap;       // We create "portable" from another Class's instance
+            - In general:
+                - Upcasting and downcasting are part of the polymorphism behaviour in OOP. 
+                - **Upcasting** is straightforward and safe, allowing a derived class to be treated as its base class.
+                - **Downcasting** is more risky, as it involves treating a general type as a more specific type
+                
+            - **upcasting:** 
+                - creating an inherited superclass/baseclass or implemented interface reference from a subclass reference (safe):
 
-            - **downcasting:** creating a subclass reference from a superclass or interface reference
-                    
-                    Dog dog = new Dog();
-                    Pet pet = dog;
-                    Dog puppy = (Dog)pet;       // "Dog" type correctly
+                        Dog dog = new Dog();
+                        IAnimal animal = dog;       // We create "animal" from another Class's instance (a dog can be an IAnimal type, but an animal can't be a Dog type!)
 
-                    // can lead to runtime errors if the superclass cannot be cast to the specified subclass:
+            - **downcasting:** 
+                - creating a subclass reference from a superclass or interface reference (unsafe, as the object needs to be an instance of the base class we are casting into)
                     
-                    // Dog inherits from Pet. An implicit downcast throws a compile-time error:
-                    Pet pet = new Pet();
-                    Dog dog = pet;
+                        Dog dog = new Dog();
+                        Animal animal = dog;
+                        Dog puppy = (Dog)animal;       // "Dog" type correctly
 
-                    // Every downcast must be explicit, using the cast operator, like (TYPE). This fixes the compile-time error but raises a new runtime error.
-                    Pet pet = new Pet();
-                    Dog dog = (Pet)pet;         // "Pet" type instead of "Dog", so it won't work
+                        // can lead to runtime errors if the superclass cannot be cast to the specified subclass:
+                        
+                        // Dog inherits from Pet. An implicit downcast throws a compile-time error:
+                        Animal animal = new Animal();
+                        Dog dog = animal;
+
+                        // Every downcast must be explicit, using the cast operator, like (TYPE). This fixes the compile-time error but raises a new runtime error.
+                        Animal animal = new Animal();
+                        Dog dog = (Animal)animal;         // "Animal" type instead of "Dog", so it won't work
+
+                - `is` and `as` operators for safe downcasting:
+                    - Using `is` operator: Checks if the object can be downcast to a specified type:
+
+                            if (animal is Dog)
+                            {
+                                Dog dog = (Dog)animal;
+                                // Use dog
+                            }
+
+                    - Using `as` operator: Tries to downcast and returns null if the downcasting is not possible.
+
+                            Dog dog = animal as Dog;
+                            if (dog != null)
+                            {
+                                // Use dog
+                            }
 
     - **CONVERSION:**
         - **implicit:** happens automatically, if there is no data loss (eg. `int` can be converted to `double`, but not the other way around)
@@ -1121,9 +1224,9 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
     - **INTERFACES:**                
         - `interface`:
             - **Overview:**
-                - **Definition:** An interface is a contract that defines how different parts of a program communicate with each other
-                - It is an abstract type in C# that defines a **contract**:
-                    - Any class or struct that implements an interface must provide an implementation of the members defined in the interface.
+                - **Definition:** An interface is a contract that defines how different parts of a program communicate with each other (it defines the main public controls of a class, without specifying them - this is later done when a class implements them)
+                - It is an **abstract type** in C# that defines a **contract**:
+                    - Any class or struct that implements an interface must provide an implementation of the members defined in the interface. (that's why ISP is important, to only use the interfaces we need)
                 - The interface is then used to facilitate communication between objects.
                 - Instead of using a reference of a concrete type, the objects talk to each other via this interface.
                 - This will lead `Components` to depend on **abstractions** rather than **implementations*
@@ -1142,15 +1245,16 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                         {
                             List<Card> Generate(int[] numbers, string[] symbols, string[] suits);
                         }
-            
+
             - **Benefits:**
-                - they guarantee how a class behaves and helps organize and modularize components of software (a class can implement multiple interfaces)
+                - they guarantee how a class behaves and helps organize and modularize components of software
                 - You can inherit multiple intefaces (but only one class!)
                 - extra security
+
             - **Example:**
 
-                    // The IAutomobile interface has three properties. Any class that implements this interface must have these three properties:
-                    interface IAutomobile
+                    // The ICar interface has three properties. Any class that implements this interface must have these three properties:
+                    interface ICar
                     {
                         string LicensePlate { get; }
                         double Speed { get; }
@@ -1284,9 +1388,34 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                 Console.WriteLine(number2); //Prints 0
 
                 Console.ReadKey();
-    
-    - **Method parameters:**
-        - When passing parameters into methods, de default behaviour is **pass by value**:
+        
+        - **Nullable value types:**
+            - they are an extension of the basic value types that allow the value types to represent the **normal range of values for their type**, plus an additional `null` value
+            - This is needed, because **value types** such as `int`, `double`, `bool`, etc., cannot be `null` (they always have a `default` value)
+            - Thet are represented with a `?` mark at the end of their type:
+                - **Regular Value Type:**       int i = 0;      // Cannot be `null`
+                - **Nullable Value Type:**      int? i = null;  // Can be `null`
+            - How to use them:
+                - You can check if it has a value using `HasValue` and access the value using `Value`:
+
+                        int? nullableInt = null;
+
+                        if (nullableInt.HasValue)
+                        {
+                            Console.WriteLine("Has Value: " + nullableInt.Value);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Does not have a value."); // This will be executed.
+                        }
+            - **Null-Coalescing Operator** `??`
+                - used with nullable types, in order to specify a `default value` to be used when a **nullable type** is `null`:
+
+                        int? nullableInt = null;
+                        int nonNullableInt = nullableInt ?? 0; // nonNullableInt will be 0
+        
+    - **Using them with method parameters:**
+        - When passing parameters into methods, the default behaviour is **pass by value**:
             - For **reference types** -> the reference is passed (because the reference type's value is the reference itself) -> we can make modifications to them inside the method:
 
                     int[] numbers = { 1, 2 };
@@ -1348,8 +1477,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                     {
                         return num + 1;             // The returned value will be a new integer
                     }
-
-
+            
 ## METHODS:
 - **Overview:**
     - In C# methods and functions are the same
@@ -1619,7 +1747,58 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
 
                 var isBetween = input.IsBetween(start, end);        // We are calling it now on "input", not on "DateTimeUtils"
 
+- **Functions as objects:**
+    - functions can be treated as objects by using `delegates`, `lambda expressions`, and the `Func<>` and `Action<>` delegate types (in support of functional programming)
+        - `delegate`: 
+            - a type that represents references to methods
+            -  delegate instance can refer to any method that **matches its signature**:
 
+                    public delegate void DisplayMessage(string message);        // We create a delegate
+
+                    public class Program
+                    {
+                        public static void ShowMessage(string message)          // This is the method/function we will be using as an object
+                        {
+                            Console.WriteLine(message);
+                        }
+
+                        static void Main(string[] args)
+                        {
+                            DisplayMessage messageDelegate = ShowMessage;       // We create an instance of the delegate we defined previously by adding "ShowMessage" as its reference
+                            messageDelegate("Hello, World!");                   // Calls ShowMessage
+                        }
+                    }
+        - `Func<TResult>`:
+            - a built-in generic `delgate` type, used for methods that **return a value**:
+
+                    Func<int, int, int> add = (x, y) => x + y;      // param1 & param2 are the parameter types, the last is the return type (we are also using a lambda expression!)
+                    int result = add(5, 10);
+            
+            - We can use it to pass functions as parameters to other functions, or to return functions from other functions:
+
+                    // Pass Func<> as a param: (higher order functions)
+                    public void ExecuteOperation(Func<int, int, int> operation, int a, int b)
+                    {
+                        var result = operation(a, b);
+                        Console.WriteLine(result);
+                    }
+
+                    ExecuteOperation((x, y) => x + y, 5, 10); // Passes a lambda function
+
+                    // Return a Func<>:
+                    public Func<int, int> GetMultiplier(int factor)
+                    {
+                        return x => x * factor;
+                    }
+
+                    var multiplier = GetMultiplier(5);
+                    Console.WriteLine(multiplier(3)); // Outputs 15
+
+        - `Action`:
+            - a built-in generic `delgate` type, used for methods that **return void**
+
+                    Action<string> greet = name => Console.WriteLine("Hello, " + name);     // Here we only use 1 param for the input, because there is no return type
+                    greet("Alice");
 
 ## ARCHITECTURE PRINCIPLES:
 - **The 4 basic OOP principles:**
@@ -1739,6 +1918,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
             - **The Composite**
             - **The Decorator**
             - **The State**
+            - **The Repository**
 
     - **Design patterns in detail:**
         - **THE FACTORY PATTERN:** *(https://refactoring.guru/design-patterns/factory-method/csharp/example#lang-features )*
@@ -1834,6 +2014,27 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                     - Control Over Inheritance: With abstract classes, you can control the inheritance hierarchy. Subclasses are tightly coupled to the abstract class, which can be both an advantage and a disadvantage depending on the context.
                     - Base Behavior and Properties: If you have common fields or base behavior (methods) that should be shared across all subclasses, an abstract class can be a good choice.
                     - Future Extensions: If you anticipate that your base class will need to add new methods or properties in the future, an abstract class is a safer bet, as adding new methods to an interface would break existing implementations.
+        
+        - **THE REPOSITORY PATTERN:**
+            - Used to simulate a repository, that we can use to perform our SQL queries:
+                - The **primary goal** of the Repository Pattern is to create an abstraction layer between the data access layer and the business logic layer of an application
+                - Abstraction of data layer:  the business logic doesn't need to know whether the data is coming from a database, a web service, or another source
+                - Helps **layered architecture**, by separationg this functionality into a separate class (it also helps SRP - each class is responsible for one thing!)
+        - Constists of:
+            - Methods to perform operations (CRUD operations)
+            - Methods that prepare the operations (Get single user (returns `User` type) / Get all users ( returns `IEnumerable` type))
+
+                    public interface IUserRepository
+                    {   
+                        // CRUD: operations
+                        void Create(string userName, string password);
+                        void DeleteAll();
+                        void Update(int id, string userName, string password)
+
+                        // Preparations:
+                        User Get(int id);
+                        IEnumerable<User> GetAll();
+                    }
 
 ## PROCESS OF MODELING:
 - **Process of modeling overview:**
@@ -2820,64 +3021,8 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                 }
 
 ## UNIT TESTING:
-- Workshop quick notes:
-    - functionally works?
-    - Is it fast enough?
-    - maintainability
-
-    - Provide quality of software
-    - szabvanyok -> mit, hogyan kell letesztelni CMM 1-5
-
-    - Unit test writing:    
-        - write test for `public` methods only, `privates` are supposedly included
-        - `public` class is an API
-
-    - Levels:
-        - Unit test
-        - Component test (this is what the developer does, to check how classes work together)
-        - "Black box" testing - only input and output is imprtant (what's inside is unknown)
-
-    - Coverage:
-        - nCover based:
-            - functions (80% required)
-            - line coverage (70% required)
-
-    - Mutation analysis: test not being effective enough (?)
-
-    - `System.Reflection` -> this is what we will be using a lot
-
-    - **FIRST** guidelines:
-        - **F**: Fast
-        - **I**: Isolated - classes should be testable independently ("class mocking" (?))
-        - **R**: Repeatable & Stabile
-        - **S**: Self (?) what was the reason why we failed?
-        - **T**: Throughout - cover all edge cases - equivalency partition (input type variety eg. pos num, 0, and negative num for numbers)
-
-    - Framework: NUnit
-    - validation / verification:
-        - Is the product good?
-        - Is it well designed?
-        - weight of the bug / issue (small typo vs. cash machine not outputting money)
-
-    - Release notes: known errors to fix for next release / guidebook of use
-
-    - Process:
-        1. Add new project (Unit test pr.) - add name+Test
-        2. Delete sample class (test1)
-        3. Add new class: classNameTest
-            - new method:
-
-                    public void Test_metohd_NormalValue
-            
-            - add dependency: RClick on solution -> add reference (the project we are testing)
-            - Assert line (?)
-            - [Test] -> add this before the methods we want to test, only these will run
-        
-        4. Run All Tests -> if unsuccessful, fix issue and rerun, repeat
-        5. Now new value testing -> Normalvalue -> Nullvalue, etc.
-
 - **The purpose of unit testing:**
-    -   **Unit testing In general:**
+    - **Unit testing In general:**
         - we use unit testing to validate the functional correctness of individual **units** of code:
             - **unit:** the smallest testable part of an application, usually a `function` or a `method`.
         - **the purpose:** catch errors early in the development process, when they are cheaper and easier to fix
@@ -2885,6 +3030,17 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         - We test a unit in **isolation**, before they cause errors on a larger scale
         - A unit test also serves as a form of documentation (by clearly specifying the expected behaviour)
         - **C# testing frameworks:** `NUnit`, `xUnit`, or `MSTest`
+    
+    - **Importance of Unit Testing:**
+        - **Quality assurance:**
+            - Ensure that the software *functions correctly*
+            - it is *maintainable*
+            - performs *efficiently*
+        - **Standards compliance:**
+            - Follows CMM standards *(=Capability Maturity Model, levels 1-5)*
+        - **Validation and Verification:**
+            - **Product Quality:** Assess if the product is good and well-designed.
+            - **Issue Severity:** Understand the impact of issues, ranging from minor typos to critical functional errors.
 
     - **Advantages:**
         - **Improved code quality:** 
@@ -2911,6 +3067,37 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
             - A software development method in which the requirements are converted into *test cases* and these **tests get written before the actual implementation**. 
             - It basically reverses the classic way of developing a class then writing test for it, into *developing the tests cases for a class* **then** *writing the implementation of the class*.
 
+- **Writing Unit Tests:** *(these are the notes from the workshop)*
+    - **Scope:**
+        - We write test for a class's `public` methods (these form the API), those should be incorporating all the `private` methods
+    - **FIRST guidelines:**
+        - **F: Fast**
+            - Tests should run quickly
+        - **I: Isolated**
+            - Each class should be testable independently, using techniqyes like mocking
+        - **R: Repeatable & Stable:**
+            - Tests must consistently yield the same results under the same conditions
+        - **S: Self-checking**
+            - Test should automatically detect whether the pass or fail
+        - **T: Thorough**
+            - Cover all edge cases, including a variety of input types like positive numbers, zero and negative numbers
+    - **Levels of Testing:**
+        - **Unit test:** 
+            - Test a unit/class independently
+        - **Component test:**
+            - Performed by developers to check how multiple classes work together
+        - **Black box testing:**
+            - Focus only on the input and output, without knowledge of the internal workings
+    - **Test Coverage:**
+        - `nCover` Based Metrics:
+            - **Function Coverage:** Aim for at least 80%.
+            - **Line Coverage:** Aim for at least 70%.
+    - **Advanced Techniques:**
+        - **Mutation Analysis:** Evaluates the effectiveness of tests.
+        - `System.Reflection`: A common tool used in unit testing for inspecting assemblies.    
+    - **Documentation:**
+        - **Release Notes:** Maintain notes on known issues to be fixed in the next release and provide a guidebook for usage.
+
 - **NuGet:**
     - a **package manager** designed specifically for .NET projects. It is similar to `npm` in `Javascript`, or `pip` in `Python`.
         - simplifies the process of managing third-party libraries and dependencies within your C# projects.
@@ -2919,6 +3106,17 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
     - Integrated both into VSCode and Rider
 
 - **Adding unit tests to a solution:**
+    - Simplified process of Unit Testing: (fomr workshop, see detailed process below)
+        - Create a New Project: Add a new Unit Test project, naming it appropriately (e.g., ProjectNameTest).
+        - Setup: Delete the sample class (like Test1) and add a new class (e.g., ClassNameTest).
+        - Developing Tests:
+        - Write new methods for testing, like public void Test_Method_NormalValue.
+        - Add project references for dependencies.
+        - Use Assert statements for verifying outcomes.
+        - Annotate test methods with [Test] attribute.
+        - Execution and Iteration: Run all tests, fix any issues, and re-run. Iterate this process.
+        - Expand Test Cases: Include tests for different values like normal, null, etc.
+
     1. Add a Unit Test Project:
         - Click on explorer - `Add -> New Project...` (.Net Core / Unit Test Project) & name the project (eg. "SampleProjectTest")
         - We use `NUnit` in this course as the testing framework (it gets added to the project's dependencies)
@@ -3064,5 +3262,4 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                             ClassicAssert.AreEqual(4, 2 + 2);       // old
                             Assert.That(2 + 2, Is.EqualTo(4));      // new
 
-## ADVANCED ARCHITECTURE:
 

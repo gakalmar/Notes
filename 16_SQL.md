@@ -108,6 +108,8 @@
                 - `_` Used anywhere in a string to match a single character (only with `LIKE` or `NOT LIKE`):
 
                         col_name LIKE "AN_"         // matches "AND", but not "AN"
+            
+            - `@` is a simplified `$`, because it's still a Verbatim string, but without parameter
     
 - **More filtering to refine return data:**
     - `DISTINCT`:
@@ -158,7 +160,197 @@
             
 ## MULTI-TABLE QUERIES: https://sqlbolt.com/lesson/select_queries_with_joins
 
-## GUIDE TO CREATE A BASIC AUTHENTICATOR:
+## GUIDE TO CREATE A BASIC AUTHENTICATOR: (CONNECTION STRING METHOD)
+1. **Set Up the SQLite Database:**
+    - Name it eg. `authenticator.db`
+    - Create a `Users` table in it with the following parameters:
+
+            CREATE TABLE Users (
+                UserID INTEGER PRIMARY KEY,
+                Username TEXT NOT NULL,
+                PasswordHash TEXT NOT NULL,
+                Email TEXT,
+                CreationDate DATE
+            );
+
+2. Set up project:
+    - Install NuGet packages:
+        - `Microsoft.Data.Sqlite`
+    - Establish data connection in `Program` class `Main` function: (this is also in step 4, where it's summarized!)
+
+            string workDir = AppDomain.CurrentDomain.BaseDirectory;         // There was also a step here, where we had to add this file to the build (?)
+            var dbFile = $"{workDir}Resources\\authenticator.db";
+
+            IUserRepository userRepository = new UserRepository(dbFile);    // Initialize with `dbFile` if the connection is created within for each query
+
+
+3. Create `UserRepository` class and add basic user operations:
+    - This class will handle database operations related to users, such as creating new users, validating existing users, etc:
+    - Start with the interface:
+
+            using Codecool.BruteForce.Users.Model;
+
+            namespace Codecool.BruteForce.Users.Repository;
+
+            public interface IUserRepository
+            {
+                void Add(string userName, string password);
+                void DeleteAll();
+                void CreateTable(string tableName);
+
+                User Get(int id);
+                IEnumerable<User> GetAll();
+            }
+
+    - Then with the implementation:
+
+            public class UserRepository : IUserRepository
+            {
+                // CONSTRUCTOR AND BASIC PROPERTIES
+
+                private readonly string _dbFilePath;        
+
+                public UserRepository(string dbFilePath)    
+                {
+                    _dbFilePath = dbFilePath;               
+                }
+
+                // ESTABLISH CONNECTION:
+
+                private SqliteConnection GetPhysicalDbConnection()      
+                {
+                    var dbConnection = new SqliteConnection($"Data Source ={_dbFilePath};Mode=ReadWrite");
+                    dbConnection.Open();        
+                    return dbConnection;
+                }
+
+                private static SqliteCommand GetCommand(string query, SqliteConnection connection)
+                {
+                    return new SqliteCommand
+                    {
+                        CommandText = query,
+                        Connection = connection,
+                    };
+                }
+
+                private void ExecuteNonQuery(string query)
+                {
+                    using var connection = GetPhysicalDbConnection();       // We make use of IDisposable (auto-integrated in SqliteConnection) using the keyword "using"
+                    using var command = GetCommand(query, connection);      // We make use of IDisposable (auto-integrated in SqliteCommand) using the keyword "using"
+                    command.ExecuteNonQuery();
+                }
+
+                // MAIN FUNCTIONALITY
+
+                public void CreateTable(string tableName)
+                {
+                    // tableName should be first made valid (remove any invalid characters)
+                    var safeTableName = new Regex(@"\W").Replace(tableName, "");
+
+                    var query = $@"
+                        CREATE TABLE IF NOT EXISTS {safeTableName} (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Column1 TEXT NOT NULL,
+                            Column2 INTEGER NOT NULL
+                        );
+                    ";
+
+                    ExecuteNonQuery(query);
+                }
+
+                public void Add(string userName, string passwordHash)       
+                {
+                    var query = $"INSERT INTO Users (Username, PasswordHash) VALUES ('{userName}', '{passwordHash}')";      // Passwords should be hashed before adding them to the database!
+                    ExecuteNonQuery(query);
+                }
+
+                public void DeleteAll()
+                {
+                    var query = "DELETE FROM Users";
+                    ExecuteNonQuery(query);
+                }
+
+                public bool ValidateUser(string username, string passwordHash)          // In the original task this was a separate class called `AuthenticateUser` with an `Authenticate` method
+                {
+                    var command = _connection.CreateCommand();
+                    command.CommandText =
+                    @"
+                        SELECT COUNT(*)
+                        FROM Users
+                        WHERE Username = $username AND PasswordHash = $passwordHash;
+                    ";
+
+                    command.Parameters.AddWithValue("$username", username);
+                    command.Parameters.AddWithValue("$passwordHash", passwordHash);
+
+                    var result = Convert.ToInt32(command.ExecuteScalar());
+                    return result > 0;
+                }
+
+                // PRIVATE METHODS
+
+                public User Get(int id)
+                {
+                    var query = @$"SELECT * FROM users WHERE id = {id}";
+                    using var connection = GetPhysicalDbConnection();
+                    using var command = GetCommand(query, connection);
+
+                    using var reader = command.ExecuteReader();
+                    return new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2));
+                }
+
+                public IEnumerable<User> GetAll()
+                {
+                    var users = new List<User>();
+                    var query = "SELECT * FROM users";
+                    using var connection = GetPhysicalDbConnection();
+                    using var command = GetCommand(query, connection);
+
+                    using var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        users.Add(new User(reader.GetInt32(0), reader.GetString(1), reader.GetString(2)));
+                    }
+
+                    return users;
+                }
+            }
+
+4. Add logic to `Main` method to only enter after the user was successfully logged in:
+
+        // ALREADY CREATED IN STEP 2:
+        string workDir = AppDomain.CurrentDomain.BaseDirectory;         // There was also a step here, where we had to add this file to the build (?)
+        var dbFile = $"{workDir}Resources\\authenticator.db";
+
+        IUserRepository userRepository = new UserRepository(dbFile);    // Initialize with `dbFile` if the connection is created within for each query
+
+        // LOGIC ADDED FROM HERE:
+        while (true)
+        {
+            Console.WriteLine("Please enter your username:");
+            string username = Console.ReadLine();
+
+            Console.WriteLine("Please enter your password:");
+            string password = Console.ReadLine();
+
+            // In a real application, you should hash the password before validation    (?)
+            string passwordHash = HashPassword(password); // Assume HashPassword is a method that hashes the password
+
+            if (userRepository.ValidateUser(username, passwordHash))
+            {
+                Console.WriteLine("Authentication successful!");
+                break; // Exit the loop if the user is authenticated
+            }
+            else
+            {
+                Console.WriteLine("Invalid username or password. Please try again.");
+            }
+        }
+
+        // Continue with the rest of your application logic
+        Console.WriteLine("Welcome to the application!");
+
+## GUIDE TO CREATE A BASIC AUTHENTICATOR: (USING SQLITECONNECTION)
 1. **Set Up the SQLite Database:**
     - Name it eg. `authenticator.db`
     - Create a `Users` table in it with the following parameters:
@@ -176,18 +368,13 @@
         - `Microsoft.Data.Sqlite`
     - Establish data connection in `Program` class `Main` function:
 
-            // USE CONNECTION STRING
-            string workDir = AppDomain.CurrentDomain.BaseDirectory;
-            var dbFile = $"{workDir}Resources\\Users.db";
+            // USE SQLITECONNECTION TYPE TO ESTABLISH CONNECTION: (This is also in step 4, showing the complete code)
 
-            IUserRepository userRepository = new UserRepository(dbFile);        // Initialize with `dbFile` if the connection is created within for each query
-
-            // USE SQLITECONNECTION TYPE TO ESTABLISH CONNECTION:
             var connectionString = "Data Source=C:\\path\\to\\your\\folder\\authenticator.db";      // A better way is to store the information as an environment variable, and the call it from there (more advanced topic!)
             using var connection = new SqliteConnection(connectionString);
             connection.Open();                                              
 
-            UserRepository userRepository = new UserRepository(connection); // proper connection
+            IUserRepository userRepository = new UserRepository(connection); // proper connection
 
 3. Create `UserRepository` class and add basic user operations:
     - This class will handle database operations related to users, such as creating new users, validating existing users, etc:
@@ -201,6 +388,7 @@
             {
                 void Add(string userName, string password);
                 void DeleteAll();
+                void CreateTable(string tableName);
 
                 User Get(int id);
                 IEnumerable<User> GetAll();
@@ -212,47 +400,35 @@
             {
                 // CONSTRUCTOR AND BASIC PROPERTIES (make sure you use either a connection string or a SqliteConnection type, but don't mix them!)
 
-                private readonly string _dbFilePath;        // OR // private SqliteConnection _connection;
+                private SqliteConnection _connection;
 
-                public UserRepository(string dbFilePath)    // OR // public UserRepository(SqliteConnection connection)
+                public UserRepository(SqliteConnection connection)
                 {
-                    _dbFilePath = dbFilePath;               // OR // _connection = connection;
+                    _connection = connection;
                 }
 
-                // ESTABLISH CONNECTION: (only with string type!)
+                // ESTABLISH CONNECTION:
 
-                private SqliteConnection GetPhysicalDbConnection()
-                {
-                    var dbConnection = new SqliteConnection($"Data Source ={_dbFilePath};Mode=ReadWrite");
-                    dbConnection.Open();        // We open the connection here in this instance, not in the Main method
-                    return dbConnection;
-                }
-
-                private void ExecuteNonQuery(string query)
-                {
-                    using var connection = GetPhysicalDbConnection();
-                    using var command = GetCommand(query, connection);
-                    command.ExecuteNonQuery();
-                }
-                private static SqliteCommand GetCommand(string query, SqliteConnection connection)
-                {
-                    return new SqliteCommand
-                    {
-                        CommandText = query,
-                        Connection = connection,
-                    };
-                }
-
+                // The connection is established in Main method (outside!)
+                
                 // MAIN FUNCTIONALITY
 
-                // METHOD SHOULD LOOK LIKE THIS WITH A STRING TYPE CONNECTION AS A DEPENDENCY:
-                public void Add(string userName, string passwordHash)       
+                public void CreateTable(string tableName)
                 {
-                    var query = $"INSERT INTO Users (Username, PasswordHash) VALUES ('{userName}', '{passwordHash}')";      // Passwords should be hashed before adding them to the database!
+                    // tableName should be first made valid (remove any invalid characters)
+                    var safeTableName = new Regex(@"\W").Replace(tableName, "");
+
+                    var query = $@"
+                        CREATE TABLE IF NOT EXISTS {safeTableName} (
+                            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            Column1 TEXT NOT NULL,
+                            Column2 INTEGER NOT NULL
+                        );
+                    ";
+
                     ExecuteNonQuery(query);
                 }
 
-                // METHOD SHOULD LOOK LIKE THIS WHEN WE HAVE A PROPERLY SET UP CONNECTION WITH SQLITECONNECTION TYPE AS A DEPENDENCY
                 public void Add(string username, string passwordHash)
                 {
                     var command = _connection.CreateCommand();
@@ -320,14 +496,15 @@
                 }
             }
 
-5. Add logic to `Main` method to only enter after the user was successfully logged in:
+4. Add logic to `Main` method to only enter after the user was successfully logged in:
+
+        // THIS WAS ADDED IN STEP 2 ALREADY!
 
         var connectionString = "Data Source=C:\\path\\to\\your\\folder\\authenticator.db";
         using var connection = new SqliteConnection(connectionString);
-        connection.Open();                                              // this is only needed if we use the proper way of establishing a connection (the connection closes automatically after the Main function ends)
+        connection.Open();
 
-        IUserRepository userRepository = new UserRepository(dbFile);    // connection string
-        IUserRepository userRepository = new UserRepository(connection); // proper connection
+        IUserRepository userRepository = new UserRepository(connection);
 
         while (true)
         {
@@ -356,3 +533,72 @@
 
 
 
+
+## Notes from workshop: (HeidiDQL)
+
+- working on `northwind traders` -> PA excercise
+- SQL: structured query language; the language of relational database operations
+- relational databases:
+    - relational: there is a relationship between the data
+        - relationship types:
+            - 1-1 (marriage: 1 husband - 1 wife)
+            - 1-many ()
+            - many-many
+        - retionship description:
+            - primary key: the unique identifier of a record in the table
+            - foreign key: value that refers to the primary key of another table (we can use these to describe connections)
+
+    - rows = records
+    - columns = fields
+
+- CRUD operations:
+    - Create: `CREATE/INSERT`
+    - Read: `SELECT`
+    - Update: `ALTER/UPDATE`    (don't forget to use WHERE! Otherwise everything gets deleted)
+    - Delete: `DROP/DELETE`     (don't forget to use WHERE! Otherwise everything gets deleted)
+
+- Operations:
+
+        SELECT * FROM order_details;                                                // Get all properties (*) of all records from order_details
+        SELECT * FROM order_details WHERE quantity >= 10;                           // Apply `WHERE` to filter results (`WHERE` filters for the data in the table)
+        SELECT * FROM order_details WHERE quantity >= 10 ORDER BY quantity DESC;    // Add an ordering methodology (ASC or DESC)
+
+        // Formatting:
+        SELECT * FROM order_details
+        WHERE quantity >= 10
+        ORDER BY quantity DESC;
+
+        // Add more complex filtering:
+        SELECT 
+            category_id,                            // only get this property
+            COUNT(*) AS product_count               // it only counts after GROUP BY category
+        FROM
+            products
+        WHERE
+            discontinued = 0
+            AND quantity_per_unit LIKE '%ml%'       // Include if q_p_u contains the "ml" string
+        GROUP BY
+            category id                             // Only show how many of each category exist in the table
+            // this is the point, where the "COUNT" starts counting 
+        HAVING      // A filter that is based on calculated data (COUNT -> this doesn't exist in the Table)
+            product_count > 1       // This doesn't work yet, it runs before "SELECT"
+            COUNT(*) > 1            // We need to write COUNT again, in order to make it work
+        ORDER BY
+            product_count DESC      // Here we can refer to it as "product_count", because here it already exists (because of order of execution)
+        LIMIT 1;
+
+- Aggreagate functions (many inputs - one output, eg `COUNT`)
+
+- How to create a new table:
+        
+        conn;
+        var adapter = new NpgsqlDataAdapter("SQL command", conn);
+        
+        adapter.Fill()
+        adapter.ExecuteNonQuery()
+
+        // OR
+
+        ORM
+        Object Relational Mapping
+        EntityFramework
