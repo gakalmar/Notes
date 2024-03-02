@@ -345,6 +345,8 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                         }
                     }
 
+                    // Get the length of one of the array's dimensions:
+                    GetLength(dimension)        // dimension can be 0 or 1
             
             - 3 dimensions:
 
@@ -422,6 +424,69 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                     {
                         Console.WriteLine($"Hello {name.ToUpper()}!");
                     }
+            
+            - `SortedList<T>`
+                - It's basically a `Dictionary<T>`, with the difference that its items are sorted (in ascending order by default). 
+                    - Every time a new item gets added, `IComparer<T>` interface determines where in the list to add the new item, to maintain the sorting
+                
+                - Example:
+
+                        // Initialize:
+                        SortedList<string, string> openWith = new SortedList<string, string>();
+
+                        // Add items to it:
+                        openWith.Add("txt", "notepad.exe");
+                        openWith.Add("bmp", "paint.exe");
+                        openWith.Add("dib", "paint.exe");
+                        openWith.Add("rtf", "wordpad.exe");
+
+                        // If we try adding an item, that's already in there, we get thrown an exception:
+                        openWith.Add("txt", "winword.exe");     // ArgumentException is thrown (element with this key already exists)
+                        
+                        // Remove an item:
+                        openWith.Remove("doc");
+
+                        // Refer to an item:
+                        Console.WriteLine(openWith["rtf"]);     // Prints "wordpad.exe"
+
+                        // Overwrite an item:
+                        openWith["rtf"] = "winword.exe";
+
+                        // If the key doesn't exist yet, a new item gets added with the value:
+                        openWith["doc"] = "winword.exe";
+
+                        // To avoid overwriting this way, we can check with "ContainsKey" first:
+                        if (!openWith.ContainsKey("ht"))
+                        {
+                            openWith.Add("ht", "hypertrm.exe");
+                            Console.WriteLine($"Value {openWith["ht"]} added for key = 'ht'");
+                        }
+
+                        // It's more efficient to use TryGetValue:
+                        string value = "";      // We create a placeholder for "out" value
+                        if (openWith.TryGetValue("tif", out value))
+                        {
+                            Console.WriteLine(value);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Key = 'tif' is not found.");
+                        }
+
+                        // IEnumerable iteration results in iteration through KVPs:
+                        foreach( KeyValuePair<string, string> kvp in openWith )
+                        {
+                            Console.WriteLine($"Key: {kvp.Key}, Value: {kvp.Value}");
+                        }
+
+                        // But we can easiliy retrieve just a list of the keys or the values:
+                        IList<string> ivalues = openWith.Values;    // We use IList (the interface of List, to maintain encapsulation) 
+                        IList<string> ikeys = openWith.Keys;
+
+                        // This way we can use indexing:
+                        Console.WriteLine(openWith.Values[0]);      // Prints the first value
+                        Console.WriteLine(openWith.Keys[2]);        // Prints the third key's name
+
         - **Dictionaries:**
             - `Dictionary<TKey, TValue>`: A collection of key-value pairs.
                 - Use:
@@ -580,6 +645,39 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                             string top = stack.Pop();  // Removes and returns "Cherry"
                             string next = stack.Peek(); // Returns "Banana" without removing it
 
+        - **Tuple:** (not a collection!)
+            - It's not a collection, but since it's just a language feature, it was best to place it here
+                - Tuples do not provide built-in enumeration or iteration capabilities like collections!
+
+            - A **Tuple** is a way to group multiple values into a single, lightweight, **immutable** data structure
+                - 1 tuple is like 1 item in a Dictionary, a KVP in essence, but with multiple "Items" in it
+                - A better way to visualize it is saying it's like an object, that has a different value for each of its keys. The keys are called "Item1", "Item2" and so on, but we can rename the keys (see below)
+            - they can hold elements of different types, allowing for a mix of data types within the same tuple
+            
+            - Example of its use:
+
+                    // Initializing a tuple with two elements
+                    var person = ("John", 30); // Tuple with a string and an int
+
+                    // Accessing tuple elements with "ItemN" keyword:
+                    Console.WriteLine($"Name: {person.Item1}, Age: {person.Item2}");
+
+                    // Assigning names to tuple elements
+                    var namedPerson = (Name: "Jane", Age: 35);
+                    Console.WriteLine($"Name: {namedPerson.Name}, Age: {namedPerson.Age}");
+
+                    // Using tuples to return multiple values from a method
+                    (string, int) GetPerson()       // We create a method, that's return type is a tuple -> (string, int)
+                    {
+                        return ("Alice", 28);       // We return values according to the tuple type's specified values 
+                    }
+
+                    var (name, age) = GetPerson();  // We assign it to a var with the same value types, making it also a tuple
+
+                    // Deconstructing a tuple
+                    var cityWithPopulation = ("New York", 8_336_817);
+                    (string cityName, int cityPopulation) = cityWithPopulation;
+                    Console.WriteLine($"City: {cityName}, Population: {cityPopulation}");
 
         - `ICollection` interface:
             - Defines a collection of objects (part of .NET Framework's collection classes, included in the `System.Collections` namespace)
@@ -1623,6 +1721,33 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                 int number2;
                 bool success2 = Int32.TryParse(" !!! ", out number2);       // in this case the parsing can't be done, so "success2" will be false, and "number2" will be 0
 
+- `params` modifier:
+    - a keyword we use in a method declaration, which has to be the last parameter (and there can only 1 `params`)
+    - params refers to a single-dimensional array of parameters
+    - When calling a method, the `params` argument should be one of the follwoing:
+        - A comma-separated list of arguments of the type of the array elements.
+        - An array of arguments of the specified type.
+        - No arguments. If you send no arguments, the length of the params list is zero.
+    
+    - Example:
+
+        // We can declare a method like this:
+        public static void UseParams(params int[] list)     // we specified an array of integers, with the name "list"
+        {
+            foreach(var param in params)
+            {
+                Console.Write(param);
+            }
+        }
+
+        // We can now pass arguments like this:
+        UseParams(1, 2, 3, 4);
+        UseParams();        // It also accepts zero arguments
+
+        // Or passing an already created array:
+        int[] myIntArray = { 5, 6, 7, 8, 9 };
+        UseParams(myIntArray);
+
 - **Expression-bodied Definitions** (*=arrow function*)
     - can only be used when a method contains one expression
     - The classic way of defining a method:
@@ -1676,7 +1801,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
             
             - `Func<int, int>`: 
                 - this is a `delegate` type, that gets 1 **input** (`int`) and **returns** another value (`int`)
-                - the last parameter is always the **return** value, and we can have up to 16 **input** values (eg. `Func<int, int, double>` get 2 params (int, int), and returns a double value)
+                - the last parameter is always the **return** value, and we can have up to 16 **input** values (eg. `Func<int, int, double>` get 2 parameterss (int, int), and returns a double value)
                 - we can also create a parameterless one: `Func<int>`, which will return an `int` but require no input parameters
     
     - **Using lambdas:**
@@ -1921,7 +2046,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
             - **The Repository**
 
     - **Design patterns in detail:**
-        - **THE FACTORY PATTERN:** *(https://refactoring.guru/design-patterns/factory-method/csharp/example#lang-features )*
+        - **THE FACTORY PATTERN:** *( https://refactoring.guru/design-patterns/factory-method/csharp/example#lang-features )*
             - solves the problem of creating product objects without specifying their concrete classes (compiled at runtime)
             - works very well with the Liskov Substitution Principle (LSP), which states that a baseclass and its subclasses should be interchangeable
             - should be used for creating objects instead of using a direct constructor call (`new` operator):
@@ -2020,21 +2145,194 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                 - The **primary goal** of the Repository Pattern is to create an abstraction layer between the data access layer and the business logic layer of an application
                 - Abstraction of data layer:  the business logic doesn't need to know whether the data is coming from a database, a web service, or another source
                 - Helps **layered architecture**, by separationg this functionality into a separate class (it also helps SRP - each class is responsible for one thing!)
-        - Constists of:
-            - Methods to perform operations (CRUD operations)
-            - Methods that prepare the operations (Get single user (returns `User` type) / Get all users ( returns `IEnumerable` type))
+            - Constists of:
+                - Methods to perform operations (CRUD operations)
+                - Methods that prepare the operations (Get single user (returns `User` type) / Get all users ( returns `IEnumerable` type))
 
-                    public interface IUserRepository
-                    {   
-                        // CRUD: operations
-                        void Create(string userName, string password);
-                        void DeleteAll();
-                        void Update(int id, string userName, string password)
+                        public interface IUserRepository
+                        {   
+                            // CRUD: operations
+                            void Create(string userName, string password);
+                            void DeleteAll();
+                            void Update(int id, string userName, string password)
 
-                        // Preparations:
-                        User Get(int id);
-                        IEnumerable<User> GetAll();
+                            // Preparations:
+                            User Get(int id);
+                            IEnumerable<User> GetAll();
+                        }
+
+        - **THE SINGLETON PATTERN:** *( https://refactoring.guru/design-patterns/singleton )*
+            - A creational pattern, which ensures that only one object of its kind exists, and provides a single point of access to it for any other code
+            - Violates the SRP by solving 2 problems at the same time:
+                - Ensure that **a class has just a single instance**:
+                    - eg when sharing a resource, like a database
+                - Provide a **global access** point to that instance:
+                    - just like a globa object variable that can be accessed from anywhere in the code (which is very unsafe!), it lets you **access some object from anywhere in the program**, but it also **protects that instance from being overwritten** by other code
+
+            - Example:
+
+                    public sealed class Singleton
+                    {
+                        private Singleton(){}                   // constructor is private, so that no other external calls can be made!
+
+                        private static Singleton _instance;     // the instance is stored in a static field!
+
+                        public static Singleton GetInstance()   // static method that creates 1 instance, only if there isn't one already
+                        {
+                            if (_instance == null)
+                            {
+                                _instance = new Singleton();
+                            }
+                            return _instance;                   // if it was already created, the originally created is returned
+                        }
+
+                        public void publicMethod()
+                        {
+                            // METHOD THAT CAN BE CALLED ON THE INSTANCE
+                        }
                     }
+
+                    class Program
+                    {
+                        static void Main(string[] args)
+                        {
+                            Singleton s1 = Singleton.GetInstance();     // Create or Get the instance
+                            si.publicMethod();                          // We can now call any methods on this instance
+                        }
+                    }
+        
+        - **THE ADAPTER PATTERN:** *( https://refactoring.guru/design-patterns/adapter )*
+            - A structural desing pattern that allows objects with incompatible interfaces to collaborate:
+                - converts (wraps) the interface of one object so that another object can understand it
+                - the "wrapped" object isn't even aware of the adapter 
+                - The adapter is based on **multiple inheritance**, it essentially inherits/implements the interface of both the **Client** and the **Service**
+                - examples:
+                    - stock data provider using XML as output, but also working with JSON thanks to an adapter:
+
+                            // STRUCTURE:
+                            CLIENT -> CLIENT'S INTERFACE <-> ADAPTER (Class that can work both with CLIENT's INTERFACE & SERVICE; INTERFACE gets implemented, SERVICE object is getting wrapped) <-> SERVICE (can't use the CLIENT's INTERFACE directly!)
+
+                            // EXAMPLE:
+                            DATA PROVIDER (XML) -> APPLICATION RECEIVES THE DATA IN XML -> THEN PASSES IT TO THE ADAPTER -> THE ADAPTER PASSES IT AGAIN TO THE OTHER EXTERNAL CLASS (EG. ANALYTICS LIBRARY), BUT NOW IN JSON FORMAT
+
+                    - metric system based source data working with something that uses imperial units (there is a converter inbetween)
+
+            - **How it works:**
+                1. The `adapter` **gets an interface**, compatible with one of the existing objects
+                2. Using this `interface`, the existing object can safely **call the adapter’s methods**
+                3. When receiving a call, the `adapter` **passes the request** to the second object, but **in a format and order that the second object expects**
+                    - In some cases even a 2-way adapter can be designed
+            
+            - **When to use:**
+                - when you want to use some existing class, but its interface isn’t compatible with the rest of your code
+                - when you want to reuse several existing subclasses that lack some common functionality that can’t be added to the superclass
+
+            - **How to implement:**
+                1. Make sure that you have at least two classes with incompatible interfaces:
+                    - A useful **service class**, which you can’t change (often 3rd-party, legacy or with lots of existing dependencies).
+                    - One or several client classes that would benefit from using the service class.
+                2. Declare the **client interface** and describe how clients communicate with the service.
+                3. Create the **adapter class** and make it follow the client interface. Leave all the methods empty for now.
+                4. Add a `field` to the adapter class to **store a reference to the service object**. The common practice is to **initialize this field via the constructor**, but sometimes it’s **more convenient to pass it to the adapter** when calling its methods.
+                5. One by one, implement all methods of the client interface in the adapter class. The adapter should delegate most of the real work to the service object, handling only the interface or data format conversion.
+                6. Clients should use the adapter via the client interface. This will let you change or extend the adapters without affecting the client code.
+            
+            - Example:
+
+                    // Define the 2 interfaces needed:
+                    public interface ILightningConnector
+                    {
+                        void ChargeWithLightning();
+                    }
+
+                    public interface IMicroUSBConnector
+                    {
+                        void ChargeWithMicroUSB();
+                    }
+
+                    // Now define Client class:
+                    public class MicroUSBPhone : IMicroUSBConnector
+                    {
+                        public void ChargeWithMicroUSB()
+                        {
+                            Console.WriteLine("Charging with Micro USB");
+                        }
+                    }
+
+                    // Create adapter:
+                    public class LightningToMicroUSBAdapter : ILightningConnector
+                    {
+                        private IMicroUSBConnector _microUSBDevice;
+
+                        public LightningToMicroUSBAdapter(IMicroUSBConnector microUSBDevice)
+                        {
+                            _microUSBDevice = microUSBDevice;
+                        }
+
+                        public void ChargeWithLightning()
+                        {
+                            Console.WriteLine("Adapter converts Lightning signal to Micro USB.");
+                            _microUSBDevice.ChargeWithMicroUSB();
+                        }
+                    }
+
+                    // Now you can use the adapter in the Client code:
+                    class Program
+                    {
+                        static void Main(string[] args)
+                        {
+                            MicroUSBPhone androidPhone = new MicroUSBPhone();
+                            ILightningConnector adapter = new LightningToMicroUSBAdapter(androidPhone);
+
+                            // Now you can charge an Android phone with a Lightning cable.
+                            adapter.ChargeWithLightning();
+                        }
+                    }
+
+- **Other design concepts:**
+    - **SLAP:**
+        - It is short for "Single Level of Abstraction Principle"
+        - **Concept:**
+            - the idea is that each piece of code should operate a "single level of abstraction"
+        - **Purpose:**
+            - Improves **readibility** of the code
+            - Improves **maintainability** (changes in the code are less likely to affect other parts of the code)
+        - **How to apply:**
+            - Break down complex functions into smaller pieces (each handling a specific task, like in SRP):
+                - A complex method should be calling methods, that don't hold any more enbedded methods (see example below)
+            - Example:
+
+                    // Before applying SLAP:
+                    public void ProcessOrder(string orderId)
+                    {
+                        var order = database.FindOrder(orderId);
+                        if (order == null) 
+                        {
+                            // handle error
+                        }
+                        if (order.IsPaid) 
+                        {
+                            // process order
+                        }
+                        // more code handling different scenarios
+                    }
+
+                    // After applying SLAP:
+                    public void ProcessOrder(string orderId)
+                    {
+                        var order = GetOrderFromDatabase(orderId);
+                        ValidateOrder(order);
+                        ExecuteOrderProcessing(order);
+                    }
+
+                    private Order GetOrderFromDatabase(string orderId) { /* ... */ }
+                    private void ValidateOrder(Order order) { /* ... */ }
+                    private void ExecuteOrderProcessing(Order order) { /* ... */ }
+
+    - **YAGNI:**
+        - Stands for "You aren't going to need it!"
+        - Advices against adding functionality until it's really needed
+        - It's part of the agile development practices
 
 ## PROCESS OF MODELING:
 - **Process of modeling overview:**
@@ -2763,6 +3061,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         catch (FormatException e)       // 2nd catch block
         {
             Console.WriteLine(e.Message);
+            throw;                      // We can use "throw" simply in a catch block to re-throw the exception that was caught
         }
 
         // We can also add:
@@ -2770,6 +3069,41 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         {
             // CODE THAT GETS EXCECUTED IN ALL CASES
         }
+
+- Using the `throw` statement:
+    - It throws an exception:
+
+            if (shapeAmount <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(shapeAmount), "Amount of shapes must be positive.");
+            }
+    
+    - Here are the most common exceptions that can be thrown:
+        - `System.Exception`: The base class for all exceptions in C#. It's rarely thrown directly but is often caught in catch blocks.
+        - `System.NullReferenceException`: Thrown when attempting to access a member on a type whose value is null.
+        - `System.InvalidOperationException`: Thrown when a method call is invalid in the object's current state.
+        - `System.ArgumentException`: Thrown when a method receives an argument that is not valid.
+        - `System.ArgumentNullException`: A subclass of ArgumentException, thrown when a method receives a null argument that is not allowed.
+        - `System.ArgumentOutOfRangeException`: Another subclass of ArgumentException, thrown when a method argument is outside the allowable range of values.
+        - `System.IndexOutOfRangeException`: Thrown when attempting to access an element of an array or collection with an index that is outside its bounds.
+        - `System.FormatException`: Thrown when the format of an argument does not meet the parameter specifications of a method.
+        - `System.NotImplementedException`: Thrown when a requested method or operation is not implemented.
+        - `System.IO.IOException`: The base class for exceptions thrown during input and output operations.
+        - `System.IO.FileNotFoundException`: Thrown when attempting to access a file that does not exist.
+        - `System.DivideByZeroException`: Thrown when attempting to divide an integral or Decimal value by zero.
+        - `System.OverflowException`: Thrown when an arithmetic, casting, or conversion operation results in an overflow.
+        - `System.TimeoutException`: Thrown when a specified time interval elapses and a requested operation has not completed.
+        - `System.UnauthorizedAccessException`: Thrown when the operating system denies access because of an I/O error or a specific type of security error.
+
+- Using `throw` as an expression:
+    - For example with a null-coalescing operator:
+
+            public string Name
+            {
+                get => name;
+                set => name = value ??
+                    throw new ArgumentNullException(paramName: nameof(value), message: "Name cannot be null");
+            }
 
 ## LINQ: 
 - Basics:
@@ -3144,12 +3478,12 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
     - In `NUnit` we have `TestCase` and `TestCaseSource` attributes for this:
         - Using `TestCase`:
             - add `[TestFixture]` attribute before the class (not the methods, but the whole testing class!)
-            - instead of creating the parameters separately, we create the inputs with `[Testcase( params )]`, inline, also adding the `ExpectedResult` (otside the test methods!):
+            - instead of creating the parameters separately, we create the inputs with `[Testcase( *parameters* )]`, inline, also adding the `ExpectedResult` (otside the test methods!):
 
                     [TestCase(new[] { 2, 3, 4 }, new[] { "J", "Q", "K" }, new[] { "Hearts", "Diamonds" }, ExpectedResult = 12)]
                     [TestCase(new[] { 1, 2 }, new[] { "A", "B" }, new[] { "Clubs", "Spades" }, ExpectedResult = 8)]
 
-            - add the required params now to the methods signature:
+            - add the required parameters now to the methods signature:
                     public int GenerateCardsReturnsExpectedNumberOfCards(int[] numbers, string[] symbols, string[] suits)       // We also changed the return value (void -> int)
                     {
                         // Arrange
@@ -3166,7 +3500,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                     public void FunctionTest(int par1, int par2){};
 
         - Using `TestCaseSource`:
-            - we us this instead of each individual `[TestCase( params )]` line (written in the testing class, but before the unit test methods):
+            - we us this instead of each individual `[TestCase( *parameters* )]` line (written in the testing class, but before the unit test methods):
 
                     private static readonly object[] TestCases =
                     {

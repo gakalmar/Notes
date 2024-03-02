@@ -21,7 +21,7 @@
 - Be constructive  
 - Bring up an example  
 
-### 2B. TIME MANAGEMENT (SI WEEK)
+### 2. TIME MANAGEMENT
 
 - 2 minute rule: If you can do it in 2 minutes, do it NOW
 - procrastination:
@@ -37,8 +37,7 @@
         4. Make the task more achievable (prepare your running kit the day before)
         5. Make the task more achievable (break it down to smaller, more achievable steps)
 
-
-### HOW TO GIVE FEEDBACK
+### 3. HOW TO GIVE FEEDBACK
 
 - Focus on the positive feedaback (helps against burnout)
     "Catch someone doing something well!"
@@ -71,6 +70,53 @@
         - Asking for explanation
         - Debate coding style
         - Brainstorming
+
+### 4. ASSERTIVE COMMUNICATION:
+https://journey.study/v2/learn/materials/pages/softskills/assertive-communication-communication-styles.md
+
+### 5. EMPATHY:
+https://journey.study/v2/learn/materials/pages/general/what-is-empathy
+https://journey.study/v2/learn/materials/pages/general/empathy-at-work
+
+### 6. MOTIVATION:
+Causes: https://journey.study/v2/learn/materials/pages/softskills/causes-of-demotivation.md
+Types and hierarchy: https://www.yourarticlelibrary.com/motivation/motivation-theories-top-8-theories-of-motivation-explained/35377
+
+**SMART goals:**
+- **Specific:** Goals should be well-defined and clear. Instead of having a vague goal, it should be detailed. For example, rather than saying "I want to get fit," a specific goal would be "I want to be able to run 5 kilometers without stopping."
+- **Measurable:** There should be concrete criteria for measuring progress towards the attainment of the goal. This helps in staying on track and meeting deadlines. For instance, if your goal is to save money, a measurable goal would be "I want to save $5000 by the end of the year."
+- **Achievable:** Goals should be realistic and attainable. While they can be challenging, they shouldn't be so extreme that they're unattainable. It's about finding the balance between challenging yourself and setting a goal that is within reach given your current resources and constraints.
+- **Relevant:** The goal should matter to you and align with other relevant goals. It's important that the goal actually contributes to broader objectives and is relevant to your interests, needs, and abilities.
+- **Time-bound:** Every goal needs a target date, so that there is a deadline to focus on and something to work toward. This part of the SMART goal criteria helps to prevent everyday tasks from taking priority over your longer-term goals.
+
+- Focus on the **PROCESS** or a **SYSTEM**, not the GOALS, to achieve your **GOALS**
+
+- **Relation between habits and motivation:**
+    - Habits, both conscious and hidden, significantly influence our motivation levels:
+        - Conscious habits require active input to maintain
+        - Hidden habits operate on autopilot and are often unnoticed.
+    - Motivation is not a simple on/off switch but a flow that includes support, surface recognition, and a core purpose.
+    - Having a clear purpose, which provides meaning and forward movement, is crucial for sustaining motivation. 
+
+- **2 types of habits:**
+    - **Concious:**
+        - These are habits that we are actively aware of and deliberately work on
+        - They require intentional effort and decision-making
+        - For example, setting a specific time for exercise each day or dedicating an hour to reading before bed are conscious habits.
+        - Since these habits demand more active input and self-control, they can be directly influenced by our motivation levels.
+    - **Unconcious/Hidden:**
+        - Also known as unconscious or automatic habits, these are behaviors that we perform without much thought, often because they have been deeply ingrained over time.
+        - These habits can include things like our posture, the way we react in certain situations, or routine actions we do every day.
+        - Hidden habits operate more on autopilot and can significantly influence our lives without our immediate awareness.
+
+- **The connection between these two types of habits and motivation is significant:**
+    - **Influence of Conscious Habits on Motivation:** 
+        - When you actively work on conscious habits, especially those aligned with your goals and values, they can boost your motivation. 
+        - Successfully maintaining a conscious habit can give you a sense of achievement and progress, which fuels further motivation.
+    - **Influence of Hidden Habits on Motivation:** 
+        - Hidden habits can either positively or negatively affect your motivation. 
+            - **Positive hidden habits** like automatically organizing your workspace, can create an environment that fosters motivation.
+            - **Negative hidden habits** such as procrastination or automatically reaching for unhealthy snacks, can hinder your motivation and progress towards your goals.
 
 # PART B - 'TECHNICALS'
 
@@ -144,11 +190,4 @@
         - Can create tickets and assign people to them
         - Can create project timeline
 
-### 6. INTRODUCTION TO REACT:
 
-### 7. ASSERTIVE COMMUNICATION:
-https://journey.study/v2/learn/materials/pages/softskills/assertive-communication-communication-styles.md
-
-### 8. EMPATHY:
-https://journey.study/v2/learn/materials/pages/general/what-is-empathy
-https://journey.study/v2/learn/materials/pages/general/empathy-at-work
