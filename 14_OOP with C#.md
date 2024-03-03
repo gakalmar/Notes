@@ -2044,6 +2044,52 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
             - **The Decorator**
             - **The State**
             - **The Repository**
+        
+        - **The Gang of Four:**
+            - refers to the four **authors** of the influential book *"Design Patterns: Elements of Reusable Object-Oriented Software"*, published in 1994
+                - Erich Gamma, Richard Helm, Ralph Johnson, and John Vlissides
+            - The book collects and organizes design patterns into sub-categories:
+
+                - **Cretional Patterns:**
+                    - Deal with object creation mechanisms, by controlling object creation
+                    - The patterns:
+                        - **The Singleton**
+                        - **The Factory** and **Abstract Factory**
+                        - **The Builder**
+                        - **The Prototype**
+                        
+                - **Structural Patterns:**
+                    - These patterns are about class and object **composition**, by using interfaces and focusing on composiong objects to form larger structures
+                    - The patterns:
+                        - **The Adapter**
+                        - **The Composite**
+                        - **The Proxy**
+                        - **The Flyweight**
+                        - **The Facade**
+                        - **The Bridge**
+                        - **The Decorator**
+
+                - **Behavioural Patterns:**
+                    - These are about the algorithms and the assignment of responsibilities between objects (describe patterns of objects AND the communication between them)
+                    - The patterns:
+                        - **The Observer**
+                        - **The Strategy**
+                        - **The Command**
+                        - **The Iterator**
+                        - **The State**
+                        - **The Visitor**
+                        - **The Mediator**
+                        - **The Memento**
+                        - **The Interpreter**
+                        - **The Template Method**
+                        - **The Chain of Responsibility**
+
+            - **Risks:**
+                - The risk is about the **misuse or overuse** of the patterns, as they are designed to be used in very specific conditions
+                - The developer needs to **balance** between **simplicity/readibility** with the **use of these patterns** (the latter makes it more complex and difficult to read)
+                - The use of these patterns makes the code more complex, reducing performance
+                - Scalability issues can happen wiht patterns that are very strict on the structure of the code and what components they use
+                - In some instances, we have to decide between the use SOLID or a Pattern (eg. Adapter -> 2 responsibilities (use const. inj. instead when possible)) 
 
     - **Design patterns in detail:**
         - **THE FACTORY PATTERN:** *( https://refactoring.guru/design-patterns/factory-method/csharp/example#lang-features )*
@@ -2333,6 +2379,16 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         - Stands for "You aren't going to need it!"
         - Advices against adding functionality until it's really needed
         - It's part of the agile development practices
+
+    - **KISS:**
+        - stands for "Keep It Simple, Stupid!"
+        - Emphasizes the importance of simplicity in design and implementation (avoid unnecessary complexity in software development)
+        - **Benefits:**
+            - code is easier to understand and maintain
+            - faster to develop
+            - there is a smaller chance of creating errors
+            - better performance and reliability because of the reduced complexity
+
 
 ## PROCESS OF MODELING:
 - **Process of modeling overview:**
@@ -3559,6 +3615,69 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                 }
         
         5. `_mockInstance.Object` is how we refer to the actual object we need (but it's a dummy!)
+
+- **Test Doubles: Mocking vs Stubbing vs Faking:**
+    - Test Doubles in general:   
+        - They are all used to simulate the behaviour of objects/systems
+        - The **purpose** of them is to be able to **test in isolation**
+        - They differ mainly in their purpose and the level of functionality they provide
+    
+    - **Which one to use?**
+        - Depends on **what** we want to test and **how** we want to test it:
+            - `Fakes` are generally used to improve performance by avoiding external calls. 
+            - `Mocks` are used to verify the behavior of our code.
+            - `Stubs` are used to provide data that our code needs to run.
+    
+    - **Mocks / mocking:**
+        - **What are they?**
+            - They are objects that have predefined behavior
+            - These objects register calls they receive, allowing us to assert how we use them in the code
+            - They don’t have working implementations, but they have pre-programmed expectations about how they will be used in the code.
+        - **Purpose:**
+            - `Mock` objects are used to test interactions between a class and its dependencies. `Mocks` focus on behavior rather than state.
+        - **How it works:** 
+            - `Mocks` simulate the behavior of real objects and are typically used to verify that certain methods have been called with specific parameters.
+            - They are especially useful in verifying the interaction with an external system or object.
+        - **Key Point:**
+            - `Mocks` can be programmed with expectations, meaning they are expected to be used in a certain way during testing.
+            - If the expectations are not met (for instance, a method isn't called as expected), the test will fail.
+        - **Example:**
+            - A `mock` object might be programmed to return a specific value when it is called with certain arguments.
+            - `Mocks` are generally used to test the behavior of our code rather than its output.
+            - We can use `mocks` to verify that our code is calling the dependencies in an expected way.
+    
+    - **Stubbs / stubbing:**
+        - **What are they?**
+            - `Stubs` are objects that return predefined values.
+            - They don’t have working implementations and they are not programmed to expect specific calls either.
+            - They simply return values when they are called.
+        - **Purpose:**
+            - `Stubs` provide canned answers to calls made during the test.
+            - They are typically used when you need to test a component that depends on another component (a dependency) which is not easy to instantiate or use in a test environment (e.g., a database).
+        - **How it works:** 
+            - `Stubs` replace these dependencies with a simplified version that returns fixed data relevant to the test.
+            - They don’t have any expectations about how many times or in what order their methods are called.
+        - **Key Point:**
+            - `Stubs` are primarily used for providing the test with 'indirect inputs' and are less about verifying interactions and more about ensuring the test can run in a controlled environment.
+        - **Example:**
+            - A `stub` might be programmed to always return the same value when called with any arguments.
+            - `Stubs` are generally used to provide data that our code needs to run. This data can be hard-coded or generated dynamically.
+    
+    - **Fakes / faking:**
+        - **What are they?**
+            - They are objects that have working implementations
+            - A `fake` object implements the same interface as a real object but takes shortcuts to improve performance.
+            - Generally used when we need to test something that depends on an external service or API, and we don’t want to make actual calls to that service.
+        - **Purpose:**
+            - `Fakes` are a form of `stubbing`, but with a bit more functionality.
+            - They are used when a real implementation of an object or process is impractical for testing.
+        - **How it works:** 
+            - `Fakes` have working implementations, but usually take some shortcut which makes them not suitable for production (e.g., an in-memory database).
+        - **Key Point:**
+            - `Fakes` are particularly useful when a test needs to interact with a closer approximation of the real implementation of a dependency, but where using the real dependency is impractical or impossible.
+        - **Example:**
+            - An in-memory database is a fake because it implements the same interface as a real database but doesn’t use disk storage.
+            - It makes it much faster than a real database, but it also means that the data is only persisted in memory and will be lost when the application restarts.
 
 - **NUnit:** *(cheatsheet: https://www.automatetheplanet.com/nunit-cheat-sheet/)*
     - a **unit testing framework** for the .NET ecosystem

@@ -13,13 +13,46 @@
 - **SQL:**
     - *Structured Language Query* is a language that is used to work with **relational databases**
     - Supported by many databases (SQLite, MySQL, Postgres, Oracle, Microsoft SQL Server)
-- **Relational database:**
-    - represents a **collection**(!) of related tables (2D), that is similar to an Excel table (fixed number of named **columns/attributes** and **rows/data**)
-    - a collection is like a `type` in C#, and each row represents an `object/instance`, and the columns are the common properties
+- **Relational databases:**
+    - they represent a **collection**(!) of related **tables** (2D), that is similar to an Excel table (fixed number of named **columns/attributes** and **rows/data** - see more below!)
+    - a collection is like a `type` (eg. `class`) in C#, and each row represents an `object/instance`, and the columns are the common properties
+    
+    - **Advantages:**
+        - They use SQL language, which is widely used (complex queries can be written)
+        - They use `primary` and `foreign keys`, relational databases ensure data integrity (which means that the accuracy and consistency of data are maintained across different tables).
+        - The use of database normalization (storing data accross multiple orthogonal tables):
+            - minimize duplicate data
+            - allow for data growth independently of each other
+    - **Disadvantages:**
+        - Complex design process (multi-table design, definition of relationships)
+        - Performance is slower (multi-talbe storage, complex queries)
+        - Rigid schema (eg addint a new column would require altering the whole database)
+        - Performance can also be an issue for very high volumes of data (noSQL is better in this case)
+    
+    - **Tables:**
+        - A `Database` is a collection of **related Tables** -> A `Table` is a collection of **data** within the database:
+            - Data is represented in a 2D array, with the following:
+                - **Column (also called field or attribute):**
+                    - represents a particular type of data field
+                    - has a specific **data type**, such as `integer`, `decimal`, `date`, or `text`, which defines the nature of the data that can be stored in that column
+                    - in SQLite, which uses **type affinity**, types are only recommendations
+                - **Row (also called a record, or tuple):**
+                    - represents a single record or instance of the entity (for example in the customers table a row is the data  of 1 specific customer)
+                    - each row in a table is unique, typically enforced by a primary key
+        - **Characteristics:**
+            - **Structured Data:** 
+                - Tables are a way of structurally organizing data into a format that is easy to understand and manipulate.
+            - **Schema:**
+                - The schema of a table defines its structure by specifying the columns and data types.
+            - **Normalization:**
+                - Tables in a relational database are often normalized, which means the data is organized in a way that reduces redundancy and improves data integrity, by storing it accross multiple tables.
+            - **Relationships:**
+                - Tables can be related to one another. These relationships are a key feature of relational databases, allowing for complex queries and data analysis.
+
 
 - **Repository:** 
-        - performs the tasks of an **intermediary** between the *domain model layers* and *data mapping*
-        - encapsulates a set of objects stored in the database and operations that can be performed on them
+    - performs the tasks of an **intermediary** between the *domain model layers* and *data mapping*
+    - encapsulates a set of objects stored in the database and operations that can be performed on them
 - **Repository pattern:** *(More on the repository pattern: https://medium.com/@pererikbergman/repository-design-pattern-e28c0f3e4a30) (more detailed: https://deviq.com/design-patterns/repository-pattern )*
     - provides an abstraction of data
     - uses SOLID principles
@@ -236,6 +269,26 @@
         - **Disadvantages:**    
             - more complex queries
             - slower performance because of different storage locations
+    - **Relationship types:**
+        - **1-to-1**
+            - when a single record in one table is related to only one record in another table (marriage example)
+            - **Implementation:**
+                - It is typically implemented by adding a `primary key` from one table as a `unique foreign key` in the other table.
+                - For example, if you have a `Users` table and a `UserProfiles` table, each user record in `Users` corresponds to exactly one profile in `UserProfiles`.
+
+        - **1-to-Many:**
+            - a record in one table can relate to multiple records in another table (customer and their orders example)
+            - **Implementation:**
+                - It is implemented by adding a `foreign key` in the 'many' table that references the `primary key` of the 'one' table. 
+                - For example, in a `Customers` and `Orders` scenario, each customer in the `Customers` table can have multiple orders in the `Orders` table, but each order is associated with only one customer.
+
+        - **Many-to-Many:**
+            - multiple records in one table can relate to multiple records in another table (students-courses example)
+            - **Implementation:**
+                -  It is implemented using a `junction table` (also called a linking or associative table = `JOIN`).
+                - The `junction table` contains `foreign keys` referencing the `primary keys` of the two tables it is linking.
+                - For example, in a `Students` and `Courses` scenario, a student can enroll in many courses, and each course can have many students. The `junction table`, say `Enrollments`, would have `foreign keys` referencing the `Students` and `Courses` tables.
+
     - **Requirements:**
         - If we want to use `JOIN`, we need to make sure there is a a **PRIMARY KEY**, that identifies that entity uniquely accross databases
         - Using this key, we can combine row data across two separate tables 
