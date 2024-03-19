@@ -97,14 +97,33 @@
         int.MinValue;
 
 ### **Array-List-Collection methods:**  *(link to methods: https://learn.microsoft.com/en-us/dotnet/api/system.collections.generic.list-1.add?view=net-8.0)*
+- Creating a list:
+
+        // Initialize, then add values:
+        List<int> myList = new List<int>();
+        myList.Add(1);
+
+        // Add elements at declaration:
+        List<int> myList = new List<int> { 1, 2, 3 };       // No braces!
+
 - Indexing:
         names[0] -> refers to the first element
         names[names.Count - 1] -> refers to the last element
 - Add/remove elements:
-        names.Add("Bill");
-        names.Remove("Ana");
+        names.Add("Bill");      // Returns bool value!
+        names.Remove("Ana");    // Returns bool value!
+        names.Clear();          // Removes all items
+- Range-related methods:
+        names.AddRange(new string[] {"Peter", "John"} );
+            // Add 2 names at the end of the list, returns nothing
+        names.InsertRange(2, new string[] {"Peter", "John"} );       
+            // takes an int and array or list as an argument. Adds the values at the int index. Returns nothing.        
+        names.RemoveRange(2, 4);            
+            // takes two int values. The first int is the index at which to begin removing and the second int is the number of elements to remove. Returns nothing.
+        names.GetRange(0, 3);               
+            // takes two int values. The first int is the index of the first desired element and the second int is the number of elements in the desired range. Returns a list of the same type.
 - Length of a list:
-        names.Count
+        names.Count             // Property, not method!
 - Searching:
         var index = names.IndexOf("Felipe");        // Returns -1 if it doesn't find something
 
@@ -113,6 +132,8 @@
         {
             Console.WriteLine($"The name {names[index]} is at index {index}");
         }
+- Contains:
+        names.Contains("name");                     // Returns a bool value
 - Sort (modifies items in place, so modifies the original list):
         names.Sort();                               // Recognizes the data type, and uses Quicksort/Introsort to sort data (so numbers in an ascending order, strings alphabetically)
         foreach (var name in names)                 // This will go through the already sorted list
@@ -365,6 +386,11 @@
                 bool hasEvenNumbers = numbers.Any(n => n % 2 == 0); // True, because there are even numbers in the list
 
     - `All`
+        - Checks if all items in the list match a certain condition:
+
+                bool allAreEven = numbers.All(n => n % 2 == 0);
+                // if every number is even, allAreEven will be true, otherwise it will be false
+
     - `Contains`
     
 - **Partitioning operators**

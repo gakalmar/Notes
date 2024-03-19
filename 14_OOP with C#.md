@@ -766,30 +766,29 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                 - **Non-generic IEnumerable:** represents a sequence of objects (no specific type)
                 - **Generic IEnumerable:** represents a sequence of objects of a specific type (allows you to work with the `Type` rather than an `object`, which is much more flexible).
 
-            - How it works:
-                - `IEnumerator` interface -> has a single method `GetEnumerator()` -> returns an `IEnumerator` object -> use it to iterate through the collection
-                - `IEnumerator` object (instance) -> has 2 methods:
+            - How it works (eg. when we use LINQ or a foreach loop, we implicitly use `IEnumerable` and `IEnumerator` interfaces):
+                - `IEnumerable` interface -> has a single method `GetEnumerator()` -> returns an `IEnumerator` object -> uses it to iterate through the collection
+                - `IEnumerator` object (instance) -> has 2 members:
                     - `MoveNext()`: moves the iterator to the next item in the collection and returns a bool value indicating whether there are more items to be traversed.
-                    - `Reset()`: resets the iterator to its initial position
-                    - `Current { get; }`
+                    - `Current`: returns the current item in the collection 
 
-                - This is all built in into C# (so using foreach or a LINQ method means you are implicitly using `IEnumerable`):
+            - This is all built in into C# (so using foreach or a LINQ method means you are implicitly using `IEnumerable`):
 
-                        List<int> numbers = new List<int> {1,2,3,4,5}; // List<T> implements `IEnumerable`
+                    List<int> numbers = new List<int> {1,2,3,4,5}; // List<T> implements `IEnumerable`
 
-                        foreach (int number in numbers) // The compiler calls the `GetEnumerator` method 
-                        {
-                            Console.WriteLine(number);
-                        }
+                    foreach (int number in numbers) // The compiler calls the `GetEnumerator` method 
+                    {
+                        Console.WriteLine(number);
+                    }
 
-                        // Behind the scenes, when calling a foreach on an array, this is what happens really:
-                        
-                        var enumerator = array.GetEnumerator();
-                        
-                        while(enumerator.MoveNext())                // meaning: do this while there is a next item
-                        {
-                            Console.WriteLine(enumerator.Current);
-                        }
+                    // Behind the scenes, when calling a foreach on an array, this is what happens really:
+                    
+                    var enumerator = array.GetEnumerator();
+                    
+                    while(enumerator.MoveNext())                // meaning: do this while there is a next item
+                    {
+                        Console.WriteLine(enumerator.Current);
+                    }
                 
             - **Best practices:**
                 - IEnumerable in method parameters:
@@ -1169,6 +1168,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
         - Sealed class: A class that doesn't allow inheriting
             
         - The **Object** base class:
+            - Every object in C# inherits from this base class, even Value types!
             - It's a special built-in class located in `System` namespace
             - It's the base class of any new class created, so these 2 are equivalent:
                     
@@ -1181,6 +1181,17 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                     {
                         //...
                     }
+
+            - Some of the members accssible for every type: *( all members: https://learn.microsoft.com/en-us/dotnet/api/system.object?view=net-8.0 )* 
+                - `Equals(Object)`:
+                    - returns true if the current instance and the argument are equal 
+                    - using **value equality** for **value** types and **referential equality** for **reference** types
+                - `GetType()`
+                    - returns the type of the object
+                - `ToString()`
+                    - returns a string describing the object
+            
+            
         - **Upcasting vs Downcasting:**
             - In general:
                 - Upcasting and downcasting are part of the polymorphism behaviour in OOP. 
@@ -1640,6 +1651,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                             {
                                 // NEW CODE
                             }
+                            
             - `abstract` keyword (modifier) describes an incomple Class, that the subclass needs to complete it on implementation:
                 - Use the `abstract` modifier in a class declaration to indicate that *a class is intended only to be a base class* of other classes, not instantiated on its own.
                 - The complete implementation of an `abstract` member must be marked with `override`:
@@ -3172,7 +3184,7 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                         where cust.City == "Phoenix"
                         select new { cust.Name, cust.Phone };
 
-- Method & Syntax:
+- Method & Syntax (collectively called **operators**):
     - **Method syntax:** resembles most other C# method calls:
 
             var custQuery2 = customers.Where(cust => cust.City == "London");
@@ -3183,6 +3195,10 @@ Ctrl + Shift + R - Refactor selected (eg. extract class)
                 from cust in customers  
                 where cust.City == "London"  
                 select cust;
+        
+        - The `from` operator declares a variable to iterate through the sequence.
+        - The `where` operator picks elements from the sequence if they satisfy the given condition. The condition is normally written like the conditional expressions you would find in an if statement.
+        - The `select` operator determines what is returned for each element in the sequence.
 
 - **Imperative vs Declarative programming style:**
     - **imperative** -> focus on the *how*:

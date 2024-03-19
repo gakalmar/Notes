@@ -1,22 +1,19 @@
 # LIST OF THINGS TO DO IN ORDER:
 
-- How to do SQL joins:
-https://www.w3schools.com/sql/sql_join.asp
+- create a full-stack project for practice, with React, and create a user login (use useContext to store logged in user data!)
 
-- finish codecademy tutorial https://www.codecademy.com/learn/learn-c-sharp
-
-- add to SQL authenticator guide:
-    - password hashing
-    - parameterized queries to address SQL injection vulnerability
-    - keep only string or only Sqliteconnection method (find out which is better!)
+- Finish optional tasks to check out 1 more design pattern (Deocrator?)
 
 - All links to check:
     - Unit testing video: https://www.youtube.com/watch?v=uvqAGchg8bc&ab_channel=MatthiWare
     - NUnit cheatsheet: https://www.automatetheplanet.com/nunit-cheat-sheet/ - ADD ASSERTIONS TO METHODS
     - NUnit annotations: https://www.blazemeter.com/blog/nunit-annotations - ADD TO METHODS
 
-- check dojo collection:
-    https://docs.google.com/file/d/1OisLbpx2BeLSTywYg7q1gwSiwb7Fl0xKZIlBDu_Njnw/view
+- team task links:
+    - https://learn.microsoft.com/en-us/aspnet/core/security/authentication/cookie?view=aspnetcore-8.0
+    - https://www.atlassian.com/agile/scrum
+    - https://code-maze.com/csharp-hashing-salting-passwords-best-practices/
+    - https://www.passcamp.com/blog/what-is-password-hashing/
 
 # Not urgent:
 

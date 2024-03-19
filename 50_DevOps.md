@@ -1,0 +1,129 @@
+# DevOps
+
+## Virtual Box *( Full Manual: https://www.virtualbox.org/manual/ )*
+- Oracle's open-source type-2 hypervisor
+- Commands:
+    - Ctrl + Alt + F1-F6 - virtual console (SSH - Secure Shell)
+    - Ctrl + Alt + F7-F8 - GUI
+    - Ctrl + Alt + T - open terminal from GUI
+- **Virtualization:**
+    - the process of creating a software based or virtual version of something (compute, storage, networking, servers or applications)
+    - The **hypervisor** makes it feasible:
+        - Also called Virtual Machine Monitors (VMMs)
+        - It's a piece of software, that runs above the physical server/host
+        - It pulls the resources from the physical server/host and allocate them to the virtual environment
+        - 2 main types:
+            - Type I. / Bare Metal hypervisor
+                - Installed directly on top of the physical hypervisor:
+                    - HARDWARE -> HYPERVISOR -> VM
+                - Most frequently used and most secure
+                - Eg.: VMware ESXi / Microsoft Hyper-V / Xen / Opensource KBM / Oracle VM Server for x86
+            - Type II. / Hosted
+                - There's an additional layer of Host OS between the Host and the Hypervisor:
+                    - - HARDWARE -> **HOST OS** -> HYPERVISOR -> VM
+                - Less frequent, mostly used for end-user virtualization
+                - Eg.: Oracle VM VirtualBox / VMware Workstation (Pro) & VMware Fusion (for Mac) / Paralells Desktop / QEMU
+    - Once the hypervisor is installed, we can create **VMs** (Virtual Machines):
+        - A VM is a software based computer, that behaves like a separate computer (it has it's own OS and storage, etc.)
+        - We can run multiple VMs on a hypervisor (they each can have different OSs)
+        - The hypervisor manages the resources that are allocated to these virtual environments
+        - They are **portable**, so we can move a VM from 1 hypervisor to another hypervisor
+    - **Benefits:**
+        - Reduce costs by reducing infrastructure -> Running multiple environments in 1 physical machine
+        - Agility and speed: setting up a VM and transfering it to another machine is very simple and quick
+        - Lower downtime: if a host goes down, we can just quickly move the VM to another machine that works
+- **Virtual Machine:**
+    - Definition 1:
+        - It's a software emulation of a physical computer
+        - It runs an operating system and applications just like a physical computer, but it's **encapsulated** in a layer of software called a **hypervisor** that runs on top of your physical hardware. This allows multiple VMs to run on a single physical machine, with each VM isolated from the others. This isolation means that the processes, software, and data on one VM can't interfere directly with those on another VM.
+        - allows for the dynamic allocation of physical resources like CPU and memory to VMs, ensuring that the host system's resources are used efficiently.
+
+    - Definition 2:
+        - A virtual machine is a completely self-contained operating system running on another piece of hardware.
+        - You interact with it the same exact way you would use any other desktop computer or server.
+        - The idea is you can use 1 set of hardware that houses several VMs. The hardware resources (RAM, CPU, storage) are split amongst the VMs. Each VM is completely self-contained. You could, for example, run 3 VMs on a single piece of hardware, each running a different operating system, with 3 separate configurations tailored for different jobs.
+        - A VM image is a snapshot of the entire VM. These images are generally used for migrating VMs from one system to another, or as a form of backup and restore. You typically cannot interact directly with a VM image, it needs to be turned into a VM before you can use it - the process to do this depends on the hypervisor (i.e.: the VM software) you are using.
+    - **Container vs Virtual Machine:**
+        - A Linux container is conceptually similar to a VM, but functions differently:
+            - Containers are not full, independent machines, they are just an isolated process
+            - They share the same Linux kernel as the host OS, and also the libraries and files required for the execution of processes
+            - Typically containers are used to run a single program instead of a whole server.
+    - **Snapshots:**
+        - with snapshots you can save the current state of a VM and return to that state at any time, making it easier to recover from mistakes or experiment without risk.
+
+- **Virtual Appliance:**
+    - a pre-configured virtual machine image designed to provide a specific set of services or to perform a particular function, ready to be run on a hypervisor
+    - they are essentially self-contained packages that include all the necessary software, settings, and sometimes operating system environments needed to deploy a service or application with minimal setup
+    - they simplify the deployment and management of software applications because they eliminate the need to install and configure software from scratch. Instead, you can simply import the virtual appliance into a virtualization platform and run it
+    - Since virtual appliances are tested and configured by the provider, they offer a consistent and reliable environment.
+
+- **Virtualization strategies:**
+    - The most simple is **hosted virtualization**, which involves a **HOST OS** and a **GUEST OS**:
+        - host operating systems run on hardware and guest operating systems run on a virtual machine
+    - It uses:    
+        - the existing operating system (host operating system),
+        - third-party virtualization software,
+        - a variety of guest operating systems (each guest OS operates using shared resources with its host)
+    
+    - **Host OS:**
+        - works with the underlying hardware
+        - With **virtualization**, a single physical server can become multiple virtual machines (pieces of hardware with plenty of processing, memory, storage, and network capacity)
+        - Host OS also use **container-based virtualization** (helps to partition the application in a server):
+            - allows the use of containers for each application and doesn’t require the use of the entire OS
+    
+    - **Guest OS:**
+        - the guest operating system is software installed onto and running on the virtual machine
+        - provides another OS for applications
+        - The guest OS shares resources with the host OS, but the two operate independently of one another (host needs to be started first of course!)
+    
+    - **Advantages of a guest OS:**
+        - the ability to run programs and applications that don’t work with the host OS
+        - Run more than one application requiring different OS on the same hardware
+        - Be used for testing purposes
+        - there can only be 1 host, but multiple guest OS-s
+        - virtual OS-s can be restored (backup)
+- **Guest additions:**
+    - designed to be installed inside a virtual machine after the guest operating system has been installed
+    - consist of device drivers and system applications that optimize the guest operating system for better performance and usability
+    - provided as a single CD-ROM image file which is called `VBoxGuestAdditions.iso` (located in the installation directory of Oracle VM VirtualBox).
+        - To install the Guest Additions for a particular VM, you mount this ISO file in your VM as a virtual CD-ROM and install from there
+    - **Features:**
+        - **Mouse pointer integration:**
+            - provides you with seamless mouse support
+            - pressing the Host key is no longer required to free the mouse
+        - **Shared folders:**
+            - provide an easy way to exchange files between the host and the guest
+        - **Better video support:**
+            - VirtualBox emulates a virtual graphics card for guest OSs with basic features only -> additions provide extra features and quality
+            - Resizing of the VM window can also happen in this case
+        - **Seamless windows:**
+            - the individual windows that are displayed on the desktop of the virtual machine can be mapped on the host's desktop, as if the underlying application was actually running on the host
+        - **Generic host/guest communication channels:**
+            - allow you to control and monitor guest execution
+            - *guest properties* provide a generic string-based mechanism to exchange data bits between a guest and a host
+        - **Time synchronization:**
+            - VirtualBox can ensure that the guest's system time is better synchronized with that of the host
+            - useful when for example a VM was paused and needs to be resynced
+        - **Shared clipboard:**
+            - the clipboard of the guest operating system can optionally be shared with your host operating system
+        - **Automated logins / Shared credentials:**
+            - each version of VirtualBox has it's own version of Guest Additions - automatically checks and makes sure this is updated properly
+- **Emulated hardware:**
+    - VirtualBox virtualizes almost all hardware of the host:
+        - **Input devices:**
+            - can emulate a standard PS/2 keyboard and mouse
+            - can provide virtual USB input devices to avoid having to capture mouse and keyboard
+        - **Graphics:**
+            - default graphics devices is SVGA for Windows guests
+            - for Linus guests an SVGA graphics devices is emulated
+            - legacy guest OS: a VGA-compatible graphics device is available
+        - **Storage:**
+            - emulates the most common types of hard disk controllers
+            - only one of these controllers would be enough for Oracle VM VirtualBox by itself, this multitude of storage adapters is required for compatibility with other hypervisors
+            - migrating VMs between hypervisors is very difficult or impossible if the storage controllers are different
+        - **Networking:**
+            - For each card, you can individually select what kind of hardware will be presented to the virtual machine
+        - **USB:**
+            - emulates these types of USB host controllers: xHCI, EHCI, and OHCI
+        - **Audio:**
+            - determines whether the VM will detect a connected sound card, and if the audio output should be played on the host system
