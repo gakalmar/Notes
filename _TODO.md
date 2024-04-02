@@ -1,5 +1,9 @@
 # LIST OF THINGS TO DO IN ORDER:
 
+- 2 more guides to take notes from
+
+# OOP
+
 - create a full-stack project for practice, with React, and create a user login (use useContext to store logged in user data!)
 
 - Finish optional tasks to check out 1 more design pattern (Deocrator?)
@@ -15,7 +19,12 @@
     - https://code-maze.com/csharp-hashing-salting-passwords-best-practices/
     - https://www.passcamp.com/blog/what-is-password-hashing/
 
-# Not urgent:
+# WEB:
 
 - CSS:
     - CSS algorithms https://www.joshwcomeau.com/css/understanding-layout-algorithms/
+
+- Look these up again:
+
+    encodeURIComponent() and decodeURIComponent() ?
+    Event bubbling - how and when to use stopPropagation() ?
