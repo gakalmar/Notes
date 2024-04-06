@@ -404,7 +404,7 @@
 19. Explain the parts of an URL:
 
     0. **Components:**
-    <br>![ulr componenets](./image.png)
+    <br>![ulr componenets](./assets/image.png)
 
     1. **Scheme/Protocol:**
         - The first part of the URL, that specifies the protocol used:
@@ -2286,17 +2286,17 @@
     - **Short summary:**
         - Running your app in production vs. running it in development:
             - **production:** Communication happens between BROWSER (Frontend) and SERVER (Backend) only.<br>
-                ![production_process](cors_proxy_sop_prod_env.png)
+                ![production_process](./assets/cors_proxy_sop_prod_env.png)
             - **development:** We also use a **development server**, which is responsible for serving static files<br>
-                ![development_process](cors_proxy_sop_dev_env.png)
+                ![development_process](./assets/cors_proxy_sop_dev_env.png)
         - **Same Origin Policy:**
             - JS files can initiate HTTP requests (e.g. with a fetch) to the same origin (scheme + domain + port) where they are originated from, but not to another source (eg when we are running our server and frontend on a different port).
             - This **security mechanism** is called **Same Origin Policy**<br>
-            ![same_origin](cors_proxy_sop_cors_blocked.png)
+            ![same_origin](./assets/cors_proxy_sop_cors_blocked.png)
         - Solution:<br>
             - Introducing a **PROXY**, that tricks the browser into thinking the requests are sent to the same place. 
             - The development server gets all the requests, but **the proxy forwards it to the BACKEND** for what we specify (eg. APIs)<br>
-            ![proxy](cors_proxy_sop_dev_proxy.png)
+            ![proxy](./assets/cors_proxy_sop_dev_proxy.png)
             - You can now use URLs for fetching in a short way:
 
                     // ❌ instead of this (localhost:5000 is the backend server's URL)

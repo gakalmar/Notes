@@ -37,6 +37,15 @@ Number.isInteger(value)                                 //Chheck if the value is
     string.replace(/[aeiou]/gi, "")                     //this is an advanced way to write it (/ refers to a global expression, [aeiou] refers to a character class and the letters to look for inside it). g means all occurrencies, i means case insensitive search
     string.trim()                                       //removes whitespace from end and beginning of a string
 
+    To count a character in a string:
+    string.split("").filter(c => c === "a").length      //we count the number of "a" characters by creating an array of chars, then counting the items we want with a filter
+
+    quick count funtion:
+    function count(char, word){
+        return word.filter(c => c === char).length;
+    }
+    count("a", "alma"); -> should return 2
+
 ### Additional ones from Journey course:
 
     charAt(index)                                       //Returns the character at the specified index within the string.
@@ -72,8 +81,8 @@ Number.isInteger(value)                                 //Chheck if the value is
     Math.min(...arrayOfNumbers) or
         Math.min(1, 2, 3)
     Math.Pi                                             //Refers to 3.1415...
-    Marh.floor(fractionalNumber)                        //Returns the whole values of a number rounded down (integer from float)
-    Marh.ceil(fractionalNumber)                         //Returns the whole values of a number rounded up (integer from float)
+    Math.floor(fractionalNumber)                        //Returns the whole values of a number rounded down (integer from float)
+    Math.ceil(fractionalNumber)                         //Returns the whole values of a number rounded up (integer from float)
 
     parseInt("42")                                      //converts a string into an integer
     parseFloat("42.184923")                             //converts a string into a float
@@ -191,6 +200,49 @@ Number.isInteger(value)                                 //Chheck if the value is
     FIND
     find(callback[, thisArg])                           //Returns the value of the first element in the array that satisfies the provided testing function.
     findIndex(callback[, thisArg])                      //Returns the index of the first element in the array that satisfies the provided testing function, or -1 if no element satisfies the test.
+
+**HIgher order SUMMARY**
+    array.forEach(item, [index, arr])       //create operations with each element
+            array.map(item, [index, arr])           //return a new array by doing something to each element
+            array.filter(item, [index, arr])        //return a new array by applying a specific condition to each element -> include in return array if it's true
+            array.find(item)                        //similar to filter, but only returns the first element
+
+            array.reduce(callback(accumulator, currentElement), [initialValue])             //callback function has 2 parameters: (accumulator, currentElement)
+                                                                                            //1st iteration: accumulator is the first item of the array initially (unless initial value is specified), and currentElement is the second element
+                                                                                            //2nd iteration: accumulator is now the result after the first operation, and currentElement is the third element
+
+            Simple example:
+
+                const numbers = [1, 2, 3, 4, 5];
+
+                const result = numbers.reduce(function (accumulator, currentValue) {
+                return accumulator + currentValue;
+                }, 10);
+
+                console.log(result); // 25 (sum of all numbers + initial value 10)
+
+            Complex example (find the most common item):
+
+                const numbers = [1, 2, 2, 3, 4, 4, 4, 5, 5, 6, 6, 6, 6];
+
+                const mode = numbers.reduce(function (accumulator, currentValue) {
+                    if (!accumulator[currentValue]) {
+                        accumulator[currentValue] = 1; // Initialize count for currentValue     //create a key if it doesn't exist
+                    } else {
+                        accumulator[currentValue]++; // Increment count for currentValue        //if key exists, add 1 to it
+                    }
+                    return accumulator;
+                }, {});                                                                         //accumulator's intial value is {}
+
+                let maxCount = 0;
+                let modeValue;
+
+                for (const number in mode) {                                                    //mode returns an object with unique keys and their count as a value
+                    if (mode[number] > maxCount) {
+                        maxCount = mode[number];
+                        modeValue = number;
+                    }
+                }
     
 # Callback builtins
 

@@ -6,201 +6,83 @@
     - There are 2 basic datatypes in JS:
         - **Primitives/Value types** (string, number (float or integer), boolean, (+undefined, +null))
         - **Data structures/Reference types** (objects, arrays and other grouped data)
-    
     - Differences between arrays and objects:
-        - **ARRAYS:**
-            - An array is a special type of object, where the keys basically represent the index (they are hidden)
+        - **Arrays:** (represent a list of things)
+            - special object, where the keys are the index (these are hidden)
             - Arrays are ITERABLE - `for..of` loop work on them
             - They have a length property
-            - Syntax:
-
-                    let array = [item1, item2];
-            
-            - Commonly we store objects within arrays, and then arrays within the keys of an object:
-
-                    eg. list of movies:
-
-                    let movies =[
-                        {
-                            **movie1**
-                        },
-                        {
-                            **movie2**
-                        },
-                    ];
-
-            - Access data:
-
-                    refer to item:
-                    array[index]
-
-                    let nums = [1, 2, 3, 4, 5];
-                    console.log(nums[0])    //will print 1
-
-                
-        - **OBJECTS:**
+            - Syntax: `let array = [item1, item2];`
+            - Access data: `array[index]`
+        - **Objects:** (represent 1 thing, with properties)
             - An object has keys, and each key has a value
-            - They are non-iterable - to loop through the values we need to use `for..in` loop (uses Object.keys() to create keys to iterate through first in BG)
+            - They are NON-ITERABLE - to loop through the values we need to use `for..in` loop (uses Object.keys() to create keys to iterate through first in BG)
             - They don't have a length property by default (we could use Object.keys().length to check though)
             - Syntax:
 
                     let object = {
                         key1: "value1",
-                        key2: "value2",
-                        key3: "value3",
+                        key2: "value2"
                     };
-            - We use them to store data with different properties/attributes in them:
 
-                    eg. movie:
-
-                    {
-                        title: "Goonies",
-                        runtime: 124,
-                        releasedate: 1986,
-                        genres: [list of items]
-                    }
-            
             - Access data:
-
-                    refer to item:
-                    object.key          //dot notation - use when you know the name of the key
-                    object["keyname"]   //bracket notation - use with template literals (=backtick strings) & when key includes a special character
-
-                    let obj = {name: "John", age: 34}
-                    console.log(obj.name);      //will print "John"
-                    console.log(obj["age"]);    //will print 34
-    
+                - `object.key`          //dot notation - use when you know the name of the key
+                - `object["keyname"]`   //bracket notation - use with template literals (=backtick strings) & when key includes a special character
 
 2. **Explain the concept of key-value pairs in objects and how they differ from indexed elements in arrays.**
-
-    - Objects store their data within keys, which means all entries have a key, and an associated value.
+    - Objects:
+        - store data within keys, and each key has its associated value.
         - Objects are non-iterable (there is no numeric order in it's data)
         - Each key is basically a string, representing the name of the key, which opens the container that includes the value
         - we call it either with dot notation (obj.key), or bracket notation (obj.["keyname"])
     
-    - Arrays are iterable, which means there is an order in the data structure:
+    - Arrays :
+        - They are iterable, which means there is an order in the data structure:
         - we refer to an array's item with it's index (the position within the array)
         - we call it like this: arr[0];
     
 3. **Describe a scenario where you would choose to use an object instead of an array, or vice versa, and explain your reasoning.**
-
     - I would think of an object as it was a real-life object, where I could store all it's properties inside it's keys (eg. person or movie example)
     - Arrays are rather to keep a list of elements together in an ordered way:
         - Counting the number of items inside them would also be more practical with the length property. 
         - Also sorting them based on different criteria would be possible with an array
 
 4. **How can you retrieve the first and last items of an array?**
-
-    - First item:
-
-            arr[0]
-
-    - Last item:
-
-            arr[arr.length-1]
+    - `arr[0]`, `arr[arr.length-1]`
 
 5. **Identify the five most commonly used primitive types in JavaScript, and provide examples demonstrating when and how to use them?**
-
-    - String - "text"
-        - Use it to store text
-    
-    - Numbers - Float (1.09023) or Integers (14)
-        - Use them to do mathematical operations
-
-    - Booleans - true or false values
-        - Used for comparison (eg 50 > 34)
-        - within if statement's conditions and ( `if (array.length < 50){}` ) 
-        - to check if anything existist already (eg. key of an object)
-    
-    - null - define a non-value
-
-    - undefined - eg a variable was declared, but it's value wasn't assigned yet
+    - String, Integer, Float, Bool, null (defines a non-value intentionally), undefined (a value was declared, but wasn't assigned a value yet)
 
 ## Algorithm Basics
 
 6. **Provide examples of assignment operators in JavaScript.**
-
-    - Assignment operators (re)assign a value to a previous value or variable
-
-            =       Assigns or reassigns a value to an item or variable
-            +=      i = i + x is the same as i += x                             //To be used only with VARIABLES!
-            -=      i = i - x
-            *=      i = i * x
-            /=      i = i / x
-            **=     i = i ** x
-
-            i++     i = i + 1 | Increment - Add 1 to the current value of the variable 'i' ('i' needs to be declared first)        //To be used only with VARIABLES!
-            i--     i = i - 1 | Decrement - Substract 1 of current value  
+    - Assignment operators (re)assign a value to a previous value or variable:
+        - `=`, `+=`, `-=`, `*=`, `/=`, `**=`
+        - `i++`, `i--`
 
 7. **Name some of the arithmetic operators in JavaScript.**
-
-        +       Works also with strings (old way of doing concatenation), and variables that are numbers (eg. let number = 10, number + 1 = 11)
-        -       Substraction
-        *       Multiplication
-        **      Exponential (2 ** 3 = 8)
-        /       Division
-        %       Modulo/modulus - returns the 'leftover' or 'remainder' value after a division (eg. 14 % 5 = 4)
+    - `+`, `-`, `*`, `**`, `/`, `%`
 
 8. **What are the different comparison operators in JavaScript?**
-
-    - Operators that return boolean values
-
-    - Equality operators:
-
-            ==      equal to                    
-            !=      not equal to
-            ===     stricklty equal to          
-            !==     stricktly not equal to
-    
-    - Mathematiocal operators for numbers only:
-
-            >       greater than                
-            <       less than
-            >=      greter or equal to
-            <=      less than or equal to
-
-    - Special cases:
-
-            [] === [] will always be false, because the content is the same, but it's in a different "box"
-            obj1.key === obj2.key this can be true, if the key's values are the same
+    - Operators that return boolean values:
+        - Equality operators: `==`, `!=`, `===`, `!==`
+        - Mathematiocal operators for numbers only: `>`, `<`, `>=`, `<=`
+        - Special cases: 
+            - `[] === []` will always be false (reference types)
+            - `obj1.key === obj2.key` this can be true, if the values are primitives
 
 9. **Name a few logical operators used in JavaScript.**
-
-    - By hierarchy or precedence (desc):
-        
-            !   NOT     Inverts true or false values
-            &&  AND     If all values are true, it returns true
-            ||  OR      If at least one value is true, it returns true
+    - By hierarchy or precedence (desc): `!` NOT, `&&` AND, `||` OR
 
 10. **Explain the differences between a `for` loop, `for of` loop, and `for in` loop in JavaScript.**
-
-    - For loop:
-        - Used for more complex operations (i iterable can be used as an index to refer to other items in the array as well)
-        - with arr[i] we always refer to the original array item, therefore we can change it's value
-
-                for (let i = 0; i < arr.length; i++){
-                    CODE BODY
-                }
-
-                let i = 0 - executed at the beginning, once (i is a variable used to count the number of iterations/loops)
-                i < arr.length - condition to check if the next loop should start
-                i++ - Executed at the end of the code - value increment, to count loops and not to run infinitely
-
-    - For...of loop:
-        - Used to go through every item of the iterable (array):
-        - `item` refers to the current item in the array (similar to `array[i]`), but it's just a local variable (can't access original)
-
-                for (const item of array){
-                    CODE BODY;
-                }
-
-    - For...in loop:
-        - Same as for of, but used to iterate through the keys of an object (uses `Object.keys()` first to create the keys, then these are called)
-                
-                for (const key of obj){
-                    CODE BODY;
-                }
-
+    - `for` loop:  
+        - **more control:** refer to other item relative to the current one, skip items
+        - `for (let i = 0; i < arr.length; i++){}`
+    - `for...of` loop:
+        - Used to go through every item of an **iterable** (array)
+        - `for (const item of array){}`
+    - `for...in` loop:
+        - Same as `for of`, but used to iterate through the keys of an object (uses `Object.keys()` first to create the keys, then these are called)
+        - ``for (const item in object){}`                
 
 11. **If you can't use any built-in functions or methods, how would you calculate the average of values in an array?**
 
@@ -213,98 +95,57 @@
 ## Function Basics
 
 12. **What is a function in JavaScript? Explain its purpose and how it is used in programming.**
-
     - A function is a reusable block of code, that when executed will become a value (return).
-
     - Purpose is to reuse code whenever possible, by collectiog a set of commands/code to be executed.
 
 13. **Describe the different syntax elements that make up a JavaScript function.**
-
     - Syntax:
 
             Declare:
-            function funcName (parameter(s)){
-                BODY / BLOCK OF CODE
+            function funcName (parameters){
+                BODY
                 return value
             }
 
             Call:
-            funcName(argument(s))   //returns a value, but doesn't log it
+            funcName(arguments)   //returns a value, but doesn't log it
     
     - Alternative ways:
 
         - Anonymous function (=function expression):
 
-                Declare as variable:
-                const variable = function(){};
+            - Declare as variable:
+                - `const variable = function(){};`
+                - Call as variable: `variable();`
 
-                Call as variable:
-                variable();
-
-                Declare as object's key's value (=method):
-                const obj = {
-                    key: function(){
-                        BODY / BLOCK OF CODE
+            - Declare as object's key's value (=method):
+                    
+                    const obj = {
+                        key: function(){
+                            BODY / BLOCK OF CODE
+                        }
                     }
-                }
 
-                Call as object's key:
-                obj.key()
+            - Call as object's key: `obj.key()`
 
         - Arrow function:
-
-                const variable = ( parameter(s) ) => { BODY };
-
-                Essentially this is also a function stored inside a variable, but the syntax is different
-                
+            - `const variable = ( parameter(s) ) => { BODY };`
+            - Essentially this is also a function stored inside a variable(anonymous), but the syntax is different
 
 15. **How do you pass arguments to a function? Explain the concept of parameter passing and provide an example.**
-
-    - parameters are locally created variables, which exisist within the scope of the function
-    - we use them to add input data to a function to work with
-
-    - Decalaration stage:
-
-            function addNums(par1, par2){       //We call these parameters at this stage
-                return par1 + par2; 
-            }
-
-    - Calling stage:
-
-            addNums(arg1, arg2)                 //At this stage we call them arguments
-
-    - Add default values:
-
-            function addNums(par1 = 0, par2 = 0){}      //We can call the function with less arguments as well like this
-    
+    - parameters: locally created variables, which exisist within the scope of the function
+    - Decalaration stage: we call them parameters
+    - Calling stage: we call them arguments
+    - Add default values: `function addNums(par1 = 0, par2 = 0){}`
     - rest parameters:
-
-        - when we want to keep the possibility of adding multiple arguments to our function, we can use this when we create the function:
-
-                function add(...pars){              //rest parameters with spread operator must be the last one!
-                    let result = 0;
-                    for (let par of pars){
-                        pars += par;
-                    };
-                };
-
-                add(1, 2, 5, 7);                    //Both calls will be valid, regardless of how many arguments we call it with
-                add(12, 23);
+        - when we can add a set of value, without specifying the number (eg a sum fucntion)
+        - use `spread` operator: `function sumNums(...pars){}`
 
 16. **What is the difference between function expressions and function declarations? Provide examples of each.**
-
-    - Function declaration:
-
-            function funcName(parameter(s)){BODY}
-
-    - Function expression (=anonymous function stored within a variable or an object's key (methods)):
-
-            const addNums = function(par1, par2){return par1 + par2};
-
-            const addnums = (par1, par2) => {return par1 + par2};       //Same using arrow function
+    - Function declaration: `function funcName(parameter(s)){}`
+    - Function expression (=anonymous function stored within a variable or an object's key):
 
 17. **Explain what a callback function is in JavaScript.**
-
     - A callback function is when we use a function as a parameter of another function:
 
             let arrayOfNums = [1, 2, 5, 6, 7];
@@ -326,29 +167,17 @@
 
             logNums(arrayOfNums, oddOrEven);
     
-    - We use callback functions for some methods:
-
-            arr.sort(callback) -> we have to provide a compare function as a callback to overwrite default
+    - Commonly used with higher order functions
 
 18. **What is the scope of variables in JavaScript functions? Explain the difference between local and global variables.**
 
     - **GLOBAL scope** is when we create something directly in the root of the file:
-
-            let varGlobal = "value";
-    
-    - **BLOCK scope** is something that is created within another element (loop, function):
-
-            function getOddNums(arr){
-                let oddNums = [];               //created on function's LOCAL scope
-                arr.forEach(num => {
-                    if (num % 2 !== 0){
-                        oddNums.push(num);
-                    }
-                })
-            }
-    - **LOCAL scope** is our current scope, which is the innermost BLOCK scope we are in
-    - We can access variables created in global scope from anywhere
-    - We can access variables created in local scope only from local scope, not from global
+    - **BLOCK scope** is something that is created within another element (loop, if statement):
+    - **LOCAL (FUNCTION) scope** is our current scope, which is the innermost BLOCK scope we are in
+    - **MODULE SCOPE:** since ES6, modules also have their own scope
+    - **LEXICAL SCOPE:**
+        - We can access variables created in global scope from anywhere
+        - We can access variables created in local scope only from local scope, not from global
 
 ## Built-in Features
 
@@ -462,7 +291,6 @@
                     }
                 }
 
-
 21. **How can you use built-in functions or methods in JavaScript to perform mathematical operations? Give examples of commonly used functions or methods for mathematical calculations.**
     
     - Common methods:
@@ -505,48 +333,33 @@
 23. **Discuss the differences between `for` loops and the `forEach` method in JavaScript.**
 
     - For loops:
-
-        - More control over:
-            - when to start, when to end looping
-            - step (increment amount)
-            - possibility to break from loop early
+        - more control over when to start, when to end looping
+        - step (increment amount)
+        - possibility to break from loop early
     
     - forEach() method:
-
-        - simplifies the process of the iteration thorugh the elements
+        - simplifies the process of the iteration through the elements
         - takes a callback function executed for every element, from start to end
         - easier to read
         - it can take additional parameters for the index and array, but there's no control over the loop's start and end
 
     - Syntax:
 
-        - sample array:
-        
-                const numbers = [1, 2, 3, 4, 5];
-        
-        - Using a for loop:
-        
-                for (let i = 0; i < numbers.length; i++) {
-                    console.log(numbers[i]);
-                }
+            numbers.forEach(function (number) {
+                console.log(number);
+            });
 
-        - Using forEach:
-        
-                numbers.forEach(function (number) {
-                    console.log(number);
-                });
+            Using a callback function:
 
-                Using a callback function:
+            const numbers = [1, 2, 3, 4, 5];
 
-                const numbers = [1, 2, 3, 4, 5];
+            // Define a separate callback function
+            function processNumber(number) {
+                console.log(number * 2); // Example: Double each number
+            }
 
-                // Define a separate callback function
-                function processNumber(number) {
-                    console.log(number * 2); // Example: Double each number
-                }
-
-                // Use forEach with the callback function
-                numbers.forEach(processNumber);                
+            // Use forEach with the callback function
+            numbers.forEach(processNumber);                
 
 ## File Basics
 
@@ -557,39 +370,36 @@
         - Popular lightweight text-based **data format** used for *exchanging information between a server and a client*
         - Strict syntax (eg. key names in objects are always within parenthses "", string also always use double quotes)
         - Doesn't include functions or executable code
-        - example:
-
-                {
-                    "name": "John",         //note keys are within parentheses!
-                    "age": 30,
-                    "city": "New York"
-                }
-    
+        - no trailing commas!     JSON.parse("[1, 2, 3, ]")       //Syntax error
+        - no single quotes!       JSON.parse("'hello'")           //Syntax error
     - **Javascript** data format:
         - object based data (key-value pairs, similar to JSON), but more flexibility on syntax
         - executable code (programming logic)
         - more data types (functions)
 
-    - Examples for data conversion:
-
-            JSON.parse("{}"); // {}
-            JSON.parse("true"); // true
-            JSON.parse('"foo"'); // "foo"
-            JSON.parse('[1, 5, "false"]'); // [1, 5, "false"]
-            JSON.parse("null"); // null
-
-            NB:
-            no trailing commas!     JSON.parse("[1, 2, 3, ]")       //Syntax error
-            no single quotes!       JSON.parse("'hello'")           //Syntax error
-
 25. **How would you create a JavaScript data structure from the data in a JSON file?**
 
     - **Parsing** a JSON file means *converting the content of the JSON file into a JS object*, to access and manipulate it. We need to read the data first! (see below)
-    - `JSON.parse(text, [reviver])`:
+    - First read the file with `fs` node module. For this we need to import the module:
+            
+            import * as fs from 'node:fs';
+    
+    - Then we can read **synchronously**, or **asynchronously**, eg.:
+
+            fs.readFile('file.txt', 'utf8', (err, data) => {        // readFile is an async operation (sync version is readFileSync)
+                if (err) {
+                    console.error('Error reading the file:', err);
+                    return;
+                }
+                const jsonData = JSON.parse(data);      //PARSING DONE HERE
+                /// ALL FUNCTIONS TO BE CALLED HERE, THAT REQUIRE IMPORTED 'DATA' VARIABLE ///
+            });
+        
+    - Then the read file can be parsed with `JSON.parse(text, [reviver])`:
 
             let jsonData = JSON.parse(data);
 
-        - Example for the use of the reviver function:
+        - Example for the use of the reviver function (we can filter the data that is read):
 
                 JSON.parse(
                     '{"p": 5}',
@@ -601,129 +411,44 @@
                     
                 // Output will be: { p: 10 }
     
-    - In Node.js, you can **read files**:
-        - **synchronously (sync):**
-            - The program waits until the file is read completely before moving on (slow)
+25. **Promises vs. Async / Await:**
+    - **Promises**
+        - A **Promise** in JS is an *object* (**Promise object**) representing the *completion or failure* of an asynchronous operation (uses `.then()` and `.catch()` methods)
+        - Example:
 
-                    import * as fs from 'node:fs';
+                import { readFile } from 'fs/promises';
 
+                readFile('file.json', 'utf8')
+                    .then(data => {
+                        const jsonData = JSON.parse(data);
+                        console.log(jsonData);
+                    })
+                    .catch(err => console.error('Error reading or parsing the JSON file:', err));
+    
+    - **Async/Await**
+        - It's built on top of promises
+        - Use `async` before a function to indicate that it will perform asynchronous operations
+        - Inside that function you can use `await` to pause the execution until the **promise** is resolved or rejected
+        - Example:
+        
+                import { readFile } from 'fs/promises';
+
+                async function readAndParseJSON() {
                     try {
-                        const data = fs.readFileSync('file.txt', 'utf8');
-                        console.log(data);
+                        const data = await readFile('file.json', 'utf8');
+                        const jsonData = JSON.parse(data);
+                        console.log(jsonData);
                     } catch (err) {
-                        console.error('Error reading the file:', err);
+                        console.error('Error reading or parsing the JSON file:', err);
                     }
+                }
 
-                    // Parsing done after:
-                    const jsonData = JSON.parse(data);
-
-                    // Code breakdown:
-                    // Import the built-in "fs" module.
-                    // Use a try and catch block to handle any errors that might occur while reading the file.
-                    // Call readFileSync function with the file name ('file.txt') and encoding ('utf8') as arguments.
-                    // Log the file content to the console.
-                    
-        - **asynchronously (async):** 
-            - The program can keep working on tasks while the file is being read (faster)
-            - Preferable in Node.js environment for better performance
-
-            - Ways to read data:
-                1. Read file with **callback function:**
-                        
-                        import * as fs from 'node:fs';
-
-                        fs.readFile('file.txt', 'utf8', (err, data) => {
-                            if (err) {
-                                console.error('Error reading the file:', err);
-                                return;
-                            }
-                            const jsonData = JSON.parse(data);      //PARSING DONE HERE
-                            /// ALL FUNCTIONS TO BE CALLED HERE, THAT REQUIRE IMPORTED 'DATA' VARIABLE ///
-                        });
-
-                - The  function can be declared separately (this is the best practice!):
-
-                        import * as fs from 'node:fs';
-
-                        // Call it separately:
-                        fs.readFile("data.json", "utf8", dataRead)
-
-                        // Then create dataRead callback function:
-                        let dataRead = (err, data) => {
-                            if (err){
-                                console.error(err);
-                                return;
-                            }
-                            ***
-                            try {
-                                let jsonFile = JSON.parse(data);
-                                movieDB.movies = jsonFile.movies;
-                            } catch {
-                                console.error(`Error parsing the JSON data: `, err);
-                            };
-                            ***
-                            // const jsonData = JSON.parse(data);      //PARSING DONE HERE IF WE DON'T USE TRY
-                            /// ALL FUNCTIONS TO BE CALLED HERE, THAT REQUIRE IMPORTED 'DATA' VARIABLE ///
-                        }
-
-                        // Code breakdown:
-                        // Import the built-in "fs" module.
-                        // Call readFile function with the file name ('file.txt'), encoding ('utf8'), and a callback function as arguments.
-                        // The callback function takes two parameters: err and data.
-                        // If there's an error (err is not null), log the error to the console and return.
-                        // If there's no error, log the file content to the console.
-
-                -   > The file's **data can only be accessed within the callback function** (readFile), because of the nature of working simultaneously on other tasks before finishing.</br>
-                    > In order to *properly handle data*, place all the code that uses the file's content within the callback function, or use techniques like **promises** or **async/await**.
-
-                2. **Promises**
-                    - If you don't want to use a parameter for error and a callback function, you can use either use promises or async/await.
-                    - A **Promise** in JS is an *object* representing the *completion or failure* of an asynchronous operation (uses `.then()` and `.catch()` methods)
-                    - Example:
-
-                            import { readFile } from 'fs/promises';
-
-                            readFile('file.json', 'utf8')
-                                .then(data => {
-                                    const jsonData = JSON.parse(data);
-                                    console.log(jsonData);
-                                })
-                                .catch(err => console.error('Error reading or parsing the JSON file:', err));
-                
-                3. **Async/Await**
-                    - It's built on top of promises
-                    - Use `async` before a function to indicate that it will perform asynchronous operations
-                    - Inside that function you can use `await` to pause the execution until the **promise** is resolved or rejected
-                    - Example:
-                    
-                            import { readFile } from 'fs/promises';
-
-                            async function readAndParseJSON() {
-                                try {
-                                    const data = await readFile('file.json', 'utf8');
-                                    const jsonData = JSON.parse(data);
-                                    console.log(jsonData);
-                                } catch (err) {
-                                    console.error('Error reading or parsing the JSON file:', err);
-                                }
-                            }
-
-                            readAndParseJSON();
+                readAndParseJSON();
 
     - **Blocking / Non-blocking**:
-        - desribe code behaviour with asynchronuous operations (only async?)
-        - **non-blocking**: It doesn't wait for an operation to complete before continuing with the rest of the program (the operation is ran in the background). While waiting for the operation to complete, the program can run other operations in the meantime, and proceed with it after it's done.
-        - **blocking**: It waits for the operation to complete before continuing with the rest of the program. Program might become unresponsive while waiting.
-
-    - **Keywords:**
-    - `import`: bring modules, functions, objects or values from other JS files into the current file (examples import the "fs" (file system) module)
-    - `error`: refers to a problem/issue occurring during the reading process (eg. inaccessible, not found, no permission to read, etc.)
-        - Handling errors: ensure that the program responds appropriately and inform users about the issue -> avoid unexpected crashes
-    - `try-catch`: used with *sync* reading (`err` parameter and `callback function` to do the same with *async*)
-    - `{ readFile }`: curly braces indicate the import a **named export** (*=specific functions or values that a module makes available for other modules*)
-    - `from`: specify the module where we are importing from, followed by the name or path of the module a string
-    - `fs/promises`: the name of the module we are importing from (built-in node.js module that provides an API to interact with the file system using promises instead of CB functions. It's an alternative to the "fs" module)
-    - > **Summary**:** the line `import { readFile } from 'fs/promises'`; means we're importing the readFile function from the 'fs/promises' module to use it for reading files asynchronously with promises in our script.
+        - describes the code behaviour:
+            - **non-blocking -> async**: It doesn't wait for an operation to complete before continuing with the rest of the program (the operation is ran in the background).
+            - **blocking -> sync**: It waits for the operation to complete before continuing with the rest of the program. Program might become unresponsive while waiting.
 
 ## View Basics
 
@@ -732,112 +457,57 @@
         - **Tree structure:**
             - a way of representing hierarchical relationships between elements (**root** element, **child** elements, **edges** connect children at same level)
             - each element is called a **node**, while the last elements are called **leaves** or **leaf-nodes**
+            - Typical hierarchy is `<html>`, then `<head>`/`<body>`, then other tags like `<div>`, `<h1>` or `<p>`
         - You can **interact with** and **manipulate** the tree through the DOM
-        - Manipulation of the DOM using JavaSript means access, modify, delete, or add elements and attributes:
+            - means *access*, modif*y, *delete*, or *add* elements and attributes (crud operations):
             - eg. `insertAdjacentHTML()` and `getElementById()`
-        - **DOM's structure**  = HTML tree:
-            - Root element: usually `<HTML>` tag (window -> document -> html)
-            - Direct children of `<HTML>` are `<HEAD>` and `<BODY>`
-            - Other elements like `<H1>` or `<P>` can be nested inside the body.
     - **JS Object Data Structure:**
         - Can have multiple parents
         - Object based data storage (key-value pairs)
 
 27. **What are the necessary steps to change the content of an HTML element using JavaScript?**
 
-    1. Access element by an attribute:
-
-            const root = document.getElementById("rootId");
-
-            // Alternative ways:
-            document.querySelector(".myClass")                          //get the first object with a specific class (make it a const to store it)
-            document.querySelector("#myID")                             //get the first object with a specific Id (make it a const to store it)
-            document.querySelectorAll("p")                              //get an array of objects with a CSS selector (make it an array to store them)
-
+    1. Access element by an attribute: 
+        - `const root = document.getElementById("rootId");` (or use `querySelector()` - `".class"`/`"#ID"` )
     2. Do something with that element:
-
-            // Add new element after:
-            root.insertAdjacentHTML("beforeend", `<div>text</div>`)
-
-            // Change it's content:
-            root.innerHTML("<p>text</p>")                               //Gets or sets the HTML content of an element
-            root.textContent = "New text content";                      //replaces/adds new text content to an element (returns `null` for "document" or "doctype")
-                                                                        //!!! removes all children first, and then fills it up with just text content!
-
-            // Manipulate it's attributes:
-            item.setAttribute("class", "myClass")                       //"class" attribute's new value will be "myClass"
-            item.removeAttribute("class")                               //removes the attribute from an element
-
-            // Remove the element:
-            root.remove()
-
-            //Clone an element:
-                // 1 Get a reference to the node you want to clone
-                const originalNode = document.getElementById('originalNode');
-
-                // 2 Clone the node (deep clone, including child nodes)
-                const clonedNode = originalNode.cloneNode(true);
-
-                // 3 Append the cloned node to the DOM
-                document.body.appendChild(clonedNode);
+        - `root.insertAdjacentHTML("beforeend", "<div>text</div>")` (add new element after)
+        - `root.innerHTML("<p>text</p>")` (change it's content)
+        - `item.setAttribute("class", "myClass")` (change its attributes)
 
 ## Event Basics
 
 28. **Define an event listener in JavaScript.**
 
-    - **Event:**
-        - ACTIONS - They happen in the browser, usually due to user interaction / change of state of the web page.
-        - eg click, mouse movement, load event, etc.
+    - **Event:** 
+        - An action that happens in the browser usually due to user interaction (eg mouseclick, load, select)
     - **Event listener** 
         - The mechanism that is used to check if an event occurs, and triggers the **event handler** (they work together and are essetinally the same thing).
         - We **register** these, when they are attached to an event of an element
-        - `addEventListener()` method is commonly used to attach an eventlistener to an HTML element:
+        - We can attach multiple listeners to 1 element
+        - We can add a single on to the parent element, and it will also get triggered on its children (event bubbling)
+    - **Event object**:
+        - the object the event is attached to
+        - refer to it with `e` or `event` parameter in it's event handler function
+        - `e.target` is the element the event happened on (not necessarily the event object, if bubbling happens!) 
+
+    - **Adding an event listener:**    
+        - `addEventListener()` - attach an eventlistener to an HTML element:
                 
                 window.addEventListener('load', function () {
                     console.log('All resources have finished loading!');
                 });
-    - **Event object**:
-        - the object the event is attached to (see more below)
-        - refer to it with `e` or `event` parameter in it's event handler function
-        - `e.target` is the element the event happened on (not necessarily the event object, if bubbling happens!) 
 
 29. **Outline the steps involved in changing the content of an HTML element when it is clicked.**
 
-    1. Access element by an attribute:
-
-            const root = document.getElementById("rootId");
-
-            // Alternative ways:
-            document.querySelector(".myClass")                          //get the first object with a specific class (make it a const to store it)
-            document.querySelector("#myID")                             //get the first object with a specific Id (make it a const to store it)
-            document.querySelectorAll("p")                              //get an array of objects with a CSS selector (make it an array to store them)
-
+    1. Access element by an attribute: 
+        - `const root = document.getElementById("rootId");` (or use `querySelector()` - `".class"`/`"#ID"` )
     2. Attach an event listener:
-
-            root.addEventListener("click", function(event){
-                event.target -> refer to triggered element
-                // ACTIONS TO BE EXECUTED AT CLICK
-            })
-
-            // Benefits:
-            // Multiple can be attached to 1 object / 1 event
-            // Add it to the parent element of multiple objects (bubbling)
-            // Add it to the parent element of multiple objects, and filter with event delegation to set which ones it should be applied to
-
-    - (old way is to add a function on the `onclick` attribute)
+        - `root.addEventListener("click", e => e.target...)` (you can do operations with it in the callback, refering to it with `e.tartget`)
 
 30. **Inside a `click` event listener, how can you access the element that was clicked?**
         
-    - Access triggered element from inside the function:
-
-            root.addEventListener("click", function(event){
-                event.target -> refer to triggered element
-                // ACTIONS TO BE EXECUTED AT CLICK
-            })
-
-    - A few examples why this can be good:
-        - `console.log(e.composedPath())`       to log all parents of the element (composedPath() is a built-in method on `e` event)
-        - `console.log(e.target.textContent)`   to log text content through `e` event's object
+    - refer to it in the **event handler** with `e.target`, which is the second parameter, when attaching (a callback function)
+    - A few examples:
         - `console.log(e.target.value)`         to log the value of the input box
         - `console.log(e.target.tagName)`       to log just the tag name
 
@@ -899,7 +569,7 @@
 
     - The CSS **Box model** is a concept that describes how HTML elements are represented as rectangular boxes on a web page.
     - Used to make designs work well on different devices and screen sizes.</br>
-        <img src="csspadding.png" width="400" height="250">
+        <img src="./assets/csspadding.png" width="400" height="250">
     - 4 components:
         - **Content:**
             - the area where text, images and other media are displayed

@@ -901,7 +901,7 @@
 
     - The CSS **Box model** is a concept that describes how HTML elements are represented as rectangular boxes on a web page.
     - Used to make designs work well on different devices and screen sizes.</br>
-        <img src="csspadding.png" width="400" height="250">
+        <img src="./assets/csspadding.png" width="400" height="250">
     - 4 components:
         - **Content:**
             - the area where text, images and other media are displayed

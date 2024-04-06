@@ -1145,7 +1145,7 @@
                 p2.Y = 20;      // pw is only fully initialized at this point
 
     - Comparison chart: </br>
-    ![structs v classes](struct-vs-class.png)
+    ![structs v classes](./assets/struct-vs-class.png)
 
     - Example code:
             

@@ -576,6 +576,7 @@
     - `/etc/passwd`	    User account information
     - `/etc/gshadow`	Contains the shadowed information for group accounts
     - `/etc/group`	    Defines the groups to which users belong
+    - `/etc/skel/`      Used to initiate home directory when a user is first created
 
     - `etc/shadow`: *( https://linuxize.com/post/etc-shadow-file/ )*
         - The `/etc/shadow` file keeps records about encrypted users’ passwords
@@ -606,6 +607,23 @@
         - use commands like `passwd` or `change` to modify this file, don't do it manually!
         - replace the hash: `usermod -p $HASH john` (place the hash for the user `john` in `/etc/shadow`)
     
+    - `/etc/skel`
+        - derived from word "skeleton"
+        - Used to initiate home directory when a user is first created
+        - “skeleton” directory is defined in `/etc/default/useradd` file:
+            ```{bash}
+            # cat /etc/default/useradd
+            # useradd defaults file
+            GROUP=100
+            HOME=/home
+            INACTIVE=-1
+            EXPIRE=
+            SHELL=/bin/bash
+            SKEL=/etc/skel
+            CREATE_MAIL_SPOOL=yes
+            ```
+        - Default permission of /etc/skel is `drwxr-xr-x`
+
 - **Utilities:**
     - `sysctl`: *( detailed guide: https://wiki.archlinux.org/title/sysctl )*
         - a command-line utility that allows you to read and modify kernel parameters at runtime ( the central management tool for controlling the init system)
@@ -1042,6 +1060,8 @@
     - **How it works:**
         - When a file is opened, a **file descriptor** is created (uses the path as an addressing system)
         - The descriptor then becomes the interface on which the operations are performed
+        - Every File has an associated number called **File Descriptor** (`FD`)
+        - When a program is executed the output is sent to File Descriptor of the output device (eg. screen)
     - **Storage locations of special files:**
         - `/proc`: system related files, eg. `/proc/cpuinfo`
         - `/dev`: device realted files, eg. `/dev/cdrom` or `dev/sda` (the first hard drive)
@@ -1049,7 +1069,117 @@
             - `/dev/random` – Produces randomness using environmental noise. It’s a random number generator you can tap into
             - `/dev/zero` – Produces zeros – a constant stream of zeros
     - Using these files:
-        - We can use these special files with any command: `command > /dev/null`, for example:
+        - We can use these special files with any command: `command > /dev/null`
+
+- **Input-Output redirection:**
+    - **Redirection:**
+        - a feature in Linux such that when executing a command, you can change the standard input/output devices
+        - default workflow of any Linux command is that it takes an input and give an output
+        - This can be changed with redirection:
+            - The standard input (`stdin`) device is the keyboard
+            - The standard output (`stdout`) device is the screen
+    
+    - **Output redirection:**
+        - done with the `>` symbol, eg:
+            - `ls -al > listings`   # list the output of ls command to the "listings" file
+            - `ls -al >> listings`  # >> is used to append insted of overwrite
+        - you could even redirect to a device:
+            - `cat music.mp3 > /dev/audio` # this should play the mp3 file
+    
+    - **Input redirecion:**
+        - done with the `<` symbol
+        - Example using `mail` program in Linux:
+            - This would attach the file with the email, and it would be sent to the recipient:
+                - `mail -s "News Today" abc@gmail.com < NewsFlash`
+                - Syntax: `Mail -s "Subject" to-address < AttachmentFilename`
+    
+    - **Error redirection:**
+        - Whenever you execute a program/command at the terminal, 3 files are always open, and the file descriptors are associated with these:
+            - `stdin` standard input -> `FD0` (eg keyboard)
+            - `stdout` standard output -> `FD1` (eg screen)
+            - `stderr` standard error -> `FD2`
+        - By default, error stream is displayed on the screen -> **Error redirection** is routing the errors to a file other than the screen
+        - Examples:
+            - Using `2>` we re-direct the error output to a file named `errorfile`:
+                - `myprogram 2>errorsfile`
+            - Using find statement:
+                - `find . -name 'my*' 2>error.log`:
+                    - we are searching the “.” current directory for a file with “name” starting with “my”
+            - List directories and store both error and standard output into a file:
+                - `ls Documents ABC > dirlist 2>&1`:
+                    - `2>&1` means that `STDERR` redirects to the target of `STDOUT` (which is the file dirlist)
+                    - this results in both the error and the output being stored in `dirlist` file
+
+- **Set and list environment variables:**
+    - **Environment variables:**
+        - a set of dynamic named values, stored within the system that are used by applications launched in shells or subshells
+            - in simple terms: an environment variable is a variable with a name and an associated value
+        - allow you to customize how the system works and the behavior of the applications on the system (eg defult text editor, path to executable files, keyboard layout settings)
+        - available system-wide and are inherited by all spawned child processes and shells
+
+        - **Format:**
+            - `KEY-value` or `KEY="some other value"` OR `KEY=value1:value2`
+            - naming is case sensitve, and env. variables are UPPERCASE
+            - assign multiple values wiht `:`
+            - no space around `=`
+
+    - **Shell variables:**
+        - apply only to the current shell instance
+        - Each shell such as `zsh` and `bash`, has its own set of internal shell variables
+    
+    - **Commands available that allow you to list and set environment variables in Linux:**
+        - `env` 
+            - The command allows you to run another program in a custom environment without modifying the current one.
+            - When used without an argument it will print a list of the current environment variables.
+        - `printenv` 
+            - The command prints all or the specified environment variables.
+            - If called wiht no args, it lists all, otherwise the value of that variable is displayed only:
+                - `printenv HOME` (more can also be added at the same time)
+            - you could also use `echo` for printing out the value of a variable:
+                - `echo $BASH_VERSION`
+        - `set` 
+            - The command sets or unsets shell variables.
+            - When used without an argument it will print a list of all variables including environment and shell variables, and shell functions:
+                - use it with `| less` to see page-by-page:
+                    - `set | less`
+        - `unset`
+            - The command deletes shell and environment variables.
+        - `export`
+            - The command sets environment variables.
+
+    - **Most common environment variables:**
+        - ``USER` - The current logged in user.
+        - ``HOME` - The home directory of the current user.
+        - ``EDITOR` - The default file editor to be used. This is the editor that will be used when you type edit in your terminal.
+        - ``SHELL` - The path of the current user’s shell, such as bash or zsh.
+        - ``LOGNAME` - The name of the current user.
+        - ``PATH` - A list of directories to be searched when executing commands. When you run a command the system will search those directories in this order and use the first found executable.
+        - ``LANG` - The current locales settings.
+        - ``TERM` - The current terminal emulation.
+        - ``MAIL` - Location of where the current user’s mail is stored.
+    
+    - **Create new variables:**
+        - **Create new SHELL variable:**
+            - `MY_VAR='Linuxize'`
+                - check success with `set | grep MY_VAR` or `echo $MY_VAR`
+                - Use the printenv command to check whether this variable is an environment variable or not:
+                    - `printenv MY_VAR` (if empty output, then it's not an env variable)
+        - **Create new ENVIRONMENT variables:**
+            - **Temporary Environment Variables:**
+                - Environment Variables created in this way are available only in the current session
+                - The `export` command is used to set Environment variables:
+                    - `export MY_VAR` OR `export MY_NEW_VAR="My New Var"` (assign a value too)
+                        - check: `printenv MY_VAR` (should have an output now)
+            - **Persistent Environment Variables:**
+                - define them variables in the bash configuration files:
+                    - `/etc/environment` is used to set up system-wide environment variables
+                        - Format: `VAR_TEST="Test Var"`
+                    - `/etc/profile` is used and opened when a bash login shell is entered
+                        - Format: `export PATH=$PATH:$JAVA_HOME/bin`
+            - **Declare user-specific config files in `~/.bashrc`:**
+                - `export PATH="$HOME/bin:$PATH"`
+            - **Load the new environment variables into the current shell session:**
+                - `source ~/.bashrc`
 
 - **SSH Keys:**
     - more links:
@@ -1116,8 +1246,12 @@
                 - At this point we set up the machine so that you can connect from any remote machine using SSH
             - **Add host's public key to authorized keys:**
                 - **Solution 1 (using `ssh-copy-id` command):**
-                    - This command should be written in the Bash terminal:
-                        - `ssh-copy-id -i /c/Users/gakal/.ssh/id_rsa.pub ubuntu@127.0.0.1 -p 2222`
+                    - Using the Bash terminal from windows, once you connected with a password:
+                        - `ssh-copy-id ubuntu@127.0.0.1 -p 2222`
+                        - `ssh-copy-id -i /c/Users/gakal/.ssh/id_rsa.pub ubuntu@127.0.0.1 -p 2222` (use this if your public key is not in the default folder)
+                        - the windows known host file will run into an order if the port was already taken for a different machine, so change 2222 and change it to something else if you see an error
+                    - You can also do it direcly in the VM:
+                        - in this case you need to do it manually (see below)
                 - **Solution 2 (manual):**
                     - Prepare `.ssh` directory if it doesn't exist and create `authorized_keys` file:
                         - `mkdir -p ~/.ssh`
@@ -1152,26 +1286,66 @@
                         - `ssh -i /c/Users/gakal/.ssh/id_rsa -p 2222 ubuntu@127.0.0.1`
                             - `p` used to specify port
                             - `127.0.0.1` means we are connecting through the forwarded port on the localhost
-                            
+            - Setting up **postgres**:
+                - Add `postgres` port forwarding:
+                    - set `host port` to what you want (eg keep `5432`)
+                    - set `guset port` to `5432`, that Postgres uses
+                    - reboot the VM
+                - In bash terminal, after you ssh-ed in to the VM, you can now:
+                    - check postgres status:
+                        - `sudo service postgresql status` (should be active)
+                    - Log into the PostgreSQL command line interface:
+                        - `sudo -u postgres psql`
+                    - Create usperuser:
+                        - `CREATE ROLE ubuntu WITH LOGIN SUPERUSER PASSWORD 'ubuntu';`
+                        - Or if already exists:
+                            - `ALTER ROLE ubuntu WITH PASSWORD 'ubuntu';` (to update pw)
+                    - Log in:
+                        - `sudo -u postgres psql` (default user)
+                        - `sudo -u ubuntu psql`
+
         3. **More SSH guides:**
             - **Add SSH key to agent:** https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+            
             - **How to use `ssh-copy-id`:** https://www.ssh.com/academy/ssh/copy-id
-            - **Exchange encrypted data using SSH keys:** (this is not working! the private key might also need to be converted into pem fomrat first)
-                1. Convert Your Public Key to PEM Format:
-                    - `ssh-keygen -f ~/.ssh/id_rsa -e -m pem > ~/.ssh/id_rsa.pem.pub`
-                    - `ssh-keygen -f ~/.ssh/id_rsa.pub -e -m PKCS8 > id_rsa.pem.pub` (this is from stackexchange)
-                    - `ssh-keygen -f ~/.ssh2/id_rsaTEST.pub -e -m PKCS8 > ~/.ssh2/id_rsaTEST.pem.pub` (this is from Dani)
-                    - `ssh-keygen -p -m PEM -f id_rsaTest` (password,magic,PEM/OPENSSH)
-                    - You can now send it to a mate, and he can use it to encrypt a file he/she wants to send you
-                    - You also receive a `id_rsa_from_mate.pem.pub` that you can use
-                2. Encrypt a Text File with the Received Public Key:
-                    - use the other person's pem-type public key to encrypt a file you create:
-                    - `openssl pkeyutl -encrypt -pubin -inkey id_rsaTest.pem.pub -in message.txt -out EncryptedMessage.txt` (from Dani)
-                    - `openssl rsautl -encrypt -inkey ~/received_keys/id_rsa_from_mate.pem.pub -pubin -in ~/data/secret.txt` (outdated?)
-                    -out ~/data/secret.enc`
-                3. Decrypt an Encrypted Message Received:
-                    - `openssl pkeyutl -decrypt -inkey id_rsaTest -in EncryptedMessage.txt -out DecryptedMessage.txt` (from Dani)
-                    - `openssl rsautl -decrypt -in message.enc -inkey ~/.ssh/id_rsa -out decrypted_message.txt` (outdated)
+            
+            - **Encrypt-Decrypt process, using a script:** (copy it into a script!)
+                ```{bash}
+                #!/bin/bash
+
+                # Create the message file
+                echo "secret" > message.txt
+
+                # Generating a public/private rsa key pair: id_rsa, id_rsa.pub
+                # at the .ssh folder of the user. (eg. if the user is ubuntu it will create it at: /home/ubuntu/.ssh/) by default.
+                ssh-keygen
+
+                # Convert the public key to pem format. This step makes the public key able to encrypt messages.
+                # -f: This flag specifies the input file for the operation.
+                # -e: This flag indicates that the operation will export a key.
+                # -m pem: This specifies the format to which the key should be converted. In this case, it's specifying the PEM format.
+                # > ~/.ssh/id_rsa.pub.pem: Specifies the converted file.
+                ssh-keygen -f ~/.ssh/id_rsa.pub -e -m pkcs8 > ~/.ssh/id_rsa.pub.pem
+                
+                # the line below be uncommented, and the above commented out if using pem fomrat instead
+                # ssh-keygen -f ~/.ssh/id_rsa.pub -e -m pem > ~/.ssh/id_rsa.pub.pem
+
+                # Convert the private key to pem format and change the passphrase
+                # -p Indicates that the operation will change the passphrase of an existing private key.
+                # (We should include this flag, or the command will generate a completely new pem private key instead of just convert the existing one to pem)
+                ssh-keygen -p -m pem -f ~/.ssh/id_rsa
+
+                # Encrypt the message.txt file with the id_rsa.pub.pem public key and save the file in encrypted_message.txt
+                # -pubin: This option indicates that the key provided is a public key
+                openssl pkeyutl -encrypt -pubin -inkey ~/.ssh/id_rsa.pub.pem -in message.txt -out encrypted_message.txt
+
+                # Decrypt the encrypted_message.txt file with the id_rsa private key and save the file in decrypted_message.txt
+                openssl pkeyutl -decrypt -inkey ~/.ssh/id_rsa -in encrypted_message.txt -out decrypted_message.txt
+
+                echo "created keys: id_rsa, id_rsa.pub, id_rsa.pub.pem"
+                echo "created txt files: message.txt, encrypted_message.txt, decrypted_message.txt"
+                echo "Both message.txt and decrypted_message.txt should contain the same string: 'secret'"
+                ```
 
 # HOW TO USE GUIDES:
 ## DETAILED GUIDES:
@@ -1446,7 +1620,7 @@
                 - add timestamp:
                     - `ping -D google.com`
 
- - **Port forwarding:**
+- **Port forwarding:**
     - **The issue is:**
         - NAT networking: you can't reach guest servers from the VMs
         - Bridged networking: the VMs will appear on the overall network (because they get their own IP address)
@@ -1471,7 +1645,7 @@
             - `sudo systemctl restart sshd`
         - Check again:
             - `sudo grep -i port /etc/ssh/sshd_config`
-    
+
 ## SIMPLIFIED EXTRACTS OF PROCESSES:
 - **Create virtual storage and set it up for use:**
     1. In VirtualBox:

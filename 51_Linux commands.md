@@ -162,12 +162,224 @@
     - The other type is external commands (directories that are part of the system's path env variable, like `/bin` or `/usr/bin`)
         - `ls` Lists the contents of a directory
         - `ps` Shows information about active processes
-        - `grep` Searches for patterns within text. It's used to find specific strings in files or output
+        - `grep` Searches for patterns within text. It's used to find specific strings in files or output - use in combination with wildcards
+            - `grep '^\.'` looks for all files that start wiht a `.` (secret files)
+            - `^` caret character is used to express the start of a line
+            - `\` is used as the escape character, to use `.` (otherwise it would mean "match any single character)
         - `find` Searches for files in a directory hierarchy based on various criteria like name, size, modification date
         - `awk` A powerful text processing and pattern matching programming language. It's commonly used for data extraction and reporting
         - `vi` or `vim` A text editor
         - `nano` Another text editor, known for its simplicity and ease of use
         - There's much more...
+
+- **Some useful commands for data extract and monitoring:**
+    - REGEX tutorials:
+        - regex crossword
+        - regex 101
+    - `sed` = "Stream editor: *( https://www.howtogeek.com/666395/how-to-use-the-sed-command-on-linux/ )*
+        - utility for processing text (a text editor without an interface)
+        - reads input line by line (from a file or a pipeline)
+        - **Features and examples:**
+            - Text substitiution:
+                - find and replace text:
+                    - `sed 's/old/new/' file.txt`
+            - Selective Printing
+                - print specific lines based on a pattern match or line number:
+                    - `sed -n '/pattern/p' file.txt`
+            - In-place Editing
+                - edit files in place using the -i option:
+                    - `sed -i 's/old/new/g' file.txt`
+            - Line Deletion:
+                - delete lines from a file based on a pattern match or line number:
+                    - `sed '/pattern/d' file.txt`
+            - Multiline operations:
+                - allowing complex patterns and substitutions spanning across line boundaries
+            - Script Files:
+                - `sed` commands can be stored in a script file and executed
+    - `awk` *( https://www.howtogeek.com/562941/how-to-use-the-awk-command-on-linux/ )*
+        - used as a powerful tool for data extraction and reporting
+        - works by scanning a file line by line, splitting each line into fields, and processing it with patterns and actions defined in a script
+        - **Features:**
+            - automatically splits each line of input into fields (data is structured into columns)
+            - has built-in variables, eg `NR` or `NF`
+            - allows pattern matching
+            - supports arithmetic string operations
+            - supports conditional statements
+        - **Examples:**
+            - Print Specific Fields:
+                - `awk '{print $1, $3}' file.txt`
+            - Sum a Column of Numbers:
+                - `awk '{sum += $1} END {print sum}' file.txt`
+            - Filter Based on Condition:
+                - `awk '$2 > 10' file.txt`
+            - Formatting Output:
+                - `awk '{print "Value:", $1}' file.txt`
+    
+    - `grep` *( https://www.howtogeek.com/496056/how-to-use-the-grep-command-on-linux/ )*
+        - a command-line utility to filter text
+        - **Features:**
+            - allows pattern matching
+            - can recursively search directories with `-r` or `-R`
+            - displays line numbers with `-n`
+            - count mathches with `-c`
+            - invert mathch with `-v`
+            - hoghlight matches with `--color`
+        - **Examples:**
+            - Basic Search:
+                - `grep "error" file.txt`
+            - Case Insensitive Search:
+                - `grep -i "error" file.txt`
+            - Recursive Search:
+                - `grep -r "error" .`
+            - Counting Occurrences:
+                - `grep -c "error" file.txt`
+            - Invert Match:
+                - `grep -v "error" file.txt`
+            - Regular Expression Search:
+                - `grep "^error.*" file.txt`
+
+    - `tail`: *( https://www.howtogeek.com/481766/how-to-use-the-tail-command-on-linux/ )*
+        - displays data from the end of a file
+        - most commonly used to view the most recent entries in files, such as logs or other text files that are frequently updated
+        - particularly useful for real-time monitoring of files as they grow
+        - **Examples:**
+            - View the Last 10 Lines of a File:
+                - `tail file.txt`
+            - View the Last N Lines of a File:
+                - `tail -n 20 file.txt`
+            - Follow a File in Real Time:
+                - `tail -f /var/log/syslog`
+            - View the Last N Bytes of a File:
+                - `tail -c 100 file.txt`
+            - Follow Multiple Files:
+                - `tail -f file1.txt file2.txt`
+            - Combine with other commands:
+                - often used in conjunction with other commands through piping `|` to process or filter the output
+                - For example, to get the most recent entries in a log file and search for a specific error:
+                    - `tail -f /var/log/syslog | grep "error"`
+    
+    - `jq` *( https://www.baeldung.com/linux/jq-command-json )*
+        - a lightweight and flexible command-line JSON processor
+        - transform structured data in a similar way as the above, but work with JSON
+        - uses a query language
+        - **Examples:**
+            - Pretty Print JSON: 
+                - `cat file.json | jq .`
+                - formats and prints the entire JSON file in a human-readable form
+            - Extract a Specific Field:
+                - `echo '{"name": "John", "age": 30}' | jq '.name'`
+                - This would output "John".
+            - Filter an Array Based on Condition:
+                - `echo '[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]' | jq '.[] | select(.age > 25)'`
+                - returns the object(s) in the array where age is greater than 25
+            - Map an Array:
+                - `echo '[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]' | jq 'map(.name)'`
+                - produce an array of names
+            - Modify and Add New Fields:
+                - `echo '{"name": "John", "age": 30}' | jq '. + {"job": "Developer"}'`
+                - adds a new "job" field to the JSON object
+            - Combine `jq` with other commands:
+                - eg use it with `curl` to fetch data from a web API and pipe it into `jq`:
+                    - `curl 'https://api.example.com/data' | jq '.data'`
+                    - fetch JSON data from the specified API and use jq to extract the .data portion of the response
+    
+    - `source` *( https://linuxize.com/post/bash-source-command/ )*
+        - reads and executes commands from the file specified as its argument
+        - useful to load functions, variables, and configuration files into shell scripts
+        - **Syntax:**
+            ```{bash}
+            source FILENAME [ARGUMENTS]
+            . FILENAME [ARGUMENTS]
+            ```
+            - `source` and `.` are the same command
+        - **Examples:**
+            - Sourcing Functions:
+                - extract common functions used by more of your scripts in a separate file and then source that file in your scripts
+                - create a file that includes a bash function that checks whether the user running the script is the root:
+                    ```{bash}
+                    # this is in the functions.sh script:
+                    check_root () {
+                        if [[ $EUID -ne 0 ]]; then
+                            echo "This script must be run as root" 
+                            exit 1
+                        fi
+                    }
+                    ```
+                - Now in each script that needs to be run only by the root user, simply source the `functions.sh` file and call the function:
+                    ```{bash}
+                    #!/usr/bin/env bash
+
+                    source functions.sh
+                    check_root
+
+                    echo "I am root"
+                    ```
+            
+            - Bash config file:
+                - you can also read variables from a file using `source`
+                - variables must be set using the Bash syntax: `VARIABLE=VALUE`
+                - `config.sh` file:
+                    ```{bash}
+                    VAR1="foo"
+                    VAR2="bar"
+                    ```
+                - `bashscript`:
+                    ```{bash}
+                    #!/usr/bin/env bash
+
+                    source config.sh    # read the config file
+
+                    echo "VAR1 is $VAR1"
+                    echo "VAR2 is $VAR2"
+
+- **Compression tools:** *( https://www.computernetworkingnotes.com/linux-tutorials/how-to-use-gzip-and-bzip2-linux-commands-explained.html )*
+    - Comparison:
+        - `gzip` is faster, but can't achive such high compression as `bzip2`
+        - Compression level:
+            - both allow to specify compression level:
+                - `-1` means the fastest compression (least compressed)
+                - `-9` means the slowest compression (most compressed)
+    - `gzip`:
+        - Compress a File:
+            - `gzip filename`
+            - replaces the original file with a compressed version named filename.gz
+        - To also keep the Original File:
+            - `gzip -k filename`
+        - Specify compression level:
+            - `gzip -9 filename`
+        - Decompress a File:
+            - `gzip -d filename.gz`
+    - `bzip`:
+        - Compress a file:
+            - `bzip2 filename`
+            - replace the original file with a compressed version
+        - To keep the Original File:
+            - `bzip2 -k filename`
+        - Decompress a File:
+            - `bzip2 -d filename.bz2`
+    - Compressing Directories: 
+        - use `tar` in combination with `gzip` or `bzip2`:
+            - `tar czvf archive_name.tar.gz directory_name` (gzip)
+            - `tar cjvf archive_name.tar.bz2 directory_name` (bzip)
+    - `tar`: *( https://www.tecmint.com/tar-command-examples-linux/ )*
+        - used for archiving multiple files into a single archive file
+        - it doesn't compress files directly
+        - preserves attributes, like permissions, dates, and the directory structure
+        - `.tar` format is widely supported across different operating systems and platforms.
+        - **Examples:** 
+            - Creating an Archive:
+                - `tar -cvf archive_name.tar directory_to_archive/`
+                    - `-c` option tells tar to create an archive
+                    - `-v` enables verbose mode (lists files as they are added)
+                    - `-f` specifies the filename of the archive
+            - Extracting an Archive:
+                - `tar -xvf archive_name.tar`
+            - Viewing Contents of an Archive (without extracting):
+                - `tar -tvf archive_name.tar`
+            - Appending Files to an Archive:
+                - `tar -rvf archive_name.tar new_file`
+            - Excluding Files:
+                - `tar -cvf archive_name.tar directory_to_archive/ --exclude='pattern'`
 
 - **Find PID and kill a process in Linux:** https://www.linuxandubuntu.com/home/find-pid-and-kill-a-process-in-linux
     - if we want to kill a process, we need to find its ID first, using `ps` program (short for process state):
