@@ -538,38 +538,32 @@
     - We can overwrite these values with CSS! (`div` -> *make it inline* or `span` -> *make it block*)
     
     - `display: inline-block`:
-        - An element with `display: inline-block` remains inline-level, meaning it can appear inline with other elements, just like text, but it also acts as a block-level container, allowing you to set a width, height, margins, and padding.
-        - When you want elements to appear next to each other horizontally, but also control their width and height. This is useful for creating things like navigation menus or lists of items.
-        - It's commonly used in creating grid systems, where you have a series of elements arranged horizontally with equal or variable widths. You can use it to create responsive grid layouts.
+        - if you want to add multiple block elements next to each other, you should use `inline-block` (you can still control the size, but they can be placed next to each other)
+
 32. **Explain the distinctions between `position: relative` and `position: absolute` CSS properties.**
     
     - Position value types:
         - **Static:**
-            - Default value. Elements are positioned based on the normal flow of the document.
-        - **Relative:**
-            - Positioned relative to their normal position in the document.
-            - Adjust with `top`, `right`, `bottom`, `left` properties
-        - **Absolute:**
-            - Positioned relative to their nearest positioned ancestor (if there is none, then relative to the document body)
-            - Adjust with `top`, `right`, `bottom`, `left` properties
+            - Default value. Elements are positioned based on the normal flow of the document (based on their size, and type, like block or inline).
+        - **Relative:** 
+            - offset the static value
+        - **Absolute:** 
+            - offset relative to its parent or the document body if there's no other parent
         - **Fixed:**
             - Positioned relative to the viewport
             - They remain in the same position even after scrolling
-            - Adjust with `top`, `right`, `bottom`, `left` properties
     
-    - Example:
-
+    - Adjust with `top`, `right`, `bottom`, `left` properties, eg:
+    
             .box {
-                position: relative;         //position relative to it's normal position
+                position: relative;         //position relative to it's normal position (the static value)
                 top: 50px;                  
                 left: 100px;
             }
         
 33. **What is the box model? Name the CSS properties associated with it.**
 
-    - The CSS **Box model** is a concept that describes how HTML elements are represented as rectangular boxes on a web page.
-    - Used to make designs work well on different devices and screen sizes.</br>
-        <img src="./assets/csspadding.png" width="400" height="250">
+    - describes how HTML elements are represented as rectangular boxes on a web page.
     - 4 components:
         - **Content:**
             - the area where text, images and other media are displayed
@@ -578,9 +572,10 @@
             - Space between content and border (`padding` property)
         - **Border:**
             - A line that surrounds the content and padding area (`border` property)
-        - **Margin:**
+        - **Margin (block type only):**
             - The space between the border and surrounding elements (`margin` property)
-    - Example of the CSS box model:
+    - The **actual size of an element** is determined by the sum of its content (padding, border, and margin). 
+    - Example:
 
             .box {
                 width: 300px;
@@ -590,253 +585,128 @@
                 margin: 10px;
             }
 
-    - The **actual size of an element** is determined by the sum of its content (padding, border, and margin). 
-        - For example, an element with a width of 300px and a padding of 20px on each side will actually have a total width of 340px (300px + 20px + 20px).
-
 34. **Identify the CSS properties that affect font and text appearance.**
 
     - **Typography toolset:**
         - `font-family`
-            - Set the **font family** for an element.
-            - Specify a list of fonts to use, in order of preference (if the first font is not available, the browser will try the next font in the list).
-
         - `font-size` 
-            - Set the **size of the font**.
-            - Can be set in pixels, ems, rems, or other units.
-
         - `line-height` 
-            - Set the **height of a line of text**. 
-            - Can be set as a number, a percentage, or a length value.
-
-        - `font-weight`
-            - Set the **thickness** or **boldness** of the font.
-            - Can be set as a number from 100 to 900, or as the keywords normal or bold.
-
-        - `font-style`
-            - Set the style of the font, such as **italic** or **oblique**.
-
-        - `text-decoration`
-            - Add visual emphasis to text, such as **underlining**, **overlining**, or **striking through**.
-
-        - `text-alignment`
-            - Set the horizontal alignment of text within its container, such as **left**, **right**, **center**, or **justified**.
-
-    - **Typography:** Art and technique of arranging type to make written language legible, readable and appealing
-        - Basic concepts:
-            - **Typeface:**
-                - a set of characters that share the same design (eg. Arial, Helvetica)
-                - It can include various fonts (blod, italic, egular...)
-            - **Font:**
-                - A specific size weight and style of a typeface (eg. Arial Bold 12pt is considered a font)
-            - **Kerning:**
-                - The adjustment of spaces between letters (eg. "VA" letters)
-            - **Leading:**
-                - The sapce between lines of text.
-            - **Tracking:**
-                - Adjustment of space between groups of letters, word ot lines of text    
-            - **Hierarchy:**
-                - Arrangement of text blocks based on importance
-                - Allows users to quickly gain crucial information first, then get into the details of a specific topic
-            - **Alignment:**
-                - The posiioning of text on a page (*left/right-aligned, centered or justified*)
-            - **White space:**
-                - Empty space around and within elements of a design
-                - Used to create visual balance and create the design more readible, appealing.
+        - `font-weight` (100 to 900)
+        - `font-style` (italic, oblique (=bold?))
+        - `text-decoration` (inder/overline, strikethrough)
+        - `text-alignment` (L, R, C, Justified)
+        - `color` (font color)
+        - `background-color` (BG color)
 
 35. **List the steps for adding or removing a class name from an HTML element.**
     
-    1. Access element by an attribute:
-
-            const root = document.getElementById("rootId");
-
-            // Alternative ways:
-            document.querySelector(".myClass")                          //get the first object with a specific class (make it a const to store it)
-            document.querySelector("#myID")                             //get the first object with a specific Id (make it a const to store it)
-            document.querySelectorAll("p")                              //get an array of objects with a CSS selector (make it an array to store them)
-
+    1. Access element by an attribute: 
+        - `const root = document.getElementById("rootId");` (or use `querySelector()` - `".class"`/`"#ID"` )
     2. Add/remove attributes:
-
-            element.setAttribute("class", "myClass")                    //"class" attribute's new value will be "myClass"
-            element.removeAttribute("class")                            //removes the attribute from an element
-
-            element.classList.add("active");                            //Allows you to add, remove, or toggle CSS classes on an element
-            element.classList.remove("inactive");
-            element.classList.toggle("highlight");                      //Turn it on and off
+        - `element.classList.add("active");`                   
+        - `element.classList.remove("inactive");`
+        - `element.classList.toggle("highlight");`             // Turn it on and off
+        - `element.setAttribute("class", "myClass")`           // rename attribute
 
 ## JavaScript - Language Specialties
 
 36. **Elaborate on the differences between value and reference data types in JavaScript, specifically in relation to objects and primitives.**
 
-- In JavaScript, data types can be categorized into two main groups: **primitive data types** and **reference data types**. The key distinction between them lies in how they are stored and manipulated in memory.
-
-    - **"Value"** refers to primitive data types (e.g., numbers, strings, booleans).
-    - **"Reference"** refers to reference data types (e.g., objects, arrays, functions).
-
-    - **Primitive Data Types (Value Types):**
-
-        - Stored by Value:
-            - Primitive data types, such as numbers, strings, booleans, null, and undefined, are stored directly in memory locations.
-            - When you assign a primitive value to a variable or pass it as an argument to a function, a copy of the value is made.
-
-        - Immutable:
-            - Primitive values are immutable, meaning their values cannot be changed once they are created. 
-            - Any operation that appears to modify a primitive value actually creates a new value.
-
-        - Examples:
-
-                let num = 42;
-                let str = "Hello";
-                let isTrue = true;
-
-    - **Reference Data Types:**
-
-        - Stored by Reference: 
-            - Reference data types, such as objects (including arrays and functions), are more complex. They are stored by reference in memory. 
-            - When you assign an object to a variable or pass it as an argument, you are working with a reference to the object, not a copy of the object itself.
-
-        - Mutable: 
-            - Reference objects are mutable, meaning their properties and values can be changed after they are created.
-            - This is because you are working with a reference to the same object in memory.
-
-        - Examples:
-
-                let obj = { name: "John" };
-                let arr = [1, 2, 3];
-    
-    - **Key Differences:**
-
-        - Copy vs. Reference: 
-            - When you assign a primitive value to a new variable, you create a copy of that value.
-            - With reference types, assigning a variable or passing it as an argument does not create a new object but rather a reference to the existing object.
-
-        - Mutability:
-            - Primitive values are immutable, while objects are mutable.
-            - You can change the properties and values of objects after they are created, but you cannot modify primitive values.
-
-        - Comparison:
-            - When comparing primitive values, you are comparing their actual values (e.g., a === b).
-            - When comparing objects, you are comparing their references in memory, not their content:</br>
-              (e.g., obj1 === obj2 compares whether they reference the same object, not whether they have the same properties and values).
-
-        - Passing by Value vs. Reference: 
-            - When you pass a primitive as an argument to a function, you are passing a copy of the value (pass by value).
-            - When you pass an object as an argument, you are passing a reference to the object (pass by reference).
-
-        - Undefined vs. Null:
-            - **undefined** is a primitive value that represents the absence of a value or an uninitialized variable. 
-            - **null** is a primitive value often used to indicate the intentional absence of an object value.
-
+- **"Value"** refers to primitive data types (e.g., numbers, strings, booleans, undefined, null):
+    - Characteristics:
+        - **stored** directly in memory locations
+        - they are **immutable** (their values can't change after declaration -> any modification creates a new value)
+        - when **storing it in a variable or passing it to a function**, the copy of the value is passed
+        - When **comparing** primitive values, you are comparing their actual values (e.g., `a === b`)
+- **"Reference"** refers to reference data types (e.g., objects, arrays, functions, dates).
+    - Characteristics:
+        - **stored** by reference (they just point to a memory location, where the actual data is)
+        - they are **mutable** (values can be changed)
+        - when **storing it in a variable or passing it to a function**, the pointer is passed, so it will refer to the orignial data
+        - When **comparing** objects, you are comparing their references in memory, not their content (so they can have identical values, still not be equal, if were created separately)
 
 37. **Discuss the concept of mutability and immutability in objects, arrays, and primitives, and explain why it is important to understand when working with data structures in JavaScript.**
 
-    - Primitive values are immutable, while objects are mutable.
-    - You can change the properties and values of objects after they are created, but you cannot modify primitive values.
-    
-    - **Immutable:**
-            - Primitive values are immutable, meaning their values cannot be changed once they are created. 
-            - Any operation that appears to modify a primitive value actually creates a new value.
-
-    - **Mutable:**
-            - Reference objects are mutable, meaning their properties and values can be changed after they are created.
-            - This is because you are working with a reference to the same object in memory.
+    - Primitive values are immutable, while objects are mutable:
+        - modifying a mutable value copies the value itself (the reference)
+        - modifying an immutable value creates a new piece of data
 
 38. **Is `null` considered an object or a primitive in JavaScript?**
 
     - **null** is a primitive value often used to indicate the intentional absence of an object value.
 
-            let variable = null; //The value is intentially set
-
 39. **"What does `undefined` represent in JavaScript?"**
 
-    - **undefined** is a primitive value that represents the absence of a value or an uninitialized variable.
-
-            let variable;       //The value is not set, therefore it will be undefined
+    - **undefined** is a primitive value that represents the absence of a value or an uninitialized variable (unassigned).
 
 40. **When would you use `var`, `let`, and `const` in JavaScript?**
 
-    - **var** is the old way of declaring a variable (it causes errors, because of hoisting, because it behaves like declared functions (can be called before they are declared))
-        - it also causes errors for example if we declare "i" in for loops with them, or for..of loops' local variables (because they will be seen after as well)
+    - **var** is the old way of declaring a variable
+        - issues can happen, because of hoisting (when the functions and variables are read wihtout contents, in the beginning phases)
+        - `var` has global or function scope, not `block` scope like `let` and `const` -> issues with loops or if statements
         - they can be redeclared (var name; var name -> works, but let name; let name -> error (Already declared))
 
-    - **let** new way of declaring a variable. We can later change it's value.
-    - **const** declare a constant, which cannot be modified later
-        - If we declare an array or object as a constant, we can't change them, but we can change their values still
+    - **let** 
+        - its value can be modified
+    - **const**
+        - its value can't be changed (unless it's an object, then its values can be modified)
         - common way to declare functions (function expressions), so they are not overwritten (but they have to be declared before calling them!)
 
 41. **Explain the concept of hoisting in JavaScript.**
 
-> *Hoisting is a JavaScript behavior where variable and function declarations</br>
-> are moved to the top of their containing scope during the compilation phase.</br>
-> This means that you can use variables and functions before they are declared in your code*
-
-- **NB:** they are not really lifted, it's just what happens during the **Creation Stage**, when the **Syntax parser** runs first, it creates variables with undefined values.
-
-- **hositing** means *raising* something above (pre-execute). So it's processed at the start of execution:
-    - This is done for variable and function **DECLARATIONS**, but not for their values **ASSIGNMENTS**
-    - So after the hoisting phase, these will have an *undefined* value
-- Declarations are hoisted, but assignments are not:
-    - The line `var phrase = "Hello"` has two actions in it:
-
-        - Variable *declaration* `var`
-        - Variable *assignment* `=`
+- In the **compilation phase** (when the **sytax parser** runs) `var` and `function` declarations (but not assignments!) are moved to the top of their containing scope, which means you can refer to them before they are declared in the code (their values will be `undefined` still at this stage!)
 
 ## Git
 
 42. **Discuss the advantages of using a version control system.**
-    > A distributed version control system (DVCS) is a system that helps developers track changes of their code.
-
-    1. **Storage and backup:**
-        - A decentralized online backup storage system, to make your code available from anwhere
-        - Create repositories (=folders for projects)
-
-    2. **Collaboration:**
-        - It's available for all members on the team to work in collaboration
-        - Availability to work on separate branches
-        - Availability to merge separate pieces of work (prevent conflicts)
-        - Each other's codes can be reviewed
-
-    3. **Version control:**
-        - One of the main purposes is trackability of the modifications, which makes it good to track versions of the code
-        - Commit messages for documentation
-        - Branches make availability for experimentation with unreleased code
-    
-    4. **Open Source and Integration:**
-        - Vast ecosystem of tools and services built around it (GitHub, GitLab)
+    - A distributed version control system (DVCS) is a system that helps developers track changes of their code.
+    - **Advantages:**
+        1. **Storage and backup:**
+            - Create `repositories` (=folders for projects)
+            - A decentralized online `backup` storage system, to make your code available from anwhere
+        2. **Collaboration:**
+            - Availability to work on separate `branches` (all members on the team can work in collaboration)
+            - Availability to `merge` separate pieces of work (prevent conflicts)
+            - Each other's codes can be `reviewed`
+        3. **Version control:**
+            - One of the main purposes is `trackability` of the modifications (track versions)
+            - Commit messages for `documentation`
+            - Branches make availability for `experimentation` with unreleased code
+        4. **Open Source and Integration:**
+            - Vast `ecosystem of tools and services` built around it (GitHub, GitLab)
 
 43. **Clarify the differences between Git and GitHub.**
     - **GIT**
-        - It's a distributed version control system (DVCS), that helps developers track changes of their code.
-        - It's a command line tool that you install on your computer (available offline!)
-
+        - It's a `distributed version control system` (DVCS), that helps developers track changes of their code.
+        - It's a `command line tool` that you install on your computer (available offline!)
     - **GitHub**
-        - Online platofrm that hosts repositories for GIT system
-        - It's a service for collaboration and online storage
-        - Social network for sharing open-source content for programmers/developers
-        - Provies additional web interface for those who don't/can't interact through a command line
+        - `Online platofrm` that hosts repositories for GIT system
+        - It's a `service` for collaboration and online storage
+        - `Social network` for sharing `open-source` content for programmers/developers
+        - Provies `additional web interface` for those who don't/can't interact through a command line
 
 44. **What is the purpose of remote repositories in Git?**
 
-    - Version control / track progress
-    - Backup of your code
     - Make your code available from anwhere / code sharing
+    - Backup of your code
     - Available for team members / Access control
-    - Contributing (open-source)
     - Availability to work in isolation, then only push changes that are ready
+    - Version control / track progress
+    - Contributing (open-source)
 
 45. **When does a merge conflict occur in Git?**
 
     - It happens if the automated merge can't happen:
-
-        - There can be a number of **reasons**:
-            - **Paralel development:** 
-                - When the same code is changed on the same branch. One pushes changes, but the other person started working on it before the push was made (resolve with manual merge)
-            - **Merging branches:** 
-                - When there is some part of the code that was developed on a new branch, but the original branch also had some changes (resolve manual merge)
-            - **Rebasing:** 
-                - if you use the git rebase command to rebase your changes onto another branch, conflicts can arise if there are conflicting changes between your branch and the branch you're rebasing onto.
-            - **Cherry-picking:**
-                - when you manually select commits to be moved to a separate branch, and there is a conflict between them
-        
+    - Possible **reasons**:
+        - **Paralel development (woking on the same branch in 2 different locations):** 
+            - When the same code is changed on the same branch. One pushes changes, but the other person started working on it before the push was made (resolve with manual merge)
+        - **Merging branches (wokring on different branches):** 
+            - When there is some part of the code that was developed on a new branch, but the original branch also had some changes (resolve manual merge)
+        - **Rebasing:** 
+            - means putting "your code" above the "existing code" -> this will likely cause a merging issue (manual merge)
+        - **Cherry-picking:**
+            - when you manually select commits to be moved to a separate branch, and there is a conflict between them
+    
     - To **resolve a merge conflict**, you typically need to:
 
         1. Examine the conflicting code in your text editor or integrated development environment (IDE).
@@ -849,21 +719,11 @@
 ## Terminal
 
 46. **How would you execute a JavaScript file in the terminal?**
-    - There are multiple terminal we can choose from, the one I've been using is **GitBash**
-        - **PowerShell** is the default in VSCode, but there's also the **CommandPrompt** we can use.
-        - **GitBash** is a terminal emulator for Windows, that provides Unix-like command-line environment (Unix-based operating systems are Linux or macOS)
-    - If I have the terminal set to the one I want to choose:
-        1. open project folder
-        2. start new terminal
-        3. navigate to my project's root folder or where the file I want to run is located
-        4. type in the following command:
-            - `node filename.js` 
-                - node keyword tells the terminal to use Node.js to interpret the JS file
-                - **Node.js** is a JavaScript runtime that allows you to run a JS file outside of a browser.
+    - `node filename.js` 
 
 47. **What is the keyboard shortcut to stop a running process in the terminal?**
 
-    - Keyboard shortcut to stop a running process: **Ctrl + C** on Windows, **Cmd + C** on Mac
+    - **Ctrl + C** on Windows, **Cmd + C** on Mac
 
 48. **How can you retrieve the previous command executed in the terminal?**
 

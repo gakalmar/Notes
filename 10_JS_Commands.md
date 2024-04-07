@@ -1,3 +1,172 @@
+# SUMMARY
+
+## Strings:
+- String specific methods:
+
+        string.indexOf("char1")                 //returns the index value of first char1 in string
+        string.lastIndexOf("char1")             //returns the index value of last char1 in string
+        string.charAt(index)                    //returns the character at a specific index number (indexing also works as with arrays)
+        string.charCodeAt(index)                //returns the character's unicode value
+
+        string.concat(str1, " ", str2)          //combines 2 or more strings into a single string (simply "str1" + "str2" will do the same)
+
+        string.toUpperCase()
+        string.toLowerCase()
+
+        string.split(", ")                      //creates array
+
+        string.startsWith("str")                //bool
+        string.endsWith("str")                  //bool
+
+        string.trim()                           //remove whitespaces by default  
+        string.trimStart()   
+        string.trimEnd()   
+
+        string.substring(index1, index2)       //return substring from index1 (included), to index2 (not included)
+
+- Non string specific:
+
+        string.length                           //this is rather a property, not a method, hence the missing parentheses
+
+        string.slice(index1, index2)
+        string.replace(what, withwhat)
+        string.replaceAll(what, withwhat)
+
+        string.includes("substr")
+
+        string.repeat(n)
+
+- Conversion:
+
+        arr.join("")                            //create a string from an array's values
+
+        item.toString()                         //creates string from item (number, object, array, Date)
+        num.toString(2)                         //creates binary from number
+        String(item)                            //creates string from item
+
+## Arrays:
+- Add / remove elements:
+
+        arr.push(item)                          //add item to end of array
+        arr.pop()                               //remove last item from array
+        arr.unshift(item)                       //add item to start of array
+        arr.shift()                             //remove first item from array
+
+- Other basic methods:
+
+        array.reverse()
+        array.sort()                                            //based on ASCII values by default
+            arr.sort((a, b) => a - b)                           //sort by ascending order
+            arr.sort((a, b) => b - a)                           //sort by desending order
+            arr.sort((a, b) => a.localeCompare(b));
+        array.includes(item)
+        array.slice(index1, index2)
+        arr.splice(start, number, item1,...itemN)       //removes "number" elements from list from 'start' (included). Then add all the elements listed after it in the parameters.
+                                                        //it the also returns a new array with the removed items
+
+## Higher order fucntions:
+
+        array.forEach(item, [index, arr])       //create operations with each element
+        array.map(item, [index, arr])           //return a new array by doing something to each element
+        array.filter(item, [index, arr])        //return a new array by applying a specific condition to each element -> include in return array if it's true
+        array.find(item)                        //similar to filter, but only returns the first element
+
+        array.reduce(callback(accumulator, currentElement), [initialValue])             //callback function has 2 parameters: (accumulator, currentElement)
+                                                                                        //1st iteration: accumulator is the first item of the array initially (unless initial value is specified), and currentElement is the second element
+                                                                                        //2nd iteration: accumulator is now the result after the first operation, and currentElement is the third element
+
+        Simple example:
+
+            const numbers = [1, 2, 3, 4, 5];
+
+            const result = numbers.reduce(function (accumulator, currentValue) {
+            return accumulator + currentValue;
+            }, 10);
+
+            console.log(result); // 25 (sum of all numbers + initial value 10)
+
+        Complex example (find the most common item):
+
+            const numbers = [1, 2, 2, 3, 4, 4, 4, 5, 5, 6, 6, 6, 6];
+
+            const mode = numbers.reduce(function (accumulator, currentValue) {
+                if (!accumulator[currentValue]) {
+                    accumulator[currentValue] = 1; // Initialize count for currentValue     //create a key if it doesn't exist
+                } else {
+                    accumulator[currentValue]++; // Increment count for currentValue        //if key exists, add 1 to it
+                }
+                return accumulator;
+            }, {});                                                                         //accumulator's intial value is {}
+
+            let maxCount = 0;
+            let modeValue;
+
+            for (const number in mode) {                                                    //mode returns an object with unique keys and their count as a value
+                if (mode[number] > maxCount) {
+                    maxCount = mode[number];
+                    modeValue = number;
+                }
+            }
+
+## Numbers:
+- Common methods:
+    
+        Math.min(...array)
+        Math.max(...array)
+        
+        Math.round(Float)
+        Math.floor(Float)
+        Math.ceil(Float)
+        Math.abs(num)
+
+- Generate numbers:
+
+        Math.Pi
+        Math.random()
+
+- Operations:
+
+        Math.pow(num, exp)      //eg Math.pow(2, 3) -> 2^3 = 8
+        Math.sqrt(num)          
+        Math.sin(num)          
+        Math.cos(num)   
+
+- Conversion (Number object methods):
+    - `Number("42")`
+    - `Number.parseInt()`: create an integer from a string, if it has a numeric representation      //parseInt("42") -> 42
+    - `Number.parseFloat()`: create a floating-point number from a string, if it has a numeric representation       //parseFloat("42.1235") -> 42.1235
+    - `Number.toFixed(digits)`: Converts a number to a string, rounding to the specified number of decimal places.      //23.34462.toFixed(2) -> 23.34
+    - `Number.toPrecision(precision)`: Converts a number to a string with the specified precision (total number of digits).     //23.34465(5) -> 23.344
+    - `Number.toString(radix)`: Converts a number to a string in the specified radix (base).    (16).toString(2) -> 1000
+
+# Objects:
+
+    Object.keys(obj)                                    //Returns an array of a given object's keys.
+    Object.values(obj)                                  //Returns an array of a given object's values.
+    Object.entries(obj)                                 //Returns an array of a given object's kvps.             
+
+# Dates:
+
+    let today = new Date();                             //Gets today's date in this format: "Sat Jul 02 2023 09:30:00 GMT+0530 (India Standard Time)"
+    let year = today.getFullYear();                     //Get only 'YYYY' format from previously generated date
+    let month = today.getMonth() + 1;                   //Get 'MM' or 'M' - Months are zero-indexed, so we add 1 to get the correct month.
+    let day = today.getDate();                          //Get 'DD' or 'D' format of the day
+    let todayShort = new Date(`${year}-${month}-${day}`)//To get it in a short version
+
+    let date1 = new Date(todayShort);                   //Calculate AGE (substract 2 dates)
+    let date2 = new Date(`1986-10-4`);                  
+    let age = (date1 - date2)*1000*60*60*24*365         //Substract 2 dates and multiply the result in millisecs until you get years (use Math.floor() to get whole numbers)
+
+## Other:
+- count funtion:
+
+    function count(char, word){
+        return word.filter(c => c === char).length;
+    }
+    count("a", "alma"); -> should return 2
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
 # General:
 
 typeof === value instanceof Array                       //Check the type of the data

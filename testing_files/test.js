@@ -126,4 +126,35 @@
 // console.log(isValidWalk(['n','s','n','s','n','s','n','s','n','s']));
 // console.log(isValidWalk(['n','s','n','s','n','s','n','s','n']));
 
-// C. 
+// C. Replace with alphabetical position
+// function alphabetPosition(text) {
+//     const positions = [];
+//     text.toLowerCase().split("").forEach(char => {
+//         if (char.charCodeAt(0) - 96 > 0 && char.charCodeAt(0) - 96 < 27)
+//         positions.push(char.charCodeAt(0) - 96)
+//     });
+//     return positions.join(" ");
+// }
+
+// console.log(alphabetPosition("The sunset sets at twelve o' clock."));
+
+// D. Sort the odd
+// function sortArray(array) {
+//     let oddValues = array.filter(num => num % 2 !== 0);
+//     oddValues.sort((a, b) => a-b);
+//     console.log(oddValues);
+//     let counter = 0;
+//     let sorted = array.map(num => {
+//         if (num % 2 === 0){
+//             return num;
+//         } else {
+//             counter++;
+//             return oddValues[counter-1];
+//         }
+//     })
+//     return sorted;
+// }
+
+// console.log(sortArray([5, 3, 2, 8, 1, 4]));
+// console.log("Expected:");
+// console.log([1, 3, 2, 8, 5, 4]);
