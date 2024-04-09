@@ -14,6 +14,12 @@
         string.toLowerCase()
 
         string.split(", ")                      //creates array
+        string.split(/[-_]/)                    //add multiple splitters with regex
+        string.slice(start, end)                //creates a substring (negative values can also be used)
+        string.slice(1)                         //cuts off the first letter
+        string.slice(0, -1)                     //cuts off the last letter
+        string.charAt(0).toUpperCase() +        //make camelCase string
+            string.slice(1).toLowerCase();
 
         string.startsWith("str")                //bool
         string.endsWith("str")                  //bool
@@ -133,8 +139,8 @@
 
 - Conversion (Number object methods):
     - `Number("42")`
-    - `Number.parseInt()`: create an integer from a string, if it has a numeric representation      //parseInt("42") -> 42
-    - `Number.parseFloat()`: create a floating-point number from a string, if it has a numeric representation       //parseFloat("42.1235") -> 42.1235
+    - `Number.parseInt("num")`: create an integer from a string, if it has a numeric representation      //parseInt("42") -> 42
+    - `Number.parseFloat("num")`: create a floating-point number from a string, if it has a numeric representation       //parseFloat("42.1235") -> 42.1235
     - `Number.toFixed(digits)`: Converts a number to a string, rounding to the specified number of decimal places.      //23.34462.toFixed(2) -> 23.34
     - `Number.toPrecision(precision)`: Converts a number to a string with the specified precision (total number of digits).     //23.34465(5) -> 23.344
     - `Number.toString(radix)`: Converts a number to a string in the specified radix (base).    (16).toString(2) -> 1000
@@ -370,7 +376,7 @@ Number.isInteger(value)                                 //Chheck if the value is
     find(callback[, thisArg])                           //Returns the value of the first element in the array that satisfies the provided testing function.
     findIndex(callback[, thisArg])                      //Returns the index of the first element in the array that satisfies the provided testing function, or -1 if no element satisfies the test.
 
-**HIgher order SUMMARY**
+**Higher order SUMMARY**
     array.forEach(item, [index, arr])       //create operations with each element
             array.map(item, [index, arr])           //return a new array by doing something to each element
             array.filter(item, [index, arr])        //return a new array by applying a specific condition to each element -> include in return array if it's true

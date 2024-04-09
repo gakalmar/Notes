@@ -26,7 +26,7 @@
 //             let currentDist = Math.abs(Math.sqrt(Math.pow(distancesOrdered[i], 2) - Math.pow(distancesOrdered[i-1], 2)));
 //             totalDistance += currentDist;
 //         }
-    
+
 //         return Math.floor(totalDistance);
 //     }
 // }
@@ -43,7 +43,7 @@
 //     const snailRes = [];
 //     let steps = array.length;
 //     let totalSteps = steps*steps;
-    
+
 //     for(let n=0; n<totalSteps; n++){
 //         // phase 1 - add upper row
 //         for (let i = 0; i < array.length-2*n; i++){
@@ -51,21 +51,21 @@
 //             totalSteps--;
 //             if (totalSteps == 0){return snailRes}
 //         }
-        
+
 //         // phase 2 - add last items vertically, apart from the first and last items:
 //         for (let i = n+1; i < array.length-1; i++){
 //             snailRes.push(array[i][array.length-1-n]);
 //             totalSteps--;
 //             if (totalSteps == 0){return snailRes}
 //         }
-        
+
 //         // phase 3 - add last row reversed:
 //         for (let i = array.length-1-n; i >= n+0; i--){
 //             snailRes.push(array[array.length-1-2*n][i])
 //             totalSteps--;
 //             if (totalSteps == 0){return snailRes}
 //         }
-        
+
 //         // phase 4 - add last items vertically reversed, apart from the first and last items:
 //         for (let i = array.length-2-n; i > n; i--){
 //             snailRes.push(array[i][n]);
@@ -73,7 +73,7 @@
 //             if (totalSteps == 0){return snailRes}
 //         }
 //     }
-    
+
 //     console.log(totalSteps);
 //     return snailRes;
 // }
@@ -87,6 +87,33 @@
 // https://www.codewars.com/kata/54521e9ec8e60bc4de000d6c/train/javascript
 
 // Itt magat a feladatot sem ertem
+
+// 04 - Weight for weight
+// https://www.codewars.com/kata/55c6126177c9441a570000cc
+// function orderWeight(strng) {
+//     return strng.split(" ").sort().sort((a, b) => a.toString().split("").reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0) - b.toString().split("").reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0)).join(" ");
+// }
+
+// console.log(orderWeight("103 123 4444 99 2000"));
+
+// 05 - Valid Parentheses
+// https://www.codewars.com/kata/52774a314c2333f0a7000688/train/javascript
+// function validParentheses(parens) {
+//     if (parens === ""){
+//         return true;
+//     }
+//     let firstCharIsCorrect = parens[0] === "(";
+//     let lastCharIsCorrect = parens[parens.length - 1] === ")";
+//     let lParCounter = 0;
+//     let rParCounter = 0;
+//     let allParens = parens.split("")
+//     for (let i = 0; i < allParens.length; i++){
+//         if (allParens[i] === "(") lParCounter++; 
+//         if (allParens[i] === ")") rParCounter++;
+//         if (rParCounter > lParCounter) return false;
+//     }
+//     return firstCharIsCorrect && lastCharIsCorrect && lParCounter === rParCounter;
+// }
 
 // Random 6kju katas:
 // A. Duplicate encoder:
@@ -158,3 +185,107 @@
 // console.log(sortArray([5, 3, 2, 8, 1, 4]));
 // console.log("Expected:");
 // console.log([1, 3, 2, 8, 5, 4]);
+
+
+// // E. Persistent bugger
+// function persistence(num) {
+//     let finalNum = num;
+//     let steps = 0;
+//     while (finalNum.toString().length > 1){
+//         let currentNum = 1;
+//         finalNum.toString().split("").forEach(charNum => {
+//             currentNum *= charNum
+//         });
+//         finalNum = currentNum;
+//         steps++;
+//     };
+//     return steps;
+// }
+
+// console.log(persistence(4));
+// console.log(persistence(25));
+// console.log(persistence(39));
+// console.log(persistence(999));
+
+// F. Convert string to camel case
+// function toCamelCase(str){
+//     let words = str.split(/[-_]/);
+//     let finalString = words[0];
+//     if (str.length = 0){
+//         return "";
+//     } else if (words.length === 1) {
+//         return str;
+//     } else {
+//         for (let i = 1; i < words.length; i++){
+//             finalString += words[i].charAt(0).toUpperCase() + words[i].slice(1);
+//         }
+//         return finalString;
+//     }
+// }
+
+// console.log(toCamelCase("the_stealth_warrior"));
+
+// G. Does my number look big in this?
+// function narcissistic(value) {
+//     let nums = value.toString().split("");
+//     let numLen = value.toString().length;
+//     let numSum = 0;
+//     for (let i = 0; i < numLen; i++){
+//         numSum += Math.pow(Number.parseInt(nums[i]), numLen);
+//     }
+//     return value === numSum;
+// }
+
+// console.log(narcissistic(152));
+// console.log(narcissistic(153));
+
+// H. Your order, please
+
+// function order(words) {
+//     let wordsArr = words.split(" ");
+//     let orderedWords = [];
+    
+//     for (let i = 1; i <= wordsArr.length; i++) {
+//         let foundWord = false;
+//         let nextWord = (wordsArr.find(word => {
+//             word.split("").forEach(char => {
+//                 if (char == i){
+//                     foundWord = true;
+//                 }
+//             })
+//             return foundWord;
+//         }))
+//         orderedWords.push(nextWord);
+//     }
+//     return orderedWords.join(" ");
+// }
+
+// console.log(order("4of Fo1r pe6ople g3ood th5e the2"));
+
+// I. Tribonacci Sequence
+// function tribonacci(signature,n){
+//     let tribSq = [...signature];
+//     if(n === 0){
+//         return [];
+//     } else if (n === 1){
+//         return [signature[n-1]];
+//     } else if (n === 2){
+//         return [signature[n-1], signature[n-2]];
+//     }
+
+//     while (n - 3 > 0){
+//         let nextNum = 0;
+//         for(let i = tribSq.length; i > tribSq.length - 3; i--){
+//             nextNum = tribSq[tribSq.length-1] + tribSq[tribSq.length-2] + tribSq[tribSq.length-3]
+//         }
+//         tribSq.push(nextNum);
+//         n--;
+//     }
+//     return(tribSq);
+// }
+
+// console.log(tribonacci([1,1,1], 10));
+// console.log("Expected:");
+// console.log([1,1,1,3,5,9,17,31,57,105]);
+
+console.log("sutemeny".includes("sut"));

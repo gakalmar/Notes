@@ -241,62 +241,19 @@
 ## Git
 
 42. **Discuss the advantages of using a version control system.**
-    - A distributed version control system (DVCS) is a system that helps developers track changes of their code.
-    - **Advantages:**
-        1. **Storage and backup:**
-            - Create `repositories` (=folders for projects)
-            - A decentralized online `backup` storage system, to make your code available from anwhere
-        2. **Collaboration:**
-            - Availability to work on separate `branches` (all members on the team can work in collaboration)
-            - Availability to `merge` separate pieces of work (prevent conflicts)
-            - Each other's codes can be `reviewed`
-        3. **Version control:**
-            - One of the main purposes is `trackability` of the modifications (track versions)
-            - Commit messages for `documentation`
-            - Branches make availability for `experimentation` with unreleased code
-        4. **Open Source and Integration:**
-            - Vast `ecosystem of tools and services` built around it (GitHub, GitLab)
+    - A git egy distributed version control system (DVCS)
+    - Előnyei: repok készítése, backup / brancheken való munka, merge, code review, experiment of unreleased code / version control, dokumentáció (commit messages) / open source és ecosystem
 
 43. **Clarify the differences between Git and GitHub.**
-    - **GIT**
-        - It's a `distributed version control system` (DVCS), that helps developers track changes of their code.
-        - It's a `command line tool` that you install on your computer (available offline!)
-    - **GitHub**
-        - `Online platofrm` that hosts repositories for GIT system
-        - It's a `service` for collaboration and online storage
-        - `Social network` for sharing `open-source` content for programmers/developers
-        - Provies `additional web interface` for those who don't/can't interact through a command line
+    - **GIT** - DVCS és command line tool (offline is elérhető!)
+    - **GitHub** - online platform egy webinterface-szel, egy szolgáltatás, ahol a repokhoz hozzáférünk, open-source, social network
 
 44. **What is the purpose of remote repositories in Git?**
-
-    - Make your code available from anwhere / code sharing
-    - Backup of your code
-    - Available for team members / Access control
-    - Availability to work in isolation, then only push changes that are ready
-    - Version control / track progress
-    - Contributing (open-source)
+    - bárhonnan elérhető a kód csapatmunkához, online backup és verziókövetés, kísérletezés különböző verziókkal, hozzáférés szabályozása, open-source contribution
 
 45. **When does a merge conflict occur in Git?**
-
-    - It happens if the automated merge can't happen:
-    - Possible **reasons**:
-        - **Paralel development (woking on the same branch in 2 different locations):** 
-            - When the same code is changed on the same branch. One pushes changes, but the other person started working on it before the push was made (resolve with manual merge)
-        - **Merging branches (wokring on different branches):** 
-            - When there is some part of the code that was developed on a new branch, but the original branch also had some changes (resolve manual merge)
-        - **Rebasing:** 
-            - means putting "your code" above the "existing code" -> this will likely cause a merging issue (manual merge)
-        - **Cherry-picking:**
-            - when you manually select commits to be moved to a separate branch, and there is a conflict between them
-    
-    - To **resolve a merge conflict**, you typically need to:
-
-        1. Examine the conflicting code in your text editor or integrated development environment (IDE).
-            - Conflict markers (e.g., <<<<<<<, =======, >>>>>>>) are added to the code to indicate the conflicting sections
-        2. Edit the code to remove the conflict markers and choose which changes to keep.
-        3. Save the resolved code.
-        4. Add the resolved files to the staging area using git add.
-        5. Commit the changes to finalize the merge resolution.
+    - amikor az auto merge nem sikerül, ilyenkor manuálisan kell mergelni a conflicted kódban (markerek jelzik)
+    - párhuzamos munka ugyanazon a branchen, különböző branchek mergelésénél, rebasingnél és cherrypickingnél történhez
 
 ## Terminal
 
@@ -304,13 +261,10 @@
     - `node filename.js` 
 
 47. **What is the keyboard shortcut to stop a running process in the terminal?**
-
     - **Ctrl + C** on Windows, **Cmd + C** on Mac
 
 48. **How can you retrieve the previous command executed in the terminal?**
-
     - Using arrows UP and DOWN
 
 49. **How do you navigate to the parent directory of the current directory in the terminal?**
-    
     - cd ..
