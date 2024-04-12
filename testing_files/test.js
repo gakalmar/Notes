@@ -3,20 +3,16 @@
 // function tour(friends, fTowns, distTable) {
 //     const fTownsOrdered = [];
 //     const distancesOrdered = [];
-
 //     friends.forEach(friend => {
 //         if (fTowns.find(f => friend == f[0])){
 //             fTownsOrdered.push(fTowns.filter(fr => fr[0] == friend)[0])
 //         }
 //     });
-
 //     fTownsOrdered.forEach(item => {
 //         let currentItemIndex = distTable.findIndex((i) => item[1] == i);
 //         distancesOrdered.push(distTable[currentItemIndex+1]);
 //     })
-
 //     let totalDistance = distancesOrdered[0] + distancesOrdered[distancesOrdered.length-1];
-
 //     if (fTownsOrdered.length <= 1){
 //         return 0
 //     } else if ( fTownsOrdered.length <= 2){
@@ -26,7 +22,6 @@
 //             let currentDist = Math.abs(Math.sqrt(Math.pow(distancesOrdered[i], 2) - Math.pow(distancesOrdered[i-1], 2)));
 //             totalDistance += currentDist;
 //         }
-
 //         return Math.floor(totalDistance);
 //     }
 // }
@@ -34,7 +29,6 @@
 // var friends1 = ["A1", "A2", "A3", "A4", "A5"];
 // var fTowns1 = [["A1", "X1"], ["A2", "X2"], ["A3", "X3"], ["A4", "X4"]];
 // var distTable1 = ["X1", 100.0, "X2", 200.0, "X3", 250.0, "X4", 300.0];
-
 // console.log(tour(friends1, fTowns1, distTable1))
 
 // // 02 - Snail
@@ -43,7 +37,6 @@
 //     const snailRes = [];
 //     let steps = array.length;
 //     let totalSteps = steps*steps;
-
 //     for(let n=0; n<totalSteps; n++){
 //         // phase 1 - add upper row
 //         for (let i = 0; i < array.length-2*n; i++){
@@ -51,21 +44,18 @@
 //             totalSteps--;
 //             if (totalSteps == 0){return snailRes}
 //         }
-
 //         // phase 2 - add last items vertically, apart from the first and last items:
 //         for (let i = n+1; i < array.length-1; i++){
 //             snailRes.push(array[i][array.length-1-n]);
 //             totalSteps--;
 //             if (totalSteps == 0){return snailRes}
 //         }
-
 //         // phase 3 - add last row reversed:
 //         for (let i = array.length-1-n; i >= n+0; i--){
 //             snailRes.push(array[array.length-1-2*n][i])
 //             totalSteps--;
 //             if (totalSteps == 0){return snailRes}
 //         }
-
 //         // phase 4 - add last items vertically reversed, apart from the first and last items:
 //         for (let i = array.length-2-n; i > n; i--){
 //             snailRes.push(array[i][n]);
@@ -73,11 +63,9 @@
 //             if (totalSteps == 0){return snailRes}
 //         }
 //     }
-
 //     console.log(totalSteps);
 //     return snailRes;
 // }
-
 // console.log("Result:");
 // console.log(snail([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15], [16, 17, 18, 19, 20], [21, 22, 23, 24, 25]]))
 // console.log("Correct result should be:");
@@ -93,7 +81,6 @@
 // function orderWeight(strng) {
 //     return strng.split(" ").sort().sort((a, b) => a.toString().split("").reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0) - b.toString().split("").reduce((acc, curr) => parseInt(acc) + parseInt(curr), 0)).join(" ");
 // }
-
 // console.log(orderWeight("103 123 4444 99 2000"));
 
 // 05 - Valid Parentheses
@@ -133,7 +120,6 @@
 //     });
 //     return encodedWord;
 // }
-
 // console.log(duplicateEncode("Success"));
 
 // B. Take a Ten Minutes Walk
@@ -149,7 +135,6 @@
 //         return false;
 //     }
 // }
-
 // console.log(isValidWalk(['n','s','n','s','n','s','n','s','n','s']));
 // console.log(isValidWalk(['n','s','n','s','n','s','n','s','n']));
 
@@ -162,7 +147,6 @@
 //     });
 //     return positions.join(" ");
 // }
-
 // console.log(alphabetPosition("The sunset sets at twelve o' clock."));
 
 // D. Sort the odd
@@ -181,7 +165,6 @@
 //     })
 //     return sorted;
 // }
-
 // console.log(sortArray([5, 3, 2, 8, 1, 4]));
 // console.log("Expected:");
 // console.log([1, 3, 2, 8, 5, 4]);
@@ -201,7 +184,6 @@
 //     };
 //     return steps;
 // }
-
 // console.log(persistence(4));
 // console.log(persistence(25));
 // console.log(persistence(39));
@@ -222,7 +204,6 @@
 //         return finalString;
 //     }
 // }
-
 // console.log(toCamelCase("the_stealth_warrior"));
 
 // G. Does my number look big in this?
@@ -235,16 +216,13 @@
 //     }
 //     return value === numSum;
 // }
-
 // console.log(narcissistic(152));
 // console.log(narcissistic(153));
 
 // H. Your order, please
-
 // function order(words) {
 //     let wordsArr = words.split(" ");
 //     let orderedWords = [];
-    
 //     for (let i = 1; i <= wordsArr.length; i++) {
 //         let foundWord = false;
 //         let nextWord = (wordsArr.find(word => {
@@ -259,7 +237,6 @@
 //     }
 //     return orderedWords.join(" ");
 // }
-
 // console.log(order("4of Fo1r pe6ople g3ood th5e the2"));
 
 // I. Tribonacci Sequence
@@ -272,7 +249,6 @@
 //     } else if (n === 2){
 //         return [signature[n-1], signature[n-2]];
 //     }
-
 //     while (n - 3 > 0){
 //         let nextNum = 0;
 //         for(let i = tribSq.length; i > tribSq.length - 3; i--){
@@ -283,9 +259,75 @@
 //     }
 //     return(tribSq);
 // }
-
 // console.log(tribonacci([1,1,1], 10));
 // console.log("Expected:");
 // console.log([1,1,1,3,5,9,17,31,57,105]);
 
-console.log("sutemeny".includes("sut"));
+// Moving Zeros to End:
+// function moveZeros(arr) {
+//     let zeros = arr.filter(item => item === 0);
+//     let nonZeros = arr.filter(item => item !== 0);
+//     return [...nonZeros, ...zeros];
+// }
+// console.log(moveZeros([1,2,0,1,0,1,0,3,0,1]));
+
+// Unique In Order:
+// Solution 1:
+// var uniqueInOrder=function(iterable){
+//     return [...new Set(iterable)];
+// }
+
+// Solution B:
+// var uniqueInOrder=function(str){
+//     if (str.length === 0){
+//         return [];
+//     }
+//     let iterableBase = str.toString().split("");
+//     let iterable = iterableBase.filter(item => item !== ",");
+//     let rtn = [ iterable[0] ]
+//     for (let i = 1; i < iterable.length; i++){
+//         if (iterable[i] !== iterable[i-1]){
+//             rtn.push(iterable[i]);
+//         }
+//     }
+//     if (typeof str[0] === "number"){
+//         return rtn.map(num => parseInt(num));
+//     }
+//     return rtn;
+// }
+// console.log(uniqueInOrder('AAAABBBCCDAABBB'));
+// console.log(uniqueInOrder([0, 1, 2, 2, 3, 4, 4, 5, 6, 6, 6]));
+
+// Baby magpies:
+// var child = function(bird1, bird2) {
+//     let bird1arr = [...bird1]
+//     let bird2arr = [...bird2]
+//     let differences = bird1arr.filter((birdSpot, i) => birdSpot !== bird2arr[i]).length;
+//     return differences >= 1 && differences <= 2; 
+// }
+
+// var grandchild = function(bird1, bird2) {
+//     if (bird1.length === 1 && bird1 !== bird2) return false;
+//     let bird1arr = [...bird1]
+//     let bird2arr = [...bird2]
+//     let differences = bird1arr.filter((birdSpot, i) => birdSpot !== bird2arr[i]).length;
+//     return differences >= 0 && differences <= 4;
+// }
+//  console.log(child("BWBWBW","BWBWBB"));
+
+// Playing with digits
+// function digPow(n, p){
+//     let sum = 0;
+//     let counter = 0;
+//     [...n.toString()].forEach(digit => {
+//         sum += Math.pow(parseInt(digit), p + counter);
+//         counter++;
+//     });
+//     if (sum/n % 1 === 0){
+//         return sum/n;
+//     } else {
+//         return -1;
+//     }
+// }
+// console.log(digPow(92, 1));
+// console.log(digPow(46288, 3));

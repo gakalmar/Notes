@@ -545,6 +545,7 @@
                     - This permission does not affect individual files, but at directory level it restricts file deletion
                     - Only the owner (and root) of a file can remove the file within that directory.
                     - A common example of this is the `/tmp` directory: `drwxrwxrwt` (note now a `t` is used in the other section)
+                    - if you have a writing right, then you can also delete - but with sticky bit, you can reset this behaviour to revoke delete permission
             - setting special permissions:
                 - using the symbolic mode, nothing changes:
                     - `chmod g+s community_content/` (an `s` is added to the `g` group)

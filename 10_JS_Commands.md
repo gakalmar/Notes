@@ -85,9 +85,7 @@
 
             const numbers = [1, 2, 3, 4, 5];
 
-            const result = numbers.reduce(function (accumulator, currentValue) {
-            return accumulator + currentValue;
-            }, 10);
+            const result = numbers.reduce((acc, curr) => acc + curr, 10);
 
             console.log(result); // 25 (sum of all numbers + initial value 10)
 
@@ -95,13 +93,13 @@
 
             const numbers = [1, 2, 2, 3, 4, 4, 4, 5, 5, 6, 6, 6, 6];
 
-            const mode = numbers.reduce(function (accumulator, currentValue) {
-                if (!accumulator[currentValue]) {
-                    accumulator[currentValue] = 1; // Initialize count for currentValue     //create a key if it doesn't exist
+            const mode = numbers.reduce(function (acc, curr) {
+                if (!acc[curr]) {
+                    acc[curr] = 1; // Initialize count for currentValue     //create a key if it doesn't exist
                 } else {
-                    accumulator[currentValue]++; // Increment count for currentValue        //if key exists, add 1 to it
+                    acc[curr]++; // Increment count for currentValue        //if key exists, add 1 to it
                 }
-                return accumulator;
+                return acc;
             }, {});                                                                         //accumulator's intial value is {}
 
             let maxCount = 0;
@@ -170,6 +168,17 @@
         return word.filter(c => c === char).length;
     }
     count("a", "alma"); -> should return 2
+
+- create a list of unique elements:
+
+    let originalArray = [1, 2, 2, 3, 4, 4, 5];
+    let uniqueArray = [...new Set(originalArray)];
+
+- Check for types:
+    
+    Number.isInteger(value)                                         // Check for int type
+    typeof variable === "number" && !Number.isInteger(floatValue)   // Check for float type
+    typeof variable === "string"                                    // Check for string type
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 

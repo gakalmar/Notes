@@ -1,0 +1,452 @@
+# TCP/IP
+
+## Links:
+- Internet protocol suite (more on TCP/IP layers): https://en.wikipedia.org/wiki/Internet_protocol_suite#Layer_names_and_number_of_layers_in_the_literature 
+- Networking full playlist: https://www.youtube.com/playlist?list=PLQVJk9oC5JKp_8F9LPa3Pv67boA80KLm1
+
+## Fundamentals:
+- **TCP/IP in general:**
+    - **TCP:**
+        - used to dictate how devices communicate across a network
+        - involves structuring messages into smaller packets (=responsibility for separating the packets)
+    - **IP:**
+        - determines the route that the packet takes
+        - sets the route for the packet transfer
+        - ensure that the packets reach their destination
+
+## Networking overview:
+- **Chapter 1: The topology of a network**
+    - **Self check questions:**
+        - What is a topology with relation to networking?
+            - a diagram that shows how the network elements are connected
+        - What kind of different hardware devices are in a network?
+            - Devices can be:
+                - Hosts - eg. computers, servers, printers, mobile devices
+                - Switch - a device that forwards data to its destination
+                - Router
+                - Firewall (then this connects to other routers or other networks)
+            - Characteristics:
+                - they all have a **NIC** (Network Interface Card - wired or wireless):
+                - SOHO (small office / home office) equipments merge a switch, a router with access points and a firewall
+                - UTP (unshielded twisted pair) cable is the same as a twisted-pair
+                - End-user computers are the same as workstations
+                - Servers in networking are computers that provide functionality for multiple clients (there is local or internal servers and distant servers we want to connect with)
+
+- **Chapter 2: Protocol stack**
+    - **Self check questions:**
+        - What is a protocol?
+            - protocol is a set of rules
+            - On the transport layer, the 2 biggest protocols are:
+                - TCP (Transmission Control Protocol): reliable, because it cares about unsuccessful deliveries
+                - UDP (User Datagram Protocol): no checking if the info was actually delivered
+        - What is a stack?
+            - Protocols that work together to facilitate communication accross the network (eg when a request is being sent from the user to the internet?)
+            - The **TCP/IP stack** includes:
+                - Application Layer: App / Web Service that is being used, which makes the request
+                - Layer 4: Transport Layer uses **TCP** (or UDP - user datagram protocol or other) protocol
+                - Layer 3: Network layer uses **IP** address for identification of the host (the user)
+                - Layer 2: Data-Link layer uses **MAC** (physical address) for identification of the internal server
+                - Layer 1: Physical layer sends bits of data 
+        - What is the purpose of DNS?
+            - DNS is an application layer service, that connects the name of a website with an IP address
+            - stand for Domain Name Service
+        - When a DNS request is made, which transport layer protocol is used by the DNS service? In other words, what protocol is DNS using?
+            - UPD protocol
+        - What protocol is HTTP using?
+            - HTTP is a protocol (Hypertext Transport Protocol) for the Application layer
+            - It uses TCP protocol as the L4 transport protocol
+        - What is the well-known port for HTTP?
+            - Well-Known Ports are destination ports used to associate transport-layer services with them
+            - This is the port the network is listening to, for incoming requests
+            - The well-known port is 80
+        - Which transport layer protocol is connection-oriented and reliable?
+            - The TCP protocol?
+        - What application layer service uses UDP at the transport layer, and resolves the name of a web site to an IP address?
+            - The DNS service uses UDP L4 transport layer protocol
+        - Is DNS needed when a request is made using an IP address? (Think entering some IP address in your browser's address bar.)
+            - It's not needed, you can also enter an IP address directly
+        - Verification services:
+            - ping (an IP or a domain)
+
+- **Chapter 3: Addresses**
+    - **Self check questions:**
+        - What alternative names do you know for a MAC address?
+            - "physical address", "hardware address", "Layer 2 address", ethernet address"
+            - It's a 12-digit long, hexadecimal(0-9 + A-F = 16 digit options) sequence (burned in in the factory, so can't be changed)
+        - What does ARP stand for?
+            - Address Resolution Protocol
+        - How does ARP work? (The general steps.)
+            - The host (user's machine) sends an ARP request
+            - It includes the IP address (from Layer 1), that it wants to find out who is using it
+            - A broadcast is sent (ff:ff:ff:ff:ff:ff), so everyone on the network will hear it
+            - The server who the IP address corresponds to, will send a response and include its L2 ethernet address
+        - What is the purpose of the ARP protocol?
+            - To find out the MAC address of the server / service it wants to connect to, using the IP address from L1
+        - Which TCP/IP layer does the ARP protocol belong to?
+            - It operates on the Link (L2) layer primarily, but because it also uses IP addresses, it's also involved with L3 (Network layer)
+        - How does a switch work? (The one that only work with MAC addresses.)
+            - A L2 switch works with MAC addresses
+            - The steps are:
+                - When the first pieece of data (a frame) is sent from a device, through the switch, it will remember its MAC and IP address, and also attach it to the PORT it came from
+                - Then the next time a request comes in with a certain destination, it will instantly know, if the destination is amongst the stored locations
+        - Why there's a need for a switch to memorize MAC address/switch port combinations? What's the benefit?
+            - It this makes the process quicker, because it doesn't have to send it through any other port to see if it's the right destination
+        - When does a switch learn a MAC address?
+            - When those devices send data (a frame) through the switch
+            - It then notes that the request with X MAC address came through PORT N
+        - What does "broadcast" mean?   
+            - A broadcast is a request sent to (ff:ff:ff:ff:ff:ff), so everyone on the network will hear it
+        - Commands in the CLI:
+            - `ipconfing /all` - we can check under Ethernet 0 our IP (IPv4) and physical address
+
+- **Chapter 4: IPv4 and inter-network communication:**
+    - **Self check questions:**            
+        - What is the IPv4 address format? What are the constraints?
+            - `#.#.#.#` (4 numbers ranging between 0-255)
+            - Parts:
+                - Street / network address (first 2 numbers) - devices on the same network will have the same first 2 nums
+                - House number / host address (second 2 numbers)
+        - What is a network address?
+            - the part of the IP address, that refers to the network (based on the mask config)
+            - all devices on the same network have the same network address
+        - What is a host address?
+            - the second part of the IP address
+            - this is different for all devices on the same network
+        - What is a (network) mask?
+            - The network and host address separator doesn't have to be in the middle
+            - The mask can be configured eg as `255.255.0.0`, which means the first 2 numbers are the network address, the remaining are the host address (`255.0.0.0` or `255.255.255.0` can also be a config, in this case only the first number is the network)
+        - What does "local address" mean? What does "remote address" mean?
+            - Local address refers to an address on the same network, while a remote is outside the local network
+        - How does a computer decide if an address is a "local" or "remote"? Based on what information?
+            - By comparing its IP address with the IP address of the target, where it wants to send a request to
+            - If it's remote, then it forwards it to the gateway (and it will have the gateway's L2 address in the frame it sends, but L3 will still be the distant server's IP address, which is the final destination)
+        - What is a "default gateway"?
+            - a network node (typically a router), that serves as an access point, that a user uses to send information to a remote server. It then gets redirected from here, so it's like an outbox
+            - in the configuration, we write the IP address of the router, that is responsible for forwarding these requests
+        - What is "routing"?
+            - When a user on a network wants to access information on a distant server, it needs to used routing to access
+            - There's also need for a Default Gateway it can use
+        - What is a "hop"?
+            - a hop is the route a data packet (frame) travels from one routing device to the other.
+        - 4 key debugging points:
+            - correct IP address?
+            - correct mask configuration?
+            - default gateway is configured?
+            - DNS server is configured and works correctly?
+
+- **Chapter 5: Dynamic host configuration:**
+    - **Self check questions:**  
+        - What is the purpose of DHCP?
+            - **Dynamic Host Configuration Protocol** makes sure the user's device has all the necessary information to work well
+            - used to to automatically obtain network configuration information
+        - What kind of information needs to be configured in a DHCP server? Why are these necessary?
+            - IP address range the server can hand out
+            - Mask setup to see what the network and host addresses are 
+            - Default Gateway to handle remote IP addresses (the IP address of the router that does that)
+            - DNS server to resolve IP addresses behind the domain names
+        - How does a computer utilize DHCP? What's required to make it work?
+            - It uses it to automatically obtain network configuration information
+            - It needs:
+                - DHTP Server
+                - DHTP Client (modern computers have this built-in)
+                - Network connection (they need to be on the same network)
+                - Communication protocol (DORA steps, see below)
+        - What are the steps a DHCP client takes to acquire an IP? ("DORA" steps)
+            - Discover - sends out broadcast saying that it's looking for a DHTP server
+            - Offer - the DHTP server's response that is sent back to the broadcast (eg offer an IP address, that the host can use)
+            - Request is sent again, if the offer is accepted
+            - Acknowledgement of accepting it (the rest of the options are sent now)
+        - Setup on Windows:
+            - Settings / Change adapter options / RClick on current network / Properties / Find IPv4 / Properties
+
+## Layers and data flow:
+- **Layers of TCP/IP suite/stack:**
+    - There's 2 types of layers:
+        - **4-layer structure:**
+            - the actual way things are structured in real-life implementation of the model
+            - strucutred like the information is passed down from applications to the physical network layer
+            - When data is sent, each layer treats all of the information it receives from the layer above as *data* and adds control information to the front of that data. This control information is called a `header`, and the addition of a header is called `encapsulation`
+            - When data is received, the opposite procedure takes place (referred to as `decapsulation`) as each layer removes its header before passing the data to the layer above
+        - **7-layer OSI model** 
+            - this is just a concept (an abstraction), used to create the actual TCP/IP stack
+    
+    - **Encapsulation and decapsulation:** *( https://www.youtube.com/watch?v=xaKvGnnuYmk&ab_channel=SystemEngineer )*
+        - **Encapsulation:**
+            - it happens whenever data is sent between 2 devices
+            - when data is created at the application layer and it's sent down to each layer below it -> each layer is going to pre-pend a little bit of information (management info) to our original data -> this is called **encapsulation**
+            - So, it's *the process of adding headers and trailers to data*
+            - The process is slightly different in each model:
+                - OSI (7 layer):
+                    - the flow from application layer to physical layer is called **adjacent layer interaction**, which just means each layer needs to interact with the adjacent layers
+                    - Process of sending data:
+                        - Applicaiton layer:
+                            - L7H (Layer 7 header) is pre-pended to the data: `L7H | Data`
+                            - header and data together are called **PDU (Protocol Data Unit)** -> `L7 PDU`
+                        - Presentaiton layer:
+                            - pre-pend it's own header: `L6H | L7H | Data`
+                        - Process keeps repeating until it reaches **L2 - Data Link Layer** layer (this process of receiving data and capturing it by adding a new header is called **encapsulation**)
+                        - Before reaching physical layer, on **L2 - Data Link Layer** a unique thing happens: `L2T` (=Layer 2 Trailer) is also added (appended) -> this is used to verify/validate the correctness of data that's being sent over the network by a receiver
+                        - On the **L7 - Physical layer** nothing gets added, because this is the layer, where the info is going to be sent accross the physical network
+                    - Process of receiving data (decapsulation):
+                        - After receinving it, the process will be similar, but backwards (starting from L7)
+                        - It is first passed to **L6 Data Link Layer**, where it check the header and trailer to determine how to read/treat the data -> this is the repeated, until reaching **L1 - Application Layer**, where it can finally read/access the data
+                        - The whole process of going doen the 7 layers, transfering the data and then extracting it through the same 7 layers is called **Same-Layer-Interaction**
+                - TCP/IP model process:
+                    - Application Layer: Data is created, then a header is added (eg. `HTTP`, `FTP`)
+                    - Transport Layer: Header is added, which is (`TCP`. `UDP`) -> the header and Data is called **Segment** in the **transport layer** (`TCP | Data`)
+                    - Internet Layer: Header added here is `IP`, so it looks like this: `IP | TCP | Data` -> this is called **Packet**
+                    - Network access layer: A header **and a trailer** are also added to the **Packet** -> this whole thing will now be the **Frame** -> this is used to verify/validate the correctness of data that's being sent over the network by a receiver
+                    - Now it goes to the physical layer, where it's sent to the destination
+                    - Receiving data is now extracted in the same way backwards (decapsulation)
+    
+    - **Data transfer / Packet traveling:** *( https://www.youtube.com/watch?v=rYodcvhh7b8&ab_channel=PracticalNetworking )*
+        - **The network setup:**
+            - each `device` has an IP address and a MAC address. The IP address consists of the network's and the device's own address
+            - `Switches` have ports, that are used to connect devices to each other
+            - `Routers` facilitate communications between networks (=they connect different networks to each other)
+        - Table's that the devices store the data in:
+            - ARP table:
+                - maps **IP addresses** to **MAC addresses**
+                - contains IP addresses and MAC addresses
+            - MAC address table:
+                - maps **SwitchPORTs** to **MAC addresses**
+                - contains PORT numbers and MAC addresses
+            - Routing table:
+                - maps **IP networks** to **Interfaces**
+                - contains network names, their IP addresses and `DC` meaning it's direcly connected
+        - The process of data travel between networks:
+            - the `Router`'s routing table is populated first, from directly connected interfaces (the 2 network's IP addresses will be noted)
+            - The host we are sending data from (`Host A`) knows the IP address of the recipient (`Host D`) -> can put together a `L3 header` with this info:
+                - `SRC: 11.11.11.10` (the source IP address)
+                - `DST: 22.22.22.40` (the destination's IP address)
+            - Because `Host A` recognizes the IP address is on a different network, it will know that it will have to forward data to the `Default Gateway` on the router first -> needs to create a `L2 header` to get it to the router:
+                - An `ARP` request is bing sent out first: it is used to discover the router's MAC address (the IP is known as it's set as the `default G/W`, so an ARP request is sent there to retrieve a MAC address for the `L2 header`)
+                    - `ARP` request goes through the `switch` first:
+                        - The `switch` will now know the MAC address of `Host A`
+                        - The ARP request that comes in to the frame is a `broadcast`, therefore it's meant to reach all other IP addresses apart from the one it came from, so the request is then forwarded through all other ports (this is called **flooding**)
+                    - When the `ARP` request is finally received by the router:
+                        - it first learns the IP address and MAC address of `Host A`
+                        - the router generates an `ARP` response, that is sent as a **frame**
+                    - The response **frame** is sent through the `switch` again, which will now learn the MAC and IP address that lives on Port 3, where the `router` is
+                        - the **frame** includes the destination address, and since the switch already knows on which port that IP address is, it will send it through that port
+            - Now that the `ARP` response was received by `Host A`, it can finally send the **packet** to the router (the `Default G/W`):
+                - A `L2 header` is generated:
+                    - `SRC: aaaa.aaaa.aaaa` (the MAC address of the source)
+                    - `DST: ee01.ee01.ee01` (the MAC address of the destination, which is now the router, not the final destination! But `L3 header` still contains the final destination's IP address!)
+                        - **L3H's purpose is to get the data from host to host**
+                        - **L2H's purpose is to get the info from hop to hop**
+            - The data is sent and arrives to the `Router`:
+                - the `L2 header` will be stripped, because its purpose was to get the **packet** to the `router / default G/W`
+                - from the `L3 header`, the router will learn where it needs to forward the **packet** based on its `routing table` data (it stores the IP addresses of the networks connected)
+                - The MAC address of the destination is not known for the router, so an `ARP` request is sent now from the router, to find out the `IP`'s corresponding `MAC address`
+            - After the `router` finds out the destination's `MAC address`, it will now send the package to it:
+                - a `L2 header` is generated again, now containing the destination's `MAC address`:
+                    - `SRC: ee02.ee02.ee02` (the MAC address of the router, which is now the source)
+                    - `DST: dddd.dddd.dddd` (the destination's MAC address)
+                - the **packet** is now sent to `Host D`:
+                    - `L2 header` is removed (it was used for the hop)
+                    - `L3 header` is now also removed, as it is it's own IP address
+                    - The data is extracted and now a response will be sent back (it will now know already the locations, so it doesn't have to send out `ARP` requests anymore)
+
+    - **4 Layer model in detail** 
+        - **Application layer** (7-6-5 in OSI model)
+            - This layer defines how host programs interact with the network and uses its services
+            - It acts as a gateway to the other layers and determines the protocols used for data transfer
+            - encompasses protocols such as HTTP, DNS, FTP, SSH, and SMTP. Among these, HTTP is considered the most significant
+            - Parts of an HTTP request ("pull protocol"):
+                - Req (HTTP protocol): HTTP method (verb), URI (=URL of the request), headers, body
+                - Res (TCP protocol): code, message, headers, body
+        
+        - **Transport or Host-to-Host layer**
+            - designed to enable devices on the source and destination hosts to communicate with each other
+            - uses protocols like **TCP** or **UDP**:
+                - TCP:
+                    - Provides reliable, ordered, and error-checked delivery of data over the network
+                    - Guarantees deliver of data: if a piece of data doesn't arrive at the destination (in the require time) it'll be resent automatically (or the recipient will be notified of the problem)
+                    - Connection-oriented, and a connection between client and server is established (also known as a session) before data can be sent using a three-way handshake
+                - UDP:
+                    - *Connectionless, meaning there's no time spent on establishing a session between source and destination (less overhead)
+                    - No guarantee of delivery, ordering, or duplicate protection
+                    - Prioritizes time over reliability
+            - the header formats contain **source** and **destination** port numbers
+            - three way handshake:
+                - the first thing is that the TCP protocol verifies the connection
+                - TCP guaratnees that the data arrived (it will keep trying to resend it until it arrives )
+                - How it works (easier to understand version in the check questions below!):
+                    - Host A sends a SYN packet to host B
+                    - Host B receives the SYN packet and sends a SYN-ACK to host A (an acknowledgement of the SYN packet).
+                    - Host A receives the SYN-ACK and responds with an ACK.
+            - **Ports:**
+                - a port is a communication endpoint (16-bit unsigned number (0 - 65535))
+                - TCP and UDP both use ports for communication
+                - well-known-ports are reserved ports for specific services, to make data-forwarding easier
+                - Port number ranges:
+                    - System Ports range (0-1023)
+                        - Running an application on a System Port requires admin rights
+                        - It also needs to explain why it can't use other non-system ports
+                    - User Ports range (1024-49151)
+                        - A documentation with request for using a User Port number must describe why a port number from the Dynamic Ports range is unsuitable.
+                    - Dynamic Ports range (49152-65535)
+                        - These ports have been specifically set aside for local and dynamic use.
+                        - Application software may simply use any dynamic port that is available on the local host, without any sort of assignment.
+                - Well-known ports: (all here: https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml )
+                    - 21 - FTP
+                    - 22 - SSH
+                    - 25 - SMTP
+                    - 80 - HTTP
+                    - 194 - IRC
+                    - 389 - LDAP
+                    - 443 - HTTPS
+                    - 5432 - PostgreSQL
+                    - 3306 - MySQL
+                - Check if a port is in use: https://www.cyberciti.biz/faq/unix-linux-check-if-port-is-in-use-command/
+                - Port forwarding: https://www.youtube.com/watch?v=2G1ueMDgwxw&ab_channel=PowerCertAnimatedVideos
+        
+        - **Internet Layer**
+            - responsible for putting data into IP datagrams
+            - includes protocols **IP** (IPv4 and IPv6) and **ICMP**:
+                - IP:
+                    - responsible for addressing host interfaces (NICs) and encapsulating data into IP datagrams/packets (contains a header and a payload(the data being transfered))
+                    - IP header includes source IP address, destination IP address that are used to route and deliver the datagram accross different networks
+            - **ICMP:**
+                - Internet Control Message Protocol is a supporting protocol in the Internet protocol suite (it's an integral part of IP, therefore it uses IP protocol as if it were a higher-level protocol)
+                - ICMP messages are sent as IP packets but are handled differently
+                - It's an L3 / Network Layer protocol - because of this there are no TCP or UDP port number associated with ICMP packets
+                - primarily used for network diagnostic purposes
+                - defines several control message types:
+                    - Most important ones: echo request (7), echo response (8), destination unreachable (3) and time exceeded (11)
+                    - Full list: https://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#Control_messages
+                - `ping` and `traceroute` tools are based on the ICMP protocol
+                    - How to use `tracert / traceroute`: https://www.youtube.com/watch?v=1bIpUup5Vp4&ab_channel=CBTNuggets
+                        - `tracert` uses the TTL value to force ICMP echo responses from hops along the path to a destination
+                        - on Linux and macOS traceroute sends UDP packets instead of ICMP echo requests by default
+                    - How to use `ping`: https://www.youtube.com/watch?v=vJV-GBZ6PeM&ab_channel=PowerCertAnimatedVideos
+        
+        - **Link or Network Access Layer**
+            - the collection of networking protocols that operate only on the local network that a host is connected to
+            - two kinds protocols in the Link layer of TCP/IP:
+                - Ethernet:
+                    - define how data is physically transmitted through the network over different mediums
+                - Other that use Ethernet:
+                    - eg ARP (Address Resolution Protocol):
+                        - the entire contents of an ARP message becomes the payload for a message sent over the local network like an Ethernet frame
+                        - how an ARP message is constructed:
+                            - An ARP message can be a request or a reply and it contains:
+                            - the sender's MAC or L2 address,
+                            - the sender's IP or L3 address,
+                            - the target's MAC or L2 address
+                            - the target's IP or L3 address. 
+            - MAC or Medium Access Control:
+                - a "sublayer" in the OSI model terminology that controls the hardware responsible for interaction with the wired, optical or wireless transmission medium
+            - LAN or local area network protocols:
+                - protocols in this layer only deal with hosts, computers on the same local network
+                - Ethernet and its friends like Wi-Fi defines how devices on the same network exchange information over wired, optical or wireless mediums
+                - The Ethernet protocol defines how to send data over different mediums in small chunks called frames
+                - Each frame contains a source/sender MAC address and a destination/recipient MAC address and a payload
+            - Full process of the fetching is in here: https://journey.study/v2/learn/materials/pages/networks/tcp-ip-layers-link.md
+
+    - **7-layer OSI model** 
+        - Layers:
+            - Layer 7: Application
+            - Layer 6: Presentation
+            - Layer 5: Session
+            - Layer 4: Transport
+            - Layer 3: Network
+            - Layer 2: Data link
+            - Layer 1: Physical
+        - These are referred to as numbers in case of layers 1-3:
+            - **L1** device is a *hub*, because it deals with electrical signals
+            - **L2** device would be a *switch*, because
+            - **L3** device is a *router*, because it uses IP protocol
+
+# DNS
+- Links:
+    - General video: https://www.youtube.com/watch?v=mpQZVYPuDGU&ab_channel=PowerCertAnimatedVideos
+    - 
+
+- **DNS** stands for **Domain Name System**, which is essentially the *phone book of the internet*:
+    - Web browsers interact through IP addresses
+    - DNS translates domain names to IP addresses
+    - DNS is basically a diectory, that contains **domain names** and their corresponding **IP addresses**
+
+- **How DNS works:** *( https://www.youtube.com/watch?v=72snZctFFtA&ab_channel=DNSMadeEasyVideos )*
+    - the domain actually has a `.` at the end, which represents the root of the internet's namespace
+    - after typing in a domain, it will first be determined, if the IP Address is known:
+        - configured on the computer?
+        - configured in memory? (in cache)
+    - If it's not known yet, then this process will happen (this process is much better explained in the video in the DNS links!):
+        - a query is sent from the computer to a `resolving name server` to resolve the domain, and find out the IP address:
+            - the `resolving name server` should know where to find the `root name servers` (the `.`)
+            - the name servers reply with the location of the `com name servers` (=`top level domain name servers` or `TLD`)
+            - the `resolving name servers` then take all this info from the `root name servers`, adds it to its `cache`, and go to the `com TLD servers`
+            - the `com TLD server` doesn't know, just where to find the `example.com name servers` (=`authoratative name servers` or `ANS`)
+            - The domain's `registrar` is what determines which `ANS` to use, and lets the `TLD` servers know (this is where we register a domain name)
+            - the `resolving name servers` then take all this info from the `authoratative name servers`, which finally knows the IP address
+            - this is then sent to the OS, which forwards the info to the browser, so it can now make a connection
+    - **Summary of server types (DNS servers involved in loading a webpage):**
+        - `Resolving name server / DNS recursor`:
+            - The recursor can be thought of as a librarian who is asked to go find a particular book somewhere in a library. The DNS recursor is a server designed to receive queries from client machines through applications such as web browsers. Typically the recursor is then responsible for making additional requests in order to satisfy the client’s DNS query.
+        - `Root name server`:
+            - The root server is the first step in translating (resolving) human readable host names into IP addresses. It can be thought of like an index in a library that points to different racks of books - typically it serves as a reference to other more specific locations.
+        - `TLD name servers`
+            -  The top level domain server (TLD) can be thought of as a specific rack of books in a library. This nameserver is the next step in the search for a specific IP address, and it hosts the last portion of a hostname (In example.com, the TLD server is "com").
+        - `Authorative name servers`
+            - This final nameserver can be thought of as a dictionary on a rack of books, in which a specific name can be translated into its definition. The authoritative nameserver is the last stop in the nameserver query. If the authoritative name server has access to the requested record, it will return the IP address for the requested hostname back to the DNS Recursor (the librarian) that made the initial request.
+
+- **Resolving domain names:** (eg looking them up)
+    - Using the command-line:
+        - `nslookup <domain-to-lookup>`
+    - Online services:
+        - eg `https://www.ultratools.com/tools/dnsLookup`
+    - - Using `dig` command line tool:
+        - used for querying the DNS
+        - more: https://en.wikipedia.org/wiki/Dig_(command)
+        - install on windows: https://www.isc.org/download/
+
+- **Round-robin:**
+    - a single domain name can have multiple IPs assigned to it, this is by design:
+        - Round-robin DNS is a load balancing technique where the balancing is done by a type of DNS server called an authoritative nameserver, rather than using a dedicated piece of load-balancing hardware. Round-robin DNS can be used when a website or service has their content hosted on several redundant web servers; when the DNS authoritative nameserver is queried for an IP address, the server hands out a different address each time, operating on a rotation.
+        - A DNS server with round-robin enabled will have multiple different A records, each with the same domain name but a different IP address. The IP addresses in a round-robin DNS server are like football players in a penalty warmup: each one gets a turn and then is moved to the back of the line.
+
+- **DNS record types:** *( https://www.cloudflare.com/en-gb/learning/dns/dns-records/ )*
+    - Links:
+        - Summary video: https://www.youtube.com/watch?v=6uEwzkfViSM&ab_channel=ITFreeTraining
+        - Most important types: https://www.cloudflare.com/en-gb/learning/dns/dns-records/ 
+        - All record types: https://en.wikipedia.org/wiki/List_of_DNS_record_types
+    - The 3 most important are:
+        - `A`: *( https://support.dnsimple.com/articles/a-record/#whats-an-a-record )*
+            - The record that holds the IPv4 address of a domain
+            - A stands for Address
+        - `CNAME / Alias`: *( https://support.dnsimple.com/articles/cname-record/#whats-a-cname-record )*
+            - forwards one domain or subdomain to another domain, does NOT provide an IP address
+        - `AAAA ("quad A")`:
+            - A records only hold IPv4 address, AAAA is the equivalent concept for IPv6 addresses, so if a website has an IPv6 address, it will instead use an AAAA record (we won't use these)
+
+- **TTL:** *( https://ns1.com/resources/understanding-ttl-values-in-dns-records )*
+    - DNS `TTL`, or `time to live` is an important concept
+        - can be set at DNS record level (e.g. for an A record)
+        - You can set this on a DNS service or registrar's website for particular domains names
+        - TTL tells for a DNS resolver (or client) how long to cache a query before requesting a new one.
+        - The information gathered is then stored in the cache of the recursive or local resolver for the TTL before it reaches back out to collect new, updated details.
+        - For example, if TTL is set to 60 seconds (1 min) for an A record for the domain example.com, the resolver (e.g. your computer) is going to send a new DNS query for another DNS server to learn (once again) the details (the IP address) of example.com every minute. If 100 users visit the site in that period, they will all see the same thing, until the resolvers update their TTL.
+        - Setting TTL to a correct value (small for frequently changing records and larger for rarely changing records) is crucial in how DNS operates:
+            - There are many reasons why you may consider to go long or short with your DNS TTLs. Below, we have outlined some popular reasons for each to help show you that TTLs can help benefit all different aspects of the business:
+                - Reasons for Long:
+                    - Security availability: Availability of service if the DNS server is ever down for a time (DDoS), still available on the local resolver cache
+                    - Infrastructure: Static site that doesn’t often change, less of a burden on your DNS servers
+                    - User Experience: Faster responses from cache
+                - Reasons for Short:
+                    - Network: Network-wide changes that need to be implemented quickly
+                    - End-User: Frequent updates or changes made to websites
+                    - Infrastructure: DNS based load balancing
+        - Note! TTL in the context of DNS is a completely different than in the context of IP packets, traceroute or other tools
+    - **Testing TTL:**
+        - All steps here: https://journey.study/v2/learn/courses/252/modules/29404/units/1/materials/5400
+
+- **DDNS - Dynamic DNS:**
+    - DNS is used with static IP addresses
+    - DDNS is used with dynamic IP addresses
+    - Mainly used in home devices, so we can access them from anywhere else, even if the home IP address changes
+    - DDNS will automatically update the reference for the domain name, when the IP address changes (you use a custom host name for that references the IP Address, instead of using the IP Address itself)
+
+
