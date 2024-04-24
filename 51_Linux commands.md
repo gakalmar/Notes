@@ -44,6 +44,7 @@
 
 - **Basic commands in the console/shell/command line:**
 
+`cat /etc/os-release`       | log the distro name
 `sudo -i`                   | log in as `root` superuser, so you can avoid typing `sudo` every time
 `ls --help` or `ls -h`      | Get help
 `man ls`                    | read manual of "ls" or anything else ("Man pages")
