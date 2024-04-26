@@ -475,13 +475,14 @@ lance TUI? (diplay running processes in terminal)
                 - when enabled, restricts access to a bucket with a public policy to only AWS services and authorized users within the bucket owner's account
                 - blocks all cross-account access to the bucket with a public policy (except by AWS services), while still allowing users within the account to manage the bucket
     
-    - **AWS Key Management Service:**
+    - **AWS Key Management Service KMS:**
         - I'ts a service, that makes it easier for you to create and manage cryptographic keys used to encrypt your data
-        - It is integrated with other AWS services to ensure that your data is protected by encryption at rest, making it easier to secure your data stored in services like Amazon `S3`, `EBS` and others
+        - It is integrated with other AWS services to ensure that your data is protected by **encryption at rest** (data at rest - encrypting data that is stored on a disk), making it easier to secure your data stored in services like Amazon `S3`, `EBS` and others
         - provides a centralized architecture for key management
         - works within an AWS region
         - **What it's used for:**
-            - to encrypt data in your applications or when storing data in AWS services (supports both symmetric and asymmetric keys for encryption)
+            - to encrypt data in your applications or when storing data in AWS services (supports both symmetric and asymmetric keys for encryption):
+                - eg you can use them to access data from an `S3`
             - supports automatic key rotation (for long-term use of keys)
             - set access control defining policies and roles: integrates `Identity and Access Management` (`IAM`) to define permissions for who can manage or use keys
             - monitor the usage of your encryption keys to ensure compliance and detect unauthorized access (integrates `CloudTrail `)
@@ -661,6 +662,12 @@ lance TUI? (diplay running processes in terminal)
         - Once the instance profile is attached, the EC2 instance and any applications running on it will inherit the permissions defined in the IAM role
 
 - **"Wear a different hat" method:**
+    - What is it?
+        - It makes your user have additional access, by using **assume roles**
+            - So in essence: *"wear a different role" = "Assume a different role"*
+        - A `Role` is like an anonymous user, that has a trust policy and you can set access priviliges
+        - The benefits of using a `Role` is that it expires after a cerain amount of time, so it's safer than a user
+        - It's used to expand your basic priviliges
     - Step 1: Create an Administrative Policy:
         - `IAM` -> `Policies` -> `Create Policy`
         - `Select a Service` - this should be (`*`) meaning All, but it can't be selected, so select 1 from the list (eg `EC2`)
@@ -837,6 +844,15 @@ lance TUI? (diplay running processes in terminal)
         - Also update access rights of the key: `sudo chmod 600 ~/.ssh/AWS-GK-London.pem`
 
 - **Create a Client-to-site VPN connection:**
+    - **VPN - Virtual Private Network:**
+        - It's a technology, that allows you to to create a secure connection over the internet to another network:
+            - **site-to-site:** connect 2 networks (eg AWS network with office network)
+            - **Client-to-site:** connect you (the Client) to a distant server (eg. office network)
+        - It achieves this using a VPN server, to which you connect, then the connection is forwarded from this server
+        - It uses end-to-end encrytion for sending data, so it's secure
+        - Hides you from the internet, by connecting throught the VPN server (but not completely!)
+        - You can set connection rules (eg. you can only connect to the AWS network from the office network, so you need to connect to it first)
+
     1. Generate the **client** certificates and keys (in WSL):
         - Get `easyRSA`: 
             - `git clone https://github.com/OpenVPN/easy-rsa.git`

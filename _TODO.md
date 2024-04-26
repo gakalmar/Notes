@@ -1,6 +1,17 @@
 # LIST OF THINGS TO DO IN ORDER:
 
-- 2 more guides to take notes from
+# AWS
+- Nana videos:
+    - Docker currently at 2:19 (Deploy resz jon)
+        - https://www.youtube.com/watch?v=3c-iBn73dDE&ab_channel=TechWorldwithNana
+    - Kubernetes (not started yet!)
+        - https://www.youtube.com/watch?v=VnvRFRk_51k&list=PLy7NrYWoggjziYQIDorlXjTvvwweTYoNC&ab_channel=TechWorldwithNana
+
+- Collect here the projects that I haven't completed and need to go back to:
+    - IAM security feladat utso resze "wear a different hat"
+        - "Provide users, groups, or resources with permissions they usually would not have assigned to them"
+    - Head in the cloud 2:
+        - site-to-site VPN: nem talalja az `openswan` package-t
 
 # OOP
 
