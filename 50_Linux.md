@@ -577,7 +577,7 @@
     - `/etc/passwd`	    User account information
     - `/etc/gshadow`	Contains the shadowed information for group accounts
     - `/etc/group`	    Defines the groups to which users belong
-    - `/etc/skel/`      Used to initiate home directory when a user is first created
+    - `/etc/skel`       Used to initiate home directory when a user is first created
 
     - `etc/shadow`: *( https://linuxize.com/post/etc-shadow-file/ )*
         - The `/etc/shadow` file keeps records about encrypted users’ passwords
@@ -1287,6 +1287,10 @@
                         - `ssh -i /c/Users/gakal/.ssh/id_rsa -p 2222 ubuntu@127.0.0.1`
                             - `p` used to specify port
                             - `127.0.0.1` means we are connecting through the forwarded port on the localhost
+                    - Login from WSL:
+                        - copy the private key first to your own folder somewhere, because you can't set its permissions on the Windows mounted part, then:
+                        - set permissions for folders and private key
+                        - `ssh -i /mnt/c/Users/gakal/.ssh/AWS-GK-London.pem -p 2222 ec2_user@<EC2-public-IP>`
             - Setting up **postgres**:
                 - Add `postgres` port forwarding:
                     - set `host port` to what you want (eg keep `5432`)
@@ -1621,31 +1625,31 @@
                 - add timestamp:
                     - `ping -D google.com`
 
-- **Port forwarding:**
-    - **The issue is:**
-        - NAT networking: you can't reach guest servers from the VMs
-        - Bridged networking: the VMs will appear on the overall network (because they get their own IP address)
-    - **Solution:**
-        - In VirtualBox, once the VM is stopped:
-            - go to Settings/Network/Advanced/Port Forwarding
-            - Click on new rule:
-                - Name: SSH
-                - Protocol: TCP
-                - Host port: 2222
-                - Guest port: 22222
+    - **Port forwarding:**
+        - **The issue is:**
+            - NAT networking: you can't reach guest servers from the VMs
+            - Bridged networking: the VMs will appear on the overall network (because they get their own IP address)
+        - **Solution:**
+            - In VirtualBox, once the VM is stopped:
+                - go to Settings/Network/Advanced/Port Forwarding
+                - Click on new rule:
+                    - Name: SSH
+                    - Protocol: TCP
+                    - Host port: 2222
+                    - Guest port: 22222
 
-    - The in the VM:
-        - Check ssh port currently running on:
-            - `netstat -tuln | grep ssh`
-        - Check the current ssh configuration:
-            - `sudo grep -i port /etc/ssh/sshd_config` (you can see that default is 22 in a commented out line)
-        - Change default SSH port in ununtu:
-            - `sudo nano /etc/ssh/sshd_config`
-                - uncomment and change the port line to `22222`
-        - Restart server:
-            - `sudo systemctl restart sshd`
-        - Check again:
-            - `sudo grep -i port /etc/ssh/sshd_config`
+        - The in the VM:
+            - Check ssh port currently running on:
+                - `netstat -tuln | grep ssh`
+            - Check the current ssh configuration:
+                - `sudo grep -i port /etc/ssh/sshd_config` (you can see that default is 22 in a commented out line)
+            - Change default SSH port in ununtu:
+                - `sudo nano /etc/ssh/sshd_config`
+                    - uncomment and change the port line to `22222`
+            - Restart server:
+                - `sudo systemctl restart sshd`
+            - Check again:
+                - `sudo grep -i port /etc/ssh/sshd_config`
 
 ## SIMPLIFIED EXTRACTS OF PROCESSES:
 - **Create virtual storage and set it up for use:**
