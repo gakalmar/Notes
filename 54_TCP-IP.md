@@ -362,7 +362,6 @@
 # DNS
 - Links:
     - General video: https://www.youtube.com/watch?v=mpQZVYPuDGU&ab_channel=PowerCertAnimatedVideos
-    - 
 
 - **DNS** stands for **Domain Name System**, which is essentially the *phone book of the internet*:
     - Web browsers interact through IP addresses
