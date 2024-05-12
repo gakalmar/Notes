@@ -1,17 +1,28 @@
 # LIST OF THINGS TO DO IN ORDER:
 
 # AWS
+- Try again the `EKS persistency` task!
+
 - Nana videos:
-    - Docker currently at 2:19 (Deploy resz jon)
-        - https://www.youtube.com/watch?v=3c-iBn73dDE&ab_channel=TechWorldwithNana
-    - Kubernetes (not started yet!)
+    - Kubernetes - 5 next 
         - https://www.youtube.com/watch?v=VnvRFRk_51k&list=PLy7NrYWoggjziYQIDorlXjTvvwweTYoNC&ab_channel=TechWorldwithNana
+
+- Terraform:
+    - Complete getting started guide with AWS:
+        - https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS
+    - Check the workflow guide: 
+        - https://developer.hashicorp.com/terraform/intro/core-workflow
 
 - Collect here the projects that I haven't completed and need to go back to:
     - IAM security feladat utso resze "wear a different hat"
         - "Provide users, groups, or resources with permissions they usually would not have assigned to them"
     - Head in the cloud 2:
         - site-to-site VPN: nem talalja az `openswan` package-t
+    - a Service Security feladatban, miutan megvan az S3 bucket es EC2, es a kulcsokat is megcsinaltam, mit kell utana csinalni, hogy ezeket felhasznaljam? Errol nem ir semmit (Tehat hogyan tudom ezeket a kulcsokat utana hasznalni?)
+    https://journey.study/v2/learn/courses/252/modules/29404/units/1/SOLO/15204
+    - Kernel tuning - Linux Kernel Firewall: 
+        ( https://journey.study/v2/learn/courses/252/modules/29404/units/0/SOLO/15509 )
+        nem nagyon tudtam lecsekkolni, hogy sikerult-e (nem is nagyon ertem, mi a lenyeg)
 
 # OOP
 
@@ -39,3 +50,7 @@
 
     encodeURIComponent() and decodeURIComponent() ?
     Event bubbling - how and when to use stopPropagation() ?
+
+# DEVOPS
+
+- learn about the nginx-flask-python3 stack
