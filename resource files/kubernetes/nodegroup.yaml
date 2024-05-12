@@ -1,0 +1,26 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: gk-cluster-7
+  region: eu-west-2
+
+nodeGroups:
+  - name: gk-nodegroup-2
+    instanceType: t3.micro
+    desiredCapacity: 3
+    minSize: 1
+    maxSize: 5
+    volumeSize: 20
+    labels:
+      role: additional-nodes
+    tags:
+      nodegroup-role: additional
+    iam:
+      withAddonPolicies:
+        autoScaler: true
+        externalDNS: true
+        appMesh: true
+        ebs: true
+        fsx: true
+        efs: true

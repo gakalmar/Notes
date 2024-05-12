@@ -1,0 +1,25 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: gk-cluster-7
+  region: eu-west-2
+  version: "1.29"
+
+vpc:
+  id: "vpc-0855b80bdd738be7e"
+  cidr: "10.0.0.0/16"
+  subnets:
+    public:
+      gk-cluster-7-subnet-public1-eu-west-2a:
+        id: "subnet-05e8077516f7f6fa5"
+        cidr: "10.0.0.0/20"
+      gk-cluster-7-subnet-public2-eu-west-2b:
+        id: "subnet-033223a3391afc53a"
+        cidr: "10.0.16.0/20"
+
+nodeGroups:
+  - name: gk-nodegroup-1
+    instanceType: t3.medium
+    desiredCapacity: 2
+    privateNetworking: false # make this true of you only use private ones

@@ -1,0 +1,18 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: my-eks-cluster
+  region: eu-west-2
+
+vpc:
+  subnets:
+    public:
+      eu-west-2a: { id: "subnet-0a6ada53103e107e9" }
+      eu-west-2b: { id: "subnet-0bc6bcd1dc8c7988e" }
+
+nodeGroups:
+  - name: ng-1
+    instanceType: t3.medium
+    desiredCapacity: 2
+    privateNetworking: true
