@@ -331,3 +331,15 @@
 // }
 // console.log(digPow(92, 1));
 // console.log(digPow(46288, 3));
+
+function findOdd(A) {
+    let returnNum = -1;
+    let filteredList = A.forEach(num => {
+        if (A.filter(num2 => num2 === num).length % 2 === 1){
+            returnNum = num;
+        }
+    })
+    return returnNum;
+  }
+
+  console.log(findOdd([0,1,0,1,0]));
