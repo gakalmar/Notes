@@ -1,12 +1,17 @@
 # Questions:  
 
 ## SI review
+- kis elakadasok a het elejen (aws cli verzio, ssh login gondok)
+
+- Terraforming moon 3ik feladat (hogy mashonnan is be lehessen lepni) - ezt at lehetne beszelni mi is tortenik
+ 
 - Kubernetes RBAC feladat:
-    - Nginx creation pont:
+    - Nginx creation pont (csak pod creating permission van elvileg):
         - meg kell probalni csinalni egy service-t, es elvileg nem kellene sikerulnie, de sikerul, pedig jol lettek beallitva a dolgok. Ez azert van, mert admin role-bol csinalok mindent?
         - hogyan teszteljuk, h tenyleg nem engedi?
 
 - Kubernetes EKS persistency with EBS feladat:
+    - elakad a volume csatolas valamiert
     - "Create a deployment" - valamiert leragad "ContainerCreating" stateben (`kubectl get pods`) -> HIBA: "attachdetach-controller  AttachVolume.Attach failed for volume "postgres-pv-2" : timed out waiting for external-attacher of ebs.csi.aws.com CSI driver to attach volume vol-035f524f584d7cc80"
         - try again from scratch
         - try setting gp2 types in the beginning

@@ -1,6 +1,8 @@
 # LIST OF THINGS TO DO IN ORDER:
 
 # AWS
+- Resolve SSH login issue!
+
 - Try again the `EKS persistency` task!
 
 - Nana videos:

@@ -434,7 +434,7 @@
                     number: 80
 
         - **Secret:**
-            - Kubernetes `Secrets` let you store and manage sensitive information, such as passwords, OAuth tokens, and ssh keys.
+            - Kubernetes `Secrets` let you store and manage sensitive information, such as passwords, OAuth tokens, and ssh keys, so that you don't need to include confidential data in your application code
             - Storing confidential information in a `Secret` is safer and more flexible than putting it verbatim in a `Pod definition` or in a `container image`.
             - The non-confidential version of a `secret` is a `configmap`
 
@@ -464,7 +464,11 @@
                     password: xyz
         
         - **ConfigMap:**
-            - A `ConfigMap` is an API object used to store non-confidential data in key-value pairs. `Pods` can consume `ConfigMaps` as environment variables, command-line arguments, or as configuration files in a volume. For confidential data we use `secrets` (see above!)
+            - A `ConfigMap` is an API object used to store non-confidential data in key-value pairs. `Pods` can consume `ConfigMaps` as environment variables, command-line arguments, or as configuration files in a volume (used during either application initialization or runtime).
+
+            - The stored data is used to adjust values assigned to configuration parameters, for example, you can download and run the same container image to spin up containers for the purposes of local development, system test, or running a live end-user workload.
+            
+            - For confidential data we use `secrets` (see above!)
 
             - A `ConfigMap` allows you to decouple environment-specific configuration from your container images, so that your applications are easily portable. Otherwise we would have to build and deploy our apps again, when we change something inside the app's configuration
 
@@ -650,6 +654,21 @@
                 - same as role binding, but it's not namespace specific, so it's cluster-wide
                 - If you want to bind a `ClusterRole` to all the namespaces in your cluster, you use a `ClusterRoleBinding`
 
+## Liveness and readiness probes:
+- `Liveness` and `readiness probes` are mechanisms in Kubernetes used to manage how containers in pods are handled. They help Kubernetes make decisions about when to restart a container or when to route traffic to a pod. 
+
+- **Liveness Probes**
+    - Liveness probes are used to know when to restart a container. The main purpose of a liveness probe is to check if an application inside a container is still running. If the liveness probe fails, Kubernetes assumes that the container is in a broken state and restarts it automatically.
+
+    - **Example Use Case:**
+        - An application might be running, but it's deadlocked, with all threads hung. Although the application process is still running, the application is not functioning as expected. A liveness probe could catch this by checking some type of "I am alive" signal at a set interval. If this check fails, Kubernetes restarts the container to try to restore normal operation.
+
+- **Readiness Probes**
+    - Readiness probes are used to determine when a container is ready to start accepting traffic. Essentially, the readiness probe is meant to check if the application is ready to serve requests. If the readiness probe fails, Kubernetes won’t send traffic to the pod until it passes.
+
+    - **Example Use Case:**
+        - A web server is deployed within a container, and it starts up with some initial load time because it might be loading large data sets or configurations. Even though the container is running, it's not yet ready to serve traffic. A readiness probe can check the HTTP endpoint or a specific condition that returns success only when the server is truly ready to handle requests.
+
 ## AWS EKS (Elastic Kubernetes Service)
 - **What is it?**
     - A managed k8s cluster/service:
@@ -657,6 +676,7 @@
             - Creates the master node and install all the necessary apps (Container Runtime, Master Processes)
         - Scaling and Backups
         - You can focus on `deployment`, and create only the `worker nodes`
+
 - **How does it work?**
     1. Setup / preparation:
         - Create a `VPC`
@@ -680,6 +700,14 @@
     - We can simplify this process with **eks control tool**: `eksctl` (CLI for AWS EKS) (see below in the guides section!)
 
 ## GUIDES:
+- **General tips:**
+    - Create a VPC, then create a cluster first:
+        - create a VPC (not necessary!)
+        - create yaml file for cluster (see resources - with or without existing VPC)
+        - `eksctl create cluster -f cluster.yaml`
+    - after you're done, make sure to update your context like this:
+        - `aws eks update-kubeconfig --region eu-west-2 --name gk-cluster`
+
 - **Deploy applications (Service):**
     1. Create a sample deployment and expose it on port 8080:
         - `kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0`
@@ -999,9 +1027,6 @@
                             SELECT * FROM test;
 
                     - The data should still be there
-
-
-
 
 ## COMMANDS:
 - Install (on Linux): *( https://minikube.sigs.k8s.io/docs/start/ )*

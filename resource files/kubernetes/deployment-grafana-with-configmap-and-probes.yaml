@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana-deployment
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+      - name: grafana
+        image: grafana/grafana
+        ports:
+        - containerPort: 3000
+        env:
+          - name: GF_SECURITY_ADMIN_USER
+            valueFrom:
+              configMapKeyRef:
+                name: grafana-config
+                key: username
+          - name: GF_SECURITY_ADMIN_PASSWORD
+            valueFrom:
+              configMapKeyRef:
+                name: grafana-config  #this could be grafana-secret if we want to keep using the secret for the password!
+                key: password
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 3000
+          initialDelaySeconds: 30
+          periodSeconds: 120

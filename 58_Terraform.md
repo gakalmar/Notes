@@ -118,6 +118,67 @@
 
 # GUIDES:
 
+- **Generic workflow:**
+    0. set up environment:
+        - install: `sudo snap install terraform --classic`
+        - create a directory for your project
+        - to also use `git`, you can follow the link: https://developer.hashicorp.com/terraform/intro/core-workflow
+
+    1. Set up your configuration:
+        - create a `main.tf` file inside it (this will contain the configuration)
+            - declare your provider, eg `AWS` (better to use env variables):
+
+                    provider "aws" {
+                        region     = "us-west-2"
+                        access_key = "your-access-key"
+                        secret_key = "your-secret-key"
+                    }
+            - define resources:
+                - eg. `EC2 instances`, `S3 buckets`, or an entire `EKS cluster`:
+
+                        resource "aws_instance" "example" {
+                            ami           = "ami-0c55b159cbfafe1f0"
+                            instance_type = "t2.micro"
+                        }
+
+                - you can also use existing `terraform modules` from the `Terraform Registry` to simplify configs
+                - use `variables` to have a more dynamic config and `outputs` to retrieve info about the resorces
+
+    2. Manage state (**write-plan-apply cycle** - write refers to the previous point!):
+        - run `terraform init` to initialize the setup (downloads all necessary plugins)
+        - run `terraform plan` to see what actions Terraform will take
+        - run `terraform apply` to apply the changes
+
+        - use `state` file with remote state management like `AWS S3`, if you are working on a team project
+
+    3. Update:
+        - repeat plan-apply cycle after modifications
+        - OR
+        - run `terraform destroy` to tear down all resources if you don't need them anymore
+
+- **Getting started tutorial workflow:** *( https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS )*
+    1. 
+
+- **Terraforming Moon task:**
+    0. Create a `main.tf` file in the root of your project folder (use `main-terraforming-moon_step-1.tf` template in resources!)
+    1. Create an alias, so you don't have to type `terraform` all the time:
+        - `alias tf=terraform`
+        - Then run the loop:
+            - `terraform init`
+            - `terraform plan`
+            - `terraform apply` (type `yes` to confirm!)
+    2. Modify the `main.tf` file:
+        - Add SSH login to SG section (refer to `main-terraforming-moon_step-2.tf`)
+        - Update config:
+            - `terraform apply` (type `yes` to confirm!)
+        - Now we can SSH into our newly created instance:
+            - `ssh -i ~/.ssh/AWS-GK-London ec2-user@<EC2 IP>` (add `-v` for verbose - show details)
+    3. Add more IPs to the security group (SG) to allow additional machines to connect via SSH:
+        - Update Security Group in Terraform (use `main-terraforming-moon_step-3.tf` file)
+            - Replace "203.0.113.0/24" and "192.0.2.0/24" with the actual IP ranges or specific IPs that you want to allow. This setup assumes you know the IPs or ranges you wish to permit for SSH access. (what is this part?)
+        - Update config:
+            - `terraform apply` (type `yes` to confirm!)
+
 # LINKS:
 - AWS getting started link: https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS
 - Terraform-AWS documentation: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
@@ -128,3 +189,8 @@
     - https://developer.hashicorp.com/terraform/intro/vs/cloudformation
     - https://developer.hashicorp.com/terraform/intro/vs/chef-puppet
     - https://developer.hashicorp.com/terraform/intro/vs/custom
+
+- Sample TF files:
+    - EC2 instance: https://registry.terraform.io/modules/terraform-aws-modules/ec2-instance/aws/latest
+    - Security group: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
+    - AWS provider: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
