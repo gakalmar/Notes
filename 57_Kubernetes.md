@@ -60,13 +60,20 @@
         - `Service`:
             - has a permanent IP address, that is used for the communication between pods
             - it also acts as a load balancer
+    - **Limit & Request:**
+        - **Request:** 
+            - Describes what is the minimum resource (CPU & memory) required for a pod to start.
+            - Kubernetes uses resource requests to make scheduling decisions, and it needs to make sure the request is fulfilled
+        - **Limit:** 
+            - Describes what is the maximum amount of resources (CPU and memory) that a pod can use.
+            - Kubernetes uses resource limits to constrain the resource usage of containers, preventing any single container from using more than its allocated resources and affecting other containers, and for this it uses Limit
 
 - **Minikube:**
     - a tool that lets you run a Kubernetes cluster on your own computer with minimal setup
     - The benefit is that it doesn't need a cloud provider to host your cluster, but it makes your computer slower, depending on the workload and size of the cluster
 
 - **Basic architecture of a k8s cluster:**
-    - made of of a `Master node` and some `worker nodes`
+    - made of a `Master node` and some `worker nodes`
         - in production environments in order to have a backup of the `master node`, there's usually more that 1 `master node` used
 
         - Each `worker node` must contain:
@@ -925,7 +932,7 @@
             - apply: `kubectl apply -f role-binding.yaml`
             - verify: `kubectl describe rolebinding pod-manager-binding -n default`
     
-    6. Create a Pod Based on an Image Containing the Kubectl Command:
+    6. Create a Pod Based on an Image Containing the Kubectl Command: # Create deployment instead
         - Create pod with `yaml` file (use `pod-kubectl.yaml`):
             - apply: `kubectl apply -f pod-kubectl.yaml`
             - verify: `kubectl get pods`
@@ -962,7 +969,7 @@
                 - then using the `pod-test-namespace.yaml` file, create it:
                     - `kubectl apply -f test-pod-namespace.yaml`
 
-- **EKS persistency with EBS:**
+- **EKS persistency with EBS:** (second solution with Terraform in Terraform file!)
     1. Set up VPC and cluster as before
         - don't forget to set subnet "auto allocate IP"!
         - dont' forget to update the SG to allow HTTP and SSH!
@@ -1027,6 +1034,10 @@
                             SELECT * FROM test;
 
                     - The data should still be there
+    
+    + Additional info:
+        - `AWS Cluster Role`: https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html
+        - `AWS Node Role`: https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html
 
 ## COMMANDS:
 - Install (on Linux): *( https://minikube.sigs.k8s.io/docs/start/ )*
@@ -1099,7 +1110,6 @@
 - `kubectl` commands documentation: https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
 - `eksctl` guide: https://eksctl.io/usage/creating-and-managing-clusters/
 - AWS guide to `eksclt`: https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html
-
 
 - Service accounts: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
 - RBAC examples: https://kubernetes.io/docs/reference/access-authn-authz/rbac/

@@ -476,7 +476,7 @@ lance TUI? (diplay running processes in terminal)
                 - blocks all cross-account access to the bucket with a public policy (except by AWS services), while still allowing users within the account to manage the bucket
     
     - **AWS Key Management Service KMS:**
-        - I'ts a service, that makes it easier for you to create and manage cryptographic keys used to encrypt your data
+        - It's a service, that makes it easier for you to create and manage cryptographic keys used to encrypt your data
         - It is integrated with other AWS services to ensure that your data is protected by **encryption at rest** (data at rest - encrypting data that is stored on a disk), making it easier to secure your data stored in services like Amazon `S3`, `EBS` and others
         - provides a centralized architecture for key management
         - works within an AWS region

@@ -159,8 +159,25 @@
 - **Getting started tutorial workflow:** *( https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS )*
     1. 
 
-- **Terraforming Moon task:**
+- **Workshop:**
+    - we create a `main.tf` file, but we also create others:
+        - `providers.tf` we add the providers here separately, so it's not all int he `main.tf` file
+        - `versions.tf`
+    - We use the docs, to fill these up:
+        - https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+        - For example, we add `resource` blocks to the `main.tf` file:
+            - if a resource type has only 1 instance, we call it `this`
+
+    - We now initialize it with commands:
+        - `terraform init` -> tries to find the `main.tf` file, and initializes our backend: this is where the `state` is handled
+
+- **Terraforming Moon task:** (WS video: Creating an EC2 with SSH access from 27:20)
     0. Create a `main.tf` file in the root of your project folder (use `main-terraforming-moon_step-1.tf` template in resources!)
+    0. How to get an AMI:
+        - sgpt --code "Get latest Ubuntu AMI for EC2 in terraform":
+            - this should return a `data` block, similar to a resource, that we can add to our `main.tf` file
+            - we then reference `data.aws_ami.this.id` into the resource, where we specify the `ami` (`aws_ami` was the `data` type, and `this` was the name given - since there's only 1 in the code, we use `this`)
+
     1. Create an alias, so you don't have to type `terraform` all the time:
         - `alias tf=terraform`
         - Then run the loop:
@@ -178,6 +195,11 @@
             - Replace "203.0.113.0/24" and "192.0.2.0/24" with the actual IP ranges or specific IPs that you want to allow. This setup assumes you know the IPs or ranges you wish to permit for SSH access. (what is this part?)
         - Update config:
             - `terraform apply` (type `yes` to confirm!)
+
+    + Zalan: Az volt a gond, hogy minden resource -t magamnak csináltam és nem a defaultokat használtam és még pluszban kellett route table és route table association is ami össze van kapcsolva az igw -vel és a subnet -el.
+
+- **EKS persistency with EBS:** (this is not the original way to solve it, but it's better!)
+    1. 
 
 # LINKS:
 - AWS getting started link: https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS

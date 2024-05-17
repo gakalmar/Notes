@@ -7,6 +7,7 @@ subjects:
 - kind: ServiceAccount
   name: my-service-account
   namespace: default
+  apiGroup: "" # This refers to the core
 roleRef:
   kind: Role
   name: pod-manager

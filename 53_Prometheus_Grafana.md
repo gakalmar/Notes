@@ -1,8 +1,22 @@
 # PROMETHEUS, GRAFANA
 - Tool for your Kubernetes cluster to keep track of its health and performance.
 
+# WORKBOOK:
+- **Prometheus:**
+    - It's a NoSQL database essentially (not really, because it connects metrics, not data)
+        - kvp data, where key is a timestamp (it's primarily a key-value databse)
+        - it's a time-series type database
+    - Pull-push type database as well:
+        - You can push data into the DB
+        - It can also make pull requests, so it pulls data that it needs (we can also add a frequency)
+- **Grafana:**
+    - Data-visualization / dashboarding software
+    - It can use multiple data-sources:
+        - We can give Prometheus data to it
+    - Grafana Query Language - we can use this to configure what to be used on a dashboard
+        - most of these dashboards are already pre-set, so we can reuse these instead of creating out own
+    
 # GUIDES:
-
 - **Install & setup using `kubectl`:**
     0. Set up cluster (and VPC unless it's the default)
 

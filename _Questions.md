@@ -1,5 +1,12 @@
 # Questions:  
 
+## TW review:
+- sgpt --code "querytext" -> ez mi es honnan jon?
+- Mi az az `AMI`, es nekunk mit kell tudni rola, hogy hasznaljuk?
+
+- prometheus-grafana: hogyan kellene ezeket hasznalni?
+- livenessprobe, readynessprobe - hogyan teszteljuk?
+
 ## SI review
 - kis elakadasok a het elejen (aws cli verzio, ssh login gondok)
 

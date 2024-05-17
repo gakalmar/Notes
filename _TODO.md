@@ -1,10 +1,13 @@
 # LIST OF THINGS TO DO IN ORDER:
 
-# AWS
-- Resolve SSH login issue!
-
+# DEVOPS
 - Try again the `EKS persistency` task!
 
+- Workshop videos left to watch:
+    - k8s persistency with terraform 1
+    - k8s persistency with terraform 2
+
+- watch what is `Helm` by nana video: https://www.youtube.com/watch?v=-ykwb1d0DXU&ab_channel=TechWorldwithNana
 - Nana videos:
     - Kubernetes - 5 next 
         - https://www.youtube.com/watch?v=VnvRFRk_51k&list=PLy7NrYWoggjziYQIDorlXjTvvwweTYoNC&ab_channel=TechWorldwithNana
@@ -25,6 +28,11 @@
     - Kernel tuning - Linux Kernel Firewall: 
         ( https://journey.study/v2/learn/courses/252/modules/29404/units/0/SOLO/15509 )
         nem nagyon tudtam lecsekkolni, hogy sikerult-e (nem is nagyon ertem, mi a lenyeg)
+
+# After finishing DevOps:
+- Kubernetes certification course:
+    - https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/?couponCode=LEADERSALE24B
+- learn about the nginx-flask-python3 stack
 
 # OOP
 
@@ -53,6 +61,3 @@
     encodeURIComponent() and decodeURIComponent() ?
     Event bubbling - how and when to use stopPropagation() ?
 
-# DEVOPS
-
-- learn about the nginx-flask-python3 stack
