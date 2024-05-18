@@ -12,607 +12,187 @@
 
 - Technológiák:
     - Hardware / Platform virtualizáció
-        - Ez alatt azt értjük, hogy komplett, izolált gépeket tudunk létrehozni, saját OS-el
-        - 2 típusa van:
-            - Type 1 - Bare Metal / Natív virtualizáció:
-                - itt nincs host gép, a hypervisor közvetlenül áll kapcsolatban a hardverrel
-                - pl `Microsoft Hyper-V`
-            - Type 2 - Hosted / Nested virtualizáció:
-                - ennél host gépet használunk (saját OS), ezen fut a hypervisor
-                - a host gép megosztja az erőforrásait a VM-ekkel (szabályozható)
-                - pl `Oracle VirtualBox`
-    
-    - Szoftver-virtualizáció:
-        - Desktop virtualizáció:
-            - Hypervisor helyett szoftver segítségével hozunk létre VM-eket egy távoli szerveren, és ezek távolról irányíthatóak
-            - pl `VMware Workstation`
+        - Type 1 Hypervisor - Bare Metal / Natív virtualizáció:
+            - itt nincs host gép, a hypervisor közvetlenül áll kapcsolatban a hardverrel
+            - pl `Microsoft Hyper-V`, `Xen`
+            
+    - Szoftver-virtualizáció:        
+        - Type 2 - Hosted / Nested virtualizáció:
+            - ennél host gépet használunk (saját OS), ezen fut a hypervisor
+            - a host gép megosztja az erőforrásait a VM-ekkel (szabályozható)
+            - pl `Oracle VirtualBox`, `VMware Workstation`
         
-        - Applikáció-virtualizáció:
-            - Applikációt virtualizálunk, melyek így önállóan képesek működni
-    
-    - Konténerizáció:
-        - Itt nem egy egész gépet virtualizálunk, mert OS-t nem hozunk létre, ehelyett ezt applikáció szintjén virtualizáljuk
-        - - pl `Docker`
+        - Konténerizáció:
+            - Itt nem egy egész gépet virtualizálunk, mert OS-t nem hozunk létre, ehelyett ezt applikáció szintjén virtualizáljuk
+            - Csak felhasználjuk a host gép OS-ének kernelét, hogy izolált egységeket hozzunk létre
+            - pl `Docker`, `Kubernetes`
 
     - Ezeken kívül létezik még:
         - Network virtualizáció: itt a network-öt virtualizáljuk
+        - Desktop virtualizáció: Hypervisor helyett szoftver segítségével hozunk létre VM-eket egy távoli szerveren, és ezek távolról irányíthatóak
+        - Applikáció-virtualizáció: Applikációt virtualizálunk, melyek így önállóan képesek működni
         - Storage virtualizáció: itt csak az adattárolás van már csak virtualizálva
     
 ### What command line text manipulation tools are you familiar with?
 - `sed` = "Stream editor"
-    - Stream editor is used for text transformations. It can perform tasks like search and replace, insertion, deletion, and more, based on patterns or regular expressions
-    - utility for processing text (a text editor without an interface)
-    - reads input line by line (from a file or a pipeline)
-    - **Features and examples:**
-        - Text substitiution:
-            - find and replace text:
-                - `sed 's/old/new/' file.txt`
-        - Selective Printing
-            - print specific lines based on a pattern match or line number:
-                - `sed -n '/pattern/p' file.txt`
-        - In-place Editing
-            - edit files in place using the -i option:
-                - `sed -i 's/old/new/g' file.txt`
-        - Line Deletion:
-            - delete lines from a file based on a pattern match or line number:
-                - `sed '/pattern/d' file.txt`
-        - Multiline operations:
-            - allowing complex patterns and substitutions spanning across line boundaries
-        - Script Files:
-            - `sed` commands can be stored in a script file and executed
+    - szövegtranszformációkra használjuk, azon belül is elsősorban replace-re (de lehet search, insert, delete is)
+    - stream-ekkel dolgozik - memóriahatékony nagy szöveges adatoknál
+    - pl:
+        - replace text: `sed 's/old/new/' file.txt`
 
 - `awk`
-    - used as a powerful tool for data extraction and reporting
-    - works by scanning a file line by line, splitting each line into fields, and processing it with patterns and actions defined in a script
-    - **Features:**
-        - automatically splits each line of input into fields (data is structured into columns)
-        - has built-in variables, eg `NR` or `NF`
-        - allows pattern matching
-        - supports arithmetic string operations
-        - supports conditional statements
-    - **Examples:**
-        - Print Specific Fields:
-            - `awk '{print $1, $3}' file.txt`
-        - Sum a Column of Numbers:
-            - `awk '{sum += $1} END {print sum}' file.txt`
-        - Filter Based on Condition:
-            - `awk '$2 > 10' file.txt`
-        - Formatting Output:
-            - `awk '{print "Value:", $1}' file.txt`
+    - adatok kinyerésére használjuk táblázat-szerűen
+    - sorról sorra olvassa be az adatokat, majd azokat további field-ekre bontja (oszlopokat készít), és ezekkel dolgozik
+    - pl:
+        - text Filtering: `awk '/error/ {print $0}' logfile` (regexet használ!)
+            - az "error"-t tartalmazó sorokat nyomtassa ki a logfile-ba
+        - adja össze egy oszlop adatait: `awk '{sum += $1} END {print sum}' file.txt`
+        - filter: `awk '$2 > 10' file.txt`
 
 - `grep`
-    - Used for searching text patterns within files or input streams (a command-line utility to filter text)
-    - **Features:**
-        - allows pattern matching using `regex` (regular expressions)
-        - can recursively search directories with `-r` or `-R`
-        - displays line numbers with `-n`
-        - count mathches with `-c`
-        - invert mathch with `-v`
-        - hoghlight matches with `--color`
-    - **Examples:**
-        - Basic Search:
-            - `grep "error" file.txt`
-        - Case Insensitive Search:
-            - `grep -i "error" file.txt`
-        - Recursive Search:
-            - `grep -r "error" .`
-        - Counting Occurrences:
-            - `grep -c "error" file.txt`
-        - Invert Match:
-            - `grep -v "error" file.txt`
-        - Regular Expression Search:
-            - `grep "^error.*" file.txt`
+    - szövegkeresésre, filterezésre használjuk elsősorban
+    - pl:
+        - Basic Search: `grep "error" file.txt`
+        - Case Insensitive Search: `grep -i "error" file.txt`
+        - Recursive Search: `grep -r "error" .`
+        - Counting Occurrences: `grep -c "error" file.txt`
+        - Invert Match: `grep -v "error" file.txt`
+        - Regex Search: `grep "^error.*" file.txt`
 
 - `tail`:
-    - displays data from the end of a file
-    - most commonly used to view the most recent entries in files, such as logs or other text files that are frequently updated
-    - particularly useful for real-time monitoring of files as they grow
-    - **Examples:**
-        - View the Last 10 Lines of a File:
-            - `tail file.txt`
-        - View the Last N Lines of a File:
-            - `tail -n 20 file.txt`
-        - Follow a File in Real Time:
-            - `tail -f /var/log/syslog`
-        - View the Last N Bytes of a File:
-            - `tail -c 100 file.txt`
-        - Follow Multiple Files:
-            - `tail -f file1.txt file2.txt`
-        - Combine with other commands:
-            - often used in conjunction with other commands through piping `|` to process or filter the output
-            - For example, to get the most recent entries in a log file and search for a specific error:
-                - `tail -f /var/log/syslog | grep "error"`
+    - a file végi sorokat nyomtatja csak ki (by default 10-et)
+    - pl:
+        - View the Last N Lines of a File: `tail -n 20 file.txt` (-n nélkül 10 a default)
+        - Follow a File in Real Time: `tail -f /var/log/syslog`
 
 - `jq`
-    - a lightweight and flexible command-line JSON processor
-    - transform structured data in a similar way as the above, but work with JSON
-    - uses a query language
-    - **Examples:**
-        - Pretty Print JSON: 
+    - query nyelvet használ kifejezetten JSON típusú file-okhoz
+    - pl:
+        - Pretty Print JSON (human-readable): 
             - `cat file.json | jq .`
-            - formats and prints the entire JSON file in a human-readable form
-        - Extract a Specific Field:
+        - Extract a Specific Field (eg name in this instance):
             - `echo '{"name": "John", "age": 30}' | jq '.name'`
-            - This would output "John".
-        - Filter an Array Based on Condition:
-            - `echo '[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]' | jq '.[] | select(.age > 25)'`
-            - returns the object(s) in the array where age is greater than 25
-        - Map an Array:
-            - `echo '[{"name": "John", "age": 30}, {"name": "Jane", "age": 25}]' | jq 'map(.name)'`
-            - produce an array of names
-        - Modify and Add New Fields:
-            - `echo '{"name": "John", "age": 30}' | jq '. + {"job": "Developer"}'`
-            - adds a new "job" field to the JSON object
-        - Combine `jq` with other commands:
-            - eg use it with `curl` to fetch data from a web API and pipe it into `jq`:
-                - `curl 'https://api.example.com/data' | jq '.data'`
-                - fetch JSON data from the specified API and use jq to extract the .data portion of the response
 
 - `source`
-    - reads and executes commands from the file specified as its argument
-    - useful to load functions, variables, and configuration files into shell scripts
-    - **Syntax:**
-        ```{bash}
-        source FILENAME [ARGUMENTS]
-        . FILENAME [ARGUMENTS]
-        ```
-        - `source` and `.` are the same command
-    - **Examples:**
-        - Sourcing Functions:
-            - extract common functions used by more of your scripts in a separate file and then source that file in your scripts
-            - create a file that includes a bash function that checks whether the user running the script is the root:
-                ```{bash}
-                # this is in the functions.sh script:
-                check_root () {
-                    if [[ $EUID -ne 0 ]]; then
-                        echo "This script must be run as root" 
-                        exit 1
-                    fi
-                }
-                ```
-            - Now in each script that needs to be run only by the root user, simply source the `functions.sh` file and call the function:
-                ```{bash}
-                #!/usr/bin/env bash
-
-                source functions.sh
-                check_root
-
-                echo "I am root"
-                ```
-        
-        - Bash config file:
-            - you can also read variables from a file using `source`
-            - variables must be set using the Bash syntax: `VARIABLE=VALUE`
-            - `config.sh` file:
-                ```{bash}
-                VAR1="foo"
-                VAR2="bar"
-                ```
-            - `bashscript`:
-                ```{bash}
-                #!/usr/bin/env bash
-
-                source config.sh    # read the config file
-
-                echo "VAR1 is $VAR1"
-                echo "VAR2 is $VAR2"
+    - ezzel megadhatunk egy file-t, amit beolvas, és a benne található parancsokat végrehajtja
+    - script-ekbe tudunk így betülteni adatokat (function, variable, config)
+    - pl:
+        - `source <Filename>`, vagy `. <Filename>`
 
 ### How would you schedule a command to run every Sunday at midnight?
-- Using `cron`:
-    - It is a command-line utility that schedules jobs (repetitive tasks mostly - for one-time jobs we use `at`)
-    - Users who set up and maintain software environments use `cron` to schedule `cron jobs` (commands or shell scripts)
-    - It's commonly set to run periodically (automates system maintenance or administration)
-    - `crontab`:
-        - cron table (a config file), that specifies shell commands to run periodically on a given schedule
-        - Users can have their own individual crontab files and often there is a system-wide crontab file (`/etc`)
-        - Looks like this:
-            ```{bash}
-            # ┌───────────── minute (0–59)
-            # │ ┌───────────── hour (0–23)
-            # │ │ ┌───────────── day of the month (1–31)
-            # │ │ │ ┌───────────── month (1–12)
-            # │ │ │ │ ┌───────────── day of the week (0–6) (Sunday to Saturday;
-            # │ │ │ │ │                                   7 is also Sunday on some systems)
-            # │ │ │ │ │
-            # │ │ │ │ │
-            # * * * * * <command to execute>
-            ```
-        - Execution happens when the specifies time matches the current time, eg:
-            - `1 0 * * * printf "" > /var/log/apache/error_log`
-            - `45 23 * * 6 /home/oracle/scripts/export_dump.sh`
-            - `*/5 1,2,3 * * * echo hello world` (`*/n` to run for every n-th interval of time; `1,2,3` for specific times eg here "every first, second and third hour"):   
-                - `*` means every
-                - comma separated values for multiple choices eg. day: `0,6` (Sunday and Saturday)
-                - day: `*/2` for every day that's divisible by 2 (every other day) (it works for all units)
-                - */10 means for minutes for example, "run every 10 minutes"
-                - hour: `3-6` between these hours, so between 3-6 AM
-        - Edit configuration file for a user: `crontab -e` (regardless of where it's stored)
-        - Some preset examples:
-            ```{bash}
-            Entry	                Description	                                                Equivalent to
-            @yearly (or @annually)	Run once a year at midnight of 1 January	                0 0 1 1 *
-            @monthly	            Run once a month at midnight of the first day of the month	0 0 1 * *
-            @weekly	                Run once a week at midnight on Sunday	                    0 0 * * 0
-            @daily (or @midnight)	Run once a day at midnight	                                0 0 * * *
-            @hourly	                Run once an hour at the beginning of the hour	            0 * * * *
-            @reboot	                Run at startup	                                            —
-            ```
-    - `crond`
-        - The cron Daemon (system process) that runs in the background
-    - **Permissions:**
-        - `/etc/cron.allow` – If this file exists, it must contain the user's name for that user to be allowed to use cron jobs
-        - `/etc/cron.deny` - If the other file does not exist, we can use this file to exclude users (so all not included can use cron jobs)
-    - **Common commands:**
-        - `crontab -e`: edit crontab file
-        - `crontab -l`: list existing cronjobs
-        - `crontab -r -i`: remove default crontab
-        - `crontab -u`: specify a different user's crontab
+- `cron` segítségével:
+    - egy command-line utility, ami ütemezi a job-okat
+    - leginkább rendszeresen végrehajtandó `cron job`-ok végrehajtására használjuk
+    - az ütemezés beállítására `crontab`-ot használunk (minden user-nek van sajátja, de van egy a system-nek is):
+        - Így néz ki:
 
-    - **EXAMPLES:**
-        - **Schedule a command to run every Sunday at midnight:**
-            1. check if you used it already:
-                - `crontab -l` - if it wasn't, then:
-                - `sudo crontab -e` - select to open it with nano
-            2. Add this line to the `crontab` file (each line that is a new task):
-                - `0 0 * * 0 echo "Linux is Cool!" >> ~/crontab_log.txt` (`>>` appends to the file. `>` would overwrite)
-                - We could also use a script to be executed instead, so we can include multiple or more complex commands:
-                    - `0 0 * * 0 /path/to/script.sh`:
-                        - you need to create the file first (`nano /path/to/script.sh`)
-                        - you need to make it executable first (`chmod +x /path/to/script.sh`)
-            3. Check if it was added with `crontab -l`
-
-            - Handling users:
-                - `crontab -u username -e`: edits another user's crontab, not yours
-                - `crontab -r` remove crontab file (resets to default)
-
-        - **Task from first excercise:**
-            1. Create a script to fetch the weather:
-                - `nano ~/fetch_weather.sh`
-                - Add this:
-                    
-                        #!/bin/bash
-                        /usr/bin/curl http://wttr.in/Budapest?format=3 > /etc/motd
-                        
-                - Make it executable:
-                    - `chmod +x ~/fetch_weather.sh`
-            2. Create the cron job:
-                - `crontab -e`:
-                    - Add: `0 8 * * * /bin/bash /home/your_username/fetch_weather.sh`
-            3. Test it manually:
-                - `~/fetch_weather.sh`, then log in again
+                ┌───────────── minute (0–59)
+                │ ┌───────────── hour (0–23)
+                │ │ ┌───────────── day of the month (1–31)
+                │ │ │ ┌───────────── month (1–12)
+                │ │ │ │ ┌───────────── day of the week (0–6) (Sunday to Saturday;
+                │ │ │ │ │                                   7 is also Sunday on some systems)
+                │ │ │ │ │
+                │ │ │ │ │
+                * * * * * <command to execute>
+        - pl:
+            - `1 0 * * * echo "Hello, World!" > /tmp/temp.txt`
+            - `45 23 * * 6 /home/user/scripts/myscript.sh`
+- **Schedule a command to run every Sunday at midnight:**
+1. check if you used it already:
+    - `crontab -l` - if it wasn't, then:
+    - `sudo crontab -e` - select to open it with nano
+2. Add this line to the `crontab` file (each line that is a new task):
+    - `0 0 * * 0 echo "Linux is Cool!" >> ~/crontab_log.txt` (`>>` appends to the file. `>` would overwrite)
+    - We could also use a script to be executed instead, so we can include multiple or more complex commands:
+        - `0 0 * * 0 /path/to/script.sh`:
+            - you need to create the file first (`nano /path/to/script.sh`)
+            - you need to make it executable first (`chmod +x /path/to/script.sh`)
+3. Check if it was added with `crontab -l`
 
 ### How would you check the available resources (memory, disk space, CPU)?
-- **Memory (RAM) Usage:**
-    - `free -h`:
-        - Displays the amount of free and used memory in the system, including total, used, and free memory, as well as memory buffers and cache
-    - `htop`: 
-        - Interactive process viewer that also displays memory usage along with CPU and other system information in a real-time, interactive interface.
-- **Disk Space:**
-    - `df -h`: 
-        - Displays disk space usage for all mounted filesystems, including total, used, and available space, as well as the filesystem type and mount point.
-    - `du -h /path/to/directory`:
-        - Displays disk usage for specific directories and files
-- **CPU Usage**:
-    - `top`: 
-        - Displays real-time information about processes, including CPU usage, memory usage, and more. Press `q` to quit
-    - `htop`:
-        - Similar to top but with a more user-friendly and interactive interface, displaying CPU usage, memory usage, and other system information
-- **Resource monitoring tools:**
-    - `sar`:
-        - Collects, reports, and saves system activity information such as CPU, memory, disk I/O, and network statistics
-        - Requires the `sysstat` package to be installed.
+- CPU (and memory): `htop` (interactive), `top`
+- Memory (RAM) Usage: `free -h`
+- Diks space: `df -h`, `du -h /path/to/directory`
 
 ### What are hard links and symbolic links?
-- **Hard Links**
-    - A hard link is like a new file (takes up the same memory space), that points to the same inode as the original file (so when the file changes, the inode gets updated, and the link pointing to it also gets updated - similar to reference types in C#). When deleting the original file, the hard link is still pointing to the original inode
-    - **What They Are:**
-        - A hard link is essentially an additional name for an existing file on the same filesystem. When you create a hard link, you create a new directory entry for the file. The hard link and the original file entry point to the same inode (the filesystem's internal data structure that stores information about a file).
-    - **Characteristics:**
-        - Hard links cannot span across filesystems; they must reside within the same filesystem as the original file.
-        - Deleting the original file does not remove the data on the disk as long as a hard link pointing to it exists.
-        - Hard links do not have their own metadata (like timestamps). Since hard links and the original file share the same inode, any changes to the file content or permissions affect all names linked to that inode.
-        - You can't create a hard link for a directory
-    - **Usage:**
-        - Hard links can be used to create backups of files within the same filesystem.
-        - They help in scenarios where multiple references to a file are needed without duplicating the file's content.
-        
-- **Soft Links (=Symbolic Links =Symlinks)**
-    - A soft link points to the original file's name, not it's inode on the hard-drive, so when the file is deleted, the link breaks. It takes up much less memory, because it just points to the name, like shortcut
-    - **What They Are:**
-        - A symbolic link, or soft link, is a special file that points to another file or directory. It's essentially a shortcut to another file.
-    - **Characteristics:**
-        - Symbolic links can point to files or directories on different filesystems since they store the path to the target file as text.
-        - If the original file is moved, renamed, or deleted, the symbolic link breaks and becomes a "dangling" link, as it still points to the original path.
-        - Symbolic links have their own metadata, so modifying the link does not affect the original file, and vice versa.
-    - **Usage:**
-        - Soft links are versatile for creating shortcuts, organizing files and directories without duplicating data, and maintaining compatibility (e.g., linking to different versions of libraries or files).
-
-- **Key points:**
-    - **File Management:** Understanding how to create and use hard and soft links allows for more efficient file management and organization without unnecessary duplication of data.
-    - **System Navigation:** Links, especially symbolic ones, are widely used in Unix-like systems for everything from linking libraries to providing shortcuts to commonly used directories.
-    - **Scripting and Automation:** When writing scripts or automating tasks, knowing when and how to use hard and soft links can significantly affect the performance and efficiency of your scripts.
+- Amikor létrehozunk egy file-t, akkor egy referenciát hozunk létre, ami a disk-en lévő memória egy pontjára mutat, ahol a file adatai találhatóak
+- Egy hard link egy újabb referenciát hoz létre (mintha egy új file lenne), ami ugyanarra a memóriapontra mutat, ahova az eredeti, így az eredeti file-t törölve a hard link és az adatok közti kapcsolat megmarad
+- Egy hard link viszont az eredeti file-ra mutat (a referenciára), így ha az eredeti file-t töröljük, akkor a soft linkkel való kapcsolat is megszakad
 
 ### What are services in the context of Linux?
-- **Service**:
-    - refers to a program or application that runs in the background and provides specific functionality or performs certain tasks
-    - often designed to start automatically when the system boots and continue running in the background, waiting for requests or events to occur
-    
-    - **Key points:**
-        - **Daemon:** 
-            - Services in Linux are commonly referred to as `daemons`. A `daemon` is a background process that runs independently of the user session and performs specific tasks or provides services to other applications or users.
-        - **Init System:** 
-            - Services are managed by the `init system`, which is responsible for starting, stopping, and managing processes during system boot and shutdown.
-            - Different Linux distributions use different init systems, such as `Systemd`, `Upstart`, or `SysV` init.
-        - **Service Management:** 
-            - Linux provides commands and utilities for managing services, such as starting, stopping, restarting, enabling (automatically starting at boot), disabling (preventing automatic start at boot), and checking the status of services.
-            - Common commands for managing services include `systemctl`, `service`, and `chkconfig`.
-        **Service Configuration:** 
-            - Each service typically has its own configuration file located in directories like `/etc/init.d/`, `/etc/systemd/system/`, or `/etc/init/`
-            - These configuration files specify how the service should behave, including startup options, dependencies, and other settings.
-        - **Types of Services:**
-            - Services in Linux can serve various purposes, such as:
-                - network services (e.g., web servers, DNS servers)
-                - system services (e.g., logging, time synchronization)
-                - background tasks (e.g., backups, monitoring)
-            - The most common ones:
-                - `SSH` (Secure Shell):
-                    - Provides secure remote access to a system over a network, that allows users to log in and execute commands on a remote machine securely.
-                - `HTTP Server` (e.g., Apache HTTP Server, Nginx):
-                    - Enables serving web pages and content over the HTTP protocol.
-                    - These servers are widely used for hosting websites and web applications.
-                - `DNS` (Domain Name System):
-                    - Resolves domain names to IP addresses and vice versa. 
-                    - DNS servers are essential for translating human-readable domain names into machine-readable IP addresses
-                - `FTP` (File Transfer Protocol) Server:
-                    - Facilitates file transfers between systems over a network
-                    - FTP servers allow users to upload, download, and manage files remotely
-                - `Syslog`: 
-                    - Collects and logs system messages and events generated by various components of the operating system and applications
-                    - Syslog servers are used for monitoring and troubleshooting system issues.
-        - **Logging and Monitoring:**
-            - Services often generate log files to record events, errors, and other information
-            - Monitoring tools like `systemctl`, `journalctl`, and third-party monitoring solutions can be used to monitor service status, resource usage, and performance metrics.
-        - **Security:**
-            - Services running on a Linux system should be properly configured and secured to prevent unauthorized access and ensure system integrity. This includes configuring firewalls, access controls, authentication mechanisms, and regular software updates to address security vulnerabilities.
+- Egy "service" Linux környezetben egy háttérben futó program vagy app
+- Ezeket más néven `daemon`-nak is hívjuk
+- a `Systemd` menedzseli ezeket, hogy start-upkor mi fusson le, de mi a `systemctl` segítségével tudunk velük dolgozni
+- A leggyakrabban használtak: `systemd` -> `systemctl` command, `cron`, `sshd`, `networkd`
 
 ### Describe the permission model of Linux! How would you make a file only readable and writable by its owner?
-- **Permissions:**
-    - Because Linux is a multi-user OS, which can be accessed by many users, and is also commonly used with servers, Linux has a solid **authorization system**, divided into 2 levels:
-        - **Ownership**
-            - Every file or folder in linux has 3 owner types:
-                - **User:** 
-                    - the person who creates the file becomes the owner (a User can also be called an Owner)
-                    - `root` is the **superuser** (has complete access to the operating system and its configuration, for admin purposes only!)
-                - **Group:**
-                    - contains multiple users
-                    - all users belonging to the group will have access to the file/folder
-                - **Other/World:**
-                    - any other user not listed above (external users)
-        - **Permission**
-            - Used to distinguish, what can different users do with the file/folder:
-                - **Read:**
-                    - permission to open or read a file
-                    - on a directory it means you can list its contents
-                - **Write:**
-                    - permission to modify a file
-                    - permission to add/remove/rename files in a directory
-                - **Execute:**
-                    - executable files can have executable permission (eg `.exe`)
-                    - permission to run/execute a file
-                    - in directory context it means that we can enter a dir and gain possible access to sub-dirs
-            - Further permissions (to be covered later!)
-
-    - The above creates a system of 9 characters for each file (we can see this using `ls -l`):
-        - `-`/`d` + 3 x `rwx`:
-            - the `-` means it's a file, `d` means directory
-            - `r` for read, `w` for write, `x` for execute, `-` for no permission
-            - the first 3 chars are for the User, then for the Group, then for Other/World
-
-    - **Changing permissions:**
-        - using `chmod` command (=change mode)
-        - **Absolute mode:**
-            - In this mode, we use pre-defined numberic values to set permissions:
-
-                Number	    Permission Type	        Symbol
-                0	        No Permission	        --- 
-                1	        Execute	                --x
-                2	        Write	                -w-
-                3	        Execute + Write	        -wx
-                4	        Read	                r--
-                5	        Read + Execute	        r-x
-                6	        Read + Write	        rw-
-                7	        Read + Write + Execute	rwx
-            
-            - Example:
-                - `chmod 764 filename` =>  User: `rwx` (7) / Group: `rw-` (6) / Other (4) `r--`
-        - **Symbolic mode:**
-            - We can make smaller tweaks and modify each user type individually:
-                - Operators:
-                    - `+` add permission
-                    - `-` remove permission
-                    - `=` set permission and override previous
-                - User denotations:
-                    - `u` user
-                    - `g` group
-                    - `o` other/world
-                    - `a` all
-            - Example:
-                - `chmod o=rwx filename`    // set "other" users permissions to `rwx`
-                - `chmod g+x filename`      // add "execute" permission to "group"
-                - `chmod u-r filename`      // remove "read" permission from "user"
-        
-        - **Special permissions:**
-            - a fourth access level in addition to user, group, and other:
-                - **SUID:** (User)
-                    - A file with `SUID` always executes as the user who owns the file, regardless of the user passing the command
-                    - The `x` in the permission is replaced with an `s` or `S` (if the owner doesn't have excecute permission)
-                - **SGID:** (Group)
-                    - If set on a `file`, it allows the file to be executed as the group that owns the file (similar to SUID)
-                    - If set on a `directory`, any files created in the directory will have their group ownership set to that of the directory owner
-                    - example permission: `drwxrws---` (not `s` now in the group permissions, and `d` for directory)
-                    - if the owning group does not have execute permissions, then an uppercase `S` is used.
-                - **sticky bit:**
-                    - This permission does not affect individual files, but at directory level it restricts file deletion
-                    - Only the owner (and root) of a file can remove the file within that directory.
-                    - A common example of this is the `/tmp` directory: `drwxrwxrwt` (note now a `t` is used in the other section)
-                    - if you have a writing right, then you can also delete - but with sticky bit, you can reset this behaviour to revoke delete permission
-            - setting special permissions:
-                - using the symbolic mode, nothing changes:
-                    - `chmod g+s community_content/` (an `s` is added to the `g` group)
-                - using the numerical method, we need to pass a fourth, preceding digit in our chmod command:
-                    - syntax: `chmod X file/dir`
-                    - `X` can be:
-                        - Start at 0
-                        - SUID = 4
-                        - SGID = 2
-                        - Sticky = 1
-                    - example:
-                        - `chmod 2770 community_content/` (note an extra number BEFORE the original 3)
-
-    - **Changing ownership:**
-        - using `chown` command (=change mode):
-        - Examples:
-            - `chown user filename`       // Change user ownership of a file
-            - `chown user:group filename` // Change user and group ownership of a file
-            - `chgrp group filename`      // Change group ownership of a file
-
-        - Tips:
-            - All groups are stored in `/etc/group` file (we can read it with `cat`)
-            - To work as a group other than your default group, use `newgrp groupname`
-            - A file/folder can only have 1 group owner
-            - There are no nested groups either
+- A "Permission"-ök azért léteznek a Linuxban, mert az egy multi-user OS, így korlátozni kell, hogy ki mihez fér hozzá
+- 2 rétegből áll:
+    - Ownership: User / Group / Other-World
+    - Permission Read / Write / Execute
+- Ezek egy 9biten tárolt rendszert alkotnak: `-rwxrwxrwx` (a 10-edik az elso, ami file/dir)
+- 2 féle képpen tudunk változtatni:
+    - Symbolic mode: `chmod g+x filename`
+    - Absolute mode: `chmod 764 filename` =>  User: `rwx` (7) / Group: `rw-` (6) / Other (4) `r--`
+- Special permission:
+    - SUID -> ezzel a beállítással mindig az owner nevében futtatjuk a file-t, függetlenül attól, hogy kivel vagyunk bejelentkezve
+        - `x` helyett `s` kerul a permission 9bites kódjába
+    - SGID -> ugyanez, csak Group Ownerrel
+    - Sticky bit -> ezzel be tudjuk állítani, hogy egy directory-ban ne legyen törlési jog, de írási megmarad (kivéve az ownernek és a rootnak)
+        - így tudjuk beállítani: `chmod 2770 community_content/`
+            - 4ik számjegy kerül a 3jegyű elé! (SUID: 4, SGID: 2, Sticky: 1)
+- Ownership változtatás: `chown user:group filename` (lehet csak user is!)
 
 ### What is the difference between Gi, Gb and GB?
-- `Gi`, `Gb`, and `GB` refer to different ways of measuring storage capacity, and they differ in how the units are calculated:
-    - The key distinction to remember is that `GiB` (Gibibytes) are larger than `GB` (Gigabytes) when the same number precedes them because of the difference in base calculations (binary vs decimal).
-    - This difference can be particularly important in understanding the actual capacity and performance specifications of hardware and network communications.
-
-- **Gi (Gibibyte):**
-    - A `Gibibyte` is a unit of data storage that equals 2^30 bytes, or 1,073,741,824 bytes.
-    - This unit is based on a binary system and is commonly used in computing to ensure precision, especially with RAM and disk sizes.
-    - It is denoted as "GiB" but often just abbreviated as "Gi".
-- **Gb (Gigabit):**
-    - A `Gigabit` is a unit of data measurement that equals 10^9 bits, or 1,000,000,000 bits.
-    - This unit is often used to describe data transfer rates, such as network speeds and download rates.
-    - Since there are 8 bits in a byte, a Gigabit is equivalent to 125 million bytes (or approximately 0.125 Gigabytes).
-- **GB (Gigabyte):**
-    - A `Gigabyte` is a unit of storage capacity that equals 10^9 bytes, or 1,000,000,000 bytes.
-    - This unit is based on a decimal system and is often used in marketing consumer storage products like SSDs, hard drives, and USB flash drives.
-    - It is used more broadly in many computing contexts, although it can create some confusion when compared with Gibibytes (GiB) because they are slightly different in size due to the base of their calculations (binary vs decimal).
+- **Gi or GiB (Gibibyte):** binárisan tárolt, 2^30 byte
+- **Gb (Gigabit):** 10^9 bits (itt már 10-es van, nem 2-es!)
+- **GB (Gigabyte):** 10^9 bytes (1 byte = 8 bit)
 
 ### What are some well-known configuration files on a Linux OS?
-- These are used to manage the behavior of the operating system and various applications. The most common ones are: 
-    - `/etc/shadow`:
-        - This file stores encrypted user password along with other properties related to user password.
-        - It is accessible only to privileged users to safeguard sensitive information.
-        - `/etc/gshadow`: Contains the shadowed information for group accounts
-    - `/etc/passwd`:
-        - This file contains user account information, providing a list of users on the system and their settings, which include user ID, group ID, home directory, and optional the shell.
-    - `/etc/group`:
-        - Similar to `/etc/passwd`, this file stores group information for the system.
-        - It defines the groups to which users belong.
-    - `/etc/fstab`:
-        - This file is used to define how disk partitions, various storage devices, and remote filesystems should be mounted into the filesystem. 
-        - It plays a crucial role in handling storage devices during the system boot process.
-    - `/etc/hosts`:
-        - Used for host name resolution. 
-        - The file maps IP addresses to hostnames before the system queries DNS servers.
-    - `/etc/resolv.conf`:
-        - This file specifies the DNS servers that the system should use to query for domain name resolutions and the search domain for non-fully qualified domain names.
-    - `/etc/sysctl.conf`:
-        - Contains kernel parameters that can be set at runtime. Adjustments to this file can alter system performance and security characteristics.
-    - `/etc/sudoers`:
-        - Specifies privileges for users, defining which users can execute commands as other users, including the root user.
-        - It's crucial for managing administrative access and permissions.
-    - `/etc/crontab`:
-        - A schedule file that defines shell commands to run periodically on a given schedule.
-        - It's used for automating system maintenance or administration tasks.
-    - `/etc/services`:
-        - This file maps service names to port numbers and protocol types.
-        - It is used by various network services to determine the ports to listen to or connect with.
-    - `/etc/skel`:
-        - this is not a file, but a directory
-        - serves as a template for new user home directories
-        - When a new user account is created, the system automatically copies the contents of `/etc/skel` into the new user's home directory
-        - This ensures that all new users start with a consistent set of configuration files in their home directories.
+- `/etc/shadow`: encryptálva tárol passwordöket
+- `/etc/passwd`: user account ifót tárol, hogy kik vannak a rendszerben
+- `/etc/group`: group-okat tárol ugyanígy
+- `/etc/fstab`: a diskekről és azok mountolásáról tárol információt
+- `/etc/hosts`: itt tárolja a már ismert DNS-eke, hogy ne kelljen mindent lekérdezni
+- `/etc/crontab`: cronjob ütemezésre szánt feladatokat tárol
+- `/etc/services`: service-ket és a hozzájuk kapcsolódó portokat ls protocol-okat tárolja
+- `/etc/skel`: blueprint directory for new users
 
 ### Explain the "set" builtin command and some of its most commonly used flags!
 - `set`:
-    - used mostly within scripts, to see the intermediate process
-    - Sets or unsets shell options and positional parameters
-    - can also display the names and values of shell variables
-
-    - **Common flags:**
-        - If used without any options:
-            - `set` will print a list of all shell variables and functions, formatted as assignments that can be reused as input for setting or configuring variables.
-        - `-e` (Exit immediately):
-            - Causes the shell to exit if any command exits with a non-zero status (unless the command that fails is part of an until or while loop, if test, part of an && or || list, or if the command's return status is being inverted using !).
-        - `-x` (Debug mode): 
-            - Displays each command and its expanded arguments before execution, which is helpful for debugging scripts.
-        - `-u` (Treat unset variables as an error): 
-            - When set, the shell treats attempts to expand unset variables as an error and exits immediately.
-            - useful to find typos or unset variables
-        - `-o` option-name (Set options): 
-            - This is used to set options by name.
-            - For example, `set -o` noclobber prevents the shell from overwriting existing files with redirection commands.
-        - `-f` (Disable filename expansion): 
-            - Disables globbing (filename expansion), preventing characters like *, ?, and [] from being interpreted by the shell.
-        - `-v` (Verbose mode): 
-            - Prints shell input lines as they are read, which is useful for debugging shell scripts.
-    
-    - **Example:**
-        - `set -eux`:
-            - `e` causes the script to exit immediately if any command within the script fails
-            - `u` causes the script to exit, if an unset variable is used (catch typos)
-            - `x` prints out each command as it executes (seeing the intermediate steps)
+    - scriptekben használjuk, leginkább debugginghoz, vagy a progress check-hez
+    - Leggyakoribb flagek:
+        - `-e`: lépjen ki azonnal, ha bármely command non-zero-val tér vissza (tehát sikertelen)
+        - `-x`: minden egyes commandot kiloggol, mielőtt teljesítené (debugging)
+        - `-u`: a Linux alapból nem figyelmeztet, ha egy variable unset (pl typo esetén), de ezzel beállíthatjuk
+        - `-v`: ez is hasonló az x-hez, de itt minden input line-t loggol ki, nem a parancsokat, amiket futtat
+    - Pl: `set -eux`:
 
 ### How would you make a service auto-start and machine boot-up?
-- using `systemd`, the standard init system for most modern Linux distributions:
-    - Create the script:
-        - `sudo nano /usr/local/bin/my_script.sh`
-    - Add content, eg:
-
-            #!/bin/bash
-            echo "My script is running" > /var/log/my_script.log
-    
-    - Make the script executable:
-        - `sudo chmod +x /usr/local/bin/my_script.sh`
-    - create a file for the new service:
-        - `sudo nano /etc/systemd/system/my_service.service`
+- a `systemd` daemonnal, ami az init system-ért felelős a Linuxban:
+    - Create the script: `sudo nano /usr/local/bin/my_script.sh`
+    - Add content, eg: `#!/bin/bash / echo "My script is running" > /var/log/my_script.log`   
+    - Make the script executable: `sudo chmod +x /usr/local/bin/my_script.sh`
+    - create a file for the new service: `sudo nano /etc/systemd/system/my_service.service`
     - fill up the file with the service configuration you need
-    - Reload systemd to recognize the new service:
-        - `sudo systemctl daemon-reload`
-    - Enable the service to start on boot:
-        - `sudo systemctl enable my_service`
+    - Reload systemd to recognize the new service: `sudo systemctl daemon-reload`
+    - Enable the service to start on boot: `sudo systemctl enable my_service`
 
 ## NETWORKING
 
 ### What is a MAC address?
 - **MAC address:**
-    - Short for `Media Access Control`
-    - A unique identifier assigned to network interfaces for communication
-    - It's a 12-digit long, hexadecimal(0-9 + A-F = 16 digit options) sequence (burned in in the factory, so can't be changed)
-    - Alternative names: `physical address`, `hardware address`, `Layer 2 address`, `ethernet address`
-    - `Layer 2` of both the `4-layer model` and `OSI model` (Data-Link layer) uses **MAC** (physical address) for identification of the internal server
-    - `ARP protocol` is what finds out the MAC address of a server / service we are trying to connect to (uses IP address to do it)
-    - We can use it also to set up **security** based on it (spoofing is a weakness, where the physical address can be mimiced)
+    - `Media Access Control`, ami egy egyedi azonosító a network interface-eknél, ami gyárilag kerül beléjük
+    - 12 jegyű, hexadecimális kód (0-9 + A-F = 16 digit options)
+    - Alternatív elnevezések: `physical address`, `hardware address`, `Layer 2 address`, `ethernet address`
+    - Az OSI model L2 Data-Link layere használja ezt azonosításra
+    - Az `ARP protocol` a felelős egy szerver vagy service MAC addressének a kiderítéséért 
 
 ### What is the difference between binding to 127.0.0.1 or 0.0.0.0?
-- Binding to IP addresses like `127.0.0.1` or `0.0.0.0` is a common practice in networking:
-    - `127.0.0.1` (localhost):
-        - Also called `the loopback IP address` 
-        - When a server or service is bound to `127.0.0.1`, it is configured to listen for incoming connections **only from the same machine** on which it is running
-        - typically used for *security reasons* or for *testing purposes*, as it does not allow connections from other machines on the network
-    
-    - `0.0.0.0` (All IPv4 addresses on the local machine):
-        - Binding to `0.0.0.0` means that the **server is listening on all IPv4 addresses that the machine possesses**. This includes the localhost (`127.0.0.1`) and any other network interfaces that are configured
-        - It is used when you want a server to be accessible from other machines on the network or from the internet (firewall and router config is needed!)
-        - Useful in environments with multiple network interfaces
-
-- **Binding:** (just for better understanding what it is exacly)
-    - refers to the process where a server or software application assigns itself to a specific IP address and port number combination
-    - allows the application to listen for and accept incoming network connections on that specific address and port
-    - the `application` or `service` is BOUND to an `IP address` and a `port`
+- `127.0.0.1` (localhost): csak a sajátgépről bejövő connection-ökre hallgasson
+- `0.0.0.0` (Minden IPv4 address a local machine-en): Bárhonnan figyelje a bejövő connectionöket
+- Binding: szerver vagy app hozzárendelődik egy IP címhez és PORT-hoz, amiken fogadja a bejövő requesteket
 
 ### What are the Layers of the OSI model?
 - **7-layer OSI model** 
@@ -624,163 +204,89 @@
         - Layer 3: Network
         - Layer 2: Data link
         - Layer 1: Physical
-        
-    - `Device` associations to **layers 1-3**:
-        - **L1** device is a `hub`, because it deals with electrical signals:
-            - **Responsibility:**
-                - Deals with the hardware transmission and reception of raw unstructured data over a physical medium. It includes the components and methods for connecting devices and transmitting bits.
-            - **Functions:**
-                - Defines the electrical and physical specifications of the data connection. It defines how data is physically sent through the network, including layout of pins, voltages, cable specifications, hubs, repeaters, network adapters, host bus adapters (HBA used in storage area networks), and more.
-        - **L2** device would be a `switch`:
-            - **Responsibility:**
-                - Provides node-to-node data transfer—a link between two directly connected nodes. It also handles error correction from the physical layer.
-            - **Functions:**
-                - Framing, physical addressing (MAC addressing), flow control, error detection, error handling and correction, and manages access to the physical media. Devices like switches and bridges operate at this layer.
-        - **L3** device is a `router`, because it uses IP protocol:
-            - **Responsibility:**
-                - Responsible for packet forwarding including routing through intermediate routers. It involves the addressing, packaging, and routing of packets between source and destination.
-            - **Functions:**
-                - Logical addressing (IP addressing), routing, path determination, and packet forwarding. Routers operate at this layer and use protocols like IP to route data across networks.
-
-    - From L4, we don't associate with devices, but with `functionality`:    
-        - **L4** 
-            - typical devices could be `gateways`, `firewalls` and `load balancers` (but not strictly associated!)
-            - **Responsibility:**
-                - Manages end-to-end control and error-checking to ensure complete data transfer. This layer ensures that data is sent and received in the order it was sent and without errors.
-            - **Functions:**
-                - Segmenting data for transmission, establishing and maintaining connections, error detection and recovery, and flow control.
-        - **L5**
-            - typical devices could be `gateways`, `firewalls` and `load balancers` (but not strictly associated!)
-            - **Responsibility:**
-                - Manages sessions between applications. This layer establishes, manages, and terminates connections between local and remote applications.
-            - **Functions:** 
-                - Session establishment, maintenance, and termination, synchronization of data exchange, and dialog control (either half-duplex or full-duplex).
-        - **L6** 
-            - Not typically associated with a specific type of hardware device, but software functionalities in `application delivery controllers` might perform tasks like data encryption, decryption, or compression that pertain to this layer.
-            - **Responsibility:** 
-                - Translates data between the application layer and the network. It ensures that data is in a usable format and is where data encryption and decryption occurs.
-            - **Functions:** 
-                - Data translation and encryption, data compression, and ensuring that data is in the appropriate format for the receiving application.
-        - **L7** 
-            - This layer, where data is closest to the end user, involves software-level services like application-level gateways, web proxies, and firewalls designed to work at the application level, handling specific application protocols such as HTTP, FTP, etc.
-            - **Responsibility:** 
-                - Closest to the end user, this layer interacts with software applications that implement a communicating component. It facilitates services that directly support applications.
-            - **Functions:** 
-                - Identifying communication partners, determining resource availability, synchronizing communication, ensuring adequate security, and providing various protocols like HTTP, FTP, SMTP, etc.
+    
+    - Az 1-3 layereket device-okhoz is tudjuk társítani:
+        - L1 - Hub - hardveres adattovábbítás
+        - L2 - Switch - két node közti kapcsolatért felel, MAC address-t használ
+        - L3 - Router - IP protocol-t használ packet forwardinghoz
+    
+    - A 4-7 layerekhez inkább funkciókat tudunk társítani:
+        - L4 - Gateway / Firewall / Load Balancer - Azt biztosítja, hogy az adatok hiányzalanul, megfelelő sorrendben és hibák nélkül eljussanak a címzetthez
+        - L5 - Gateway / Firewall / Load Balancer - A lokális és távoli appok közti session-öket menedzseli
+        - L6 - nincs kifejezett device - Data encryption és decryption itt történik, valamint biztosítja, hogy az adatok megfelelően használhatóak legyenek
+        - L7 - A userhez legközelebbi layer, ez bonyolítja le a kommunikációt az appok között, valamint az end-user serviceket szolgáltatja
 
 ### What is the difference between a router and a switch?
 - **Switch:**
-    - Operates at the **Data Link layer (Layer 2)** of the OSI model, though some advanced switches can also perform operations at the Network layer (Layer 3).
-    - Primarily used to connect and switch data packets between devices on the same network (LAN or VLAN).
-    - Doesn't connect to the internet - if a packet is supposed to go out, it is sent to the router first (?)
-    - Manages traffic within a network by **using MAC addresses** to forward data to the correct device.
-    - Example:
-        - Used locally, to create a network by connecting devices like computers, printers, and servers within a single local network environment.
+    - L2 Data Link layeren működik
+    - Azonos hálózaton belül küldözget data packeteket (LAN, VLAN)
+    - Nincs közvetlen kapcsolatban a külső internettel, ha egy packet mégis külső hálózatra menne, akkor az a routernek küldi
+    - MAC addresseket használ az adattovábbításhoz
 - **Router:**
-    - Operates at the **Network layer (Layer 3)** of the OSI model.
-    - Used to connect multiple networks together, such as connecting a local network to the Internet.
-    - Directs data packets between networks using logical addressing (IP addresses). 
-    - Routers use headers and forwarding tables to determine the best path for forwarding the packets.
-    - Example:
-        - Used for network edge deployment, where a network connects to the rest of the internet or other external networks
+    - L3 Network Layeren működik
+    - több networköt köt össze (a lokálisat az Internettel)
+    - IP addresseket használ adattovábbításhoz
+    - Headereket és Forwarding Table-eket használ az útvonal optimalizálására
 
 ### What is the difference between TCP and UDP?
-- **What are they?**
-    - Both are a protocols used in the OSI model's **Layer 4 (Transport layer)** (only 1 is used at the same time!)
-- **Comparison:**
-    - `TCP` (`Transmission Control Protocol`): 
-        - **In short:** connection-oriented and reliable, because it cares about unsuccessful deliveries
-        - Provides reliable, ordered, and error-checked delivery of data over the network
-        - Guarantees deliver of data: if a piece of data doesn't arrive at the destination (in the require time) it'll be resent automatically (or the recipient will be notified of the problem)
-        - Connection-oriented, and a connection between client and server is established (also known as a session) before data can be sent using a three-way handshake
-        - Uses ports for communication
-    - `UDP` (`User Datagram Protocol`): 
-        - **In short:** no checking if the info was actually delivered
-        - *Connectionless*, meaning there's no time spent on establishing a session between source and destination (less overhead)
-        - No guarantee of delivery, ordering, or duplicate protection
-        - Prioritizes time over reliability
-        - Uses ports for communication
+- Mindkettő a L4 Transport Layer protokolja, de egyszerre csak 1-et használ
+- `TCP` (`Transmission Control Protocol`): 
+    - lassabb, de megbízhatóbb protokol, mivel a kézbesítés sikerét is figyeli / garantálja
+    - automatikus újraküldés sikertelenség esetén
+    - connection oriented: session-t (=connection-t) hoz létre a két fél között, portokat használ
+- `UDP` (`User Datagram Protocol`): 
+    - gyorsabb, de megbízhatatlan, mivel nem garantálja a kézbesítést, csak "megpróbálja"
+    - connectionless: nem hoz létre kapcsolatot a küldő és a fogadó között
+    - ez is portokat használ a kommunikációra
 
 ### What is a VPN?
 - **VPN - Virtual Private Network:**
-    - It's a technology, that allows you to to create a secure connection over the internet to another network:
-        - **site-to-site:** connect 2 networks (eg AWS network with office network)
-        - **Client-to-site:** connect you (the Client) to a distant server (eg. office network)
-    - It achieves this using a `VPN server`, to which you connect, then the connection is forwarded from this server
-    - It uses `end-to-end encrytion` for sending data, so it's secure
-    - Hides you from the internet, by connecting throught the `VPN server` (but not completely!)
-    - You can set connection rules (eg. you can only connect to the AWS network from the office network, so you need to connect to it first)
+    - Egy olyan technológia, amely lehetővé teszi, hogy biztonságos kapcsolatot hozzunk létre egy másik hálózattal az interneten keresztül
+        - VPN szerver segítségével tud létrejönni ez a biztonságos kapcsolat, ehhez kapcsolódunk, majd a VPN szerver kapcsolódik a távoli hálózathoz
+        - A VPN szerver továbbá el is rejti a Client-et az internet elől, olyan, mintha a VPN szerver IP címét használná
+        - End-to-end encryption-t használ, amivel biztonságosabb lesz az adatküldés
+
+    - 2 fajátja van:
+        - Client-to-site: a Client-et köti össze a távoli szerverrel
+        - Site-to-site: 2 hálózatot köt össze (pl AWS és irodai hálózat) 
+            - itt létrehozhatunk további szabályokat is, pl az AWS-re csak irodai hálózatról lehet használni, így előbb ahhoz kell csatlakozni
 
 ### What is DNS?
-- **DNS** stands for **Domain Name System**, which is essentially the *phone book of the internet*:
-    - Web browsers interact through IP addresses
-    - DNS translates domain names to IP addresses
-    - DNS is basically a diectory, that contains **domain names** and their corresponding **IP addresses**
-    - DNS is an application layer protocol (L7), but uses `UDP` L4 transport layer protocol
-
-- **How DNS works:** *( https://www.youtube.com/watch?v=72snZctFFtA&ab_channel=DNSMadeEasyVideos )*
-    - the domain actually has a `.` at the end, which represents the root of the internet's namespace
-    - after typing in a domain, it will first be determined, if the IP Address is known:
-        - configured on the computer?
-        - configured in memory? (in cache)
-    - If it's not known yet, then this process will happen (this process is much better explained in the video in the DNS links!):
-        - a query is sent from the computer to a `resolving name server` to resolve the domain, and find out the IP address:
-            - the `resolving name server` should know where to find the `root name servers` (the `.`)
-            - the name servers reply with the location of the `com name servers` (=`top level domain name servers` or `TLD`)
-            - the `resolving name servers` then take all this info from the `root name servers`, adds it to its `cache`, and go to the `com TLD servers`
-            - the `com TLD server` doesn't know, just where to find the `example.com name servers` (=`authoratative name servers` or `ANS`)
-            - The domain's `registrar` is what determines which `ANS` to use, and lets the `TLD` servers know (this is where we register a domain name)
-            - the `resolving name servers` then take all this info from the `authoratative name servers`, which finally knows the IP address
-            - this is then sent to the OS, which forwards the info to the browser, so it can now make a connection
-
-- **Summary of server types (DNS servers involved in loading a webpage):**
-    - `Resolving name server / DNS recursor`:
-        - The recursor can be thought of as a librarian who is asked to go find a particular book somewhere in a library. The DNS recursor is a server designed to receive queries from client machines through applications such as web browsers. Typically the recursor is then responsible for making additional requests in order to satisfy the client’s DNS query.
-    - `Root name server`:
-        - The root server is the first step in translating (resolving) human readable host names into IP addresses. It can be thought of like an index in a library that points to different racks of books - typically it serves as a reference to other more specific locations.
-    - `TLD name servers`
-        -  The top level domain server (TLD) can be thought of as a specific rack of books in a library. This nameserver is the next step in the search for a specific IP address, and it hosts the last portion of a hostname (In example.com, the TLD server is "com").
-    - `Authorative name servers`
-        - This final nameserver can be thought of as a dictionary on a rack of books, in which a specific name can be translated into its definition. The authoritative nameserver is the last stop in the nameserver query. If the authoritative name server has access to the requested record, it will return the IP address for the requested hostname back to the DNS Recursor (the librarian) that made the initial request.
+- A Domain Name System röviden az internet telefonkönyve, mivel ennek segítségével fordítjuk le a domain neveket IP címekké
+- Az L7 Application Layeren létezik, és UDP protokolt használ
+- Működése:
+    - az internet namespace-ét egy .-al jelöljük az URL-ben, de ez nem látható
+    - Amikor beírunk egy domain nevet, először megvizsgálja, hogy az már ismert-e
+    - Ha nem, akkor végigmegy a DNS szervereken, és egyre jobban leszűkítve a keresést:
+        - `resolving name server` -> `root name servers` (ez a `.`) -> `top level domain name servers` -> `authoratative name servers`
+        - `registrar` -> ebben vannak regisztrálva a domainek a hozzájuk tartozó IP címekkel
 
 ### What is DHCP?
-- **Dynamic Host Configuration Protocol:**
-    - makes sure the user's device has all the necessary information to work well
-    - used to automatically obtain network configuration information
+- Dynamic Host Configuration Protocol: 
+    - Azért felel, hogy a user device-nak minden szükséges adat rendelkezésére álljon ahhoz, hogy megfelelően működjön
+    - Arra használjuk, hogy automatikusan információt kapjunk egy hálózati configurációról
 
-    - **We must configure in it:**
-        - IP address range the server can hand out
-        - Mask setup to see what the network and host addresses are 
-        - Default Gateway to handle remote IP addresses (the IP address of the router that does that)
-        - DNS server to resolve IP addresses behind the domain names
+    - Amit meg kell határozni benne:
+        - A szerver által kiosztható IP range-ek
+        - Mask setup (8-24, hogy az IP melyik része a hálózat, és mi a device)
+        - Egy Gateway-t, ami a networkön kívüli IP címeket kezeli
+        - DNS server
 
-    - **It needs:**
-        - DHTP Server
-        - DHTP Client (modern computers have this built-in)
-        - Network connection (they need to be on the same network)
-        - Communication protocol (DORA steps, see below)
-
-    - Steps a DHCP client takes to acquire an IP (`DORA` steps)
-        - `Discover` - sends out broadcast saying that it's looking for a DHTP server
-        - `Offer` - the DHTP server's response that is sent back to the broadcast (eg offer an IP address, that the host can use)
-        - `Request` is sent again, if the offer is accepted
-        - `Acknowledgement` of accepting it (the rest of the options are sent now)
+    - Az alábbi DORA lépések szerint történik az IP cím lekérdezés: 
+        - `Discover` - broadcast küldése, miszerint DHTP szervert keresünk
+        - `Offer` - A DHTP szerver a válaszban felajánl egy IP címet, amit a host használhat
+        - `Request` - újraküldés, már "elfogadás" válasszal
+        - `Acknowledgement` - a szerver tudomásul veszi az "elfogadás"-t, és küldi a további szükséges adatokat
 
 ### What are some well-known ports?
 - **Ports:**
-    - a port is a communication endpoint (16-bit unsigned number (0 - 65535))
-    - TCP and UDP both use ports for communication
-    - well-known-ports are reserved ports for specific services, to make data-forwarding easier
+    - A PORT egy kommunikációs végpont, amit a TCP és UDP protokolok is használnak
+    - A well-known-portok előre lefoglalt portok, amiket egyes service-ek használnak, hogy egyszerűsítsék az adattovábbítást
     - Port number ranges:
-        - System Ports range (0-1023)
-            - Running an application on a System Port requires admin rights
-            - It also needs to explain why it can't use other non-system ports
+        - System Ports range (0-1023) - csak admin
         - User Ports range (1024-49151)
-            - A documentation with request for using a User Port number must describe why a port number from the Dynamic Ports range is unsuitable.
         - Dynamic Ports range (49152-65535)
-            - These ports have been specifically set aside for local and dynamic use.
-            - Application software may simply use any dynamic port that is available on the local host, without any sort of assignment.
-    - Well-known ports: (all here: https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.xhtml )
+    - Well-known ports:
         - `21` - `FTP`
         - `22` - `SSH`
         - `25` - `SMTP`
@@ -795,24 +301,16 @@
         - `27017` - `MongoDB`
 
 ### What are the private IP address ranges?
-- Private IP address ranges are specified in the Internet Protocol standards and are used within individual networks or organizations. These addresses are not routable on the public Internet, which means they are reserved for use within private networks and are not recognized outside of these networks.
-- Private IP addresses are essential for managing and maintaining internal network operations without using public IP space, allowing for efficient IP address allocation and management within private networks, as well as for NAT (Network Address Translation) to map private IP addresses to public ones for Internet connectivity.
-- There are 3 ranges:
+- Ezek olyan tartományok, melyek előre meg lettek határozva, és ezek nem léteznek az interneten, csak privát hálózatokhoz lehet ezeket használni
+- 3 range létezik:
     - **Class A:** `10.0.0.0` to `10.255.255.255`
-        - This range supports up to 16 million devices (`10.0.0.0/8`). It is commonly used in large networks because it allows for extensive sub-netting and many IP addresses.
-
+        - `10.0.0.0/8`: 8 bites mask, sok subnet lehetőség
     - **Class B:** `172.16.0.0` to `172.31.255.255`
-        - This range includes 16 contiguous Class B network blocks (`172.16.0.0/12`). It's widely used in medium-sized networks.
-
+        - `172.16.0.0/12`: 12 bites mask, közepes subnet lehetőség
     - **Class C:** `192.168.0.0` to `192.168.255.255`
-        - This range includes 256 Class C network blocks (`192.168.0.0/16`) and is typically seen in small networks, such as home or small business networks.
-    
-    - In addition to these, for IPv6, there is a block of private addresses known as `Unique Local Addresses` (`ULAs`). The range for ULAs is:
-        - `fc00::/7`
-            - This range is divided into two parts: `fc00::/8` and `fd00::/8`
-                - The latter part, `fd00::/8`, is more commonly used because it requires that the next 40 bits be randomly generated, ensuring uniqueness in local contexts.
+        - `192.168.0.0/16`: 16 bites mask, kevés subnet lehetőség (tipikus otthoni beállítás)
 
-### How many usable addresses are in 192.168.1.0/24?
+### How many usable addresses are in 192.168.1.0/24? (ez maradhat angolul)
 - An `IPv4` address is stored on 8 x 4 2-bits (32 bits) (its value can be `1` or `0`): `00000000.00000000.00000000.00000000` to `11111111.11111111.11111111.11111111`
     - a set of numbers (8 digits) is called an `octet` = 8 bits
     - each octet's value can range from 0 to 255
@@ -831,23 +329,12 @@
 - These usable addresses range from `192.168.1.1` to `192.168.1.254`.
 
 ### What is the purpose of the ARP protocol?
-- To find out the MAC address of the server / service it wants to connect to, using the IP address from L1
-- It operates on the Link (L2) layer primarily, but because it also uses IP addresses, it's also involved with L3 (Network layer)
-- **How does ARP work?**
-    - The host (user's machine) sends an ARP request
-    - It includes the IP address (from Layer 1), that it wants to find out who is using it
-    - A broadcast is sent (ff:ff:ff:ff:ff:ff), so everyone on the network will hear it
-    - The server who the IP address corresponds to, will send a response and include its L2 ethernet address
-- Table's that the devices store the data in:
-    - **ARP table:**
-        - maps **IP addresses** to **MAC addresses**
-        - contains IP addresses and MAC addresses
-    - MAC address table:
-        - maps **SwitchPORTs** to **MAC addresses**
-        - contains PORT numbers and MAC addresses
-    - Routing table:
-        - maps **IP networks** to **Interfaces**
-        - contains network names, their IP addresses and `DC` meaning it's direcly connected
+- Arra hasznáéljuk, hogy kiderítsük a MAC addressét annak a servernek vagy servicenek, amihez kapcsolódni szeretnénk, IP cím segítségével
+- Elsősorban L2 Link layeren működik, de mivel IP címeket is használ, így L3 Network Layer-ben is érintett
+- Így működik:
+    - A host (user gépe) kiküld egy ARP requestet, amiben benne van az IP cím, amihez tartozó MAC address kell neki
+    - A request broadcast formában történik, tehát minden device-ra eljut, és a megfelelő device visszaküldi az L2-es MAC address-ét
+    - A device-ok ARP táblákban tárolják az IP címekhez tartozó MAC címeket
 
 ### What are the basic networking components in AWS? (?)
 1. Amazon VPC (Virtual Private Cloud)
