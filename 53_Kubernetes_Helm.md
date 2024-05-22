@@ -715,14 +715,129 @@
         - We use a **template**, or in Helm's terms a `chart`:
             - the `chart` consists of all the files we are "templating" (=describing in the confirguration), it's essencially a bundle of `yaml` files that we can use in our project
 
-- Use cases:
+- `Chart`:
+    - A `Chart` is a collection of files that describe a related set of Kubernetes resources.
+    - Charts are created as files laid out in a particular directory tree. They can be packaged into versioned archives to be deployed.
+    - **The Chart File Structure:**
+        - eg:
+
+                wordpress/
+                Chart.yaml          # A YAML file containing information about the chart
+                LICENSE             # OPTIONAL: A plain text file containing the license for the chart
+                README.md           # OPTIONAL: A human-readable README file
+                values.yaml         # The default configuration values for this chart
+                values.schema.json  # OPTIONAL: A JSON Schema for imposing a structure on the values.yaml file
+                charts/             # A directory containing any charts upon which this chart depends.
+                crds/               # Custom Resource Definitions
+                templates/          # A directory of templates that, when combined with values,
+                                    # will generate valid Kubernetes manifest files.
+                templates/NOTES.txt # OPTIONAL: A plain text file containing short usage notes
+    
+    - **Chart types:**
+        - We can add this to the `type` field of the `Chart.yaml` file. There are 2 options:
+            - `application`
+                - the default type and it is the standard chart which can be operated on fully
+            - `library`
+                - provides utilities or functions for the chart builder. 
+                - A `library chart` differs from an application chart because it is not installable and usually doesn't contain any resource objects.
+
+- `Repository`:
+    - A Repository is the place where charts can be collected and shared. (like GitHub for Kubernetes packages)
+
+- `Release`:
+    - A Release is an instance of a chart running in a Kubernetes cluster. One chart can often be installed many times into the same cluster. And each time it is installed, a new release is created. 
+    - Consider a MySQL chart: If you want two databases running in your cluster, you can install that chart twice. Each one will have its own release, which will in turn have its own release name.
+
+- **Helm Architecture:**
+    - Helm Client:
+        -  command-line client for end users, responsible for:
+            - Local chart development
+            - Managing repositories
+            - Managing releases
+            - Interfacing with the Helm library:
+                - Sending charts to be installed
+                - Requesting upgrading or uninstalling of existing releases
+    - Helm Library:
+        - provides the logic for executing all Helm operations. 
+        - It interfaces with the Kubernetes API server and provides the following capability:
+            - Combining a chart and configuration to build a release
+            - Installing charts into Kubernetes, and providing the subsequent release object
+            - Upgrading and uninstalling charts by interacting with Kubernetes
+    - Both Client and Library use the `Go` language
+
+- **Basic commands (Helm):**
+    - Getting Started 1. (install and use existing chart):
+        - Install:
+            - `curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3`
+            - `chmod 700 get_helm.sh`
+            - `./get_helm.sh`
+        - Initialize a Helm Chart Repo:
+            - `helm repo add bitnami https://charts.bitnami.com/bitnami`
+        - List charts available for install:
+            - `helm search repo bitnami`
+        - Install a sample chart:
+            - `helm repo update`
+            - `helm install bitnami/mysql --generate-name`
+            - Note:
+                - Whenever you install a chart, a new release is created. So one chart can be installed multiple times into the same cluster, and each can be independently managed and upgraded.
+            - Alternatively we can name the release instead of generating a name for it:
+                - `helm install happy-panda bitnami/wordpress`
+        - Use this to check the chart:
+            - `helm show chart bitnami/mysql`
+        - Check list of all deployed releases:
+            - `helm list`
+        - Now we can uninstall, using the chart's NAME:
+            - `helm uninstall mysql-1716386300`
+    - Getting started 2. (by creating your own chart):
+        - `helm create mychart`
+        - Remove everything from `/templates` folder to start from scratch:
+            - `rm -rf ./templates/*` (make sure to be inside your helm project folder)
+        - Create templates:
+            - `ConfigMap` in `./templates/configmap.yaml` file:
+
+                    apiVersion: v1
+                    kind: ConfigMap
+                    metadata:
+                      name: mychart-configmap
+                    data:
+                      myvalue: "Hello World"
+            
+        - Now that we have a template, we can install it with:
+            - `helm install test1 ./` # note "full-coral" is the name we want to use for the chart, and `./` refers to the dir we are working in (the project's root folder)
+        - retrieve the release:
+            - `helm get manifest test1` (gets what's inside the yaml file)
+        - now we can uninstall it:
+            - `helm uninstall test1`
+
+        - We can alter the previous `ConfigMap` to be able to add the `name` field as an input (`template directive`):
+
+                apiVersion: v1
+                kind: ConfigMap
+                metadata:
+                    name: {{ .Release.Name }}-configmap
+                data:
+                    myvalue: "Hello World"
+        
+        - now we can install it again, check the manifest and delete:
+            - `helm install test2 ./`
+            - `helm get manifest test2`
+            - `helm uninstall test2` 
+        
+        - extra tip:
+            - `helm install --debug --dry-run goodly-guppy ./mychart`
+                - using this, we will be able to check the template without actually installing
 
 
-- **Basic commands:**
     - `helm install <chartName>` - this uses the `values` file to fill all the `configuration` files, and creates the cluster (we can also specify the values file with the `--values` flag, eg `helm install --values=values.yaml <chartName>`)
     - `helm upgrade <chartName>` - after we make any changes, we can use this command to update our app
     - `helm rollback <chartName>` - in case we made a mistake, we can undo that with this command (go back to the last working version)
     - `helm package <repoIndex> <chartName>` (?) - push (`deploy`) the project's configuration (`chart`) for others to use it
+
+    - `helm search hub <value>`: 
+        - searches the Artifact Hub *( https://artifacthub.io/ )*
+        - eg `helm search hub wordpress`
+    - `helm search repo`:
+        - searches the repositories that you have added to your local helm client (search is done over local data)
 
 ## GUIDES:
 - **General tips:**
@@ -732,6 +847,8 @@
         - `eksctl create cluster -f cluster.yaml`
     - after you're done, make sure to update your context like this:
         - `aws eks update-kubeconfig --region eu-west-2 --name gk-cluster`
+    - or swap to minikube context:
+        - `kubectl config use-context minikube`
 
 - **Deploy applications (Service):**
     1. Create a sample deployment and expose it on port 8080:
@@ -1142,3 +1259,5 @@
 - HELM intro video: https://www.youtube.com/watch?v=fy8SHvNZGeE&ab_channel=IBMTechnology
 - HELM intro video (with Nana): https://www.youtube.com/watch?v=-ykwb1d0DXU&ab_channel=TechWorldwithNana
 - HELM source code: https://github.com/helm/helm
+- HELM getting started with your own chart: https://helm.sh/docs/chart_template_guide/getting_started/
+- HELM vs. kubectl (with HELM workflow!): https://medium.com/@RedBaronDr1/helm-vs-kubectl-5aaf2dba7d71
