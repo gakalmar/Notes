@@ -30,8 +30,14 @@
         nem nagyon tudtam lecsekkolni, hogy sikerult-e (nem is nagyon ertem, mi a lenyeg)
 
 # After finishing DevOps:
+- Computer science theory:
+    - Graphs: https://journey.study/v2/learn/courses/252/modules/29404/units/1/materials/232
+    - Sorting complexity: https://journey.study/v2/learn/courses/252/modules/29404/units/0/materials/5094
+    - Programming Paradigms: https://journey.study/v2/learn/courses/252/modules/29404/units/2/materials/5036
+
 - Kubernetes certification course:
     - https://www.udemy.com/course/certified-kubernetes-administrator-with-practice-tests/?couponCode=LEADERSALE24B
+
 - learn about the nginx-flask-python3 stack
 
 # OOP
