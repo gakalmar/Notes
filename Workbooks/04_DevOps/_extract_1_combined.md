@@ -2,7 +2,8 @@
 
 ## Linux
 ### What kind of virtualization technologies are you familiar with?
-- A virtualizáció egy valós entitás helyett egy virtuális dolog létrehozását jelenti
+- "Az izoláció egy eszköze"
+- A virtualizáció egy valós entitás helyett egy virtuális dolog létrehozását jelenti (történelmi gyökerek: hardver - kevés helyen - emiatt egy gépet osztottak szét (ezek voltak a virtualizációk = erőforrások szétosztása), ahhoz lehetett terminálokon át csatlakozni) - ennek ellentéte a többszálúság (tóbb idő kell a feladatok elvégzéséhez)
     - A hypervisor (Virtual Machine Monitors (VMMs)) teszi ezt lehetővé (ez allokálja a host resource-ait a virtuális környezetben)
     - Ha a hypervisor installálva van, akkor tudunk létrehozni VM-eket, amik hordozhatóak
     - az az előnye ennek,
@@ -18,13 +19,14 @@
             
     - Szoftver-virtualizáció:        
         - Type 2 - Hosted / Nested virtualizáció:
-            - ennél host gépet használunk (saját OS), ezen fut a hypervisor
+            - ennél host gépet használunk (saját OS és kernel), ezen fut a hypervisor
             - a host gép megosztja az erőforrásait a VM-ekkel (szabályozható)
             - pl `Oracle VirtualBox`, `VMware Workstation`
         
         - Konténerizáció:
             - Itt nem egy egész gépet virtualizálunk, mert OS-t nem hozunk létre, ehelyett ezt applikáció szintjén virtualizáljuk
             - Csak felhasználjuk a host gép OS-ének kernelét, hogy izolált egységeket hozzunk létre
+                - `kernel` köt össze minket a hardware-el; a `scheduler` is ide tartozik; minden ami a hardware-el kapcsolatos a `kernel`feladata
             - pl `Docker`, `Kubernetes`
 
     - Ezeken kívül létezik még:
@@ -169,7 +171,7 @@
         - `-v`: ez is hasonló az x-hez, de itt minden input line-t loggol ki, nem a parancsokat, amiket futtat
     - Pl: `set -eux`:
 
-### How would you make a service auto-start and machine boot-up?
+### How would you make a service auto-start and machine boot-up? (?)
 - a `systemd` daemonnal, ami az init system-ért felelős a Linuxban:
     - Create the script: `sudo nano /usr/local/bin/my_script.sh`
     - Add content, eg: `#!/bin/bash / echo "My script is running" > /var/log/my_script.log`   
@@ -336,892 +338,405 @@
     - A request broadcast formában történik, tehát minden device-ra eljut, és a megfelelő device visszaküldi az L2-es MAC address-ét
     - A device-ok ARP táblákban tárolják az IP címekhez tartozó MAC címeket
 
-### What are the basic networking components in AWS? (?)
-1. Amazon VPC (Virtual Private Cloud)
-    - `VPC`: A logically isolated section of the AWS cloud where you can launch AWS resources in a virtual network that you define. You have complete control over your virtual networking environment, including selection of your own IP address range, creation of subnets, and configuration of route tables and network gateways.
-2. Subnets
-    - `Subnet`: A range of IP addresses in your VPC. You can launch AWS resources into a specified subnet. Use a public subnet for resources that need to connect to the internet, and a private subnet for resources that won’t be connected to the internet.
-3. Internet Gateway
-    - `Internet Gateway` (`IGW`): A VPC component that allows communication between instances in your VPC and the internet. It provides a target in your VPC route tables for internet-routable traffic, and performs network address translation for instances that have been assigned public IPv4 addresses.
-4. Route Tables
-    - `Route Tables`: Contain a set of rules, called routes, that determine where network traffic from your subnet or gateways is directed.
-5. NAT Gateways/Instances
-    - `NAT Gateways`/`Instances`: Used to enable instances in a private subnet to connect to the internet or other AWS services, but prevent the internet from initiating a connection with those instances.
-6. Security Groups and Network ACLs
-    - `Security Groups`: Act as a virtual firewall for your instances to control inbound and outbound traffic.
-Network ACLs (Access Control Lists): Act as a firewall for controlling traffic in and out of one or more subnets.
-7. Elastic IP Addresses
-    - `Elastic IP Addresses`: Static IPv4 addresses designed for dynamic cloud computing. You can quickly remap the address to another instance in your account, providing a failover solution.
-8. Elastic Network Interfaces (`ENIs`)
-    - `Elastic Network Interfaces` (`ENIs`): A virtual network interface that you can attach to an instance in a VPC. ENIs can include attributes such as a primary private IPv4 address, one or more secondary IPv4 addresses, an Elastic IP address, a MAC address, membership in specific security groups, and more.
-9. VPC Endpoints
-    - `VPC Endpoints`: Allow private connections between your VPC and supported AWS services and VPC endpoint services powered by PrivateLink without requiring an internet gateway, NAT device, VPN connection, or AWS Direct Connect connection.
-10. AWS Direct Connect
-    - `AWS Direct Connect`: Bypasses the internet to provide a secure, dedicated connection from your premises to AWS.
-11. AWS Transit Gateway
-    - `AWS Transit Gateway`: Connects VPCs and on-premises networks through a central hub. This simplifies your network and puts an end to complex peering relationships.
+### What are the basic networking components in AWS?
+1. `VPC` - Virtual Private Cloud
+    - Egy virtuális hálózat, egy izolált része a Cloudnak, amiben tudunk `Subnet`-eket létrehozni, amikben meg `instance`-okat tudunk elindítani
+    - Meg tudjuk határozni bennük az IP kiosztást (`IPv4 CIDR block` vagy range)
+    - `Availability Zone`-okat is tartalmaz
+    - `Internet Gateway`-t tudunk hozzácsatolni, amit a `Route Table`-ökön keresztül tudunk elérhetővé tenni
+2. `Subnet`
+    - Egy IP cím csoport a hálózaron belül
+    - Egy availability zone-on belül tudjuk létrehozni
+    - Ezeknek is meg kell határozni, hogy a VPC IP kiosztásának melyik részét fedjék le
+    - `Instance`-okat tudunk benne létrehozni
+    - `NAT Gateway`-t tudunk benne létrehozni, de a `VPC`-vel asszociáljuk (ahhoz van igazából csatolva)
+    - A `Subnet` `Route Table`-jében tudjuk beállítani a route-okat (pl. ha private-et akarunk létrehozni, kell csinálni neki egy új Route Table-t, és azt asszociálni a default helyett)
+3. `Internet Gateway`
+    - Ezt egy `VPC`-hez tudjuk csatolni, és egy `VPC`-nek csak 1 lehet
+    - Ez ad hozzáférést a `public subnetek`-nek az Internethez
+    - A `Route Table`-ben tudjuk hozzácsatolni a `Subnet`-et az `IGW`-hez:
+        - **Destination:** 10.0.0.0/24 -> **Target:** local (ez a lokális hálózatot mutatja meg, default itt van)
+        - **Destination:** 0.0.0.0/0 -> **Target:** Internet Gateway (pl igw-12345678)
+4. `NAT Gateway`:
+    - Ez pedig a `private subnet`-nek ad hozzáférést az internethez, a hálózaton belüli másik, `public subnet`-en kersztül
+    - Tehát ezt egy `public subnet`-ben kell létrehozni, de egy `VPC`-hez lesz attól még asszociálva
+    - Csak 1 irányban működik, tehát a `Subnet`-nek ad csak hozzáférést, de a kívülről jövő forgalmat nem engedi át
+    - `Elastic IP`-t is hozzá kell rendelni 
+        - `public connectivity type`-al kell létrehozni a `NAT Gateway`-t, és akkor lehet neki csinálni
+        - ez valójában csak egy statikus, public IP cím, amin keresztül lehet hozzá csatlakozni az Internetről
+    - A `Route Table`-ben tudjuk hozzácsatolni a `Subnet`-et az `NAT GW`-hez
+        - **Destination:** 10.0.0.0/24 -> **Target:** local (ez a lokális hálózatot mutatja meg, default itt van)
+        - **Destination:** 0.0.0.0 -> **Target:** local (ez a lokális hálózatot mutatja meg, default itt van)
+5. `EC2 instance`
+    - Ez egy virtális gép, ami egy `Subnet`-en belül fut
+    - Egy `Security Group`-ot tudunk neki létrehozni, ebben tudunk neki adni `inbound` és `outbound rule`-okat megadni:
+        - pl SSH belépéshez az `inbound rule`-nál kell hozzáadni egy `type SSH / source 0.0.0.0/0 (anywhere IPv4)` rule-t
+    - Létrehozáskor egy `Key Pair`-t is hozzá tudunk rendelni, amivel be tudunk így SSH-zni rá
+6. `Security Group`
+    - Ebben tudjuk meghatározni egy instane `inbound` és `outbound rule`-jait, pl:
+        - Inbound:
+            - SSH belépés a 22-es porton
+            - HTTP access a 80-as porton
+            - ICMP access kell a `ping` használatához
+            - egyéb app-ok hozzáférése egyedileg meghatározott portokon
+        - Outbound:
+            - By default minden kimenő engedélyezve van
+            - De be lehet állítani pl, h csak egy adatbázisba engedélyezze speciális esetekben:
+                - pl. PostgreSQL a 5432-es porton
++ `Route Table`
     
-### What network diagnostic/debugging tools are you familiar with? (?)
-- **4 key debugging points:**
-    - correct IP address?
-    - correct mask configuration?
-    - default gateway is configured?
-    - DNS server is configured and works correctly?
+### What network diagnostic/debugging tools are you familiar with?
 - **Debugging tools:**    
-    - `Ping`: 
-        - This is a fundamental tool that tests connectivity between two hosts on a network. 
-        - It uses `ICMP` (`Internet Control Message Protocol`) to send echo requests to a target host and waits for a reply.
-        - It helps determine if a host is reachable and measures the round-trip time for messages.
-        - How it works video: https://www.youtube.com/watch?v=vJV-GBZ6PeM&ab_channel=PowerCertAnimatedVideos
-    - `Traceroute` (`tracert` on Windows):
-        - This tool is used to display the route (path) and measure transit delays of packets across an internet protocol (IP) network. 
-        - It helps in identifying the path taken by packets across a network and pinpoints where delays or drops are occurring.
-        - How it works video: https://www.youtube.com/watch?v=1bIpUup5Vp4&ab_channel=CBTNuggets
-    - `Nslookup` / `Dig`: 
-        - These are command-line tools used for querying the `Domain Name System` (`DNS`) to obtain domain name or IP address mapping, or other DNS records. 
-        - `nslookup` is widely used on Windows and some Unix-based platforms, while `dig` is preferred on Linux systems for its robust features.
-    - `Netstat`: 
-        - This tool displays network connections (both incoming and outgoing), routing tables, and a number of network interface statistics. 
-        - It is particularly useful for checking which ports are open and what connections are currently active on a machine.
-    - `Wireshark`: 
-        - An advanced network protocol analyzer, Wireshark allows users to capture and interactively browse the traffic running on a computer network. 
-        - It provides detailed information about network traffic and can be used for network troubleshooting and analysis.
-    - `Tcpdump`: 
-        - This is a command-line packet analyzer tool that allows the user to capture and display the packets being transmitted or received over a network to which the computer is attached.
-    - `IPerf` / `JPerf`: 
-        - These tools are used to measure the bandwidth between two hosts on a network. 
-        - They can test `TCP` or `UDP` throughput and provide details on the performance of the network.
-    - `MTR` (My Traceroute): 
-        - `MTR` combines the functionality of the `traceroute` and `ping` programs in a single network diagnostic tool. 
-        - It provides a continuously updated list of routers, packet loss, and response times between the local host and each router along the path to a remote host.
-    - `Telnet` / `SSH`: 
-        - While primarily used for remote access to servers, these tools are also used for diagnosing certain types of network issues, such as testing the accessibility of services on specific ports.
-    - `Nmap`: 
-        - This is a network scanning tool that can discover devices and services on a computer network. 
-        - It is extensively used for network inventory, managing service upgrade schedules, and monitoring host or service uptime.
+    - `ping`: 
+        - ehhez a `Security Group`-ban először engedélyezni kell az instance inbound rule-jainál az `ICMP` access-t, mert a ping azon működik
+        - echo requesteket küld a célpontnak, és várja a válaszokat
+        - By default végtelenítve küldi a requesteket, másodpercenként:
+            - `ping -c 4 example.com` (`-c` flag a pingek mennységét állítja (count) )
+            - `ping -i 2 example.com` (`-i` flag a pingek gyakoriságát állítja (interval) )
+    - `curl`: (=Client URL)
+        - egy weboldal tartalmát tudjuk lekérni (pl JSON data, API lekérdezés)
+        - Így működik:
+            - `curl -L http://example.com` (nyers adatokat küld vissza - GET request - -L flag a redirection miatt kell)
+            - `curl -I http://example.com` (a headereket kérdezi le, body nélkül - HEAD request)
+    - `traceroute`:
+        - végigkövetjük a packet útját a célállomásig
+        - `traceroute example.com`
+    - `lsof` - list open files - check open ports
+    - `host` / `dik` / `nslookup` - DNS feloldással kapcsolatban
+    - `nc` netcat - egy távoli szervernek tudod megnézni a nyitott portjait
 
 ## Security
 ### What is encryption at rest and encryption in transit, and how are these implemented in AWS?
-- **Data encryption (in AWS):**
-    - AWS is using AES-256 algorithm for encryption
-    - there is an `engine` that creates an individual cryptographic key, the `data key`:
-        - contains all of the cipher information that is then applied to the data object (image, video, individual document, that you want protected)
-        - The cipher data is applied against the individual object and then you end up with the encrypted data
-        - That encrypted data is then put into storage (S3 or EBS)
-        - without the original encryption key there is no way to read that data
-    - The engine makes a unique key for every object that goes into your system (for better security), so these need to be managed:
-        - `individual data key` is only used by that data object
-        - `master key` is applied against the original `data key` to get an **encrypted version** of that `data key`
-        - the object is attached to the encrypted object, and that is what gets stored
-        - you only will need the `master key` to decrypt the encrypted key, that you will then use to get the data
-        - AWS offers solution out-of-the-box you can use to manage the master key storage:
-            - Hardware solution - Cloud HSM
-            - Hardware Security Module
-            - Services such as KMS - The key management system
-
 - **Encryption at Rest:**
-    - It refers to the protection of data stored on disk. 
-    - The goal is to prevent unauthorized access to the data when it is stored on physical media such as hard drives, SSDs, or backup tapes. 
-    - This type of encryption ensures that even if the storage medium is accessed by an unauthorized party, the data remains unintelligible without the decryption key.
-    - **Implementation in AWS:**
-        - `Amazon S3`: AWS offers server-side encryption (SSE) for S3 objects with three options:
-            - `SSE-S3`: AWS manages the encryption keys.
-            - `SSE-KMS`: AWS Key Management Service (KMS) manages the keys, providing additional control and auditing capabilities.
-            - `SSE-C`: Customer provides and manages the encryption keys.
-        - `Amazon EBS` (Elastic Block Store): EBS volumes can be encrypted to protect data at rest. Encryption occurs on the server that hosts the EC2 instance, providing encryption for data at rest, data in transit between the instance and the volume, and snapshots created from the volume. Encryption is handled using AWS KMS.
-        - `Amazon RDS` (Relational Database Service): RDS supports encryption at rest for DB instances using AWS KMS. This encryption applies to the underlying storage for the DB instance, automated backups, read replicas, and snapshots.
-        - `AWS S3 Glacier`: Supports encryption at rest by default using AWS KMS.
-        - `AWS CloudTrail Logs`: CloudTrail logs can be encrypted using SSE-KMS.
-
+    - azon adatok encryptálása, melyek "rest" állapotban vannak, tehát tároljuk őket valahol
+    - az a lényege, hogy még ha hozzá is fér valaki az adatokhoz, ne tudja őket olvasni a decryption key nélkül
+    - Példák:
+        - Az `AWS S3 bucket`-eknél ez default be van állítva (`SSE-S3`), de használhatjuk `KMS`-el (`Key Management Service`), vagy akár mi magunk is megadhatjuk az encryption key-ket (`SSE-C`)
+        - Az `AWS EBS` (Elastic Block Store)-nál is tudjuk encryptálni az adatokat a `KMS`-el
 - **Encryption in Transit:**
-    - Encryption in transit refers to the protection of data as it moves between different parts of a system, such as between clients and servers or between different services.
-    - The goal is to protect the data from eavesdropping and tampering while it is being transmitted.
-    - **Implementation in AWS:**
-        - `TLS`/`SSL`: AWS services support encryption in transit using Transport Layer Security (TLS) and Secure Sockets Layer (SSL). For example:
-            - `Amazon S3`: Supports HTTPS for secure data transfer.
-            - `AWS API Gateway`: Supports HTTPS for secure communication between clients and APIs.
-            - `Elastic Load Balancing` (`ELB`): Supports HTTPS/SSL termination at the load balancer.
-        - `AWS VPN`: AWS provides VPN connections for securely connecting on-premises networks to AWS VPCs using IPsec.
-        - `AWS Direct Connect`: Provides a dedicated network connection from your premises to AWS. AWS Direct Connect supports encryption at the application layer (e.g., TLS/SSL) or can be combined with AWS VPN to encrypt traffic.
-        - `Amazon RDS`: Supports SSL/TLS connections to encrypt data in transit between the database instance and the application.
-        - `Amazon Elastic File System` (`EFS`): Supports encryption of data in transit using TLS.
-        - `AWS IoT`: Supports secure communication using TLS/SSL for IoT devices.
+    - azon adatok encryptálása, melyek "transit" állapotban vannak, tehát éppen továbbítjuk őket (client-server vagy 2 service között)
+    - azt akadályozzuk meg, hogy belelássanak vagy módosítsák a transit-ban lévő adatokat
+    - Példák:
+        - `AWS VPN` end-to-end encryptiont használ, így az adatok biztonságosan lesznek továbbítva
+        - Ezen kívül `TLS` (`Transport Layer Security`) és `SSL` (`Secure Sockets Layer`) segítségével is encryptálhatunk `AWS`-ben:
 
-### Which service is responsible for monitoring and log collections in AWS? (?)
-- **Amazon CloudWatch:**
-    - Amazon `CloudWatch` is the primary service for **monitoring** AWS resources and applications. 
-    - It collects and tracks metrics, collects and monitors log files, and sets alarms. 
-    - Key features include:
-        - **Metrics**: Collects and tracks metrics for AWS resources like EC2 instances, RDS databases, and more.
-        - **Alarms**: Allows you to set alarms based on metrics and receive notifications.
-        - **Dashboards**: Provides a visual interface to monitor and display metrics and alarms.
-        - **Events**: Monitors AWS resources and routes event notifications to targets like Lambda functions, SNS topics, and SQS queues.
-        - **Logs**: Collects and monitors log data from various AWS services and applications.
-- **Amazon CloudWatch Logs:**
-    - Amazon `CloudWatch Logs` lets you **monitor**, **store**, and **access log files** from various sources. 
-    - It can be used to collect and monitor logs from:
-        - **AWS Services**: Such as VPC Flow Logs, Lambda logs, and Route 53 query logs.
-        - **Custom Sources**: From your applications and on-premises servers using the CloudWatch Logs Agent or the CloudWatch Logs API.
-        - **Log Groups and Streams**: Organizes log data into log groups and log streams.
-        - **Metric Filters**: Allows you to extract metric data from log events.
+### Which service is responsible for monitoring and log collections in AWS?
+- `Amazon CloudWatch`, `Amazon CloudWatch Logs`, `AWS Systems Manager` (Ebben benne van a CloudWatch is)
+    - WATCH WORKSHOP VIDEO!
+    - There was a task, that sends an email notification when a new user logs in into AWS
 
-- **AWS Systems Manager (Integrated solution):**
-    - `AWS Systems Manager` integrates with `CloudWatch` and other AWS services to provide a unified interface for operational data management. 
-    - It includes features like:
-        - **OpsCenter**: Centralized view of operational issues.
-        - **Run Command**: Execute commands on AWS resources.
-        - **Parameter Store**: Secure storage for configuration data and secrets.
-        - **Session Manager**: Secure, auditable instance management.
+### Which service is responsible for tracking activities on an AWS account?
+- `AWS CloudTrail`
+    - follows API requests
+    - you can use `SNS` and attach it to events on AWS services
 
 ### What is a bastion host, and how can it be implemented in AWS? (!) update with notes from workshop!
-- **Bastion host:**
-    - a special-purpose server designed to provide secure access to a `private network` from an `external network` (typically the internet)
-    - The primary purpose of a `bastion host` is to enhance security by minimizing the attack surface and controlling access to critical resources.
-    - acts as a `gateway` through which authorized users can access other instances or resources within a `private subnet` of a `Virtual Private Cloud` (`VPC`):
-        - Only allows secure, authenticated connections (typically using `SSH` for Linux or `RDP` for Windows).
-    
-    - **Implementing a Bastion Host in AWS:**
-        1. Create a VPC:
-            - If you don't already have a VPC, create one using the VPC wizard or manually via the AWS Management Console.
-        
-        2. Set Up Subnets:
-            - Create a public subnet for the bastion host.
-            - Create private subnets for your application servers or other resources.
-        
-        3. Create a Security Group for the Bastion Host:
-            - Define a security group that allows inbound SSH (port 22) or RDP (port 3389) from specific IP addresses or IP ranges (e.g., your office IP).
-            - Allow outbound traffic on necessary ports (e.g., SSH or RDP) to the private subnet.
-        
-        4. Launch an EC2 Instance for the Bastion Host:
-            - Choose an appropriate AMI (Amazon Machine Image) for your bastion host (e.g., Amazon Linux, Ubuntu for SSH access, or Windows Server for RDP access).
-            - Launch the instance in the public subnet and associate it with the security group created earlier.
-        
-        5. Configure Key Pair or Password Authentication:
-            - Use an SSH key pair for Linux instances or set up a strong password for Windows instances.
-        
-        6. Associate Elastic IP (Optional):
-            - Assign an Elastic IP to the bastion host to have a static, reachable IP address.
-        
-        7. Configure Route Tables:
-            - Ensure that the route table associated with the public subnet has a route to an internet gateway for internet access.
-            - Private subnets should have route tables that do not allow direct internet access.
-        
-        8. Harden the Bastion Host:
-            - Disable unnecessary services and ports.
-            - Regularly update the operating system and software.
-            - Configure logging and monitoring (e.g., using AWS CloudWatch).
-        
-        9. Access Private Resources via the Bastion Host:
-            - Connect to the bastion host using SSH or RDP.
-            - From the bastion host, establish connections to instances within the private subnet.
-        
-        - **Example of Security Group Configuration for SSH Access:**
-            - Bastion Host Security Group:
-                - Inbound Rules:
-                    - Type: SSH
-                    - Protocol: TCP
-                    - Port Range: 22
-                    - Source: Your specific IP range (e.g., 203.0.113.0/24)
-            - Private Subnet Instances Security Group:
-                - Inbound Rules:
-                    - Type: SSH
-                    - Protocol: TCP
-                    - Port Range: 22
-                    - Source: Security group ID of the bastion host
+- A Bastion host egy olyan host, ami egy private network-ón (subnet-en) lévő instance-t tesz elérhetővé az internetről:
+    - Ehhez szükség van egy VPC-re, azon belül is egy public és egy private subnetre
+    - A VPC-hez csatolunk egy Internet Gateway-t, a public networkre meg teszünk egy NAT Gatewayt, valamint a Route Table-ben konfiguráljuk ezeket (private -> NAT / public -> IGW)
+    - A NAT gateway-re itt igazából nincs szükség, mert ez csak arra való, hogy a private subnet férjen hozzá az internethez. Mi a bastion hosttal épp az ellenkezőjét akarjuk elérni, hogy a private subnet-en lévő instance-ok legyenek elérhetőek kívülről (a bastion hoston keresztül)
+    - A public subnet-ben létrehozunk egy EC2-t, és hozzá egy Security Group-ot, ami engedi az SSH-t (Így már be tudunk SSH-zni a public EC2-re, amiről tovább tudunk SSH-zni a private network-ön lévő instance-ra a PRIVATE IP címét használva, ha ott is be van állítva az SSH connection).
+        - Itt használhatjuk az `ssh-add ~/.ssh/id_rsa` és `ssh -A ec2_user@public_ec2_ip` belépési módot, hogy ne kelljen a private kulcsot másolgatni
 
 ### What are the key differences between security groups and NACLs?
-- **Security Groups:**
-    - acts as a virtual firewall for your EC2 instances to control incoming and outgoing traffic
-    - Both inbound and outbound rules control the flow of traffic to and traffic from your instance (it's just like a turbo version `iptables`)
-    - when no rules are defined in a security group it blocks all inbound and outbound traffic! (By default when you launch an EC2 instance via the AWS Management Console will generate a security group for you which will allow inbound SSH connections and allow all outbound connections.)
-    - each security group can be applied to one or more instances, even across subnets
-    - each instance is required to be associated with one or more security groups (to be precise: a security group is associated with a network interface that is attached to an instance)
-    - Different setups need different security group setups (eg port 3306 for MySQL)
-    - Different rules can be set for the `webserver` or the `database server`, or we can set `ping/ICMP rules`
+- Security Group:
+    - EC2-t védi rule-okkal, amikkel szabályozza a hozzáférést
+    - Minden EC2-nek kell 1 SG, de 1 SG több instance-hoz is tartozhat
+    - By default NEM engedi át a bejövő forgalmat, csak a kimenőt
+    - SG már csak azt a forgalmat figyeli, amit a NACL már átengedett
+    - csoportosan kezeli a rule-okat
+    - csak ALLOW rule-ok
+    - stateful -> a response traffic automatikusan megengedett
+- NACL:
+    - A subnet-eket védi rule-okkal, amikkel szabályozza a hozzáférést
+    - Minden subnetnek kell 1 NACL, de 1 NACL több subnet-hez is tartozhat
+    - By default átengedi a forgalmat ki és befele is
+    - NACL szűr először, utána a SG
+    - hierarchia alapján kezeli a rule-okat (sorszámozva vannak, növekvő sorrendben)
+    - ALLOW és DENY rule-ok is
+    - stateless -> a response traffic-ra is kell külön engedély, így rule párokat használunk in- és outboundra
 
-- **Network Access Control Lists NACL:**
-    - Features:
-        - `NACL` sets rules for your **network/subnet**, based on the protocol type such as HTTP, TCP, UDP, etc., and the port numbers
-        - Used in combination with **SG**s to create a multi-layer protection
-        - each `NACL` can be applied to one or more `subnets`, but each subnet is required to be associated with one — and only one! — `NACL`
-        - When you create a VPC, AWS automatically creates a default `NACL` for it (You can add and remove rules from a default `NACL`, but you can't delete the `NACL` itself)
+- Együttesen kell ezeket használni, kihasználva a hierarchiát (NACL előszűr, majd ezután jut el az SG-re). A NACL a network-ön/subnet-en lévő összes gépre vonatkozik, míg az SG-vel finomhangolhatjuk a speciálisabb eseteket
     
-- **Comparison:**
-    - Similarities:
-        - both act as a virtual firewall to protect your network/instance
-        - use sets of inbound and outbound rules to control traffic to and from resources in a VPC
-        - Can be applied to more than one instance (security group) or subnet (NACL)
-        - Can be locked down to deny all traffic in either direction
-        - Are valid methods of securing resources in a VPC
-        - Work together to promote network redundancy and prevent unauthorized activity
-    
-    - **Differences:** (this already implements the comparison chart image!)
-        - `Security groups` and `NACLs` operate at separate layers in the VPC:
-            - `SG` -> Instance level-security
-            - `NACL` -> Network level-security
-        - don't handle response traffic the same way:
-            - `SG` allows or denies traffic that a NACL allows in
-            - `NACL` allows or denies traffic **before** it reaches an `SG`
-        - Rules processing:
-            - `SG` rules are processed as a group
-            - `NACL` rules are processed one a time (in ascending order, by number set)
-        - Allow-deny:
-            - `SGs` are implicit deny - you can only add `allow` rules!
-            - `NACLs` support both `allow` and `deny` rules
-        - Statefulness (=apply rules based on connection state):
-            - `SG` is `stateful` = response traffic is automatically allowed
-                - you don't need to set separate rules for responses, like with `NACLs`
-            - `NACL` is `stateless` = response traffic is subject to inbound and outbound rules:
-                - this means that NACL rules typically **come in pairs**. For every inbound rule for a NACL, there must be a corresponding outbound rule
-        - Application to AWS EC2 instances:
-            - `Security groups` are a **required** form of defense for `instances`, because an `instance` must be associated with at least one `security group`
-            - A `NACL` on the other hand, automatically applies to **all instances** in the `subnet` it is associated with
-        - Default rules:
-            - `SG` deny all incoming traffic by default
-            - `NACL` allow all traffic in and out by default (must be configured to be less permissive!)
-    
-- **How to use `NACL` together with `SGs`:**
-    - By taking advantage of the order of operations:
-        - When traffic enters your network, it is filtered by `NACLs` **before** it is filtered by `security groups` (so traffic allowed by a `NACL` can then be allowed or denied by a `security group`, and traffic stopped by a `NACL` never makes it any further)
-    
-### Which service is responsible for tracking activities on an AWS account? (?)
-- **AWS CloudTrail:**
-    - `AWS CloudTrail` is a service that enables governance, compliance, and operational and risk auditing of your AWS account. 
-    - With `CloudTrail`, you can log, continuously monitor, and retain account activity related to actions across your AWS infrastructure. 
-    - This provides a history of AWS API calls for your account, including API calls made through the AWS Management Console, AWS SDKs, command line tools, and other AWS services.
-    
-    - **Key Features:**
-        - Event logging: 
-            - operations such as the creation, modification, and deletion of AWS resources
-        - Trails:
-            - can be set to apply to all regions or to a single region
-            - can be configured to log events in a specified S3 bucket for storage
-            - A single trail can log events from multiple AWS accounts, simplifying centralized auditing and compliance
-        - CloudTrail Insights:
-            - Automatically detect unusual API activities in your AWS account
-            -  help identify operational issues and potential security threats by analyzing normal activity patterns
-        - Integration with Other Services (eg. `CloudWatch`)
-        - Event history (90-day history)
-        - Security and Compliance:
-            - Helps meet compliance requirements by providing detailed logs of account activity, which can be used for audits and investigations
-    
-    - **Use cases:**
-        - **Security Monitoring:**
-            - Track user activity and API usage to detect unauthorized access or changes to your AWS resources.
-            Investigate potential security incidents by reviewing API call history.
-        - **Compliance Auditing:**
-            - Maintain a record of AWS resource changes to demonstrate compliance with internal policies and regulatory standards.
-            Use CloudTrail logs to generate audit reports for compliance frameworks like PCI DSS, HIPAA, and GDPR.
-        - **Operational Troubleshooting:**
-            - Identify the root cause of operational issues by reviewing the history of API calls and resource changes.
-            Monitor the creation, modification, and deletion of resources to ensure proper resource management and optimization.
-        - **Change Management:**
-            - Ensure changes to infrastructure are authorized and documented, supporting effective change management processes.
-            Use CloudTrail logs to verify that changes to critical resources are made according to organizational policies.
+
 
 ### Explain the difference between symmetric and asymmetric encryption!
-- **Symmetric:**
-    - Analogy:
-        - Simple box with a lock analogy, where everyone with access has their own key (every key is identical)
-    - How it works:
-        - Uses 1 `single key`
-        - This key is used both for encryption and decryption
-        - The sender and the receiver both need the key (so they both have one), and this must be kept a secret
-        - This method is much simpler, but risky because of using just 1 key
-- **Assymetric:**
-    - Analogy:
-        - It works roughly like a mail box, where anyone can drop in their mail through a slot (this would be the public key), but only you can open and read the mail using your private key.
-    - How it works:
-        - Uses 2 keys: `private key` and `public key`
-        - `public key` is meant to be shared, so others can send you messages using your public key (it is used for **encryption**)
-        - `private key` is kept as a secret, so you can **decrypt** messages sent to you
-        - Solves the problem of sharing keys, because the **decryptor** `private key` is not sent accross, just the **encrypting** `public key`
-        - It is slower compared to symmetric method
-        - Examples are `RSA` and `ECC`
+- Symmetric encryption:
+    - doboz analógia, ahol a dobozt egy kulccsal tudjuk kinyitni, de a kulcsból lehet több is, ami nyitja
+    - Így működik:
+        - egy féle kulcs van, ezt használjuk encryptáláshoz és decryptáláshoz is
+        - a feladónak és a fogadónak is kell a kulcsból 1-1 másolat
+        - egyszerű módszer, de rizikós, ha kikerül a kulcs
+- Assymmetric encryption:   
+    - Postaláda analógia, ahol van egy postaláda, amibe mindenki tud dobni egy üzenetet egy nyíláson át (ez lenne a public key), de csak az tudja kinyitni a postaládát, akinek van egy private key-je
+    - Így működik:
+        - 2-féle kulcsot használ, `private key`-t és `public key`-t
+        - A private key-t használjuk decryptáláshoz, ennek kell titokban maradnia
+        - A public key-t használjuk encryptálásra, de nem lehet vele decryptálni, így nem baj, ha kikerül (ezt kell elküldenünk annak, aki szeretne nekünk üzenni)
+        - Mivel a private key-t nem küldjük el senkinek, ezért sokkal biztonságosabb ez a módszer, de lassabb
+        - Egy példa erre a típusra az RSA rendszer
 
 ### What is the Principle of Least Privilege (PoLP), and how can it be implemented in AWS?
-- **Principle of Least Privilege (PoLP):**
-    - a security concept that aims to give users, systems, or applications the minimum level of access necessary to perform their required tasks
-    - helps reduce the risk of unauthorized access or damage by limiting the access and permissions to only what is necessary
-    - **Implementing the Principle of Least Privilege in AWS:**
-        - Use `IAM` Roles instead of `root user`:
-            - Give users and services the specific permissions they need, using `IAM roles`
-            - Organize `users` into `IAM groups`, based on their roles and responsibilities
-            - Create `IAM policies` by specifying the exact actions, resources and conditions: attach these to `groups` instead of single `users`
-            - Enable MFA
+- Principle of Least Privilege (PoLP):
+    - lényege, hogy mindig a lehető legkevesebb hozzáférést engedjük meg egy usernek vagy service-nek, ami szükséges a működéséhez
+    - Az AWS-ben pl:
+        - érdemes IAM role-okat készíteni, és ezeket odaadni a usereknek, ha szükségük van rá
+        - a user-eket érdemes IAM group-okba rendezni role-ok és felelősségeik alapján
+        - IAM policy-kat is érdemes létrehozni, melyeket Role-hoz és User-hez is lehet csatolni, de legjobb, ha a group-okhoz csatoljuk  
 
 ### How do AWS IAM roles differ from IAM users, and in what scenarios would you use each?
-- `IAM roles` and `IAM users` are both mechanisms for controlling access to AWS resources, but they serve different purposes:
-    
-    - **User:**
-        - Represent individual people or services that need access to AWS resources
-        - Each user has a unique identity within your AWS account:
-            - permanent credentials (long-term use)
-            - they are assigned policies that define their permissions (similarly to `roles`)
-            - suitable for long-term access
-        - Typical use-cases:
-            - Human users (employees)
-            - Administrative tasks (admin)
-            - Service accounts (for the management of a specific resource)
-        - **When to use summary:** 
-            - long-term access; human user; static access keys (no dynamic is available)
-            - eg. employee access
-
-    - **Role:**
-        - Are intended for granting temporary access to AWS resources
-        - They are not associated with a specific user or service but can be assumed by anyone who needs them:
-            - temporary credentials (through `AWS STS` - security token service)
-            - Roles can be **assumed** by AWS services, IAM users, applications, or external identities
-                - `assume`: same as "wear a different hat", which basically means, get temporary permissions using a certain role, that is being `assumed`
-            - they are assigned policies that define their permissions (similarly to `users`)
-            - enables role-based access control to different tasks
-        - Typical use-cases:
-            - Cross-Account Access: Allowing access to resources in another AWS account without sharing long-term credentials.
-            - AWS Services: Granting AWS services (eg EC2) the permissions they need to interact with other AWS resources.
-            - Granting short-lived access to AWS resources for specific tasks or applications.
-            - Providing temporary access to AWS resources for users authenticated via an external identity provider
-        - **When to use summary:** 
-            - temporary access; service permissions; cross-account actions; access through external identity providers
-            - eg. `EC2` access to `S3` (the role is attached to the `EC2`)
+- Mindkettővel szabályozni tudjuk a hozzáféréseket, mindkettőhöz tudunk policy-kat is csatolni, de:
+    - IAM user:
+        - tényleges személyt (felhasználót) reprezentál
+        - hosszú távú használatra
+    - IAM role:
+        - ideiglenes hozzáférést tudunk vele biztosítani több user-nek vagy service-nek is az "assume" miatt ("wear a different hat")
+        - ideiglenes használatra van kitalálva, hogy extra jogokkal tudjunk valakit ideiglenesen felruházni
+        - Felhasználása:
+            - Ha pl egy másik accounthoz akarunk hozzáférést adni
+            - AWS service-eknek tudunk így a működésükhöz szükséges jogokat biztosítani (pl. hogy egy EC2 hozzáférjen egy S3 buckethez)
+            - Külsős felhasználóknak tudunk ideiglenesen valamilyen hozzáférést adni
 
 ### Explain the AWS Shared Responsibility Model in the context of security.
-- **Shared Responsibility model:**
-    - A security framework thar separates responsibilities of AWS and users to ensure a secure environment in the cloud
-    - In essence, AWS is responsible for the security "of" the Cloud, while the customer is responsible for security "in" the Cloud:
-        - `AWS`: involves the infrastructure that runs all the services offered in the AWS Cloud (e.g., hardware, software, networking, and facilities)
-        - `User`: involves managing the security of the data they store and process, the applications they deploy, and the configuration of the AWS services they use (e.g., securing access to AWS resources, managing encryption, and ensuring appropriate access controls)
-    - **Example Scenarios:**
-        - `EC2` Instance:
-            - AWS Responsibility: Ensures the physical servers and underlying infrastructure running the EC2 instances are secure and operational.
-            - Customer Responsibility: Securing the guest operating system, applying security patches, configuring firewalls, managing IAM roles, and encrypting data on the instance.
-        - `S3` Bucket:
-            - AWS Responsibility: Secures the underlying storage infrastructure and provides tools to manage access.
-            - Customer Responsibility: Managing bucket policies, access control lists (ACLs), and ensuring data stored in S3 is encrypted if needed.
+- Az AWX Shared Responsibility model lényege, hogy meghatározza miért felel az AWS, és miért a felhasználó
+- Lényegében az AWS a Cloud biztonságáért felel, a felhasználó pedig a Cloud-ban lévő elemekért:
+    - AWS: A Cloud infrastruktúrájának működését biztosító egységek, szolgáltatások biztonságáért felel (hardware, software, networking)
+    - User: A felhőben tárolt adatokért, a deploy-olt app-okért, és a szolgáltatások/service-ek biztonságáért felel (hozzáférések konfigurálása, encryptálás)
++ IaaS, PaaS, SaaS
 
 ### What is the difference between KMS and HSM?
-- **AWS Key Management Service (KMS):**
-    - KMS is a fully managed service, meaning AWS handles the underlying infrastructure and management tasks for you.
-    - KMS is ideal for most standard encryption and key management tasks where ease of use, integration with AWS services, and cost-effectiveness are primary concerns.
-- **AWS CloudHSM:**
-    - Dedicated Hardware:CloudHSM provides dedicated, single-tenant HSMs that are physically isolated from other customers' HSMs.
-    - CloudHSM is suited for scenarios requiring full control over keys, compliance with strict regulatory requirements, or the need for custom cryptographic operations (eg. banking)
+- Key Management Service (KMS): ez egy "fully-managed" szolgáltatás az AWS-ben, amivel kulcsokat tudunk kezelni (Az AWS felel a működéséért és a kulcsokat is menedzseli).
+- A CloudHSM pedig egy hardware, amivel teljeskörűen kontrollálhatjuk a kulcsainkat. Nem nagyon használják, de ha igen, nagy biztonságot igénylő rendszerekben (pl bankok)
 
 ## Containers and container orchestration
 ### What are the key differences between containers and virtual machines?
-- **Containerization (Docker container) vs Virtualization (VM):**
-    - **Virtualization:**
-        - Virtualization is the technology which can simulate your hardware (such as CPU , disk, memory) and represent it as seperate machine
-        - a full guest OS gets created, and everything that comes with it  (kernel images, device drivers, etc.). It's called `hardware-level or paravirtualization`
-        - VMs run on a hypervisor (a software layer used to manage VMs)
-        - VMs are fully isolated from each other and the Host
-    - **Containerization:**
-        - `iamge` -> the blueprint; `container` -> the running environment
-        - Containers run on a container engine (eg. Docker), that uses the host OS (OS-level virtualization):
-            - generally you need to run a container that uses the same OS as your own machine
-        - Containers share the host OS kernel but have their own user space:
-            - makes a process/app think it runs in a completely virtualized environment
-        - programs running inside of a container can only see what was allocated for the container when it started (they are isolated at the process level)
-        - they are light-weight, because of sharing the OS
-            - they can be shared more easily
-            - they can be scaled more easily
-        <br>
-    - **Comparison image:** 
-        ![docker v virtual](../../assets/dockervsvirtual.png)
+- Virtualizáció:
+    - egy olyan technológia, amivel működőképes virtuális gépeket tudunk létrehozni, azáltal, hogy szimuláljuk a hardware részt (CPU, memory, disk)
+    - egy teljes, izolált, OS-el ellátott gépet hozunk létre, amely független a host gép OS-étől
+    - ez a VM egy hypervisor-on fut, ez menedzseli a VM-eket és osztja szét a host gép erőforrásait
+- Konténerizáció:
+    - A konténerek már nem teljes gépek, mert nincs saját OS-ük, mivel a host gép OS kernelét használják (emiatt az OS-nek megfelelő image-eket kell használnunk!)
+    - A hypervisor helyett egy container engine-en futnak (pl Docker engine)
+    - A konténerekben appokat tudunk futtatni, melyek "azt hiszik", hogy izolált környezetben futnak
+    - Nagyon lightweight-ek, mivel nincs külön OS, emiatt könnyen skálázhatóak és könnyen megoszthatóak
+    - Az image a tervrajz, a container a futó környezet
 
 ### What are the most important instructions in a Dockerfile?
 - `Dockerfile`:
-    - used with `docker build` command to create a `docker image`
-    - contains all the commands that'll be used by `Docker` to assemble an `image`
-    - we always base it on another, existing image (`FROM image`) -> the ultimate level is `scratch` (when it's so basic, that we don't base it any more levels)
-    - Docker images are immutable, so when there is a change needed, we build a new build a new image
-        - When we update the app and create a new `image`, the previous one becomes untagged `<none>` (you can still use it with it's ID)
-    - **Typical build-up:**
-        - `FROM`: 
-            - Specifies the base image to use for the Docker image
-            - eg.: `FROM <image>[:<tag>]`
-        - `RUN`: 
-            - Commands we would like to run
-            - eg:
-                - `RUN apt-get update`
-                - `RUN apt-get install -y nginx`
-                - `RUN chmod +x /some/path/to/script.sh`
-        - `ENV`: 
-            - use this to bake environment variables into the environment Docker creates within a container, eg:
-            - `ENV <key>=<value>`
-        - `ADD` and `COPY`:
-            - use these commands to add arbitrary files to your images
-            - they are basically the same the main difference being:    
-                - with `ADD` you can specify a URL as the source (that points to some file)
-                - `COPY` doesn't support this - it's generally better use `COPY` whenever you can
-        - `WORKDIR`
-            - Sets the working directory
-            - eg: `WORKDIR /path/to/workdir`
-        - `CMD`:
-            - Sets the default command to be executed when the container starts (can be overwritten)
-            - the `executable` is overridable at runtime, but will still use the params:
-                - eg. if we set `CMD ["echo", "Hello, World!"]`, then `docker run <container>` -> runs with `echo "Hello, World!"`
-                - but we can set it to something else, like this: `docker run <container> newCommand` -> runs `newCommand "Hello, World!"`
-            - Syntax: `CMD ["executable", "param1", "param2"]`
-            - Use it to set a default command with flexibility for the user to override
-        - `ENTRYPOINT:`
-            - Sets the command that will always be executed when the container starts (this is more secure, as it can't be overwritten)
-            - can't be easily overwritten - but we can add additional params at runtime:
-                - we set it to `ENTRYPOINT ["echo"]` -> then `docker run <container> "Hello, World!"` will execute `echo "Hello, World!"`
-            - Syntax: `ENTRYPOINT ["executable", "param1", "param2"]`
-            - Use it when you want to enforce a specific command to run and optionally allow parameters
-        - `EXPOSE`:
-            - Purpose: Informs Docker that the container listens on the specified network ports at runtime.
-            - Usage: `EXPOSE <port>`
-            - Example: `EXPOSE 8080`
-            - Importance: Documents which ports are intended to be published.
-        - `VOLUME`:
-            - Purpose: Creates a mount point with the specified path and marks it as holding externally mounted volumes.
-            - Usage: `VOLUME ["/data"]`
-            - Example: `VOLUME ["/app/data"]`
-            - Importance: Used to persist data and share it between containers or with the host system.
+    - Arra való, hogy a `docker build` paranccsal egy Docker Image-t hozzunk létre
+    - Minden olyan parancsot tartalmaz, ami az image létrehozásához szükséges
+    - Mindig egy másik, már létező image-ből indulunk ki (ha nem, akkor "FROM scratch")
+    - Az image-ek immutable-ek, ezért minden változtatáskor új image keletkezik (az előző untagged-é válik, de ID-val még mindig tudjuk használni)
+- Ezekből áll:
+    - `FROM`: Ebből az image-ból indulunk ki
+    - `RUN`: Ezeket a parancsokat akarjuk lefuttatni
+    - `ENV`: Környezeti változókat tudunk beállítani a konténerben
+    - `ADD` and `COPY`: Rámásolni file-okat az image-re (pl ./App). Általában a COPY-t használjuk, az a teljesebb
+    - `WORKDIR` A working directory-t állítjuk be vele
+    - `CMD`: Az elindításhoz szükséges parancsot és paramétereket tudjuk ezzel meghatározni (módosítható runtime-ban)
+    - `ENTRYPOINT:` Az elindításhoz szükséges parancsot és paramétereket tudjuk ezzel meghatározni (nem módosítható, de bővíthetőek a paraméterek)
+    - `EXPOSE`: Beállíthatjuk, hogy melyik porton hallgasson a konténerben futó network (de nem ez nyitja ki a portot!)
+    - `VOLUME`: Egy mount point-ot hoz létre egy path-al, amire tudunk Volume-ot csatolni
 
 ### What is the difference between the CMD and the ENTRYPOINT instructions?
-- `CMD`:
-    - Sets the default command to be executed when the container starts
-    - the `executable` is overridable at runtime, but will still use the params:
-        - eg. if we set `CMD ["echo", "Hello, World!"]`, then `docker run <container>` -> runs with `echo "Hello, World!"`
-        - but we can set it to something else, like this: `docker run <container> newCommand` -> runs `newCommand "Hello, World!"`
-    - Syntax: `CMD ["executable", "param1", "param2"]`
-    - Use it to set a default command with flexibility for the user to override
-- `ENTRYPOINT:`
-    - Sets the command that will always be executed when the container starts
-    - can't be easily overwritten - but we can add additional params at runtime:
-        - we set it to `ENTRYPOINT ["echo"]` -> then `docker run <container> "Hello, World!"` will execute `echo "Hello, World!"`
-    - Syntax: `ENTRYPOINT ["executable", "param1", "param2"]`
-    - Use it when you want to enforce a specific command to run and optionally allow parameters
-- We can use them combined, in that case `CMD` will provide the params, and `ENTRYPOINT` will provide the executable:
-    - `ENTRYPOINT ["echo"]`
-    - `CMD ["Hello, World!"]`
+- `CMD`: 
+    - Az elindításhoz szükséges parancsot és paramétereket tudjuk ezzel meghatározni
+    - Runtimeban módosíthatjuk a parancsot is, meg a paramétereket is
+- `ENTRYPOINT:` 
+    - Az elindításhoz szükséges parancsot és paramétereket tudjuk ezzel meghatározni
+    - Runtimeban nem módosítható a parancs, de bővíthetőek a paraméterek
+- Ha kombinálva használjuk, a CMD-ben megadhatjuk a paramétereket, az ENTRYPOINTTAL pedig a parancsot az indításhoz
 
 ### How does caching work in docker build?
-- Docker uses a layered architecture:
-    - each instruction creates a new layer
-    - layers are stacked on top of each other, and each layer depends on the layers below it
-    - during the `build` process, Docker checks if any layers can be reused from existing layers (eg they were already created in a previous version):
-        - an existing, mathching layer is called the `cached layer` -> this is reused insted of being recreated, saving time
-- How to optimize:
-    - put frequently changing keywords further down in the docker file, so they are read last (eg. `COPY`)
-    - separate dependencies into separate files (eg. `requirements.txt` for a python app)
+- A cache-ing az image build-elésekor történik, amikor azt figyeli a Docker, hogy mi az amit nem kell újra legenerálni, mert az már elkészült egyszer.
+- Ehhez át lehet beszélni, hogyan is működik a Docker:
+    - Rétegelt (layered) architektúrát használ, amiben minden Dockerfile-ban lévő instruction egy új layer-t készít
+    - Ezek egymásra rétegződnek, és függnek az alatta (Docker file-ban felette) lévő layerek-től
+    - A `docker build` parancs kiadásakor a Docker azt figyeli, hogy bármelyik layer újrahasznosítható-e a már létező layerekből:
+        - a már létező, megegyező layer-t hívjuk `cached layer`-nek
+- Optimalizálás:
+    - A gyakran cserélt rétegek kerülnek a file-ban alulra, hogy a kevésbé változtatott layerek-et ne kelljen újra és újra elkészíteni (pl `COPY`)
+    - A dependency-ket másoljuk külön file-ba (pl. `requirements.txt` egy Python app esetében)
 
 ### What are some common practices for optimizing container image size?
-- **Common practices for optimizing container image size:**
-    - Use minimal base images:
-        - Standard images like `alpine`:
-            - `FROM alpine:3.19.1`
-        - Or even better in some cases, `distroless images` by Google:
-            - `FROM gcr.io/distroless/base`
-
-    - Multi-stage builds:
-        - Separate the build environment from the runtime environment, and only copy the necessary artifacts into the final image:
-
-                FROM golang:alpine AS builder
-                WORKDIR /app
-                COPY . .
-                RUN go build -o myapp
-
-                FROM alpine:latest
-                COPY --from=builder /app/myapp /myapp
-                ENTRYPOINT ["/myapp"]
-
-    - Reduce number of layers by combining commands into a single one:
-            
-            RUN apt-get update && apt-get install -y \
-                curl \
-                vim && \
-                apt-get clean && \
-                rm -rf /var/lib/apt/lists/*
-    
-    - Clean up after installation:
-            
-            RUN apt-get update && apt-get install -y \
-                curl \
-                vim && \
-                apt-get clean && \
-                rm -rf /var/lib/apt/lists/*
-    
-    - Use `.dockerignore` file to exclude files that are not necessary for the final image (eg. node_modules, temp)
-    
-    - Install only required dependencies (eg. using a `requirements.txt` file for a Python app)
+- Optimalizálási lehetőségek:
+    - Minimális `base image` használata (pl `FROM alpine:3.19.1`)
+        - vagy `distroless images` by Google (`FROM gcr.io/distroless/base`)
+    - Csak a szükséges dependency-ket installáljuk (pl a `requirements.txt` file-ban meghatározva)
+    - Install utáni clean up-al
+    - Használjunk `.dockerignore` file-t a szükségtelen file-ok kiszűrésére a végleges image-ből (pl node_modules, temp)
+    - Layerek számának csökkentése (pl RUN commandok összevonása több, külön RUN command helyett)
+    - Többlépcsős build:
+        - Szétválasztjuk a build environmentet a runtime environmenttől, úgy, hogy a build env-et létrehozzuk először, majd csak a szükséges elemeket másoljuk át a végleges image-re
 
 ### What problems can occur when the "latest" tag is used?
-- The main issue is that there is no version control, as `latest` can change over time
-- This leads to unpredictable behavior, when a new version comes out, that works differently with other parts of your app (it might become incompatible)
-- Debugging becomes difficult, as the environment changes
-- Potentially it can pull a non-stable latest version
+- A probléma forrását az jelenti ilyenkor, hogy nincs version control, vagyis nem egy konkrét verzióhoz kötjük:
+    - Amikor egy új verzió kijön, nem lehet tudni, mi fog történni, mert lehet, hogy már másképp fog működni (inkompatibilitás)
+    - A debugging is nehezebbé válik, ha változik az environment
+    - Előfordulhat, hogy a `latest` egy nem stabil verziót húz majd le
 
 ### Explain the architecture of a Kubernetes cluster!
-- Image from official website: https://kubernetes.io/docs/concepts/architecture/
-- Nana video: https://www.youtube.com/watch?v=umXEmn3cMWY&list=PLy7NrYWoggjziYQIDorlXjTvvwweTYoNC&index=4&ab_channel=TechWorldwithNana
-- **Basic architecture of a k8s cluster:** (this was called "master-slave-architecture" in the past!)
-    - made of a `Master node` (=`Control Plane`) and some `worker nodes`
-        - in production environments in order to have a backup of the `master node`, there's usually more that 1 `master node` used
-
-        - Each `worker node` must contain:
-            - each `node` needs a **container runtime** (in our case it's the `docker runtime`)
-                - this is where the `pods` run
-            - the scheduler process is **kubelet** (Kubernetes process that interacts with both the `container` and the `node`)
-                - The `API server` on the `control plane`/`master node` communicates directly with the `kubelet` in each `node`
-                - `kubelet` starts the `pod` with the container inside and assign resources from the `node` to the `container`
-            - **kube proxy** is also installed on every `node`, this forwards the requests from `services` to `pods` (`services` is what connects the nodes instead of direct IP addresses)
-            - Apart from this, the `nodes` contain the `docker containers` that are running on them
-        - The `master node`/`control plane` runs k8s essential processes:
-            - eg `API Server` (also a container): (this is what we communicate with, and this communicates with the nodes)
-                - this is the cluster's gateway - the entrypoint to the k8s cluster, to which we can connect using the `UI` or the `CLI`, or through `API` (also authentication process is done by it)
-            - `scheduler`:
-                - ensures `Pod` placement based on the incoming requests to the `API server`
-                - decides on which `worker node` the next `pod` should be started on
-                - the actual execution of the request is done by the `kubelet`, the `scheduler` only makes the decision on where it should be done
-            - `controller manager`:
-                - keeps an overview of what is happening on the cluster
-                - detects state changes in the cluster (eg when a pod dies/crashes and needs replacement)
-            - `etcd` ("cluster brain"):
-                - key-value storage that holds the current state of the cluster
-                - backups are made using snapshots of this
-                - the application data is not stored here!
-
-    - `virtual network`:
-        - this is what connects the `master node` to the `worker nodes`
-        - creates a unified machine from all the nodes
+- Kubernetes architeture (Régi nevén `master-slave architecture`):
+    - Egy K8s CLUSTER egy `Master node`-ból (=`Control Plane`) és további `worker node`-okból áll:
+        - `Master node`:
+            - Production environment-ben a `Master node`-ból is több van a stabil működés biztosítására
+            - 4 alapvető egység fut benne:
+                - `API Server`:
+                    - Ez a cluster Gateway-e, amivel mi kommunikálunk a UI-on vagy CLI-on keresztül, valamint ez kommunikál majd a Node-okban a kubelet-tel
+                - `etcd`:
+                    - ez a cluster agya, amiben kulcs-érték párokban tárolja az adatokat az pillanatnyi state-ről (de az nem app adatainak tárolása!)
+                    - backup-okat tudunk csinálni úgy, hogy erről készítünk snapshotokat
+                - `controller manager`:
+                    - figyeli a cluster-ben történő változásokat (pl ha egy Pod elhal és újat kell helyette indítani) 
+                - `scheduler`:
+                    - ez dönti el, hogy a következő Pod melyik Node-ra kerüljön, de a lehelyezésért már a Node kubelet-e felel
+        - `Worker node`:
+            - `kubelet` (a `scheduler process`):
+                - ez áll kapcsolatban a Master Node / Control Plane API szerverével
+                - felel a Pod-ok indításáért (a Master Node scheduler döntése alapján), valamint kioszjta az erőforrásokat a Containernek
+            - `container runtime` (`docker runtime`):
+                - ebben futnak a Pod-ok, melyek tartalmazzák a container-eket
+            - `kube proxy`:
+                - a service-ek requestjeit továbbítja a Pod-ok felé (a Service-re csatlakoznak a Pod-ok, hogy statikus helyen legyenek elérhetőek selector-okkal a változó IP cím helyett)
 
 ### What is the difference between Deployment and StatefulSet kubernetes object? / What is the Deployment Kubernetes object responsible for?
-- **Deployment:**
-    - A `Deployment` provides declarative updates for `Pods` and `ReplicaSets`
-    - We don't want to just rely on 1 node, we have to have backups, so there's no downtime -> we can specify how many replicas we want to make of our app node:
-        - We create `deployments`, not `pods` directly, because here we can specify the replica numbers (we can also scale up or down replica numbers)
-        - `deployments` are the blueprints for the app's `pods` (they are another abstraction layer, so now we have `container` -> `pod` -> `deployment`)
-        - the issue is, we can't replicate a whole node, because we can't replicate databases (for this, we use `statefulSet`):
-            - so if we have a stateless App (eg no DB) -> we can use `Deployment`
-            - if we have a stateful App (eg we need a DB's state to be tracked for replicas) -> we can use `StatefulSet`
-
-    - After you describe a desired state in a `Deployment`, the `Deployment Controller` changes the actual state to the desired state at a controlled rate. 
-        - You can define `Deployments` to create new `ReplicaSets`, or to remove existing `Deployments` and adopt all their resources with new `Deployments`.
-    
-    - Highest in abstraction hierarchy:
-        - `Deployment` (set number of running pods, and set replacement strategy (eg. rolling))
-            - `ReplicaSet`
-                - `Pod`
-                    - `Container` (eg. Docker)
-
-    - The following are typical use cases for `Deployments`:
-        1. Create a `Deployment` to rollout a `ReplicaSet`. The `ReplicaSet` creates `Pods` in the background. Check the status of the rollout to see if it succeeds or not.
-        2. Declare the new *state* of the `Pods` by updating the `PodTemplateSpec` of the `Deployment`. A new `ReplicaSet` is created and the `Deployment` manages moving the `Pods` from the old `ReplicaSet` to the new one at a controlled rate. Each new `ReplicaSet` updates the revision of the `Deployment`.
-        3. Rollback to an earlier `Deployment` revision if the current state of the `Deployment` is not stable. Each rollback updates the revision of the `Deployment`.
-        4. Scale up the `Deployment` to facilitate more load.
-        5. Pause the `Deployment` to apply multiple fixes to its `PodTemplateSpec` and then resume it to start a new rollout.
-        6. Use the status of the `Deployment` as an indicator that a rollout has stuck.
-        7. Clean up older `ReplicaSets` that you don't need anymore.
-    
-    - ![deployment](../../assets/deployment.png)<br>
-
-- **StatefulSets:**
-    - `StatefulSets` are a workload API object used for managing stateful applications. They manage the deployment and scaling of a set of Pods, and unlike `Deployments`, they provide guarantees about the ordering and uniqueness of these Pods
-    - **What they do:**
-        - `StatefulSets` are specifically designed for applications that require a stable, unique network identifier, stable persistent storage, and ordered deployment and scaling.
-        - `StatefulSets` maintain a strict order with regards to how Pods are created, scaled, and deleted. They are created sequentially, and also deleted in reverse order during scaling down.
-        - Each Pod in a `StatefulSet` derives its hostname from the name of the `StatefulSet` and a unique ordinal for each Pod (e.g., myapp-0, myapp-1). This naming convention remains consistent, even if the Pods are rescheduled to new IPs.
-        - `StatefulSets` use `Persistent Volumes` that can be mounted to the Pods based on the same unique ordinal associated with each Pod. If a Pod is rescheduled, it can reattach to the same `Persistent Volume`, preserving its state.
-    - ![statefulset](../../assets/statefulset.png)<br>
-
-- **Comparison:**
-    - `StatefulSets` -> for apps that have a state (eg DBs)
-        - the replaced pods name doesn't change
-            - the volume under it is also retained (each pod gets its own PVC and PV)
-        - the pod order will also be constant
-        - sharding:
-            - subdivide the db by a certain criteria in (eg price ranges of products)
-            - the rows get subdivided
-        - `StatefulSets` needs different blueprint (yaml file):
-            - needs a headless service (where the `CLusterIP` is set to `None` in the yaml file)
-
-            - needs a `volumeClaimTemplates` section
+- Deployment:
+    - A Pod-okat Deployment-tel hozzuk létre, ami azt az extra tulajdonságot adja, hogy létrehoz egy ReplicaSet-et (futtat egy Auto Scaling Groupot), ami megmondja, hogy hány Pod-nak kell egyszerre futnia (ha 1 leáll, akkor újat indít helyette)
+    - Ennek segítségével könnyen scale-elhetjük is a cluster-ünket (csak a replikák számát kell meghatározni)
+    - Mivel adatbázisokat nem tudunk replikálni (egy közös PersistentVolumeClaim-et használnak), így Deploymentet stateless App-oknál tudunk használni (ahol nincs szükség állandó tárolásra)
+    - Absztrakciós hierarchia: Deployment - ReplicaSet - Pod - Container
+- StatefulSets:
+    - Ugyanúgy a Pod-ok számát kezeli, de stateful App-oknál (pl ha egy adatbázissal dolguzunk), ahol arra is szükség van, hogy a Podok állandóak legyenek, és a sorrendjük is változatlan legyen (ha 1 leáll, akkor annak a megegyező paramétereivel hoz létre újat, ugyanabban a sorrendben elfoglalt pozícióban)
+    - Minden egyes Pod saját PVC-vel és PV-t használ (PersistetVolume), ezeknek a state-je pedig állandóan szinkronizálva van
+    - 2 dologban tér el a Deploymenttől:
+        - a yaml file-ban kell egy `volumeClaimTemplates` rész
+        - headless service-t kell neki létrehozni (ClusterIP -> None)
 
 ### What is a Service kubernetes object responsible for?
-- **Service:**
-    - A Networking component in k8s, that makes sure the `Pod` is always reachable (the `Pod`'s IP gets updated every time they are reset - a `Service` has a constant availability, and uses **selectors** to refer to `Pods` - `Pods` use **labels**, that the selectors can use)
-        - If we update the tag of the `Pod`, it becomes **uncontrolled** (we can use this for testing), and a new one gets created instead
-        - **Types:**
-            - `ClusterIP:` Makes the connected `Pod` reachable only from inside the cluster. The Service IP remains static.
-            - `NodePort:` Makes the `Pod` reachable from outside the cluster through a static port on each `Worker Node`.
-            - `LoadBalancer:` Makes the `Pod` reachable from outside the cluster through an external IP address provided by the `CloudProvider`. (we can open `LoadBalancers` with `minikube tunnel`)
-            - `Headless:` Sets `ClusterIP` to `none`, allowing clients to connect directly to the `Pods` without a stable IP.
-            - `ExternalName:` Maps a service to an external `DNS name` (`URL`), allowing access to services outside the cluster by referring to the external `DNS name` (`URL`).
-
-    - The Kubernetes `service object` (not to be mixed with service in context of microservices) is responsible for handling communication inside or outside the cluster (we mostly use it for internal communications, for external we have `ingress`)
-    - The Kubernetes `service object` has a `type` argument which determines its functionality.
-    - We use these as a docking bay for a `pod`, so that they can communicate with each other:
-        - each `pod` has an IP address, but when that `pod` gets replaced (because it died and needs replacement), a new IP address gets assigned
-        - In order for `pods` maintain communication, they are connected with `services`, that have their own `static IP address`
-    - The most common service types include:
-
-        - **ClusterIP:**
-            - A `ClusterIP` service is the default Kubernetes service. It gives you a service inside your cluster that other apps inside your cluster can access. There is no external access.
-            - There are a few scenarios where you would use the Kubernetes proxy to access your services:
-                - Debugging your services, or connecting to them directly from your laptop for some reason
-                - Allowing internal traffic, displaying internal dashboards, etc.
-            - Because this method requires you to run `kubectl` as an authenticated user, you should NOT use this to expose your service to the internet or use it for production services.
-        
-        - **NodePort:**
-            - A `NodePort` service is the most primitive way to get external traffic directly to your service:
-                -  `NodePort`, as the name implies, opens a specific port on all the Nodes (the VMs), and any traffic that is sent to this port is forwarded to the service. 
-                - Basically, a `NodePort` service has two differences from a normal `ClusterIP` service:
-                    - First, the type is `NodePort`. 
-                    - There is also an additional port called the `nodePort` that specifies which port to open on the nodes. If you don’t specify this port, it will pick a random port. Most of the time you should let Kubernetes choose the port.
-            - There are many downsides to using `NodePorts`:
-                - You can only have one service per port
-                - You can only use ports `30000–32767`
-                - If your `Node/VM` IP address change, you need to deal with that
-                
-                - For these reasons, we don’t recommend using this method in production to directly expose your service. If you are running a service that doesn’t have to be always available, or you are very cost sensitive, this method will work for you. A good example of such an application is a demo app or something temporary.
-
-        - **LoadBalancer:**
-            - A `LoadBalancer` service is the standard way to expose a service to the internet.
-            - If you want to directly expose a service, this is the default method:
-                - All traffic on the port you specify will be forwarded to the service
-                - There is no filtering, no routing, etc. This means you can send almost any kind of traffic to it, like HTTP, TCP, UDP, Websockets or gRPC for example.
-
-            - The big downside is that each service you expose with a `LoadBalancer` will get its own IP address, and you have to pay for a `LoadBalancer` per exposed service, which can get expensive!
+- Service:
+    - Arra használjuk, hogy a ezen keresztül érjük el a Pod-okat, amiknek állandóan változik az IP címük, így ehelyett a Service-ekhez kapcsolódnak selector-ok segítségével, és így állandó helyük lesz (a Service selectora a Pod Label-jét keresi meg)
+    - Ha egy pod label-jét átírjuk, akkor az kiesik a körből, és untagged-é válik (ez ilyenkor debigginra használható). Helyette új Pod indul.
+    - Típusai:
+        - ClusterIP: Csak a belső hálózatról teszi elérhetővé a Pod-ot
+        - NodePort: Kívülről is elérhetővé teszi a Pod-ot, egy statikus porton keresztül
+        - LoadBalancer: Kívülről is elérhetővé teszi a Pod-ot, egy statikus IP címen keresztül (a CloudProvider határozza meg)
+        - ExternalName: Kívülről is elérhetővé teszi a Pod-ot, egy DNS néven keresztül (URL) (nem nagyon használjuk!)
+        - Headless: Ezt pl egy StatefulSet-hez tudjuk kapcsolni, a ClusterIP-t kell none-ra állítani hozzá
+    - Leginkább belső kommunikációra használjuk, külső kommunikációra általában Ingress-t használunk 
 
 ### How can be a kubernetes pod reached from the public internet?
-- We can either use a `Service`:
-    - `NodePort:` Makes the `Pod` reachable from outside the cluster through a static port on each `Worker Node`.
-    - `LoadBalancer:` Makes the `Pod` reachable from outside the cluster through an external IP address provided by the `CloudProvider`. (we can open `LoadBalancers` with `minikube tunnel`)
-    - `ClusteIP` is not good, because it makes the `Pod` only reachable from inside the `Cluster`
-
-- **Ingress:**
-    - It's very similar to `services`, but this is for **external connections** -> we can connect to these from outside the cluster
-    - It sits in front of multiple `services` and act as a **smart router** or entrypoint into your cluster.
-    - You can do a lot of different things with an `Ingress`, and there are many types of `Ingress controllers` that have different capabilities:
-        -  Usually an `ingress controller` will spin up a HTTP(S) `Load Balancer` for you. This will let you do both path based and subdomain based routing to backend services. For example, you can send everything on `foo.yourdomain.com` to the `foo` service, and everything under the `yourdomain.com/bar/` path to the bar service
+- Service-el: NodePort, LoadBalancer (ExternalName)
+- Ingress segítségével:
+    - Ez nagyon hasonló a service-ekhez, de itt kifejezetten kívülről bejövő connection létrehozására szolgál
+    - Egyfajta routerként, a cluster entrypoint-jaként áll a Service-ek előtt
+    - Ingress contorllereket használ, amelyekkel az alábbiakat lehet elérni:
+        - Load Balancuing: elosztja a bejövő forgalmat több service között
+        - Routing Rule-okat tudunk meghatározni, pl URL path-okat meghatározni, amiket service-ekhez tudunk kötni
 
 ### What kind of probes are there in Kubernetes, and what are their use cases? / What is the difference between LivenessProbe and ReadinessProbe?
-- `Liveness` and `readiness probes` are mechanisms in Kubernetes used to manage how `containers` inside a `Pod` are handled. They help Kubernetes make decisions about when to restart a container or when to route traffic to a pod.
-- We can build it into the `deployment.yaml` file (under the `containers` section)
-
-- **Liveness Probes** ("is the container still alive?")
-    - Liveness probes are "health checks", and are used to know whether to restart a container. The main purpose of a liveness probe is to check if an application inside a container is still running. If the liveness probe fails, Kubernetes assumes that the container is in a broken state and restarts it automatically.
-
-    - **Example Use Case:**
-        - An application might be running, but it's deadlocked, with all threads hung. Although the application process is still running, the application is not functioning as expected. A liveness probe could catch this by checking some type of "I am alive" signal at a set interval. If this check fails, Kubernetes restarts the container to try to restore normal operation.
-
-- **Readiness Probes** ("Is the container ready?")
-    - Readiness probes are used to determine when a container is ready to start accepting traffic. Essentially, the readiness probe is meant to check if the application is ready to serve requests. If the readiness probe fails, Kubernetes won’t send traffic to the pod until it passes.
-
-    - **Example Use Case:**
-        - A web server is deployed within a container, and it starts up with some initial load time because it might be loading large data sets or configurations. Even though the container is running, it's not yet ready to serve traffic. A readiness probe can check the HTTP endpoint or a specific condition that returns success only when the server is truly ready to handle requests.
+- Liveness Probe és Readiness Probe a két legfontosabb, ezek a Podokban futó containereket figyelik:
+    - Liveness Probe: "Él-e még a container?" - Azt figyeli, hogy máködésben van-e még az adott konténer. Ha a próba nem sikeres, akkor a K8s tudni fogja, hogy újat kell indítani helyette
+    - Readiness Probe: "Működőképes-e már a container?" - Azt figyeli, hogy a conatiner tud-e már bejövő kérések/requestek fogadására, tud-e már működni. Amíg a próba sikertelen, addig nem is küld felé requesteket.
 
 ### What is the difference between resource Limit and Request?
-- **Limit & Request:**
-    - **Request:** 
-        - Describes what is the minimum resource (CPU & memory) required for a pod to start.
-        - Kubernetes uses resource requests to make scheduling decisions, and it needs to make sure the request is fulfilled
-    - **Limit:** 
-        - Describes what is the maximum amount of resources (CPU and memory) that a pod can use.
-        - Kubernetes uses resource limits to constrain the resource usage of containers, preventing any single container from using more than its allocated resources and affecting other containers, and for this it uses Limit
+- Limit: mennyi a maximális resource, amit egy pod használhat (CPU, memória). Azért van erre szükség, hogy ne használjon aránytalanul sokat egy hiba esetén, ami a többi Pod működésére is hatással lenne
+- Request: a minimális (szükséges) resource-okat fejezi ki, amire a Pod futtatásához szükség van
+- Pl: "resources: requests: memory: "128Mi", cpu: "500m", limits: ..."
 
 ### What are the main differences between ConfigMaps and Secrets?
-- **In short:**
-    - `ConfigMap`:
-        - used to store non-sensitive configuration data in key-value pairs:
-            - allows you to decouple environment-specific configuration from your container images ( Otherwise we would have to build and deploy our apps again, when we change something inside the app's configuration)
-        - not encrypted, stored in plain text format
-        - Use Case: Used to pass configuration data to `Pods`, such as environment variables, command-line arguments, or configuration files, to applications. (`Pod` and `ConfigMap` needs to be in the same namespace!)
-    - `Secret`:
-        - used to store sensitive data, such as passwords, OAuth tokens and SSH keys in key-value pairs
-        - encoded, but the access is usualy also restricted
-        - Use Case: Used to pass sensitive information to applications in `Pods` securely.
+- ConfigMap:
+    - nem szenzitív információ tárulunk benne
+    - ezek általában a container image környezeti változói lehetnek, hogy ezek változásakor ne kelljen új image-eket buildelni (de lehet konfigurációval kapcsolatos adat, command-line argument is)
+    - nincs encryptálva, sima text-ként tároljuk az adatokat, kulcs-érték párokban
+- Secret:
+    - szennzitív adatokat tárolunk benne (pl Jelszavak, tokenek és SSH kulcsok)
+    - encode-olva tárolja az adatokat, kulcs-érték párokban (nincs encryptálva!)
+    - az encryptálást külön tudjuk meghatározni (encryption at rest)
 
 ## Infrastructure as Code
 ### What is Infrastructure as Code? What are its advantages and disadvantages?
-- `IaaC`:
-    - Infrastructure as a Code: 
-        - uses code (files) to create and manage infrastructure
-        - this process allows for automatation and versioning of infrastructure changes, by treating it as code
-    - Benefits:
-        - easily reproduced
-        - automated
-        - scalability (easily scale up or down by changing config parameters)
-        - uses states
-        - version control (keep track of changes and see history)
-    - Disadvantages:
-        - slow process to set up initially
-        - complex configurations
-    - A standard tool for this is `Terraform`
-    - Providers:
-        - these wrap an API, that you can modify and then call it
+- Infrastructure as a Code (IaaS) alatt azt értjük, amikor az infrastruktúrát kódként kezeljük, azt kódot tartalmazó file-okból hozzuk létre
+- Előnyei:
+    - Version Control-t használunk valójában: Könnyen követhető amit csináltunk, és nyoma is marad utólag
+    - Automatizálhatóak a folyamatok
+    - Könnyen skállázhatóvá válik az infrastruktúra
+    - State-eket használ
+- Hátrányai:
+    - Komplexebb és időigényesebb az elején jól megírni a kódot
+- Standard eszköz ehhez a Terraform, de továbbiak lehetnek: Ansible, Puppet, Chef
+- Providereket használ, mint pl az AWS, ami egy interface-ként szolgál (létrehozhatunk sajátot is)
 
 ### What are the basic commands of the terraform workflow?
-- The base loop (Lifecycle commands / state management commands):
-    - `terraform init`:
-        - Initializes a Terraform working directory. If remote backends are used, this command configures the backend.
-        - (initialize an operational index that contains Terraform pattern files)
-    - `terraform plan`:
-        - Generates an execution plan, showing what actions Terraform will take to reach the desired state.
-    - `terraform apply`
-        - Applies the changes required to reach the desired state of the configuration.
-- To then destroy it, we can use:
-    - `terraform destroy`
-- More commands:
-    - `terraform state`:
-        - Provides subcommands for advanced state management tasks, such as listing resources, showing specific resources, and removing resources from the state file.
-    - `terraform refresh`:
-        - Updates the state file with the real-world state of the managed resources.
-    - look for more by typing `terraform`, then hitting `Enter`
+- Alapvető parancsok:
+    - `terraform init`: elindítja a terraform working directory-t, valamint konfigurálja a backendet
+    - `terraform plan`: létrehoz a main.tf file-ban található utasításokból egy cselekvési tervet (ezek lementhetőek)
+    - `terraform apply`: ez is létrehoz egy tervet, de azt rögtön alkalmazza is
+    - `terraform destroy`: megsemmisíti a létrehozott infrastruktúrát
+- További parancsok:
+    - `terraform state <subcommand>`: a state file-t tudjuk ezzel kezelni (ennek segítségével dönti el a Terraform, mit kell frissíteni). Subcommandokat tudunk használni vele (pl list, mv, rm, show)
+    - `terraform refresh`: azonnal updatel-i a valós állapotot a legfrissebb state alapján
+    - ha csak a terraform parancsot adjuk meg, akkor láthatjuk az összes parancsot
 
 ### What is the difference between resources and data sources in terraform?
-- `resource`:
-    - A resource represents a component of your infrastructure (we use the keyword, if we want to tell TF that we want to create a component in our infrastrucuture)
-    - if a resource type has only 1 instance, we call it `this`
-    - we can also use it to update or delete a component in our infrastructure
-    - it doesn't necessarily represen 1 component, because for example if we want to create a private S3 bucket (`block public access`), we need 2 resources (1 that creates the S3, then the second resource makes it private)
-- `data`:
-    - used to reference something external
-    - allows you to retrieve or query information that is external to Terraform (eg information about existing resources or services)
-    - Data sources are read-only; Terraform does not manage the lifecycle of data sources
+- resource:
+    - az infrastruktúra egy komponenségt reprezentálja
+    - ezt a kulcsszót használjuk a terraformban, ha azt akarjuk, hogy hozzon létre valami, majd megadjuk a típust, és az egyedi nevét (this, ha csak 1 van)
+    - nem csak létrehozni, de update-re és delete-re is használhatjuk
+    - nem mindig 1 az 1-ben jelent egy komponenst, mert pl egy private S3 bucket létrehozásához 2 resource-ra van szükség (egy ami a bucket-et hozza létre, egy pedig private-é alakítja)
+    - A Terraform menedzseli a resource-ok lifecycle-jét
+- data source:
+    - külső elemeket tudunk vele referálni az infrastruktúránkba
+    - query-kkel tudunk külső információt lekérni létező resource-okról vagy service-ekről
+    - ezek read only-k, a Terraform nem menedzseli ezeknek a lifecycle-jét
 
 ### What does state mean in the context of terraform?
-- A state a stackünk (=backend) leképződése terraformban
-- `state` refers to a file that Terraform uses to keep track of the resources it manages. It serves as a mapping between the resources defined in your configuration and the actual resources in your infrastructure.
-- state files (`terraform.tfstate`) keep a record of all resources created and managed by Terraform, including their configurations and metadata.
-- a state can be local (default), or remote, if we want to work in a team
+- A state a stack-ünk (=backend) leképződése terraformban
+- egy file (`terraform.tfstate`), amit a Terraform arra használ, hogy nyomon kövesse a resource-okat és a létrejövő változásokat
+- A state lehet lokális, vagy remote file (ha csapatban akarunk dolgozni)
 
 ### What are modules in terraform?
-- **Module:**
-    - A self-contained collection of Terraform configurations that manages a collection of related infrastructure resources.
-    - Other Terraform configurations can call a module, which tells Terraform to manage any resources described by that module.
-    - Modules define `input variables` (which the calling module can set values for) and `output values` (which the calling module can reference in expressions).
+- Terraform module:
+    - Terraform configurációk gyűjteménye, amik egy resource-gyűjteményt kezel
+    - Ezeket más terraform konfigurációkból tudjuk beolvasni, így hozzáférni a modul-ban található resource-okhoz is
+    - A moduloknak vannak input és output variable-jeik, hogy rugalmasan lehessen ezeket kezelni
 
 ### List the meta-arguments in terraform with their use cases!
-- `meta-arguments` are special arguments that can be used with resources, modules, and other constructs to modify or control their behavior
-- Some examples:
-    - `count`
-        - **Use Case:** Used to create multiple instances of a resource or module. The value assigned to count determines how many instances are created.
-
-                resource "aws_instance" "example" {
-                    count = 3
-                    ami = "ami-123456"
-                    instance_type = "t2.micro"
-                }
-
-    - `for_each`
-        - **Use Case:** Provides a way to iterate over a map or set of strings to create multiple instances of a resource or module. It allows for more complex and fine-grained control compared to count.
-
-                resource "aws_instance" "example" {
-                    for_each = var.instances
-                    ami = "ami-123456"
-                    instance_type = "t2.micro"
-                }
-
-    - `depends_on`
-        - **Use Case:** Explicitly declares dependencies between resources. This ensures that certain resources are created or destroyed only after others.
-
-                resource "aws_instance" "example" {
-                    ami = "ami-123456"
-                    instance_type = "t2.micro"
-                    depends_on = [aws_vpc.example]
-                }
-
-    - `lifecycle`
-        - Use Case: Controls resource lifecycle settings, including create_before_destroy, prevent_destroy, and ignore_changes.
-
-                resource "aws_instance" "example" {
-                    ami = "ami-123456"
-                    instance_type = "t2.micro"
-                    
-                    lifecycle {
-                        create_before_destroy = true
-                        prevent_destroy = true
-                        ignore_changes = [tags["Name"]]
-                    }
-                }
-
-    - `provider`
-        - **Use Case:** Specifies a provider configuration to use for a resource or module. Useful for multi-cloud or multi-region deployments.
-
-                resource "aws_instance" "example" {
-                    provider = aws.west
-                    ami = "ami-123456"
-                    instance_type = "t2.micro"
-                }
-
-    - `provisioner`
-        - **Use Case:** Executes scripts or commands on the local machine or on remote resources as part of the resource creation or destruction process.
-
-                resource "aws_instance" "example" {
-                    ami = "ami-123456"
-                    instance_type = "t2.micro"
-
-                    provisioner "local-exec" {
-                        command = "echo ${aws_instance.example.id}"
-                    }
-                }
-
-    - `connection`
-        - **Use Case:** Defines how to connect to the resource for the purpose of running provisioners. It is used in conjunction with provisioner.
-
-                resource "aws_instance" "example" {
-                    ami = "ami-123456"
-                    instance_type = "t2.micro"
-
-                    provisioner "remote-exec" {
-                        inline = ["sudo apt-get update", "sudo apt-get install -y nginx"]
-                    }
-
-                    connection {
-                        type = "ssh"
-                        user = "ubuntu"
-                        private_key = file("~/.ssh/id_rsa")
-                        host = self.public_ip
-                    }
-                }
-    - `timeouts`:
-        - **Use Case:** Configures custom timeout settings for resource creation, update, and deletion operations.
-
-                resource "aws_instance" "example" {
-                    ami = "ami-123456"
-                    instance_type = "t2.micro"
-
-                    timeouts {
-                        create = "10m"
-                        update = "15m"
-                        delete = "5m"
-                    }
-                }
+- A Meta-argumentumokat resource-okkal, modulokkal vagy más Terraform construc-okkal tudjuk használni, hogy módosítsuk/pontosítsuk a máküdésüket:
+    - Néhány példa:
+        - count: az létrehozandó instance-ok számát tudjuk vele beállítani
+        - for_each: egy lista minden elemén tudunk vele iterálni, egy kicsivel komplexebb parancsokhoz, mint a count
+        - depends_on: explicit tudunk egy resourcenak dependenciát adni (pl csak akkor jöjjön létre valami, ha már valami más létrejött)
+        - lifecycle: a resource lifecycle-jére vonatkozó beállításokat tudjuk meghatározni
+        - provider: multi-region vagy multi-cloud deploymenteknél tudunk megadni a default provideren kívül más providert
+        - connection: a resource kapcsolat típusát tudjuk benne meghatározni (pl hogy SSH-val tudjunk rá belépni)
+        - timeouts: különböző műveleteknél tudjuk állítani vele a timeout időtartamát (create, update, delete)
 
 ### What is the best practice for a terraform project's file structure?
 1. Root Directory
-    - The root directory should contain general configuration files and directories for various environments and components.
+    - Ennek kell tartalmaznia az alap terraform config file-okat, valamint könyvtárakat:
+        - `./environments`
+        - `./modules`
         - `main.tf`
-        - `variables.tf`
-        - `outputs.tf`
         - `provider.tf`
+        - `variables.tf`
         - `terraform.tfvars`
+        - `outputs.tf`
 
     - `main.tf` file:
-        - try to outsource variables into separate `variables` file
-        - Define outputs to expose information about the infrastructure to `outputs.tf`
-        - Configure provider settings in `providers.tf` file
-        - Provide default values in `terraform.tfvars` file
-    
-    - use `.gitignore` to exclude files like `terraform.tfvars`
+        - a provider settings-t érdemes egy külön `providers.tf` file-ban megírni
+        - a variable-eket ajánlott kigyűjteni egy `variables` file-ba
+        - a `terraform.tfvars` file-ba tudunk default értékeket beleírni (`.gitignore` file-t érdemes létrehozni, hogy ez ne kerüljön fel)
+        - az outbputs.tf file-ba tudunk definiált output-koat expose-olni
 
-2. Create subdirectories:
-    - for environments:
-        - `/environments`
-            - eg:
-                - `/development`
-                - `/staging`
-                - `/production`
-    - for modules:
-        - Modules should be reusable components, each with its own directory containing Terraform configurations.
-        - `/modules`
-            - `/network`
-            - `/compute`
-            - `/storage`
+2. Alkönyvtárak:
+    - `/environments`
+        - `/development`
+        - `/staging`
+        - `/production`
+    - `/modules` (ezek újra felhasználható komponensek, mindegyikben a saját tf config file-jaival)
+        - `/network`
+        - `/compute`
+        - `/storage`
 
 ## TERRAFORM (Additional)
 ### What are the key features of Terraform?
@@ -1245,7 +760,6 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 
 ### What is Terraform backend?
 - A backend defines where Terraform stores its state data files. Terraform uses persisted state data to keep track of the resources it manages.
-
 
 ### What is a null resource?
 - As in the name you see a prefix null which means this resource will not exist on your Cloud Infrastructure
@@ -1272,7 +786,7 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 - Version control involves the use of a central repository where teammates can commit changes to files and sets of files. The purpose of version control is to track every line of code, and to share, review, and synchronize changes between team members. 
 
 ### Explain Git.
-- It is a distributed version control system that keeps track of changes to code repositories. As projects progress, Git uses a branch-based workflow to streamline team collaboration. Learn More.
+- It is a distributed version control system that keeps track of changes to code repositories. As projects progress, Git uses a branch-based workflow to streamline team collaboration.
 
 ### What do you mean by Git Repository?
 - As part of the software development process, software projects are organized through Git repositories. In the repository, developers can keep track of all the files and changes in the project, so that they can navigate to any point in its history at any time.
@@ -1362,6 +876,20 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 - In the context of continuous integration, branches should follow trunk-based development practices and thus be short-lived. Ideally, a branch should last for a few hours or, at most, a day.
 
 ## DevOps
+## What is DevOps?
+- A DevOps egy olyan folyamat, aminek segítségével felgyorsíthatjuk a development team és az operations team közti együttműködést azáltal, hogy egy automatizált CI/CD folyamatot hozunk létre. A ciklus végén feedback-el térünk vissza a development fázisba (SCRUM).
+- Részei és a hozzájuk tartozó tipikus tool-ok:
+    
+    - Plan ()
+    - Code (Git)
+    - Build (Docker, Kubernetes, Terraform)
+    - Test (Selenium)
+
+    - Release (Jenkins, GitHub Actions)
+    - Deploy (Docker, Kubernetes, Ansible, Chef, Puppet)
+    - Operate (Maven)
+    - Monitor (Grafana, Prometheus)
+
 ### What is the importance of DevOps?
 - A robust and flexible product deployment system is essential for organizations to remain competitive in today's digitized world. It is here that the DevOps concept comes into play. 
 
@@ -1376,8 +904,17 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 - Every change in the code must trigger a continuous integration process. This means that a CI system must be connected with a Git repository to detect when changes are pushed, so tests can be run on the latest revision
 
 ## CI / CD
-### What is CI/CD pipeline?
-- CI/CD is a combination of continuous integration (CI) and continuous delivery (usually) or continuous deployment (rarely) in software engineering. Modern DevOps operations are built on the foundation of continuous integration and continuous delivery, or the CI/CD pipeline. You can automate your software delivery process with a CI/CD pipeline. As part of the pipeline, code is built, tests are run (CI), and a new version of the application is safely deployed (CD). By automating pipelines, manual errors are eliminated, developers are provided with standardized feedback loops, and iterating on products is made more efficient. In DevOps, continuous integration and continuous delivery (CI/CD) are best practices that ensure that code changes are delivered regularly and reliably.
+### What is a pipeline?
+- In the context of Continuous Integration and Continuous Deployment (CI/CD), a pipeline is a defined **sequence of automated steps** that software undergoes from code integration to deployment. It is designed to facilitate the efficient and reliable delivery of software by automating tasks that would otherwise be manual and error-prone.
+
+    - **Detailed Explanation:**
+        - A CI/CD pipeline typically comprises several stages, each representing a distinct phase in the software development lifecycle. These stages include:
+
+            1. **Source:** This is where the pipeline begins. It is triggered by a change in the source code repository, such as a commit or a merge request.
+            2. **Build:** During this stage, the source code is compiled and assembled into a deployable artifact. This can involve compiling code, packaging binaries, or generating documentation.
+            3. **Test:** Automated tests are executed to verify that the code behaves as expected. This can include unit tests, integration tests, and other forms of automated testing to ensure code quality and functionality.
+            4. **Deploy:** The software is deployed to a staging or production environment. This stage can involve various deployment strategies, such as rolling updates or blue-green deployments.
+            5. **Monitor:** Post-deployment, the application is monitored to ensure it is performing as expected. This includes checking for errors, performance issues, and other anomalies.
 
 ### Explain Continuous Integration, Continuous Delivery, and Continuous Deployment.
 - **Continuous Integration (CI):** 
@@ -1492,12 +1029,14 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 
 ###  What are some of the deployment strategies?
 - **Regular release/deployment:** Through a single release, the software is made available to the public.
+- **Rolling deployment:** Nodes are updated 1-by-1 and monitored for any errors, so the whole update is not done all at once
 - **Canary releases:** These releases are intended to reduce the risk of failure by exposing a small fraction of the user base (around 1%) to the release. As part of a canary release, developers gradually transition users to the new release in a controlled manner.
 - **Blue-green releases:** Essentially, it involves running two instances of an application simultaneously; one is the current stable version, and the other is the most recent version. An immediate switch is made from the old version to the new one. If there is a problem, users can immediately revert to the previous version, which is safer than regular or big-bang releases.
 
 - OR 
 
 - **Regular release/deployment:** releases software to everyone at once, making it available to the general public.
+- **Rolling deployment:** Nodes are updated 1-by-1 and monitored for any errors, so the whole update is not done all at once
 - **Canary releases:** this is a method that reduces the chance of failure by exposing a small portion of the userbase (around 1%) to the release. With a canary release, developers gradually switch users to the latest release in a controlled way.
 - **Blue-green releases:** consists of running two simultaneous instances of an application; one is the stable version currently serving users and the other the latest release. Users are switched from the former to the latter all at once. This method is safer than the regular or big bang releases because users can instantly be routed back to the previous version if there is a problem.
 - **Dark launches:** are deployments where new features are released without being announced. Features can be enabled in a very fine-grained way with feature flags.
@@ -1508,7 +1047,7 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 ### What do you mean by Rolling Strategy?
 - Rolling deployments update running instances of an application with new releases as they are released. The process involves replacing old versions of an application over time with new versions of the application by replacing the entire infrastructure on which the application is run.
 
-### Describe Chef?
+### Describe Chef
 - Chef is essentially an automation platform for turning infrastructure into code. A chef is a tool used to automate processes with scripts. There are three main components of Chef that can be categorized as follows:
 
     - **Chef Workstation:** The workstation is the computer system on which the administrator sits. This system generates code for configuring and managing infrastructure, known as recipes (written in Ruby). A cookbook consists of multiple recipes. In order to upload cookbooks to the server, the Knife command line tool is used.
@@ -1529,11 +1068,11 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
     - CI/CD pipelines require all the testing effort when small changes are made. Validating minor changes continuously is easier with automated testing.
 
 ### Name a few types of tests used in software development
-- There are more types of tests than we can count with both hands, but the most common ones are:
+- The most common ones are:
 
     - **Unit tests:** validate that functions or classes behave as expected.
     - **Integration tests:** are used to verify that the different components of an application work well together.
-    - **End-to-**end tests: check an application by simulating user interaction.
+    - **End-to-end tests**: check an application by simulating user interaction.
     - **Static tests:** finds defects in code without actually executing it.
     - **Security tests:** scans the application’s dependencies for known security issues.
     - **Smoke tests:** fast tests that check if the application can start and that the infrastructure is ready to accept deployments.
@@ -1551,7 +1090,7 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 - It varies, but in principles it follows the testing pyramid:  
     - The majority of tests consist of `Unit tests`
     - Then slightly less `Integration tests`
-    - Then on top (the least amount) are the `End-to-end tests`
+    - Then on top (the least amount) are the `End-to-end` or `UI tests`
 
 ### What is a flaky test?
 - A test that intermittently fails for no apparent reason is called a flaky test. Flaky tests usually work correctly on the developer’s machine but fail on the CI server. Flaky tests are difficult to debug and are a major source of frustration.
@@ -1573,17 +1112,27 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
     - Refactor: improve the code, and make it more abstract, readable, and optimized.
 
 ### What is the main difference between BDD and TDD?
-- If `TDD` is about designing a thing right, `Behavior-Driven Development` (`BDD`) is about designing the right thing. Like TDD, BDD starts with a test, but the key difference is that tests in BDD are scenarios describing how a system responds to user interaction.
+- If `TDD` is about designing a thing right, `Behavior-Driven Development` (`BDD`) is about designing the right thing:
+    -  It starts with a collaboration between developers, testers, and business stakeholders to create a shared understanding of requirements through executable specifications written in natural language
+    - While writing a BDD test, developers and testers are not interested in the technical details (how a feature works), rather in behavior (what the feature does). 
+    - BDD tests are used to test and discover the features that bring the most value to users.
 
-- While writing a BDD test, developers and testers are not interested in the technical details (how a feature works), rather in behavior (what the feature does). BDD tests are used to test and discover the features that bring the most value to users.
+- **Comparison:**
+    - `BDD`: 
+        - focuses on the behaviour of the app, from an end-user perspective
+        - uses natural language, so that non-developers can also create input
+    - `TDD`: 
+        - focuses on the correctness of the code, from a developer perspective (through unit tests)
+        - uses code to write tests, so it involves only developers
 
 ### What is test coverage?
 - Test coverage is a metric that measures how much of the codebase is covered by tests. A 100% coverage means that every line of the code is tested at least by one test case.
 - There’s a myth that 100% coverage means that the code is bug-free. This is false; no amount of testing can guarantee that. Attempting to reach full test coverage is considered bad practice because it leads to a false sense of security and extra work when code needs to be refactored.
-- Typicallu an `overall coverage` of 70-90% is considered acceptable, but it depends on many factors (industry, type of app, standards)
+- There are many coverage areas, but the most important ones are overall coverage, line coverage and unit test or function coverage
+- Typically an `overall coverage` of 70-90% is considered acceptable, but it depends on many factors (industry, type of app, standards)
 
 ### How can you optimize tests in CI?
-- First, we need to identify which tests are the slowest and prioritize accordingly. Once we have a plan, there are several methods for making tests faster. Some of them are:
+- First, we need to identify which tests are the **slowest** and prioritize accordingly. Once we have a plan, there are several methods for making tests faster. Some of them are:
 
     - Breaking large tests into smaller units.
     - Removing obsolete tests.
@@ -1591,6 +1140,9 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
     - Parallelizing tests.
 
 ### What’s the difference between end-to-end testing and acceptance testing?
+- End-to-end -> UI testing, in production-like environment
+- Acceptance -> verify acceptance criteria (meet the business needs). it can include end-to-end tests
+
 - End-to-end usually involves testing the application by using the UI to simulate user interaction. Since this requires the application to run in a complete production-like environment, end-to-end testing provides the most confidence to developers that the system is working correctly.
 
 - Acceptance testing is the practice of verifying acceptance criteria. Acceptance criteria is a document with the rules and behaviors that the application must follow to fulfill the users’ needs. An application that fulfills all acceptance criteria meets the users’ business needs by definition.
@@ -1598,22 +1150,52 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 - The confusion stems from the fact that acceptance testing implements the acceptance criteria verification with end-to-end testing. That is, an acceptance test consists of a series of end-to-end testing scenarios that replicate the conditions and behaviors expressed in the acceptance criteria.
 
 ## CLOUD COMPUTING - IAAS, SAAS, PAAS
-### What is Cloud Computing?
-- Cloud computing is the delivery of various computing services over the internet ("the cloud"), enabling on-demand access to shared resources and services
+### What is Cloud Computing? 
+- Összefoglaló cikk magyarul: https://kalauz.lib.pte.hu/felho-technologia/
 
-- Cloud computing is on-demand access to services, via the Internet:
-    - **Services** can be computing resources, servers (physical or virtual ones), data storage, development tools, networking capabilities, and more
-    - These services are all hosted at a remote data center managed by a **cloud services provider** (or **CSP**)
-    - The **CSP** makes these resources available for a monthly subscription fee or bills them according to usage.
-- Cloud computing benefits: *( https://www.youtube.com/watch?v=M988_fsOSWo&ab_channel=Simplilearn )*
-    - **Lower IT costs:**
-        - Cloud lets you offload some or most of the costs and effort of purchasing, installing, configuring, and managing your own on-premises infrastructure.
-    - **Improve agility and time-to-value:** 
-        - With cloud, your organization can start using enterprise applications in minutes, instead of waiting weeks or months for IT to respond to a request, purchase and configure supporting hardware, and install software.
-        - Cloud also lets you empower certain users—specifically developers and data scientists—to help themselves to software and support infrastructure.
-    - **Scale more easily and cost-effectively:**
-        - Cloud provides elasticity — instead of purchasing excess capacity that sits unused during slow periods, you can scale capacity up and down in response to spikes and dips in traffic.
-        - You can also take advantage of your cloud provider's global network to spread your applications closer to users around the world.
+- **Definíció:** "A `számítási felhő` fogalma azt jelenti, hogy az informatika különböző területeit (hardver, szoftver) fizikailag nem a saját számítógépünkön érjük el, hanem, mint egy szolgáltatást megvásárolva valahol egy távoli erőforrásra/számítógépre/szerverre kapcsolódva vesszük igénybe. A `cloud computing` esetében egy cloud szolgáltató úgy biztosít alkalmazásokat, tárhelyet, adatbázisokat a felhasználói számára, hogy azoknak nem kell tudniuk, hogy az adott számítási infrastruktúra hol helyezkedik el.
+
+- **Előnyök:**
+    - On-demand fizetünk a használatért
+    - Saját igényeink szerint alakíthatjuk
+    - Nem kell fizikai tárhely vagy infrastruktúra
+    - Rugalmasan skálázható
+    - Nagyon gyorsan beüzemelhető
+    - 0-24 elérhető (nincs downtime)
+
+- **Hátrányok:**
+    - Adatbiztonság és adatvédelem, mivel állandóan elérhetőek az interneten (hozzáférés szabályozása)
+    - Szolgáltatás megbízhatósága (manapság nem gond, de nem a mi kezünkben van)
+
+- **Fajtái:**
+
+    - **Szolgáltatói modell szerint:**
+        - Klasszikus: On-premises service - itt mindent mi csinálunk
+        - **IAAS:** *Infrastrucutre as a service*
+            - Magát az infrastruktúrát, a hardware-t béreljük
+            - A szolgáltató felel a **virtualizációért**, **szerverekért**, **adattárolásért** és a **hálózatért**
+            - pl Azure, AWS, GCS
+        - **PAAS:** *Platform as a service*
+            - Amikor a szolgáltató a hardware-en kívül a platformot is biztosítja (**OS**, **Runtime**, **Middleware**-ek)
+            - Mi csak az alkalmazásért felelünk, ami ezen fut
+            - pl Azure, AWS, GCS
+        - **SAAS:** *Software as a service*
+            - Itt már mindenért a szolgáltató felel, az **alkalmazásokat** és az **adatokat** kínálja közvetlenül a felhasználóknak
+            - pl Google Drive, Dropbox
+        - Egyéb:
+            + **FAAS:** *Function as a service*
+            + **CAAS:** *Communication as a service* (eg. call & messaging service)
+            + **XaaS:** *Everything as a service*
+
+    - **Telepítési modell szerinti csoportosítás:**
+        - **Nyilvános felhő (Public cloud):**
+            - akár hétköznapi emberek számára is elérhető, de az erőforrások a szolgáltató birtokában vannak, és ők is felelnek a működtetésért
+        - **Közösségi (Community cloud):**
+            - Itt már szervezetek (közösségek) használnak megosztva egy rendszert. A működtetésért már a közösség, vagy egy külsős cég felel
+        - **Magán felhő (Private Cloud):**
+            - Kizárólag 1 szervezet használja, de a működtetés kezelése kiadható, a telephely pedig lehet távol is
+        - **Hibrid (Hybrid Cloud):**
+            - Az előző típusok elemei tetszőlegesen összeállítva
 
 ## What is the Cloud?
 - Cloud is essentially a series of servers that might be accessed through the web, and all one piece of information is stored on physical servers in information centers. Intrinsically by cloud computing, we can access the physical servers and run computer code applications on their machines.
@@ -1704,9 +1286,9 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 ### What types of deployments are used in cloud computing?
 - **Deployment model:**
     - Public Cloud: like a bus, available to the crowd over the internet (owned by CSPs like AWS, Azure or Google Cloud)
+    - Community Cloud: like a car-share app, multiple organizations use a cloud privately
     - Private Cloud: like a car, exclusively owned and managed by an organization
     - Hybrid Cloud: like a taxi, combination of the 2
-    - Community Cloud
 
 ### What is SaaS?
 - **SAAS:** *Software as a service*
@@ -1724,8 +1306,6 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 
     - IaaS is divided into three aspects: public, private, and hybrid. The private cloud can offer that infrastructure that resides at the customer end. In contrast, the public cloud is located at the cloud computing data Centre end, and the hybrid cloud is a combination of both public and private clouds.
 
-- IaaS provides us with various services, which are listed below:
-    - Compute: Computing various services, including virtual CPUs, Virtual main memory for virtual machines at the user end.
     - Storage: IaaS provider provides back-end support for storage for storing files.
     - Network: Network as a Service provides networking components such as routers, switches, and bridges for virtual machines.
     - Load Balancers: It gives load balancing at the infrastructure layer.
@@ -1788,9 +1368,8 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 - Hybrid clouds are a combination of public clouds and private clouds. It is preferred over both clouds because it applies the most robust approach to implementing cloud architecture. It includes the functionalities and features of both worlds. It allows organizations to create their cloud and give control over someone else as well.
 
 ### What is the difference between Scalability and Elasticity?
-- `Scalability` is a characteristic of cloud computing that is used to handle the increasing workload by increasing the proportion of resource capacity. Using scalability, the architecture provides on-demand resources if the traffic raises the requirement.
-
-- `Elasticity` is a characteristic that dynamically provides the concept of commissioning and decommissioning a large amount of resource capacity. It is measured by the speed at which the resources are on demand and the usage of the resources.
+- `Scalability` is a long-tern characteristic of cloud computing that is used to handle the increasing workload by increasing the proportion of resource capacity. Horizontal: increase the number of resources / Vertical: increase the capacity of the resource (eg RAM)
+- `Elasticity` is a short-term solution for handling unexpected changes. A system’s capability for adjusting its resource levels automatically to match the workloads it faces at any moment
 
 ### What are the security benefits of cloud computing?
 - **Complete protection against DDoS:** Distributed Denial of Service attacks have become very common and are attacking the cloud data of companies. So cloud computing security ensures restricting traffic to the server, and traffic that can threaten the company and its data is thus averted.
@@ -1821,13 +1400,6 @@ Cloud computing authorizes the application server, which is used in identity man
 ### Explain the full form and usage of “EUCALYPTUS” in cloud computing.
 - `EUCALYPTUS` stands for Elastic Utility Computing Architecture for Linking Your Programs to Useful Systems.
 
-- `Eucalyptus` is an open-source software infrastructure in cloud computing, enabling us to implement clusters in the cloud computing platform. The main application of `eucalyptus` is to build public, hybrid, and private clouds. Using this, you can produce your personalized data center into a private cloud and leverage it for various other organizations to make the most out of it and use the functionalities offered by `eucalyptus`.
-
-### Explain the Public, Static, and Void classes.
-- `Public`: This is an access modifier, and it is used to specify who can access a particular method. When you say public, the method is accessible to any given class.
-- `Static`: This keyword in Java tells us that it is class-based, which means it can be accessed without creating the instance of any particular class.
-- `Void`: Void defines a method that does not return any value. So this is the return-related method.
-
 ### Before going for a cloud computing platform, what are the essential things to be taken into concern by users?
 - Compliance
 - Loss of data
@@ -1836,30 +1408,8 @@ Cloud computing authorizes the application server, which is used in identity man
 - Uptime
 - Data integrity in cloud computing
 
-### What is a hypervisor in Cloud Computing?
-- It is a virtual machine screen that can logically manage resources for virtual machines. It allocates, partitions, isolates, or changes the program given as a virtualization hypervisor. Hardware hypervisor allows having multiple guest Operating Systems running on a single host system simultaneously.
-
-- It is also known as Virtual Machine Manager. There are two types of hypervisors as defined below:
-
-    - `Type 1` / `Bare Metal hypervisor`: 
-        - The guest Vm runs directly over the host hardware:
-            - HARDWARE -> HYPERVISOR -> VM
-        - Most frequently used and most secure
-        - Eg.: VMware ESXi / Microsoft Hyper-V / Xen / Opensource KBM / Oracle VM Server for x86
-    - `Type 2` / `Hosted`: 
-        - The guest Vm runs over hardware through a host OS, so there's an additional layer of Host OS between the Host and the Hypervisor:
-            - HARDWARE -> **HOST OS** -> HYPERVISOR -> VM
-        - Less frequent, mostly used for end-user virtualization
-        - Eg.: Oracle VM VirtualBox / VMware Workstation (Pro) & VMware Fusion (for Mac) / Paralells Desktop / QEMU
-
-- `Type 1 Hypervisor` works much better than Type 2 because there is no underlying middleware and thus making the best environment for critical applications and workloads. To compare the performance metrics, we need to determine the CPU overhead, the amount of maximum host and guest memory, and support for virtual processors.
-
 ### Why is cloud computing the future?
-- Considering the various benefits of cloud computing to organizations, a good case is that cloud computing is increasingly becoming the new normal. Cloud computing helps society deal with future problems like managing big data, cyber security, and internal control.
-
 - In addition to the present, emerging technologies like AI, distributed ledger technology, and many other capabilities are getting available through cloud computing. Consequently, these technologies adapt to varied platforms like mobile devices, increasing their use.
-
-- Innovations supported cloud computing, like cloud automation. Therefore, the Industry cloud is also being developed to integrate cloud computing into specific industrial activities, making various operations even more streamlined. The verdict for cloud computing is that it’s a transitional technology that has helped organizations in several jurisdictions deliver their products and services better than before.
 
 ### What is big data in cloud computing?
 - Big data in cloud computing refers to the practice of storing, processing, and analyzing large volumes of data using cloud-based services. 
@@ -1894,16 +1444,42 @@ Cloud computing authorizes the application server, which is used in identity man
 - Edge computing is complementary to cloud computation. It is a distributed computing paradigm that combines cloud computing and data storage to solve the latency issues that plague the infrastructure. It is a prevalent paradigm in the IoT scenario. Edge computing aims to manipulate the edge on the edge devices, such as tabs, mobile phones, laptops, gateways, etc., to take on some of the provisioning and management responsibilities of the cloud.
 
 ### What is an API gateway?
-- An API gateway is a management service between the client and the backend services and processes. It aids in easier management of the API services available such as user authentication, rate limiting, and statistical analysis.
+- An API gateway is a management service between the `client` and the `backend` services and processes. 
+- It managemes the API services available such as user authentication, rate limiting, and statistical analysis.
 
 ### What is rate-limiting?
 - Rate limiting is a technique by which a network’s traffic can be limited by putting a cap on the frequency of a particular action in a given timeframe. It can help eliminate suspicious activities, especially those caused by bots on any network, by tracking the IP address where the request originated. It also protects against instances of API overuse.!
 
 
 ### Describe the Cloud Computing Architecture.
-- The cloud computing architecture is all the components of a cloud model that fit together from an architectural perspective. The figure below depicts how the various cloud services are related to support the needs of businesses. On the left side, the cloud service consumer represents the types of uses of cloud services. No matter what the requirements of the particular constituent are, it is important to bring the right type of services together that can support both internal and external users. Management of the consumers should be able to make services readily available to support the changing business needs. The applications, middleware, infrastructure, and services that are built based on on-premises computing models are within this category. In addition to this, the model depicts the role of a cloud auditor. This organization provides an oversight either by an internal or external group which makes sure that the consumer group meets its obligations.
-
+- Két részre osztható:
+    - Frontend (Client)
+        - UI-ek tartoznak ide (mobil-app, browser)
+    - Backend
+        - Ez maga a Cloud, részei:
+            - Application: ehhez fér hozzá a Client a GUI-on keresztül
+            - Service: SaaS, PaaS or IaaS
+            - Cloud Runtime: ebben futnak a VM-ek (instnace-ok)
+            - Storage: flexibilis, skálázható adattárolás
+            - Infrastructure: A Cloud hardware és software komponensei 
+            + Management: a menedzsmenthez szükséges komponensek
+            + Security: a biztonsági komponensek
+        - Kiegészítő szolgáltatások:
+            - Hálózati infrastruktúra (LoadBalancer, DNS, VPC)
+            - Adatbázisok (SQL vagy noSQL)
+            - Monitoring & Analytics
+    - A kettőt az "Internet" köti össze, ezen keresztül történik a kommunikáció
 - [cloudarchitecture](../../assets/cloudarchitecture.png)
+
+- A Cloud Computing architektúra 4 rétege:
+    1. Fizikai réteg (Szolgáltató):
+        - CPU, Memória, Routerek, Switchek
+    2. Infrastruktúra réteg (Szolgáltató)
+        - VM, Adattárolás, Szerverek
+    3. Platform réteg (Developer / Szolgáltató)
+        - OS, App, Adatbázis
+    4. Applikáció réteg (Client)
+        - UI
 
 ### What are the different phases associated with cloud architecture?
 - There are four primary phases associated with cloud architecture. They are as follows:
@@ -1913,7 +1489,7 @@ Cloud computing authorizes the application server, which is used in identity man
     - **Cleanup Phase:** Here, all the services and processes left from the shutdown phase due to incorrect or faulty shutdown are cleaned up.
 
 ### What are Microservices?
-- Microservices is a process of developing applications that consist of code that is independent of each other and of the underlying developing platform. Each microservice runs a unique process and communicates through well-defined and standardized APIs, once created. These services are defined in the form of a catalog so that developers can easily locate the right service and also understand the governance rules for usage.
+- Microservices is a process of developing applications that consist of code that is independent of each other and of the underlying developing platform. Each microservice runs a unique process and communicates through well-defined and standardized APIs, once created. These services are defined in the form of a `catalog` so that developers can easily locate the right service and also understand the governance rules for usage.
 
 ### Why are microservices important for a true cloud environment?
 - The reason why microservices are so important for a true cloud environment is because of these four key benefits:
@@ -1934,9 +1510,6 @@ Cloud computing authorizes the application server, which is used in identity man
     - Decreased load on the actual servers since data is sent via the edge servers.
     - It is a robust delivery system requiring minimal maintenance
     - Extremely easy to configure with no additional resource requirements.
-
-### What are the benefits of using Traffic Manager in Azure? 
-- Microsoft Azure Traffic Manager is a component of the Azure cloud that aids the system by managing the distribution of user traffic for various service endpoints in the system. These service endpoints may be a web app, an Azure VM, or even an incorporated cloud. It utilizes the DNS to apply traffic routing methods to incoming client request traffic to facilitate its traversal to the most suitable endpoints.
 
 ### What are the roles implemented in Microsoft Azure?
 - The three roles that Microsoft Azure has implemented are the Web Role, Worker Role, and Virtual Machine Role.

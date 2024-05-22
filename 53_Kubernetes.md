@@ -661,20 +661,20 @@
                 - same as role binding, but it's not namespace specific, so it's cluster-wide
                 - If you want to bind a `ClusterRole` to all the namespaces in your cluster, you use a `ClusterRoleBinding`
 
-## Liveness and readiness probes:
-- `Liveness` and `readiness probes` are mechanisms in Kubernetes used to manage how containers in pods are handled. They help Kubernetes make decisions about when to restart a container or when to route traffic to a pod. 
+- **Liveness and readiness probes:**
+    - `Liveness` and `readiness probes` are mechanisms in Kubernetes used to manage how containers in pods are handled. They help Kubernetes make decisions about when to restart a container or when to route traffic to a pod. 
 
-- **Liveness Probes**
-    - Liveness probes are used to know when to restart a container. The main purpose of a liveness probe is to check if an application inside a container is still running. If the liveness probe fails, Kubernetes assumes that the container is in a broken state and restarts it automatically.
+    - **Liveness Probes**
+        - Liveness probes are used to know when to restart a container. The main purpose of a liveness probe is to check if an application inside a container is still running. If the liveness probe fails, Kubernetes assumes that the container is in a broken state and restarts it automatically.
 
-    - **Example Use Case:**
-        - An application might be running, but it's deadlocked, with all threads hung. Although the application process is still running, the application is not functioning as expected. A liveness probe could catch this by checking some type of "I am alive" signal at a set interval. If this check fails, Kubernetes restarts the container to try to restore normal operation.
+        - **Example Use Case:**
+            - An application might be running, but it's deadlocked, with all threads hung. Although the application process is still running, the application is not functioning as expected. A liveness probe could catch this by checking some type of "I am alive" signal at a set interval. If this check fails, Kubernetes restarts the container to try to restore normal operation.
 
-- **Readiness Probes**
-    - Readiness probes are used to determine when a container is ready to start accepting traffic. Essentially, the readiness probe is meant to check if the application is ready to serve requests. If the readiness probe fails, Kubernetes won’t send traffic to the pod until it passes.
+    - **Readiness Probes**
+        - Readiness probes are used to determine when a container is ready to start accepting traffic. Essentially, the readiness probe is meant to check if the application is ready to serve requests. If the readiness probe fails, Kubernetes won’t send traffic to the pod until it passes.
 
-    - **Example Use Case:**
-        - A web server is deployed within a container, and it starts up with some initial load time because it might be loading large data sets or configurations. Even though the container is running, it's not yet ready to serve traffic. A readiness probe can check the HTTP endpoint or a specific condition that returns success only when the server is truly ready to handle requests.
+        - **Example Use Case:**
+            - A web server is deployed within a container, and it starts up with some initial load time because it might be loading large data sets or configurations. Even though the container is running, it's not yet ready to serve traffic. A readiness probe can check the HTTP endpoint or a specific condition that returns success only when the server is truly ready to handle requests.
 
 ## AWS EKS (Elastic Kubernetes Service)
 - **What is it?**
@@ -705,6 +705,24 @@
             - deploy apps to the cluster using `kubectl`
     
     - We can simplify this process with **eks control tool**: `eksctl` (CLI for AWS EKS) (see below in the guides section!)
+
+## HELM
+- What is `Helm`?
+    - It's a package manager for K8s, that helps you manage K8s apps through `charts` (packages of pre-configured K8s resources)
+    - It is like **an extension  to the basic k8s configuration files**. It makes it available to use variables and download other packages very easily. It helps us with 2 main components:
+        - We can create a `values.yaml` file to collect all our **Configurations** into 1 single file:
+            - we type `${{.Values.delpoyment.replicas}}` or `${{.Values.service.type}}` in the original yaml files instead of hard-coding the values, and we specify these in the `values` file
+        - We use a **template**, or in Helm's terms a `chart`:
+            - the `chart` consists of all the files we are "templating" (=describing in the confirguration), it's essencially a bundle of `yaml` files that we can use in our project
+
+- Use cases:
+
+
+- **Basic commands:**
+    - `helm install <chartName>` - this uses the `values` file to fill all the `configuration` files, and creates the cluster (we can also specify the values file with the `--values` flag, eg `helm install --values=values.yaml <chartName>`)
+    - `helm upgrade <chartName>` - after we make any changes, we can use this command to update our app
+    - `helm rollback <chartName>` - in case we made a mistake, we can undo that with this command (go back to the last working version)
+    - `helm package <repoIndex> <chartName>` (?) - push (`deploy`) the project's configuration (`chart`) for others to use it
 
 ## GUIDES:
 - **General tips:**
@@ -1119,3 +1137,8 @@
 - Persistent Volumes: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 - Storage Classes: https://kubernetes.io/docs/concepts/storage/storage-classes/
 - StatefulSets: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+
+- HELM documentation: https://helm.sh/docs/
+- HELM intro video: https://www.youtube.com/watch?v=fy8SHvNZGeE&ab_channel=IBMTechnology
+- HELM intro video (with Nana): https://www.youtube.com/watch?v=-ykwb1d0DXU&ab_channel=TechWorldwithNana
+- HELM source code: https://github.com/helm/helm
