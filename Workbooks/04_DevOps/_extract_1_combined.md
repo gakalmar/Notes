@@ -3,7 +3,7 @@
 ## Linux
 ### What kind of virtualization technologies are you familiar with?
 - "Az izoláció egy eszköze"
-- A virtualizáció egy valós entitás helyett egy virtuális dolog létrehozását jelenti (történelmi gyökerek: hardver - kevés helyen - emiatt egy gépet osztottak szét (ezek voltak a virtualizációk = erőforrások szétosztása), ahhoz lehetett terminálokon át csatlakozni) - ennek ellentéte a többszálúság (tóbb idő kell a feladatok elvégzéséhez)
+- A virtualizáció egy valós entitás helyett egy virtuális dolog létrehozását jelenti (történelmi gyökerek: hardver kevés helyen létezett, emiatt egy gépet osztottak szét (ezek voltak a virtualizációk = erőforrások szétosztása), ahhoz lehetett terminálokon át csatlakozni) - ennek ellentéte a többszálúság (tóbb idő kell a feladatok elvégzéséhez)
     - A hypervisor (Virtual Machine Monitors (VMMs)) teszi ezt lehetővé (ez allokálja a host resource-ait a virtuális környezetben)
     - Ha a hypervisor installálva van, akkor tudunk létrehozni VM-eket, amik hordozhatóak
     - az az előnye ennek,
@@ -208,8 +208,8 @@
         - Layer 1: Physical
     
     - Az 1-3 layereket device-okhoz is tudjuk társítani:
-        - L1 - Hub - hardveres adattovábbítás
-        - L2 - Switch - két node közti kapcsolatért felel, MAC address-t használ
+        - L1 - Hub - hardveres adattovábbítás (nyers bit streamek, pl `10001011`)
+        - L2 - Switch - két node közti kapcsolatért felel, MAC address-t használ; (+meghatározza az adat formátumát a hálózaton)
         - L3 - Router - IP protocol-t használ packet forwardinghoz
     
     - A 4-7 layerekhez inkább funkciókat tudunk társítani:

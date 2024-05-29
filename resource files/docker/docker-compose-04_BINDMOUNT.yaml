@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: exampledb
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data  # uses a bind mount pointing to a directory on the host
+
+volumes:  # This section can be removed or retained for other uses, but it's not needed for dbdata in this setup

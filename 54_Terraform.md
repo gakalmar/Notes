@@ -196,10 +196,102 @@
         - Update config:
             - `terraform apply` (type `yes` to confirm!)
 
-    + Zalan: Az volt a gond, hogy minden resource -t magamnak csináltam és nem a defaultokat használtam és még pluszban kellett route table és route table association is ami össze van kapcsolva az igw -vel és a subnet -el.
+    + Zalan: Az volt a gond, hogy minden resource -t magamnak csináltam és nem a defaultokat használtam és még pluszban kellett route table és route table association is ami össze van kapcsolva az `igw`-vel és a `subnet`-el.
+
+- **Terraforming Mars:**
+    - Create `S3` bucket from the AWS console:
+        - add a unique name and leave everything else as default
+    - Create a `DynamoDB Table`:
+        - go to the `Dynamo DB` service to create one
+        - as name, add `terraform-lock` (common naming)
+        - primary key / partition key: `LockID`, type: `string`
+    - Create `main.tf` file (use contents of `main-terraforming-mars-step-1.tf` file):
+        - S3 added (replace name)
+        - DynamoDB added (replace name)
+    - Make an `RDS` (Relational Database Service) for the MySQL database of WordPress:
+        - Add it through a new `resource` block in the `main.tf` file (refer to `main-terraforming-mars-step-2.tf`)
+    - Make a new `S3` bucket for storing the media files of WordPress:
+        - Add it as a new resource again (`main-terraforming-mars-step-3.tf` file)
+    
+    - ### EDDIG MENT, INNEN (WORDPRESS SETUP), MAR NEM MEGY
+        - Talan ezzel a Guide-dal? https://aws.amazon.com/tutorials/deploy-wordpress-with-amazon-rds/module-four/
+        
+    - Now that the AWS infrastructure is comple, we can configure WordPress:
+        - Connect to instance:
+            - `ssh -i ~/.ssh/my-keypair.pem ubuntu@35.178.29.167`
+        - Update package manager and install required elements:
+            - `sudo apt update`
+            - `sudo apt install nginx php-fpm php-mysql -y`
+        - Go to the nginx folder to edit default config:
+            - `sudo nano /etc/nginx/sites-available/default`
+            - Edit the file, so it looks like this:
+
+                    server {
+                        listen 80;
+                        server_name your_domain;
+
+                        root /var/www/html;
+                        index index.php index.html index.htm index.nginx-debian.html;
+
+                        location / {
+                            try_files $uri $uri/ /index.php$is_args$args;
+                        }
+
+                        location ~ \.php$ {
+                            include snippets/fastcgi-php.conf;
+                            fastcgi_pass unix:/var/run/php/php7.4-fpm.sock;  # Ensure this matches your PHP version
+                            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+                            include fastcgi_params;
+                        }
+
+                        location ~ /\.ht {
+                            deny all;
+                        }
+
+                        location = /favicon.ico {
+                            log_not_found off; access_log off;
+                        }
+
+                        location = /robots.txt {
+                            log_not_found off; access_log off; allow all;
+                        }
+
+                        location ~* \.(css|gif|ico|jpeg|jpg|js|png)$ {
+                            expires max;
+                            log_not_found off;
+                        }
+                    }
+        - Restart nginx:
+            - `sudo nginx -t`
+            - `sudo systemctl restart nginx`
+        - Download Configure WordPress:
+            - `cd /var/www/html`
+            - `sudo rm *`  # Caution: This clears the directory!
+            - `sudo chown ubuntu:ubuntu /var/www/html`
+            - `wget https://wordpress.org/latest.tar.gz`
+            - `sudo tar -xzf latest.tar.gz`
+            - `sudo mv wordpress/* .`
+            - `sudo rm -rf wordpress latest.tar.gz`
+            - `sudo chown -R www-data:www-data /var/www/html`
+            - `sudo find /var/www/html/ -type d -exec chmod 755 {} \;`
+            - `sudo find /var/www/html/ -type f -exec chmod 644 {} \;`
+        - Configure WordPress:
+            - Create a `wp-config.php` by copying `wp-config-sample.php`:
+                - `sudo cp wp-config-sample.php wp-config.php`
+            - Edit `wp-config.php` to include your `RDS` credentials and endpoint:
+                - `sudo nano wp-config.php` 
+                    - Add details from `AWS RDS`:
+                        - `DB_NAME`: The name of the database you specified when creating the RDS instance (e.g., wordpress).
+                        - `DB_USER`: The username you set for the database access (e.g., wp_admin).
+                        - `DB_PASSWORD`: The password you assigned to the above user.
+                        - `DB_HOST`: The endpoint of the RDS instance. This is not a URL but a hostname, which typically looks like xxxxx.rds.amazonaws.com.
+
+
+
 
 - **EKS persistency with EBS:** (this is not the original way to solve it, but it's better!)
-    1. 
+    1. WATCH WS VIDEO!
+
 
 # LINKS:
 - AWS getting started link: https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS

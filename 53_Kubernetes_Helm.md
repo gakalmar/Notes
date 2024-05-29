@@ -1174,6 +1174,69 @@
         - `AWS Cluster Role`: https://docs.aws.amazon.com/eks/latest/userguide/service_IAM_role.html
         - `AWS Node Role`: https://docs.aws.amazon.com/eks/latest/userguide/create-node-role.html
 
+- **Tinker, Tailor, Docker, Spy:**
+    1. Create a flask app with python
+    2. Create Dockerfile
+    3. Build app:
+        - `docker build -t gakalmar/hello-world:1.0 .`
+        - use `docker images` to check your images
+        - run the image with `docker run -p 5000:5000 gakalmar/hello-world:1.0`
+    4. Upload it to a repo, once built and working: (We are using AWS ECR, not DockerHub!)
+        - In AWS ECR:
+            - Create repo:
+                - name it (a repo is for each app, so the name should reflect the app!)
+            - Click on the repo, then go throught the push commands guide
+    5. Deploy the image from ECR to a Kubernetes cluster:
+        - Create a cluster:
+            - `eksctl create cluster -f cluster.yaml`
+            - after you're done, make sure to update your context like this:
+                - `aws eks update-kubeconfig --region eu-west-2 --name gk-cluster`
+        - Prepare configurations:
+            - `deployment-hw.yaml` (use image from ECR)
+            - `service-hw.yaml` (type: LoadBalancer)
+        - Deploy to the k8s Cluster you just created:
+            - `kubectl apply -f deployment-hw.yaml`
+            - `kubectl apply -f service-hw.yaml`
+        - Check success:
+            - `kubectl get pods` (should be in Running state!)
+            - `kubectl get services` (you can test the connection using the external-ip)
+    6. Add Prometheus and Grafana with helm:
+        - Add the Helm repositories:
+            - `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
+            - `helm repo add grafana https://grafana.github.io/helm-charts`
+            - `helm repo update`
+        - Install them:
+            - `helm upgrade --install prometheus prometheus-community/prometheus --namespace monitoring --create-namespace`
+            - `helm upgrade --install grafana grafana/grafana --namespace monitoring --create-namespace`
+        - The following steps are also displayed after installing them, but to summarize:
+            - Get the password for Grafana login:
+                - `kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo`
+            - Get the Grafana URL:
+                - `export POD_NAME=$(kubectl get pods --namespace monitoring -l "app.kubernetes.io/name=grafana,app.kubernetes.io/instance=grafana" -o jsonpath="{.items[0].metadata.name}")`
+                - `kubectl --namespace monitoring port-forward $POD_NAME 3000`
+        - Now log into the Grafana interface from the browser:
+            - `localhost:3000`
+            - username: `admin`
+            - password: *what gets generated in a previous step*
+    7. HELM-erize the app (at this point we are done, we're just upgrading the solution):
+        - Clean-up cluster deployments:
+            - `kubectl scale deployment flask-app --replicas=0`
+            - `kubectl get deployment` (should be 0 now)
+        - Create a folder for the helm charts:
+            - `mkdir -p helm/charts`
+            - go inside the charts folder and create a new `helm chart`:
+                - `helm create flask-app`
+            - Now update the files in the template folder with the config file you created earlier for k8s:
+                - update the following files:
+                    - `Chart.yaml` (just general info)
+                    - `values.yaml` (Values should be added here - note image tag is separate! not like in the k8s yaml file)
+                    - `templates/deployment.yaml` (cross-check what should be referenced)
+                    - `templates/service.yaml` (cross-check what should be referenced)
+        - Now that it's set up, we can deploy:
+            - `helm install flask-app-with-helm helm/charts/flask-app`
+            - `helm upgrade flask-app-with-helm helm/charts/flask-app --install` (if you need to make any changes, eg it didn't work on the first try)
+        - Use the 2 commands that get displayed, to get an URL!
+
 ## COMMANDS:
 - Install (on Linux): *( https://minikube.sigs.k8s.io/docs/start/ )*
     - `curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64`

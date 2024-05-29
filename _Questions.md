@@ -1,11 +1,10 @@
 # Questions:  
 
 ## TW review:
-- sgpt --code "querytext" -> ez mi es honnan jon?
-- Mi az az `AMI`, es nekunk mit kell tudni rola, hogy hasznaljuk?
-
-- prometheus-grafana: hogyan kellene ezeket hasznalni?
-- livenessprobe, readynessprobe - hogyan teszteljuk?
+- Terraforming Mars feladat (TW4-rol):
+    - Nem ment a wordpress configuracio
+    - Full guide https://aws.amazon.com/tutorials/deploy-wordpress-with-amazon-rds/
+    - Just the config part: https://aws.amazon.com/tutorials/deploy-wordpress-with-amazon-rds/module-four/
 
 ## SI review
 - kis elakadasok a het elejen (aws cli verzio, ssh login gondok)

@@ -1,0 +1,20 @@
+version: '3.9'  # specifies the Docker Compose file version
+services:
+  web:
+    image: nginx:latest  # uses the latest Nginx image as the web server
+    ports:
+      - "80:80"  # maps port 80 on the host to port 80 in the container
+    depends_on:
+      - db  # ensures the db service is started first
+
+  db:
+    image: postgres:latest  # uses the latest Postgres image as the database server
+    environment:
+      POSTGRES_DB: exampledb  # sets the default database name
+      POSTGRES_USER: user  # default username
+      POSTGRES_PASSWORD: password  # password for the database
+    volumes:
+      - dbdata:/var/lib/postgresql/data  # mounts the volume for data persistence
+
+volumes:
+  dbdata:  # defines the volume named dbdata

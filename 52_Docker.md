@@ -132,7 +132,7 @@
                 - When your application requires fully native file system behavior on Docker Desktop
             - 3 volume types:
                 - Host volumes:
-                    - Adding during `docker run` command wiht `-v` flag
+                    - Adding during `docker run` command with `-v` flag
                     - You decide where on the host file system the reference is made (you specify both the mounted directory and the location where to be mounted)
                 - Anonymous volumes:
                     - We also use `run` command to add this
@@ -141,6 +141,7 @@
                     - example: `docker run -v name:/var/lib/mysql/data`
                     - an improvement of the anonymous, we also specify a name for the volume
                     - you can then reference the volume by name
+
             - We specify this also in the `yaml` Dockerfile, under `volumes`, eg:
 
                     version: '3'
@@ -166,6 +167,10 @@
             - Use cases:
                 - Sharing configuration files from the host machine to containers
                 - Sharing source code or build artifacts between a development environment on the Docker host and a container
+        
+        - **Bind mount vs Volume:**
+            - `Bind mount` is a specific path on the host machine. Useful when we want to access something on the host machine
+            - `Volume` is a separate/decoupled entity from the host, that's easier to manage and share between containers
 
 - **Docker build:**
     - Build is the process of creating a `docker image` using a `Dockerfile`
@@ -264,6 +269,8 @@
     - `docker system prune -af`: clear Docker cache
     - `docker logs -t <ID>`
     - `docker exec -it <ID> /bin/bash`: step into a running container with a terminal
+    - `docker exec <container_name_or_id> <command>` run a command in the container wihtout stepping into it
+        - eg. `docker exec my-container ls`
 
     - Upload an image to AWS ECR: ( https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html )
         - `aws ecr get-login-password --region <REGION> | docker login --username AWS --password-stdin <ECR_URL>`
@@ -304,13 +311,32 @@
     3. Remove the image: `docker tm <ID>` / `docker rmi <ID>`
 
 - **Create and manage volumes:**
-    - https://docs.docker.com/storage/volumes/#create-and-manage-volumes
+    - Create a volume outside a scope of a container:
+        - `docker volume create my-vol` 
+            - check with `docker volume ls` to see all
+            - use `docker volume inspect my-vol` to check parameters
+            - Remove it with `docker volume rm my-vol`
 
 - **Starting a container with a volume:**
-    - https://docs.docker.com/storage/volumes/#start-a-container-with-a-volume
+    - We don't have to create it, because docker creates it for us if it doesn't exist yet
+    - Mount the volume `myvol2` into `/app/` in the `nginx` container:
+        - `docker run -d --name devtest --mount source=myvol2,target=/app nginx:latest`
+        - `docker inspect devtest` (check under "Mounts" if it was attached correctly)
+    - Teardown (volume removed separately!):
+        - `docker container stop devtest`
+        - `docker container rm devtest`
+        - `docker volume rm myvol2`
 
 - **Starting a container with a bind mount:**
-    - https://docs.docker.com/storage/bind-mounts/#start-a-container-with-a-bind-mount
+    - Bind mount uses a path (`./dbdata`) that specifies a directory on the host machine directly!
+    - Mount the volume manually:
+        - Create the directory you want to use first (eg. `mkdir target`)
+        - `docker run -d -it --name devtest2 --mount type=bind,source="$(pwd)"/target,target=/app nginx:latest`
+        - `docker inspect devtest` (check under "Mounts" if it was attached correctly)
+    - Teardown (volume removed separately!):
+        - `docker container stop devtest2`
+        - `docker container rm devtest2`
+        - `docker volume rm myvol2`
 
 - **Run a MongoDB server and CLI using docker:**
     1. Pull th MongoDB image:
@@ -560,7 +586,7 @@
             
             - Run `docker-compose up -d`
 
-- **Use `secret` to build an image:**
+- **Use `secret` to build an image:** # THIS IS NOT WHAT WAS MEANT TO BE DONE!
     1. Create a new file named `Dockerfile.secret` (in a new folder, but this is optional):
 
             FROM alpine:latest
@@ -583,6 +609,9 @@
     
     5. Check if `secret.txt` file is accessible:
         - `docker exec secret-container cat /secret.txt`
+
+- **Using secrets in Docker:**
+    - https://docs.docker.com/compose/use-secrets/
 
 - **Add more client containers to the existing docker-compose:**
     
@@ -760,71 +789,6 @@
 
                     # we also need to list all the volumes' names at the end (there can be more for other images)   
                     # we can mount the same volume to different containers, so the data can be shared!
-
-<!-- - **nginx + flask task:** (TO BE SUPERSEDED!)
-    - Create folder for your project, eg `mkdir Test`
-    - Create a Dockerfile:
-
-            FROM nginx:latest
-            RUN apt update && apt install python3 python3-pip -y && pip3 install flask
-            WORKDIR /app
-            COPY app.py .
-            RUN python3 app.py &
-            EXPOSE 80 #(This is for flask)
-
-            CMD ["nginx", "-g", "daemon off;"]
-    
-    - Create an `app.sh` script file:
-
-            #!/bin/bash
-
-            nginx -g 'daemon off;' &
-
-            # Start the Flask app (in BG)
-            python3 app.py &
-
-            # Wait for any process to exit:
-            wait -n
-    
-    - An `nginx.conf` file is also needed:
-
-            http {
-                server {
-                    listen 80;
-
-                    location/ {
-                        proxy_pass http://0.0.0.0:5000;
-                    }
-                }
-            }
-            events {}
-
-    - createa an `app.py` file with this content:
-
-            #!/usr/bin/python
-
-            import time
-            from flask import Flask
-            app = Flask(__name__)
-
-            START = time.time()
-
-            def elapsed():
-                running = time.time() - START
-                minutes, seconds = divmod(running, 60)
-                hours, minutes = divmod(minutes, 60)
-                return "%d:%02d:%02d" % (hours, minutes, seconds)
-
-            @app.route('/')
-            def root():
-                return "Hello World (Python)! (up %s)\n" % elapsed()
-
-            if __name__ == "__main__":
-                app.run(debug=True, host="0.0.0.0", port=8080)
-
-    - build the image file: `docker build . -t test`
-    - run it in the background: `docker run -d -p 8080:80 -p 5001:5000 test`  -->
-
 
 ## LINKS
 - Full documentation: https://docs.docker.com/reference/

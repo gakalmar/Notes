@@ -1837,40 +1837,6 @@ Network ACLs (Access Control Lists): Act as a firewall for controlling traffic i
 - The variables are defined in the variables.tf file or using variables keyword that can be overridden but the locals can not be overridden.
 - So if you want to restrict the overriding the variables at that time you need to use the locals.
 
-
-# CHECKLIST
-
-### bash
-- write and execute bash scripts
-- sed, jq, curl, ...
-- subshell [$()], arithemtic expression [$(())], piping [|], input/output redirection [>,>>,<<]
-- if, for
-- functions
-- arguments
-- expected output: sh file, successful execution
-
-### Docker
-- Dockerfile
-- expected output: Dockerfile, successful build
-
-### docker-compose
-- Review: nginx-flask (docker-compose solution)
-- app (given), nginx, database
-- expected output: docker-compose, successful run
-
-### Kubernetes
-- Basic types: namespace, deployment, service, configmap, secret
-- expected output: manifest file(s)
-
-### Terraform (AWS)
-- Create AWS infrastructure (S3, dynamodb, IAM, networking, ...)
-- terraform documentation
-- expected output: tf files, successful apply
-
-# QUESTION GENERATOR:
-- `docker run --rm csuvikg/generate-tti`
-
-
 ## EXTRA QUESTIONS - RELEASE ENGINEER (not in the current material!)
 
 ### What are the Jenkins Agents?

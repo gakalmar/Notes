@@ -114,7 +114,7 @@
                 - `$?` contains the exit value of the last run command
             - `$$` and `$!` process numbers
                 - `$$` is a PID (process identifier number) of the currently running shell
-                - `$$` is a PID (process identifier number) of the last run background process
+                - `$!` is a PID (process identifier number) of the last run background process
             - `IFS` (Internal Field Separator)
                 - default value is `SPACE TAB NEWLINE`
             - `shift`

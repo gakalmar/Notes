@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  client1:
+    image: alpine:latest
+    container_name: client1-container
+    networks:
+      - app-network
+    command: ["tail", "-f", "/dev/null"]
+
+  client2:
+    image: alpine:latest
+    container_name: client2-container
+    networks:
+      - app-network
+    command: ["tail", "-f", "/dev/null"]
+
+  vip-client1:
+    image: alpine:latest
+    container_name: vip-client1-container
+    networks:
+      - vip-clients
+    command: ["tail", "-f", "/dev/null"]
+
+  vip-client2:
+    image: alpine:latest
+    container_name: vip-client2-container
+    networks:
+      - vip-clients
+    command: ["tail", "-f", "/dev/null"]
+
+networks:
+  app-network:
+    driver: bridge
+  vip-clients:
+    driver: bridge

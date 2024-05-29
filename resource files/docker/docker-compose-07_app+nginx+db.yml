@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  app:
+    build: ./app  # Path to your Python app's Dockerfile and source code
+    container_name: hello_world_app
+    depends_on:
+      - db
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=example
+    ports:
+      - "8000:5000"  # Map port 5000 in the container to port 8000 on the host
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_reverse_proxy
+    ports:
+      - "80:80"  # Map HTTP port to the host
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Ensure you have a config file at this path
+    depends_on:
+      - app
+
+  db:
+    image: postgres:latest
+    container_name: postgres_database
+    environment:
+      POSTGRES_PASSWORD: example  # Environment variable used by the postgres image to set the superuser password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:  # Defines a named volume for the database to persist data
+
+networks:
+  default:
+    driver: bridge
