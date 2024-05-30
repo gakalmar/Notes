@@ -1,0 +1,12 @@
+# Requests specific amounts of storage and storage characteristics, used by applications.
+apiVersion: v1 # API version for PersistentVolumeClaim
+kind: PersistentVolumeClaim # Specifies that this is a PersistentVolumeClaim
+metadata:
+  name: my-pvc # Name of the PVC
+spec:
+  accessModes:
+    - ReadWriteOnce # Access modes
+  resources:
+    requests:
+      storage: 5Gi # Requested storage capacity
+  storageClassName: standard # Storage class to use

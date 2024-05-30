@@ -687,7 +687,7 @@
 - **How does it work?**
     1. Setup / preparation:
         - Create a `VPC`
-        - Create an `IAM` Role with `Security Group`
+        - Create an `IAM Role` with `Security Group`
             - Means: Create an AWS **user** (=`IAM role`) with a **list of permissions** (=`SG`)
     2. Create the `Control Plane` of the Cluster (Create the Master Nodes):
         - Create using the `IAM Role`:
@@ -949,7 +949,7 @@
     1. Create a Deployment:
         - **OPTION 1:**
             - Create with `yaml` file:
-                - `kubectl apply -f deployment.yaml` (yaml file in resources!)                   
+                - `kubectl apply -f deployment.yaml` (yaml file in resources!)
 
         - **OPTION 2:**
             - `kubectl create deployment my-deployment-gk --image=ubuntu:alpine`
@@ -1056,7 +1056,7 @@
     
     4. Create a Role:
         - get `yaml` file from resources (`role-pod.yaml`)
-            - thsi role allows basic operations on pods
+            - this role allows basic operations on pods
         - `kubectl apply -f role-pod.yaml`
         - verify: `kubectl describe role pod-manager -n default` (pod-mager is the name of the pod)
     
@@ -1285,7 +1285,7 @@
         - This applies the changes of the kubernetes config file to your cluster, usually it means that a resource defined in the config file will get created or updated.
     - `kubectl get <KUBERNETES OBJECT TYPE> <-OPTIONAL: -n NAMESPACE->` 
         - Prints all resources from that resource type on your cluster
-        - eg `kubectl get po -A`
+        - eg `kubectl get pod -A`
     - `kubectl describe <KUBERNETES OBJECT TYPE> <OBJECT ID> <-OPTIONAL: -n NAMESPACE->` - Prints the events that happened to a specific resource
     - `kubectl logs <POD NAME> <-OPTIONAL: -n NAMESPACE->` 
         - Prints logs from a container. If the pod has multiple containers with different names, the container name also must be specified after the pod name

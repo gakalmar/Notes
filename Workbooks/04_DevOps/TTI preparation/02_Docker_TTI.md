@@ -1,6 +1,8 @@
 # DOCKER
 
-- manually start docker daemon: `sudo service docker start`
+- **DOCS:**
+    - Docker build maunal: https://docs.docker.com/build/
+    - Docker-compose maunal: https://docs.docker.com/compose/
 
 - **Dockerfile consists of:**
     - `FROM`: Ebből az image-ból indulunk ki
@@ -14,6 +16,9 @@
     - `VOLUME`: Egy mount point-ot hoz létre egy path-al, amire tudunk Volume-ot csatolni
 
 - **Most importan commands:**
+    - `sudo service docker start`: manually start docker daemon
+    - `docker system prune -a`: Delete every image
+
     - `docker pull <image>`: Pull an existing container
     - `docker run -d -p 5000:5000 <image>`: Run an existing container (`-d` in the BG, `-p` bind port)
     - `docker build -t 1.0 .` (must be in the same folder as the Dockerfile!)
@@ -25,7 +30,7 @@
     - `docker ps [-a include stopped containers]`: returns a list of all running containers
     - `docker rm [-f] <name|id>`: remove a container by id (use `-f` force flag if it's still running)
     - `docker rmi <ID/name>`: remove the image also 
-    - `docker system prune -a`: Delete every image
+
     - `docker tag <existing-image>:<existing-tag> <new-image>:<new-tag>`: re-tag your image for pushing to DockerHub
     - `docker exec <container_name_or_id> <command>` run a command in the container wihtout stepping into it
         - eg. `docker exec my-container ls`

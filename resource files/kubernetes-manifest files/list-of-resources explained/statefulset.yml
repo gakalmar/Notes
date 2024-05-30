@@ -1,0 +1,19 @@
+# Manages stateful applications, maintaining a sticky identity for each of their Pods
+apiVersion: apps/v1 # API version for StatefulSet
+kind: StatefulSet # Specifies that this is a StatefulSet
+metadata:
+  name: my-statefulset # Name of the StatefulSet
+spec:
+  serviceName: "my-service" # Service that governs this StatefulSet
+  replicas: 3 # Number of pod replicas
+  selector:
+    matchLabels:
+      app: myapp # Label selector that determines which pods belong to it
+  template:
+    metadata:
+      labels:
+        app: myapp # Labels assigned to pods created from this template
+    spec:
+      containers:
+      - name: myapp # Container name
+        image: myapp-image # Image to be used for the container

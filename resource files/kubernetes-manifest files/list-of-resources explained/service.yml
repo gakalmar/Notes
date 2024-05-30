@@ -1,0 +1,12 @@
+# An abstract way to expose an application running on a set of Pods as a network service.
+apiVersion: v1  # Specifies the API version for services
+kind: Service  # Defines the type of resource
+metadata:
+  name: my-service  # Name of the service
+spec:
+  selector:
+    app: myapp  # Selector that determines which pods will be exposed by this service
+  ports:
+    - protocol: TCP  # Protocol used
+      port: 80  # Port the service exposes
+      targetPort: 9376  # Port on the pod to which traffic is directed

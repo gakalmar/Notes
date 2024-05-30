@@ -1,0 +1,10 @@
+# Describes the "classes" of storage available to be used by PersistentVolumes.
+apiVersion: storage.k8s.io/v1 # API version for StorageClass
+kind: StorageClass # Specifies that this is a StorageClass
+metadata:
+  name: standard # Name of the StorageClass
+provisioner: kubernetes.io/aws-ebs # Provisioner type
+parameters:
+  type: gp2 # EBS volume type
+  zones: us-east-1a, us-east-1b # Availability zones
+reclaimPolicy: Retain # Policy on PV reclaim

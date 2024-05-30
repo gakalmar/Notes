@@ -1,0 +1,10 @@
+#  Store configuration data for use by your application running in pods, separating the configuration from the image content to keep containerized applications portable.
+apiVersion: v1  # Specifies the API version
+kind: ConfigMap  # Defines the type of resource
+metadata:
+  name: my-config  # Name of the config map
+data:
+  config.json: |  # Key and the data to store as configuration
+    {
+      "key": "value"
+    }

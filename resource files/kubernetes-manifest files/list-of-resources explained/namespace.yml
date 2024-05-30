@@ -1,0 +1,5 @@
+# Provides a mechanism to scope resources in a cluster, suitable for use in environments with many users spread across multiple teams or projects.
+apiVersion: v1 # API version for Namespace
+kind: Namespace # Specifies that this is a Namespace
+metadata:
+  name: my-namespace # Name of the Namespace

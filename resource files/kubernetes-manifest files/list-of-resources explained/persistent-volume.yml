@@ -1,0 +1,16 @@
+#  Represents a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using Storage Classes.
+apiVersion: v1 # API version for PersistentVolume
+kind: PersistentVolume # Specifies that this is a PersistentVolume
+metadata:
+  name: my-pv # Name of the PersistentVolume
+spec:
+  capacity:
+    storage: 10Gi # Storage capacity
+  volumeMode: Filesystem # Mode of the volume
+  accessModes:
+    - ReadWriteOnce # Access modes
+  persistentVolumeReclaimPolicy: Retain # Reclaim policy
+  storageClassName: standard # Storage class name
+  nfs:
+    path: /tmp # NFS server path
+    server: 172.17.0.2 # NFS server IP

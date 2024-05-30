@@ -1,0 +1,18 @@
+# Manage the deployment of a specified number of replicas of a pod, handling updates to your application with declarative updates to Pods and ReplicaSets.
+apiVersion: apps/v1  # Specifies the API version for deployments
+kind: Deployment  # Defines the type of resource
+metadata:
+  name: my-deployment  # Name of the deployment
+spec:
+  replicas: 3  # Number of desired replicas
+  selector:
+    matchLabels:
+      app: myapp  # Selector that determines which pods belong to the deployment
+  template:
+    metadata:
+      labels:
+        app: myapp  # Labels assigned to pods created from this template
+    spec:
+      containers:
+      - name: myapp-container  # Name of the container
+        image: myapp:latest  # Image to use for the container

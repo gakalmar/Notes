@@ -1,0 +1,9 @@
+#  Smallest deployable units created and managed in Kubernetes, typically encapsulating one or more running containers.
+apiVersion: v1  # Specifies the API version
+kind: Pod  # Defines the type of resource
+metadata:
+  name: my-pod  # Name of the pod
+spec:
+  containers:
+  - name: my-container  # Name of the container within the pod
+    image: nginx  # Container image to use

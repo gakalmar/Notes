@@ -1,0 +1,14 @@
+# Grants the permissions defined in a Role to a user or set of users.
+apiVersion: rbac.authorization.k8s.io/v1 # API version for RoleBinding
+kind: RoleBinding # Specifies that this is a RoleBinding
+metadata:
+  name: read-pods # Name of the RoleBinding
+  namespace: default # Namespace the RoleBinding applies to
+subjects:
+- kind: User # Type of subject (User, Group, ServiceAccount)
+  name: my-user # Name of the user
+  apiGroup: rbac.authorization.k8s.io # API group for RBAC
+roleRef:
+  kind: Role # Type of role (Role or ClusterRole)
+  name: pod-reader # Name of the role
+  apiGroup: rbac.authorization.k8s.io # API group for the role
