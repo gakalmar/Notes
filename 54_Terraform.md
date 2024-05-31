@@ -133,6 +133,7 @@
                         access_key = "your-access-key"
                         secret_key = "your-secret-key"
                     }
+                    
             - define resources:
                 - eg. `EC2 instances`, `S3 buckets`, or an entire `EKS cluster`:
 

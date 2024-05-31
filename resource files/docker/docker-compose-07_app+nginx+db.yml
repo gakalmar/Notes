@@ -36,4 +36,4 @@ volumes:
 
 networks:
   default:
-    driver: bridge
+    driver: bridge  # this is the default, but it's here to show how they are 

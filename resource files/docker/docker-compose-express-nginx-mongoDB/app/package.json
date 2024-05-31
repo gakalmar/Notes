@@ -1,0 +1,14 @@
+{
+    "name": "express-mongo-app",
+    "version": "1.0.0",
+    "description": "A simple Express app connected to MongoDB",
+    "main": "app.js",
+    "scripts": {
+        "start": "node app.js"
+    },
+    "dependencies": {
+        "express": "^4.17.1",
+        "mongoose": "^5.13.8",
+        "dotenv": "16.4.5"
+    }
+}

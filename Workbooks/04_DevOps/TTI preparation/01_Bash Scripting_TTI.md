@@ -464,6 +464,9 @@
                 echo "Characters from $house:"
                 echo "$data"
             fi
+    
+    - API request generic response:
+        - curl -s "<URL>" | jq -r '.[].name'    # get the name key's value of the array
 
 6. Simple calculator:
     - Write a script that takes any number of numerical arguments and calculates their sum:

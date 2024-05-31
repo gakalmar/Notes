@@ -21,7 +21,7 @@
             - And a corresponding Service, that we attach to Pods, to access them:
                 - `kubectl apply -f service.yaml` (add port and targetPort)
         - We can now check what is in our cluster:
-            - `kubectl get pods`
+            - `kubectl get pods` add `-o wide` to get more details, eg IP addresses
             - `kubectl get deployments`
             - `kubectl get events`
             - `kubectl describe deployment <deployment_name>`
@@ -120,5 +120,45 @@
         - then use the `<EXTERNAL-IP>:<PORT>` to connect though the browser or with curl
     - Add an ingress (optional, in case we would need routing - we also need an ingress controller):
         - `kubectl apply -f ingress.yaml`
+
+# YAML FILES
+
+- General build-up:
+        
+        apiVersion: # eg. v1
+        kind: # eg. Service / Deployment
+        metadata:
+            name: # what we want to call it
+            labels: # eg `app: nginx`
+        spec:
+            # here goes all the configuration of that element (kind specific)
+
+        (status) -> this is done hidden -> existing state needs to match desired state (info comes from the etcd)
+
+- Deployment:
+    - Deployment -> manages a ReplicaSet -> manages a Pod -> manages a Container
+    - `spec` for a `Deployment has 3 sections:
+        - `replicas`:
+        - `selector`: `matchLabels` section has values like `app: nginx`
+        - `template`: this is the configuration for the Pods (also has its own `metadata` and `spec` files) - the same as the yaml file for a single `pod` would be
+
+- Connection is done using `Labels` and `Selectors`:
+    - `Labels`:
+        - defined in `metadata` tabs
+        - we put a label eg. on a `pod`, but also on a `Deployment` (the latter is used to connect a `Service`)
+            - `Service` won't have a label, just a `matchLabels` tag
+    - `Selectors` 
+        - defined in `spec/selector/matchLabels` for a `Deployment`
+        - We basically say, that all items containg the label `app: nginx` should be connected to this `Deployment`
+
+- Ports:
+    - Need to be defined in the `Service` resource:
+        - eg:
+                ports:
+                  - protocol: TCP
+                    port:80 # this is the Service's port
+                    targetPort: 8080 # refers to the Pod's open port, need to match targetPort in the Pod config
+    
+    - The `targetPort` defined in the `Service` needs to match the `containerPort` defined in the `Deployment`'s `template/spec/container` section, which gives the `Pod`'s layout
 
 ### CONTINUE WITH GPT EXCERCISES!

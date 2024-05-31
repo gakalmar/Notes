@@ -243,15 +243,21 @@
 
 ### What is a VPN?
 - **VPN - Virtual Private Network:**
-    - Egy olyan technológia, amely lehetővé teszi, hogy biztonságos kapcsolatot hozzunk létre egy másik hálózattal az interneten keresztül
+    - Egy olyan technológia, amely lehetővé teszi, hogy biztonságos kapcsolatot hozzunk létre egy másik hálózattal az interneten keresztül (site = hálózat)
         - VPN szerver segítségével tud létrejönni ez a biztonságos kapcsolat, ehhez kapcsolódunk, majd a VPN szerver kapcsolódik a távoli hálózathoz
-        - A VPN szerver továbbá el is rejti a Client-et az internet elől, olyan, mintha a VPN szerver IP címét használná
-        - End-to-end encryption-t használ, amivel biztonságosabb lesz az adatküldés
+    
+    - Előnyök:
+        - külön szabályt lehet létrehozni a csatlakozáshoz (mint egy túzfal)
+        - end-to-end encryptiont használ, amivel biztonságosabb lesz az adatküldés
+        - elrejti a felhasználó IP címét a publikus internet elől (olyan, mintha a VPN szerver IP címét használná)
 
     - 2 fajátja van:
-        - Client-to-site: a Client-et köti össze a távoli szerverrel
+        - Client-to-site: a Client-et köti össze a távoli szerverrel/hálózattal, ez az elterjedtebb
+            - a VPN szerver nyitott a publikus internet felé
+            - 
         - Site-to-site: 2 hálózatot köt össze (pl AWS és irodai hálózat) 
             - itt létrehozhatunk további szabályokat is, pl az AWS-re csak irodai hálózatról lehet használni, így előbb ahhoz kell csatlakozni
+            - itt nem feltélenül kell a publikus internet felé nyitott hálózatot létrehozni
 
 ### What is DNS?
 - A Domain Name System röviden az internet telefonkönyve, mivel ennek segítségével fordítjuk le a domain neveket IP címekké
@@ -437,6 +443,8 @@
     - A NAT gateway-re itt igazából nincs szükség, mert ez csak arra való, hogy a private subnet férjen hozzá az internethez. Mi a bastion hosttal épp az ellenkezőjét akarjuk elérni, hogy a private subnet-en lévő instance-ok legyenek elérhetőek kívülről (a bastion hoston keresztül)
     - A public subnet-ben létrehozunk egy EC2-t, és hozzá egy Security Group-ot, ami engedi az SSH-t (Így már be tudunk SSH-zni a public EC2-re, amiről tovább tudunk SSH-zni a private network-ön lévő instance-ra a PRIVATE IP címét használva, ha ott is be van állítva az SSH connection).
         - Itt használhatjuk az `ssh-add ~/.ssh/id_rsa` és `ssh -A ec2_user@public_ec2_ip` belépési módot, hogy ne kelljen a private kulcsot másolgatni
+    - Előnyei: izolálja a private gépeket, csak a bastion hoston kell setup-olni
+    - Hátrányai: Single Point of Failure - ha elromlik, nem elérhető a private subnet gép (horzontal scaling-el lehet javítani)
 
 ### What are the key differences between security groups and NACLs?
 - Security Group:
@@ -641,6 +649,7 @@
 ### What is the difference between resource Limit and Request?
 - Limit: mennyi a maximális resource, amit egy pod használhat (CPU, memória). Azért van erre szükség, hogy ne használjon aránytalanul sokat egy hiba esetén, ami a többi Pod működésére is hatással lenne
 - Request: a minimális (szükséges) resource-okat fejezi ki, amire a Pod futtatásához szükség van
+- A `Deployment`-en belül, `container` szinten kell beállítani
 - Pl: "resources: requests: memory: "128Mi", cpu: "500m", limits: ..."
 
 ### What are the main differences between ConfigMaps and Secrets?
