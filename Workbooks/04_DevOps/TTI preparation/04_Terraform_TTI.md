@@ -1,6 +1,7 @@
 # TERRAFORM
 - **Docs:**
     - Full documentation: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
+    - Policy samples: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_examples.html
 
 # PROCESS
 1. Getting started:
