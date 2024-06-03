@@ -33,7 +33,7 @@
             - `$0 - $9` and `$#`
                 - `$0` the basename of the program as it was called
                 - `$1 - $9`: the first 9 additional params the script can be called with
-                - `$@` means all parameters
+                - `$@` means all parameters (as an array!)
                 - `$*` all params, without whitespace or quoting
                 - `$#` is the number of params the script was called with
                 - `$?` contains the exit value of the last run command
@@ -65,6 +65,25 @@
             else
                 echo "$greeting $name!"
             fi
+
+    - Checking for equality:
+        - `==` and `=!` identical or not equal
+        - `<` `>` checks if one string comes after another in lexicographical order
+        - `=~` checks if two strings match, eg when pattern matching, using regex:
+
+                if [[ $string =~ ^hello ]]; then
+                    echo "The string starts with 'hello'."
+                else
+                    echo "The string does not start with 'hello'."
+                fi
+            
+        - Numeric:
+            - `eq` (Equal To)
+            - `ne` (Not Equal To)
+            - `gt` (Greater Than)
+            - `lt` (Less Than)
+            - `ge` (Greater Than or Equal To)
+            - `le` (Less Than or Equal To)
 
 4. **Loops:**
     - Using a `for` loop:
@@ -301,14 +320,36 @@
             exit 1
         fi
 
-- Check if it's an integer:
+- Check if the first argument is an integer:
         
         is_integer() {
             [[ $1 =~ ^-?[0-9]+$ ]]
         }
 
-        if ! is_integer "$1"; then
+        if ! is_integer "$1"; then  # ! refers to "not"
             echo "Error: The provided argument is not a valid integer."
+            exit 1
+        fi
+
+- Check if all args are integers:
+
+        #!/bin/bash
+
+        is_integer() {
+            [[ $1 =~ ^-?[0-9]+$ ]]
+        }
+
+        error_found=false
+
+        for arg in "$@"; do
+            if ! is_integer "$arg"; then
+                echo "Error: The provided argument '$arg' is not a valid integer."
+                error_found=true
+            fi
+        done
+
+        if [ "$error_found" = true ]; then
+            echo "Not all arguments are valid integers!"
             exit 1
         fi
 
@@ -426,19 +467,19 @@
 5. API retriever:
     - Get data from an API and do something with the data:
         - Pretty print the whole response:
-            - `curl -s https://hp-api.onrender.com/api/characters | jq '.'`
+            - `curl -s "https://hp-api.onrender.com/api/characters" | jq '.'`
                 - `-s` means silent, it doesn't display search table
         - Select all characters from house Gryffindor:
-            - `curl -s https://hp-api.onrender.com/api/characters | jq '[.[] | select(.house == "Gryffindor")]'`
+            - `curl -s "https://hp-api.onrender.com/api/characters" | jq '[.[] | select(.house == "Gryffindor")]'`
                 - `.[]` iterates through all elements when we get back an array
                 - the additional `[ ... ]` is used for formatting, alternatively we can use `-r` flag (see last example)
         - Transform also the return data to list only the names:
-            - `curl -s https://hp-api.onrender.com/api/characters | jq '[.[] | select(.house == "Gryffindor") | .name]'`
+            - `curl -s "https://hp-api.onrender.com/api/characters" | jq '[.[] | select(.house == "Gryffindor") | .name]'`
         - Or get the length of the list:
-            - `curl -s https://hp-api.onrender.com/api/characters | jq '[.[] | select(.house == "Gryffindor")] | length'`
+            - `curl -s "https://hp-api.onrender.com/api/characters" | jq '[.[] | select(.house == "Gryffindor")] | length'`
         - Combine search criteria:
-            - `curl -s 'https://hp-api.onrender.com/api/characters' | jq '[.[] | select(.house == "Gryffindor" and (.name | test("Weasley"; "i")))]'`
-            - `curl -s 'https://hp-api.onrender.com/api/characters' | jq -r '.[] | select(.house == "Gryffindor" and (.name | test("Weasley"; "i"))) | .name'`
+            - `curl -s "https://hp-api.onrender.com/api/characters" | jq '[.[] | select(.house == "Gryffindor" and (.name | test("Weasley"; "i")))]'`
+            - `curl -s "https://hp-api.onrender.com/api/characters" | jq -r '.[] | select(.house == "Gryffindor" and (.name | test("Weasley"; "i"))) | .name'`
     
     - In a script, with a parameter:
 
@@ -466,7 +507,10 @@
             fi
     
     - API request generic response:
-        - curl -s "<URL>" | jq -r '.[].name'    # get the name key's value of the array
+        - curl -s "https://hp-api.onrender.com/api/$2" | jq -r '.'              # gets the complete array
+        - curl -s "https://hp-api.onrender.com/api/$2" | jq -r '.[]'            # get each element in the array
+        - curl -s "https://hp-api.onrender.com/api/${2}" | jq -r '.[].name'     # get each element's name key in the array
+        - curl -s "https://hp-api.onrender.com/api/${2}" | jq -r '.[0].name'    # get the first element's name key in the array
 
 6. Simple calculator:
     - Write a script that takes any number of numerical arguments and calculates their sum:
@@ -481,5 +525,38 @@
             done
 
             echo "The sum is: $sum"
+        
+7. Check for max value:
 
+        #!/bin/bash
+
+        # Prechecks! (Check if all args are integers - see above)
+        
+        max=$1
+
+        for num in "$@"; do
+            if [ $num -gt $max ]; then
+                max=$num
+            fi
+        done
+
+        echo "The maximum value is $max."
+
+8. Average calculation:
+
+        #!/bin/bash
+
+        # Prechecks! (Check if all args are integers - see above)
+
+        sum=0
+
+        for arg in "$@"; do
+            sum=$((sum + arg))
+        done
+
+        average=$(("$sum / $#"))                    # use this if the return value should also be an integer
+        # average=$(echo "$sum / $#" | bc -l)       # use this to also return floats
+
+        echo "The average is $average"              # use this for the simple integer version
+        # printf "The average is %.2f\n" $average   # use this to round the float's result to 2 decimals
 

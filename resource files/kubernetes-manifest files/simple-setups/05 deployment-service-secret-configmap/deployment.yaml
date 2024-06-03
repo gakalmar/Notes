@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-deployment
+  namespace: default
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: example-app
+  template:   # Here we start the definition of the pods we want to start
+    metadata:
+      labels:
+        app: example-app
+    spec:
+      containers:
+      - name: example-container
+        image: nginx
+        ports:
+        - containerPort: 80
+        env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: example-secret
+              key: API_KEY
+        volumeMounts: # this is where the configmap would start
+        - name: config-volume
+          mountPath: /etc/config
+      volumes:  # we also need to add the configmap as a volume
+      - name: config-volume
+        configMap:
+          name: example-configmap
+
+        # Equivalent of this in the "env" section:
+        # env:
+        # - name: API_KEY
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: example-secret
+        #       key: API_KEY
+        # - name: LOGGING_LEVEL
+        #   value: "verbose"
+        # - name: API_ENDPOINT
+        #   value: "http://api.example.com"

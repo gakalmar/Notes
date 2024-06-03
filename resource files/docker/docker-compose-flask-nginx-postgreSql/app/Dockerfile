@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt 
+# --no--cache-dir means don't store anything during package installation
 
 EXPOSE 5000
 

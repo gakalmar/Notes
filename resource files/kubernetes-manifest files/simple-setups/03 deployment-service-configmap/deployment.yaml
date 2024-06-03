@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-app
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-app
+  template:
+    metadata:
+      labels:
+        app: simple-app
+    spec:
+      containers:
+      - name: app-container
+        image: nginx:alpine
+        env:
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: example-simple-configmap
+              key: LOG_LEVEL
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: example-simple-configmap
+              key: DB_HOST
