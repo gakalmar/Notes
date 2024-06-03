@@ -2,14 +2,15 @@
 
 ## Linux
 ### What kind of virtualization technologies are you familiar with?
-- "Az izoláció egy eszköze"
-- A virtualizáció egy valós entitás helyett egy virtuális dolog létrehozását jelenti (történelmi gyökerek: hardver kevés helyen létezett, emiatt egy gépet osztottak szét (ezek voltak a virtualizációk = erőforrások szétosztása), ahhoz lehetett terminálokon át csatlakozni) - ennek ellentéte a többszálúság (tóbb idő kell a feladatok elvégzéséhez)
-    - A hypervisor (Virtual Machine Monitors (VMMs)) teszi ezt lehetővé (ez allokálja a host resource-ait a virtuális környezetben)
-    - Ha a hypervisor installálva van, akkor tudunk létrehozni VM-eket, amik hordozhatóak
+- "Az izoláció egy eszköze, melynek segítségével eloszthatjuk az erőforrásokat"
+- Történelmi gyökerek: hardver kevés helyen létezett, emiatt egy gépet osztottak szét (ez volt eredetile a virtualizáció), ahhoz lehetett terminálokon át csatlakozni. (többszálúság fogalma is ide kapcsolódik)
+
+- Így működik:
+    - A hypervisor (Virtual Machine Monitors (VMMs)) segítségével tudunk VM-eket létrehozni, ami allokálja a host resource-ait a virtuális környezet eszközeinek
     - az az előnye ennek,
         - hogy csökkentjük a költségeket azáltal, hogy 1 fizikai gépen tudunk futtatni különböző környezeteket, 
         - csökken a "downtime", mivel könnyen újak hozhatóak létre
-        - könnyen tudjuk őket ide-oda küldözgetni
+        - könnyen tudjuk őket ide-oda küldözgetni (pl snapshotok segítségével)
 
 - Technológiák:
     - Hardware / Platform virtualizáció
@@ -427,14 +428,29 @@
         - Ezen kívül `TLS` (`Transport Layer Security`) és `SSL` (`Secure Sockets Layer`) segítségével is encryptálhatunk `AWS`-ben:
 
 ### Which service is responsible for monitoring and log collections in AWS?
-- `Amazon CloudWatch`, `Amazon CloudWatch Logs`, `AWS Systems Manager` (Ebben benne van a CloudWatch is)
-    - WATCH WORKSHOP VIDEO!
-    - There was a task, that sends an email notification when a new user logs in into AWS
+- `Amazon CloudWatch`
+    - Ez egy monitoring service az AWS resource-okhoz:
+        - Logs:
+            - service-ekkel és app-okkal kapcsolatos adatok kimutatása (időhöz rögzített adatok)
+            - struktúrálatlan adatok
+        - Metrics:
+            - inkább erőforrásokkal kapcsolatos adatok (pl CPU, memória)
+            - struktúrált adatok, így műveletek is végrehajthatók velük (pl átlag, min-max)
+            - `Alert` és `Dashboard` funkciókat is tudunk hozzájuk csatolni
+        - Events:
+            - Már külön, Event Bridge néven fut, de régen ide tartozott
+            - pl email küldő szolgáltatás
+        - X-ray:
+            - régen nem ide tartozott, mostmár ide tartozik
+            - ez egy tracing service
 
 ### Which service is responsible for tracking activities on an AWS account?
 - `AWS CloudTrail`
-    - follows API requests
-    - you can use `SNS` and attach it to events on AWS services
+    - Ennek segítségével tudjuk nyomon követni az AWS környezetünkben történő eseményeket/változásokat
+        - Logolni lehet az event-eket, és ezeket tárolja (lehet review-zni)
+        - Biztonságot lehet növelni, mivel látszanak a nem szokványos események
+        - Nyomon követi az API request-eket is
+        - Integrálhatjuk más AWS resource-okba, pl a Cloudwatch-ba (monitorozásra az alkalmasabb)
 
 ### What is a bastion host, and how can it be implemented in AWS? (!) update with notes from workshop!
 - A Bastion host egy olyan host, ami egy private network-ón (subnet-en) lévő instance-t tesz elérhetővé az internetről:
