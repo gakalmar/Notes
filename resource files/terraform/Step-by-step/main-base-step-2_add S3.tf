@@ -34,7 +34,7 @@ resource "aws_s3_bucket_policy" "bucket_policy" {
         Action    = "s3:GetObject"
         Effect    = "Deny"
         Resource  = "20240530-my-unique-bucket-19861004/*"
-        Principal = "*"
+        Principal = "*" # means all users - Aleternatively use a specific user: "Principal": {"AWS": "arn:aws:iam::123456789012:user/UserName"}
         Condition = {
           Bool = {
             "aws:SecureTransport" = "false"

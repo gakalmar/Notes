@@ -23,7 +23,7 @@
             - Or keep it in code:
                 - do a `backend` folder create another `backend.tf` file, where we add the contents of `main-base-step-4a_add backend` file, and initialize that first + apply.
                 - then go back to the parent folder, where the `main.tf` file is (add terraform config as in `main-base-step-4b_update frontend` file), and initialize + apply that one as well
-    - `RDS` (`main-base-step-5_add RDS.tf`) - TAKES 5 min!
+    - `RDS` (`main-base-step-5_add RDS.tf`) - TAKES 5 min, so will probably not be used!
         - file for this created separately (`main-base-step-5_add RDS`)
     - `IAM` steps (`main-base-step-6_IAM.tf`):
         - Create `IAM policy`

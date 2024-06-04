@@ -160,5 +160,3 @@
                     targetPort: 8080 # refers to the Pod's open port, need to match targetPort in the Pod config
     
     - The `targetPort` defined in the `Service` needs to match the `containerPort` defined in the `Deployment`'s `template/spec/container` section, which gives the `Pod`'s layout
-
-### CONTINUE WITH GPT EXCERCISES!
