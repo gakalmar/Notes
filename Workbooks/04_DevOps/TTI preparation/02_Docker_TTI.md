@@ -17,7 +17,7 @@
 
 - **Most importan commands:**
     - `sudo service docker start`: manually start docker daemon
-    - `docker system prune -a`: Delete every image
+    - `docker system prune -a`: Delete every image (stop running images first, or those won't be deleted!)
 
     - `docker pull <image>`: Pull an existing container
     - `docker run -d -p 5000:5000 <image>`: Run an existing container (`-d` in the BG, `-p` bind port)

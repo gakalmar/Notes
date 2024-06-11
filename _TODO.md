@@ -1,5 +1,7 @@
 # LIST OF THINGS TO DO IN ORDER:
 
+- Jobhunt module project: https://github.com/orgs/CodecoolGlobal/projects/108/views/11
+
 # DEVOPS
 - Try again the `EKS persistency` task!
 

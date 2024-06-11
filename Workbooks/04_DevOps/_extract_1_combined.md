@@ -900,6 +900,18 @@
 ### How long should a branch live?
 - In the context of continuous integration, branches should follow trunk-based development practices and thus be short-lived. Ideally, a branch should last for a few hours or, at most, a day.
 
+### More questions from Journey:
+- What is git and what is a repository? (seriously, can you explain these to a non-IT person?)
+- What does it mean to clone a repository?
+- What does it mean to fork a repository?
+- What is a branch in git? How do you create it? (there are multiple ways)
+- What happens if you have commited your changes into a development branch and you checkout the master? Where are the development changes stored?
+- How do you update your branch with the new commits from the branch you opened it from?
+- What is a tag? Where is it stored? Can you commit it? Do you need to push/pull it?
+- What is a merge commit? How does the default commit message look like?
+- What is HEAD? What does it mean if it's detached?
+- What is a pull request? Is it a git feature?
+
 ## DevOps
 ## What is DevOps?
 - A DevOps egy olyan folyamat, aminek segítségével felgyorsíthatjuk a development team és az operations team közti együttműködést azáltal, hogy egy automatizált CI/CD folyamatot hozunk létre. A ciklus végén feedback-el térünk vissza a development fázisba (SCRUM).
@@ -1078,6 +1090,13 @@
     - **Chef Workstation:** The workstation is the computer system on which the administrator sits. This system generates code for configuring and managing infrastructure, known as recipes (written in Ruby). A cookbook consists of multiple recipes. In order to upload cookbooks to the server, the Knife command line tool is used.
     - **Chef Server:** Second, a server resides between a workstation and its nodes, which stores the cookbooks. Servers provide the tools necessary to enable node configurations, and they may be locally or remotely hosted.
     - **Chef Node:** The final component is the node, which requires configuration. You can have a number of Chef nodes that collect information about the current state of a node. The server then compares this information with the configuration files to determine if any new configuration is needed.
+
+### Questions from Journey:
+- What is continuous integration?
+- Why is CI important?
+- Why are tests important in the CI workflow?
+- Name software that helps the CI workflow!
+- What is a "feature flag"? Can you give an example?
 
 ## CI/CD TESTING:
 ### In what way does testing fit into continuous integration? Is automated testing always a good idea?
@@ -1453,10 +1472,11 @@ Cloud computing authorizes the application server, which is used in identity man
 
 ### What are cloud storage levels?
 - The most commonly seen cloud storage levels are:
-    - **Object storage:** Data and its metadata are stored in object format. It is the most flexible form of storage and can also be used with web applications.
-    - **File storage:** Data is stored in the form of files and often clubbed together as folders.
-    - **Block storage:** data is stored in the form of blocks. It is the lowest level of storage and closest to the hardware.
-    - **Dataset storage:** data is organized into a structured form like tables, record format, or delimited format
+    - **Object storage (blob storage):** Data and its metadata are stored in object format. It is the most flexible form of storage and can also be used with web applications. (eg. `S3`)
+    - **File storage:** Data is stored in the form of files and often clubbed together as folders. FS is required - Blob/object storage doesn't have FS (file system). (eg. `EFS`)
+    - **Block storage:** data is stored in the form of blocks. It is the lowest level of storage and closest to the hardware. (eg. `EBS`)
+
+    + **Dataset storage:** data is organized into a structured form like tables, record format, or delimited format
 
 ### What do you mean by cloud usage monitor?
 - A cloud usage monitor is a lightweight, autonomous program situated on a cloud that aids in monitoring resources and collecting and processing resource usage data.

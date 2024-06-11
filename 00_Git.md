@@ -1,23 +1,25 @@
-GENERAL:
+# GENERAL COMMANDS AND WORKFLOWS:
+
+### GENERAL:
 
     git status                              //type this to see what's going on right now
     git log                                 //view changes (exit with 'q', 'space' to move down a whole page)
     git log --summary
     git diff sourcebranch targetbranch      //review changes before merging
 
-START NEW LOCAL REPO:
+### START NEW LOCAL REPO:
 
     git init                                //Initialize local repo (better to create on GitHub and clone it locally)
 
-CLONE AN EXISTING GITHUB REPO:
+### CLONE AN EXISTING GITHUB REPO:
 
     git clone "SSH Code from GitHub"        //Clone an existing Repo from github to your PC
 
-UPDATE TO THE LATEST UPDATES IF REPO WAS ALREADY CLONED:
+### UPDATE TO THE LATEST UPDATES IF REPO WAS ALREADY CLONED:
 
     git pull                                //If already cloned and open, you can use this command to update the files to the latest GitHub version
 
-WORKING PROCESS AFTER PULL/CLONE:
+### WORKING PROCESS AFTER PULL/CLONE:
 
     git add filename                        //Add file or all files to staging area
     git add --all
@@ -31,12 +33,12 @@ WORKING PROCESS AFTER PULL/CLONE:
 
     git push                                //Send to GitHub
 
-STASHING:
+### STASHING:
 
     git stash                               //Revert to last commit by creating a temporary save from your current progress
     git stash pop                           //Get back your stash
 
-WORKING WITH BRANCHES:
+### WORKING WITH BRANCHES:
 
     git branch -a                           //list branches
     git branch -d branchname                //delete branch
@@ -77,7 +79,7 @@ WORKING WITH BRANCHES:
         2 git push --set-upstream origin <new-branch>   //add brach to remote git repo, and create pull request
         3 complete pull request on GitHub
 
-OTHER USEFUL COMMANDS:
+### OTHER USEFUL COMMANDS:
 
     git rm -r filename.ext                  //remove file or folder
 
@@ -86,14 +88,27 @@ OTHER USEFUL COMMANDS:
     git stash list                          //list all stashed entries
     git stash pop stash@{index}             //restores changes to stashed data at the chosen index, and deletes stash data
 
-GIT INIT METHOD / Not recommended as the repo still needs to be created on GitHub (Better to create the repo first on GitHub, and then clone it!)
+### GIT INIT METHOD / Not recommended as the repo still needs to be created on GitHub (Better to create the repo first on GitHub, and then clone it!)
 
-    1 Create a folder on your PC, and open it in VS
-    2 Open Terminal
-    3 git init                                      //initializes a Git local repo
-    4 code filename.js                              //create your files and add some content
-    5 add & commit as before
-    6 Create repo on GitHub & get SSH
-    7 git remote add origin git@branchLocation.git  //add GitHub repo to your initialized folder as remote
-    8 git push -u origin master (or main?)          //push changes; -u means it creates upstream branch, so now the GitHub will be the source (?)
+1. Create a folder on your PC, and open it in VS
+2. Open Terminal
+3. git init                                      //initializes a Git local repo
+4. code filename.js                              //create your files and add some content
+5. add & commit as before
+6. Create repo on GitHub & get SSH
+7. git remote add origin git@branchLocation.git  //add GitHub repo to your initialized folder as remote
+8. git push -u origin master (or main?)          //push changes; -u means it creates upstream branch, so now the GitHub will be the source (?)
 
+# GIT PRINCIPLES
+- Branching: https://www.atlassian.com/git/tutorials/using-branches
+- Merging, Rebasing, Fast-forwarding in detail: https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell (Read chapters 3.1 - 3.7!)
+- Workflows, Feature Branch Workflow: https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow
+- Pull requests: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests
+- Optional:
+    - More on workflows: https://www.atlassian.com/git/tutorials/comparing-workflows
+    - Distributed workflows: https://git-scm.com/book/en/v2/Distributed-Git-Distributed-Workflows
+    - Contributing to a Project: https://git-scm.com/book/en/v2/Distributed-Git-Contributing-to-a-Project
+    - Tagging (versions): https://git-scm.com/book/en/v2/Git-Basics-Tagging
+
+# PRACTICE
+- Interactive Turorial: https://learngitbranching.js.org/
