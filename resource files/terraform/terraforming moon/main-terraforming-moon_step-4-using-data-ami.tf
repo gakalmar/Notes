@@ -18,6 +18,7 @@ data "aws_ami" "this" {
   most_recent = true
 
   owners = ["099720109477"] # this means owned by Canonical
+}
 
 # Security Group:
 resource "aws_security_group" "moon_sg" {

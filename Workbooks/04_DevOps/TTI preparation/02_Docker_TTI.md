@@ -22,7 +22,7 @@
     - `docker pull <image>`: Pull an existing container
     - `docker run -d -p 5000:5000 <image>`: Run an existing container (`-d` in the BG, `-p` bind port)
     - `docker build -t 1.0 .` (must be in the same folder as the Dockerfile!)
-    - `docker run/create -p 5000:5000 app1Name` (Host `:5000` -> Container (App1) `:5000`)
+    - `docker run/create -d -p 5000:5000 app1Name` (Host `:5000` -> Container (App1) `:5000`)
     - `docker stop <name/ID>`
     - `dokcer kill <ID>`
     - `docker images`

@@ -102,7 +102,7 @@
             - Instance config: leave default
 
 - Install on WSL:
-    1. Update & upgrade apk:
+    1. Update & upgrade apt:
         - `sudo apt-get update`
         - `sudo apt-get upgrade`
     2. Install java:
@@ -115,13 +115,13 @@
         - `sudo apt-get install jenkins`
     4. Add `jenkins` user to `docker` group:
         - `sudo usermod -aG docker jenkins` (do this before starting it!)
-    6. Start Jenkins:
+    5. Start Jenkins:
         - `sudo systemctl start jenkins`
         - Or enable to start on boot:
             - `sudo systemctl enable jenkins`
         - Allow through firewall if necessary:
             - `sudo ufw allow 8080`
-    7. Access jenkins:
+    6. Access jenkins:
         - Type in browser:
             - `http://localhost:8080`
         - Retrieve password at initial install:
@@ -207,32 +207,93 @@
     - Rolling deployment
     - Canary Deployment
 
-# WORKFLOWS
+# GUIDES
 - Install all required plugins:
     - `docker`
     - `AWS Credentials Plugin`
 
-- Deploy a simple app and push it to the ECR using a `Jenkins Freestyle Project`:
+- **Deploy a simple app and push it to the ECR using a `Jenkins Freestyle Project`:**
     1. Open Jenkins and create a new `Freestyle Project`
     2. Add your Git Repo (make it public first!)
         - Don't forget to set the branch to `main`!
+        - A `Dockerfile` is needed to build with this method!
     3. Build environment:
         - Toggle `Delete workspace before build starts`
         - Toggle `Use secret text(s) or file(s)` with AWS credentials (add them directly to Jenkins as well under `Manage Jenkins / Credentails`!)
-    4. Add this to the build steps (shell):
+    4. Create an ECR repo! (the steps in the next step are mostly taken from there!)
+    5. Add this to the build steps (shell):
 
             aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 891376988072.dkr.ecr.eu-west-2.amazonaws.com
             docker build -t helloworld-flask-nginx:latest .
             docker tag helloworld-flask-nginx:latest 891376988072.dkr.ecr.eu-west-2.amazonaws.com/helloworld-flask-nginx:latest
             docker push 891376988072.dkr.ecr.eu-west-2.amazonaws.com/helloworld-flask-nginx:latest
 
+- **Deploy a simple app and push it to the ECR using a `Jenkins Pipeline`:**
+    1. Open Jenkins and create a new `Pipeline`
+    2. Pipeline section:
+        - Choose `Pipeline script from SCM` and set it to `Git`
+            - Add Git repo and set branch
+            - Use Jenkinsfile from resources (`Jenkinsfile-nodejs-helloworld`) - this also includes AWS credentials block
+    3. Add trigger to build on every commit:
+        - enable `GitHub hook trigger for GITScm polling`
+
+- **Add webhook:**
+    - In GitHub: Go to main settings / developer settings / personal access token / generate new token
+        - as `Note` add eg. `helloworld-node`
+        - tick all `repo`
+        - Generate token
+    - In Jenkins / Manage Jenkins / System / GitHub Server:
+        - Add credentials:
+            - choose `secret text`
+            - `Secret` should be the token
+            - `ID` and `description` should be what was under `note`, so `helloworld-node`
+    - We first need to make our pipeline accessible externally:
+        - Install ngrok if using the first time: `curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok`
+        - Add auth token from here: https://dashboard.ngrok.com/get-started/your-authtoken
+            - eg. `ngrok config add-authtoken $YOUR_AUTHTOKEN`
+        - Start ngrok: `ngrok http 8080` (the port should be the same as you set up your Jenkins)
+        - Once running, open the address below the web address (the one that's being forwarded!), so you open jenkins throught the new route
+    - Go under your GitHub repo's settings / webhooks:
+        - Add webhook:
+            - Payload URL: Enter your Jenkins environment URL appended with /github-webhook/. For example, http://yourjenkins.url:port/github-webhook/
+                - We should replace yourjenkinsurl.url:port with what we got above from ngrok (but it's currently not working - description here: https://ngrok.com/docs/integrations/github/webhooks/ )
+            - Content type: Choose application/json.
+            - Which events would you like to trigger this webhook?: Choose "Just the push event."
+            - Active: Make sure this checkbox is checked
+    - Now you can test it with a new push to the repo
+
+- **Set Up AWS EKS Cluster using Terraform:**
+    - You will need to create a `main.tf` file, with the following resources:
+        - Provider (AWS, Kubernetes and optionally Helm)
+        - VPC + subnets (min 4!)
+        - IGW & NAT GW; Route Tables; Associations
+        - Cluster
+        - IAM roles:
+            - To manage EKS
+            - To manage EKS nodes
+        - Policies:
+            - To be attached to the roles above
+        - Node Group
+
+- **Update Pipeline with EKS deployment, using Terraform:**
+    - 
+
+- **AWS EKS with Terraform:** (the simplest guide youtube video: https://www.youtube.com/watch?v=7wRqtBMS6E0&ab_channel=ASCODE )
+    - https://github.com/ascode-com/wiki/blob/main/terraform-eks/complete-example.tf
+
 # LINKS:
 - Introduction video: https://www.youtube.com/watch?v=AlrImm1T8Wg&ab_channel=KodeKloud
 - CI/CD in 100 seconds: https://www.youtube.com/watch?v=scEDHsr3APg&ab_channel=Fireship
 - Continuous integration vs. delivery vs. deployment: https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment
+- 
 
 - Articles:
     - Meta/Facebook: https://engineering.fb.com/2017/08/31/web/rapid-release-at-massive-scale/
     - Github: https://github.blog/2012-08-29-deploying-at-github/
     - Netflix: https://netflixtechblog.com/how-we-build-code-at-netflix-c5d9bd727f15
 
+
+Worked on jenkins, first using the freestyle project feature, then with a proper pipeline
+I managed to dokcerize my app and push the image to the AWS ECR
+Yesterday I also managed to make it work with Web hooks, so now after each code push to the repo triggers a new build
+The tricky part was to make this work on localhost, because web hooks don't work with local addresses, just public ones

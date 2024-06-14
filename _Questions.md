@@ -1,5 +1,14 @@
 # Questions:  
 
+- Full DevOps course:
+    - https://www.youtube.com/watch?v=7xngnjfIlK4&t=5753s&ab_channel=DevOpsDirective
+
+## DevOps Week5 
+- Leeroy Jenkins feladat:
+    - Mit ert a feladat artifact-kent? (elozo feladatban is csinaltunk mar ECR image-et)
+- Terraforming Solar System:
+    - NodeGroup valamiert nem megy, amikor terraformban akarok EKS clustert csinalni
+
 ## TW review:
 - Terraforming Mars feladat (TW4-rol):
     - Nem ment a wordpress configuracio
