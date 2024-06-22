@@ -82,6 +82,13 @@
             - searches for the given other string (not a regular expression) within s, and returns the first index where it begins or -1 if not found
         - `s.replace('old', 'new')` 
             - returns a string where all occurrences of 'old' have been replaced by 'new'
+            - Example:
+                
+                ``` {pyton3}
+                txt = "one one was a race horse, two two was one too."
+                x = txt.replace("one", "three")
+                ```
+                
         - `s.split('delim')` 
             - returns a list of substrings separated by the given delimiter.
             - The delimiter is not a regular expression, it's just text:
@@ -181,12 +188,3 @@
     greet("Gabor")
     print(greet("Joska")) # for the return option
     ```
-
-# BUILT-IN METHODS
-- **Strings:**
-    - `replace()`:
-
-        ``` {pyton3}
-        txt = "one one was a race horse, two two was one too."
-        x = txt.replace("one", "three")
-        ```
