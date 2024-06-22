@@ -247,11 +247,14 @@
             - choose `secret text`
             - `Secret` should be the token
             - `ID` and `description` should be what was under `note`, so `helloworld-node`
+            
     - We first need to make our pipeline accessible externally:
         - Install ngrok if using the first time: `curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok`
         - Add auth token from here: https://dashboard.ngrok.com/get-started/your-authtoken
             - eg. `ngrok config add-authtoken $YOUR_AUTHTOKEN`
         - Start ngrok: `ngrok http 8080` (the port should be the same as you set up your Jenkins)
+            - **THIS NEEDS TO BE UPDATED EVERY TIME!**:
+                - GitHub webhook: add the new forwarding address to the webhook!
         - Once running, open the address below the web address (the one that's being forwarded!), so you open jenkins throught the new route
     - Go under your GitHub repo's settings / webhooks:
         - Add webhook:
@@ -263,22 +266,69 @@
     - Now you can test it with a new push to the repo
 
 - **Set Up AWS EKS Cluster using Terraform:**
-    - You will need to create a `main.tf` file, with the following resources:
-        - Provider (AWS, Kubernetes and optionally Helm)
-        - VPC + subnets (min 4!)
-        - IGW & NAT GW; Route Tables; Associations
-        - Cluster
-        - IAM roles:
-            - To manage EKS
-            - To manage EKS nodes
-        - Policies:
-            - To be attached to the roles above
-        - Node Group
+    - You will need to create a `main.tf` file, with the following resources (ref. to `main-deploy-env-01.tf`):
+            
+            # PROVIDER SETUP
+            provider "aws"
+            provider "kubernetes" 
+            data "aws_availability_zones" "available"
 
-- **Update Pipeline with EKS deployment, using Terraform:**
-    - 
+            # VPC / NETWORK CONFIG:
+            resource "aws_vpc" "eks_vpc"
+            resource "aws_internet_gateway" "igw"
+            resource "aws_route_table" "public"
+            resource "aws_route" "internet_access"
+            resource "aws_eip" "nat"
+            resource "aws_nat_gateway" "nat"
+            resource "aws_route_table" "private"
+            resource "aws_route" "private_nat"
+            resource "aws_route_table_association" "private"
+            resource "aws_subnet" "eks_subnet"
+            resource "aws_route_table_association" "public"
+            resource "aws_security_group" "eks_sg"
 
-- **AWS EKS with Terraform:** (the simplest guide youtube video: https://www.youtube.com/watch?v=7wRqtBMS6E0&ab_channel=ASCODE )
+            # CREATE CLUSTER
+            resource "aws_eks_cluster" "eks"
+            data "aws_eks_cluster_auth" "eks"
+
+            # CREATE IAM ROLES AND POLICIES
+            resource "aws_iam_role" "eks"
+            resource "aws_iam_role" "eks_node"
+            resource "aws_iam_role_policy_attachment" "eks_AmazonEKSClusterPolicy"
+            resource "aws_iam_role_policy_attachment" "eks_AmazonEKSVPCResourceController"
+            resource "aws_iam_role_policy_attachment" "eks_node_AmazonEKSWorkerNodePolicy"
+            resource "aws_iam_role_policy_attachment" "eks_node_AmazonEKS_CNI_Policy"
+            resource "aws_iam_role_policy_attachment" "eks_node_AmazonEC2ContainerRegistryReadOnly"
+
+            # NODE GROUP
+            resource "aws_eks_node_group" "eks_nodes"
+
+            # DEBUGGING
+            output "cluster_endpoint"
+            output "cluster_ca_certificate"
+            output "cluster_token"
+    
+    - Add infrastructure steps to `Jenkisfile` (this is already in the `Jenkinsfile-02-deploy on kubernetes` file)
+    
+    - Now we also need to make sure that the updated `kubeconfig` file is available on the Jenkins server:
+        - Manage Jenkins / Credentials / Step in twice, until you can `Add credentials`
+            - Pick `secret file`, then add from this location: `\\wsl.localhost\Ubuntu\home\gakalmar\.kube`
+            - In the ID field, add `kubeconfig-for-eks`
+            - Create
+        - Use it in the `Jenkisfile`:
+            - Update Jenkinsfile (this is already in the `Jenkinsfile-02-deploy on kubernetes` file)
+
+    - Update Pipeline with EKS deployment
+        - Create 2 more terraform resources for the `deployment` and the `service`, and run the pipeline
+    
+    - After you succeeded, you can check out the app through the service's external IP:
+        - Update context:
+            - `aws eks update-kubeconfig --region eu-west-2 --name hello-world-eks-cluster`
+            - Test: `kubectl get nodes`
+        - Get service:
+            - `kubectl get services` -> type in the browser the `EXTERNAL-IP` of the service
+
+- **AWS EKS with Terraform (using modules):** (the simplest guide youtube video: https://www.youtube.com/watch?v=7wRqtBMS6E0&ab_channel=ASCODE )
     - https://github.com/ascode-com/wiki/blob/main/terraform-eks/complete-example.tf
 
 # LINKS:
