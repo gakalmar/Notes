@@ -614,3 +614,31 @@ react components:
     - class based component -> still used, but leave it for now
     - function based component -> mainstream
 
+# EXAMPLES:
+- **Login-register page:**
+    1. Create project folder (better to start with a git repo, then clone it)
+    2. Create `backend` folder, and inside it:
+        - `npm install express mongoose cors dotenv bcrypt`
+        - `npm install --save-dev nodemon`
+        - add `"type": "module"` to the `package.json` file
+    3. Create the `index.js` (server) file on the backend and `.env`:
+        - Create `.env` file with `PORT` and `MONGO_URI`
+        - Create `index.js` file (samples in the sample projects folder)
+    4. Go back to the root folder and initialize `vite`:
+        - `npm create vite@latest frontend -- --template react` then `y`
+        - `cd frontend`
+        - `npm install`
+        - `npm install react-router-dom`
+        - Add `"start": "nodemon index.js"` to the frontend's "scripts"
+    5. Set up frontend:
+        - In the `src` folder:
+            - Create `LoginForm.jsx` and `RegistrationForm.jsx` (samples in sample projects!)
+            - Updae `App.jsx` (samples)
+    6. Connect backend:
+        - Add routes to `/register` and `/login` in the backend's `index.js` file (already implemented in the sample)
+        - Add routes to the frontend, to connect to the backend's endpoints (In `LoginForm` and `RegisterForm` files)
+    7. Create User model:
+        - Create a `models` folder in the backend and add `User.js` file (samples) - already implements password hashing with bcrypt
+    8. Create new db in your cluster, and add it to the end of your connection string
+    9. Use tokens:
+        - Create `/src/context/AuthContext.js` (samples)
