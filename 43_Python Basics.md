@@ -5,7 +5,7 @@
     - Refers to the way we wrap the main method (similar to what we do in C#):
         - Typical Python file:
 
-            ```{python}
+            ```{python3}
             # method declarations
 
             # main method, that runs all methods we want to use
@@ -26,7 +26,7 @@
     - it is immutable, but doesn't have a `char` sub-category
     - each line is treated as a separate statements, so very long string declarations should be enclosed in a set of extra parentheses:
 
-        ```{python}
+        ```{python3}
         text = "This is a simple short text"
         textLong = (
             "We can create very long strings, "
@@ -37,7 +37,7 @@
         - concat with `+`
         - convert to sting value: 
 
-            ```{python}
+            ```{python3}
             pi = 3.14
             text = 'The value of pi is ' + str(pi)
             ```
@@ -47,7 +47,7 @@
         - **Slicing:**
             - done by `stringName[start:end]`
 
-                ```{python}
+                ```{python3}
                 s = 'hello'
                 s[1:4]      // 'ell'
                 s[1:]       // 'ello'
@@ -60,7 +60,7 @@
                 ```
             - or using the `slice(str)` function:
 
-                ```{python}
+                ```{python3}
                 # using notation (as above):
                 my_string = "Hello, World!"
                 substring = my_string[7:12]
@@ -130,6 +130,9 @@
 - we can still use `+=` or `-=`
 - explicit integer division is done wiht `//`
 
+- Arithmetic operations:
+    - `+`, `-`, `*`, `/`, `%`, `**`, `//` (floor division)
+
 **X. Sequence types:**
 - **List:**
 - **Tuple:**
@@ -140,12 +143,12 @@
     ```{python}
     if time_hour >= 0 and time_hour <= 24:
         print('Suggesting a drink option...')
-        if mood == 'sleepy' and time_hour < 10:
-            print('coffee')
-        elif mood == 'thirsty' or time_hour < 2:
-            print('lemonade')
-        else:
-            print('water')
+    if mood == 'sleepy' and time_hour < 10:
+        print('coffee')
+    elif mood == 'thirsty' or time_hour < 2:
+        print('lemonade')
+    else:
+        print('water')
 
     ## We can also write things in one line, if the code is short:
     if time_hour < 10: print('coffee')
@@ -156,3 +159,34 @@
     - `and`, `or`, `not` are used intead of `&&`, `||`, `!`
 
 ## FUNCTIONS
+- Basic syntax and call:
+
+    ``` {python}
+    def my_function():
+        print("Hello as a printed string")
+        OR
+        return "Hello as a value returned" # But not printed!
+
+    my_function()
+    ```
+
+- Arguments:
+
+    ```{python}
+    def greet(name):
+        print("Hello " + name + "!")
+        OR
+        return f"Hello, {name}!" #still needs to be printed!
+    
+    greet("Gabor")
+    print(greet("Joska")) # for the return option
+    ```
+
+# BUILT-IN METHODS
+- **Strings:**
+    - `replace()`:
+
+        ``` {pyton3}
+        txt = "one one was a race horse, two two was one too."
+        x = txt.replace("one", "three")
+        ```
