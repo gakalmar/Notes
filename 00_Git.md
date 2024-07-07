@@ -99,6 +99,11 @@
 7. git remote add origin git@branchLocation.git  //add GitHub repo to your initialized folder as remote
 8. git push -u origin master (or main?)          //push changes; -u means it creates upstream branch, so now the GitHub will be the source (?)
 
+# GIT HARD RESET (eg. go back to a specific commit and delete everything after that)
+- Clone the repo (if not already done)
+- `git reset --hard <COMMIT ID>`
+- `git push --force origin main`
+
 # GIT PRINCIPLES
 - Branching: https://www.atlassian.com/git/tutorials/using-branches
 - Merging, Rebasing, Fast-forwarding in detail: https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell (Read chapters 3.1 - 3.7!)
