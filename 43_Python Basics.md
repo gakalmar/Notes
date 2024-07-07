@@ -100,6 +100,7 @@
             - As a convenient special case s.split() (with no arguments) splits on all whitespace chars.
         - `s.join(list)`    
             - opposite of split(), joins the elements in the given list together using the string as the delimiter. e.g. '---'.join(['aaa', 'bbb', 'ccc']) -> aaa---bbb---ccc
+
     - **String formatting / f-strings:** *( Format specs: https://docs.python.org/3/library/string.html#formatspec )*
         - We can add variables to the string literals like this, adding them into `{}`:
 
@@ -140,9 +141,69 @@
 - Arithmetic operations:
     - `+`, `-`, `*`, `/`, `%`, `**`, `//` (floor division)
 
-**X. Sequence types:**
+- **Common methods:**
+    - Convert string into a number:
+        
+        ```
+        num_str = "123"
+        num_int = int(num_str)
+        ```
+        
+**3. Sequence types:**
 - **List:**
+    - A dynamic array that can hold elements of different types
+    - Syntax:
+        - create: `my_list = [1, 2, 3, 4, 5]`
+
 - **Tuple:**
+    - An immutable array
+    - Syntax:
+        - create: `my_list = (1, 2, 3, 4, 5)`
+
+- **Array:**
+    - More efficient, but has to be imported
+    - Syntax:
+        
+        ```
+        import array
+        my_array = array.array('i', [1, 2, 3, 4, 5])  # 'i' is the type code for integers
+        ```
+
+- **NumPy array:**
+    - Used for scientific computing with large datasets
+    - Syntax:
+
+        ```
+        import numpy as np
+        my_numpy_array = np.array([1, 2, 3, 4, 5])
+        ```
+
+- **Common methods:**
+    - Lists:
+        - Access an element by index: `my_list[0]` (gets the first element)
+        - Slice a list: `my_list[1:3]` (gets elements from index 1 to 2)
+        - Append an element: `my_list.append(6)`
+        - Remove an element: `my_list.remove(3)`
+        - Length of list: `len(my_list)`
+    - Tuples:
+        - Access an element by index: `my_tuple[0]`
+        - Slice a tuple: `my_tuple[1:3]`
+        - Length of tuple: `len(my_tuple)`
+    - Arrays:
+        - Access an element by index: `my_array[0]`
+        - Append an element: `my_array.append(6)`
+        - Remove an element: `my_array.remove(3)`
+    
+    - Conversion:
+        - Convert a list into a string:
+
+            ```
+            char_list = ['h', 'e', 'l', 'l', 'o']
+            result_string = ''.join(char_list)
+            ```
+
+
+
 
 ## CONTROL STATEMENTS:
 - In `Python` we don't need to enclose statements in `{}`, we use a `:` instead:

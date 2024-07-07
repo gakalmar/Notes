@@ -172,6 +172,17 @@
             - `Bind mount` is a specific path on the host machine. Useful when we want to access something on the host machine
             - `Volume` is a separate/decoupled entity from the host, that's easier to manage and share between containers
 
+- **Communication channels:**
+    - Channels are used to communicate info into or out of the process
+    - Whenever a container is running, the main processes can receive the following commands from outside:
+        - `STDIN`: Information into the process (this is what you can type in)
+        - `STDOUT`: Information out from the process (this is something that gets displayed)
+        - `STDERR`: Information out, that is an error in nature (similar to `STDOUT`, but only for errors)
+    
+    - `-it` flag:
+        - `-i` used with the `docker exec`, to attach to the `STDIN` channel
+        - `-t` used with the `docker exec`, to attach to the `STDOUT` channel
+
 - **Docker build:**
     - Build is the process of creating a `docker image` using a `Dockerfile`
     - 2 ways of creating a a `docker image`:
@@ -267,10 +278,15 @@
     - `docker rmi <ID/name>`: remove the image also 
     - `exit`: exit and stop from a container's environment
     - `docker system prune -af`: clear Docker cache
-    - `docker logs -t <ID>`
     - `docker exec -it <ID> /bin/bash`: step into a running container with a terminal
     - `docker exec <container_name_or_id> <command>` run a command in the container wihtout stepping into it
         - eg. `docker exec my-container ls`
+    - `docker logs -t <ID>`
+    - `docker logs <cont_id>`: logs all the outputs that were logged in an already closed container
+    - Use this command to set up VOLUMES (this method is much easier with docker-compose!):
+        - `docker run -it -p 3000:3000 -v /app/node_modeules -v "/$(PWD)":/app <CONT_ID>`
+            - `-v /app/node_modules`: put a bookmark on the node_modules folder
+            - `-v $(pwd):/app`: map the pwd into the '/app' folder
 
     - Upload an image to AWS ECR: ( https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html )
         - `aws ecr get-login-password --region <REGION> | docker login --username AWS --password-stdin <ECR_URL>`
