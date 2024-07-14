@@ -1,8 +1,13 @@
-def square_digits(num):
-    nums_as_string=f"{num}"
-    return_string=""
-    for char in nums_as_string:
-        return_string+=f"{int(char) ** 2}"
-    return int(return_string)
+def high_and_low(numbers):
+    nums=numbers.split(" ")
+    print(nums)
+    lowest=int(nums[0])
+    highest=int(nums[0])
+    for num in nums:
+        if int(num) < lowest:
+            lowest=int(num)
+        elif int(num) > highest:
+            highest=int(num)
+    return f"{highest}" + ' ' + f"{lowest}" 
 
-print(square_digits(9119))
+print(high_and_low("8 3 -5 42 -1 0 0 -9 4 7 4 -4"))
