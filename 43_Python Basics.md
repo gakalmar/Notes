@@ -149,6 +149,13 @@
         num_int = int(num_str)
         ```
         
+    - Add `n` number of arguments:
+
+        ```
+        def add(*args)
+            return sum(args)
+        ```
+        
 **3. Sequence types:**
 - **List:**
     - A dynamic array that can hold elements of different types
