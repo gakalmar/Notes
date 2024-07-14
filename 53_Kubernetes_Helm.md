@@ -866,6 +866,71 @@
     4. Delete the service if not used anymore:
         - `kubectl delete service hello-minikube`
 
+- **Kubernetes basics using minikube (from Udemy course):**
+    - Plan:
+        - Images should be ready-to-go on DockerHub
+        - Configurations should be done for:
+            - Creating the container(s)
+            - Creating the networking
+
+    - Create a separate folder from the project (eg. simple-k8s):
+        - Initialize minikube:
+            - `minikube start`
+        - Start by creating the basic k8s objects:
+            - Create `client-pod.yaml`
+            - Create `client-node-port.yaml` (this is a service!)
+        - Once created, we can add them to our cluster / feed them to `kubectl` (we are using `minikube` for development for now):
+            - `kubectl apply -f client-pod.yaml`
+            - `kubectl apply -f client-node-port.yaml`
+                - You can the also delete these with:
+                    - `kubectl delete -f client-pod.yaml`
+            
+            - Ports explained:
+                - `port: 3050`: this is used by other services in the cluster, that need to reach out to the pod the service connects to (through `targetPort`)
+                - `targetPort: 3000`: This is the port we expose our container on, which is specified in the Pod as `containerPort`
+                - `nodePort: 31515`: This is the port of the node, through which we can connect to. So we could type `http://localhost:31515` in theory, but since the VM created by minikube is NOT on localhost, we need to find out it's IP address first:
+                    - To find out the minikube's IP: `minikube ip`
+                    - Now we can connect with: `<minikube-IP>:<nodePort>`, eg `192.168.49.2:31515` (This only works on Linux or Mac!)
+
+        - Check status:
+            - `kubectl get pods`
+            - `kubectl get pods`
+            - `kubectl get services`
+            
+        - Initialize tunnel to access your app(required on Windows!):
+            - `minikube tunnel` // This doesn't work!
+            - `minikube service <nodePort-servce-name> --url` -> this gets you an URL that you can use to directly reach your app
+
+        - Get detailed info about a Kubernetes Object:
+            - `kubectl describe <object-type> <object-name>`
+
+        - Updating a `Pod`:
+            - just update the images it uses in the file, then re-apply the .yml file with the same `name` and `kind`
+            - You can only change the image used basically, everything else needs a different approach (use `Deployment` instead)
+        
+        - Using a `Deployment` instead a `Pod`, to run a set of `Pods`:
+            - Runs more, *identical* pods simultaneously! 
+            - Also restarts crashed pods, by monitoring them
+            - These can also be used in production!
+
+            - Uses a `Pod template`, that contains the following info:
+                - Number of containers
+                - Name
+                - Port
+                - Image
+            
+            - If we want the deployment to automatically check and update itself to use the latest version of the image it uses, we do the follwing:
+                - We need to recreate our docker image with a specific tag:
+                    - `docker build gakalmar/new-image:v1.1 .`
+                    - `docker push gakalmar/new-image:v1.1`
+                - Then we can update our running deployment like this:
+                    - `kubectl set image <object_type>/<object_name> <container_name>=<new_image_to_use>`
+                    - `kubectl set image deployment/client-deployment client=gakalmar/fibonacci-calculator-client-dev:v1.1`
+        
+    - Docker runs 2 copies separately: one on your local machine, and the other one inside the node you are using in the kubernetes cluster. By default, in our terminal we are connected to the local docker version, but we can change this in the following way:
+        - `eval $(minikube docker-env)`
+            - This command only updates in the current terminal window, so if you want to use it, just open a new terminal, then kill it once you're done
+
 - **Deploy applications (Load Balancer):**
     1. access a LoadBalancer deployment:
         - `kubectl create deployment balanced --image=kicbase/echo-server:1.0`
@@ -1236,6 +1301,9 @@
             - `helm install flask-app-with-helm helm/charts/flask-app`
             - `helm upgrade flask-app-with-helm helm/charts/flask-app --install` (if you need to make any changes, eg it didn't work on the first try)
         - Use the 2 commands that get displayed, to get an URL!
+
+- **Kubernetes deployment guide based on Udemy tutorial (2nd Fibonacci project):**
+Add here from Readme file after completing K8S section!
 
 ## COMMANDS:
 - Install (on Linux): *( https://minikube.sigs.k8s.io/docs/start/ )*
