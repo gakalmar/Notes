@@ -898,7 +898,7 @@
             - `kubectl get services`
             
         - Initialize tunnel to access your app(required on Windows!):
-            - `minikube tunnel` // This doesn't work!
+            - `minikube tunnel` -> then connect to `127.0.0.1` (localhost) instead of the `minikube ip`
             - `minikube service <nodePort-servce-name> --url` -> this gets you an URL that you can use to directly reach your app
 
         - Get detailed info about a Kubernetes Object:

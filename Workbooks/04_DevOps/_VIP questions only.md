@@ -89,36 +89,13 @@
 ## CLOUD COMPUTING
 
 ### What kind of virtualization technologies are you familiar with?
-- A virtualizáció egy valós entitás helyett egy virtuális dolog létrehozását jelenti
-    - A hypervisor (Virtual Machine Monitors (VMMs)) teszi ezt lehetővé (ez allokálja a host resource-ait a virtuális környezetben)
-    - Ha a hypervisor installálva van, akkor tudunk létrehozni VM-eket, amik hordozhatóak
-    - az az előnye ennek,
-        - hogy csökkentjük a költségeket azáltal, hogy 1 fizikai gépen tudunk futtatni különböző környezeteket, 
-        - csökken a "downtime", mivel könnyen újak hozhatóak létre
-        - könnyen tudjuk őket ide-oda küldözgetni
-
-- Technológiák:
-    - Hardware / Platform virtualizáció
-        - Type 1 Hypervisor - Bare Metal / Natív virtualizáció:
-            - itt nincs host gép, a hypervisor közvetlenül áll kapcsolatban a hardverrel
-            - pl `Microsoft Hyper-V`, `Xen`
-            
-    - Szoftver-virtualizáció:        
-        - Type 2 - Hosted / Nested virtualizáció:
-            - ennél host gépet használunk (saját OS), ezen fut a hypervisor
-            - a host gép megosztja az erőforrásait a VM-ekkel (szabályozható)
-            - pl `Oracle VirtualBox`, `VMware Workstation`
-        
-        - Konténerizáció:
-            - Itt nem egy egész gépet virtualizálunk, mert OS-t nem hozunk létre, ehelyett ezt applikáció szintjén virtualizáljuk
-            - Csak felhasználjuk a host gép OS-ének kernelét, hogy izolált egységeket hozzunk létre
-            - pl `Docker`, `Kubernetes`
-
-    - Ezeken kívül létezik még:
-        - Network virtualizáció: itt a network-öt virtualizáljuk
-        - Desktop virtualizáció: Hypervisor helyett szoftver segítségével hozunk létre VM-eket egy távoli szerveren, és ezek távolról irányíthatóak
-        - Applikáció-virtualizáció: Applikációt virtualizálunk, melyek így önállóan képesek működni
-        - Storage virtualizáció: itt csak az adattárolás van már csak virtualizálva
+- "Az izoláció egy eszköze, melynek segítségével eloszthatjuk az erőforrásokat egy adott gépen" + történelmi gyökerek
+- működés (hypervisoron futnak a VM-ek + felel a resource allokációért)
+- típusai: 
+    - fizikai/bare metal/1es típus: hardveren fut közvetlenül;
+    - szoftveres/nested vagy hosted/2es típus: egy host gépen fut, de még külön OS-el
+    - konténerizáció: applikáció szintjén (nincs saját OS), host gép kernelét használja (kernel köti össze a szoftvert a harverrel) 
+- előnyök (költséghatékony (nem kell fizikai), nincs downtime -> instant replacement, könnyen osztható)
 
 ### What is Cloud Computing? 
 - **Definíció:** "A `számítási felhő` fogalma azt jelenti, hogy az informatika különböző területeit (hardver, szoftver) fizikailag nem a saját számítógépünkön érjük el, hanem, mint egy szolgáltatást megvásárolva valahol egy távoli erőforrásra/számítógépre/szerverre kapcsolódva vesszük igénybe. A `cloud computing` esetében egy cloud szolgáltató úgy biztosít alkalmazásokat, tárhelyet, adatbázisokat a felhasználói számára, hogy azoknak nem kell tudniuk, hogy az adott számítási infrastruktúra hol helyezkedik el.
