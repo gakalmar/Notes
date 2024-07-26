@@ -212,32 +212,36 @@
     - `docker`
     - `AWS Credentials Plugin`
 
-- **Deploy a simple app and push it to the ECR using a `Jenkins Freestyle Project`:**
-    1. Open Jenkins and create a new `Freestyle Project`
-    2. Add your Git Repo (make it public first!)
-        - Don't forget to set the branch to `main`!
-        - A `Dockerfile` is needed to build with this method!
-    3. Build environment:
-        - Toggle `Delete workspace before build starts`
-        - Toggle `Use secret text(s) or file(s)` with AWS credentials (add them directly to Jenkins as well under `Manage Jenkins / Credentails`!)
-    4. Create an ECR repo! (the steps in the next step are mostly taken from there!)
-    5. Add this to the build steps (shell):
+### AWS EKS with Terraform (using modules):
+- (the simplest guide youtube video: https://www.youtube.com/watch?v=7wRqtBMS6E0&ab_channel=ASCODE )
+- https://github.com/ascode-com/wiki/blob/main/terraform-eks/complete-example.tf
 
-            aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 891376988072.dkr.ecr.eu-west-2.amazonaws.com
-            docker build -t helloworld-flask-nginx:latest .
-            docker tag helloworld-flask-nginx:latest 891376988072.dkr.ecr.eu-west-2.amazonaws.com/helloworld-flask-nginx:latest
-            docker push 891376988072.dkr.ecr.eu-west-2.amazonaws.com/helloworld-flask-nginx:latest
+### Deploy a simple app and push it to the ECR using a `Jenkins Freestyle Project`:
+1. Open Jenkins and create a new `Freestyle Project`
+2. Add your Git Repo (make it public first!)
+    - Don't forget to set the branch to `main`!
+    - A `Dockerfile` is needed to build with this method!
+3. Build environment:
+    - Toggle `Delete workspace before build starts`
+    - Toggle `Use secret text(s) or file(s)` with AWS credentials (add them directly to Jenkins as well under `Manage Jenkins / Credentails`!)
+4. Create an ECR repo! (the steps in the next step are mostly taken from there!)
+5. Add this to the build steps (shell):
 
-- **Deploy a simple app and push it to the ECR using a `Jenkins Pipeline`:**
-    1. Open Jenkins and create a new `Pipeline`
-    2. Pipeline section:
-        - Choose `Pipeline script from SCM` and set it to `Git`
-            - Add Git repo and set branch
-            - Use Jenkinsfile from resources (`Jenkinsfile-nodejs-helloworld`) - this also includes AWS credentials block
-    3. Add trigger to build on every commit:
-        - enable `GitHub hook trigger for GITScm polling`
+        aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 891376988072.dkr.ecr.eu-west-2.amazonaws.com
+        docker build -t helloworld-flask-nginx:latest .
+        docker tag helloworld-flask-nginx:latest 891376988072.dkr.ecr.eu-west-2.amazonaws.com/helloworld-flask-nginx:latest
+        docker push 891376988072.dkr.ecr.eu-west-2.amazonaws.com/helloworld-flask-nginx:latest
 
-- **Add webhook:**
+### Deploy a simple app and push it to the ECR using a `Jenkins Pipeline`
+1. Open Jenkins and create a new `Pipeline`
+2. Pipeline section:
+    - Choose `Pipeline script from SCM` and set it to `Git`
+        - Add Git repo and set branch
+        - Use Jenkinsfile from resources (`Jenkinsfile-nodejs-helloworld`) - this also includes AWS credentials block
+3. Add trigger to build on every commit:
+    - enable `GitHub hook trigger for GITScm polling`
+
+4. Add webhook:
     - In GitHub: Go to main settings / developer settings / personal access token / generate new token
         - as `Note` add eg. `helloworld-node`
         - tick all `repo`
@@ -265,7 +269,7 @@
             - Active: Make sure this checkbox is checked
     - Now you can test it with a new push to the repo
 
-- **Set Up AWS EKS Cluster using Terraform:**
+5. Set Up AWS EKS Cluster using Terraform:
     - You will need to create a `main.tf` file, with the following resources (ref. to `main-deploy-env-01.tf`):
             
             # PROVIDER SETUP
@@ -328,10 +332,10 @@
         - Get service:
             - `kubectl get services` -> type in the browser the `EXTERNAL-IP` of the service
 
-- **AWS EKS with Terraform (using modules):** (the simplest guide youtube video: https://www.youtube.com/watch?v=7wRqtBMS6E0&ab_channel=ASCODE )
-    - https://github.com/ascode-com/wiki/blob/main/terraform-eks/complete-example.tf
 
-- **Full development and production deployment using `Travis`:**
+
+### Full development and production deployment using `Travis`:
+
 ### Development deployment guide
 - Worker folder (calculate number based on index and connect to redis)
     - package.json
@@ -362,7 +366,7 @@
         - specify environmental variables:
             - `variableName=value` (sets variable at runtime) - USE THIS METHOD
             - `variableName` (in this case the value is taken from my local environment) - it's still set at runtime
-            - potential issue - rename variables from `PGPASSWORD` to postgres documentation format `POSTGRES_PASSWPRD`
+            - potential issue - rename variables from `PGPASSWORD` to postgres documentation format `POSTGRES_PASSWORD`
     - Create **client** service: Identical to server mostly
     - Create **worker** service: Identical to server mostly
     - Add **nginx**:
@@ -374,7 +378,7 @@
             - `/api` requests should be routed to the express upstream server (on the server the `/api` part is not there anymore, it's just used for the nginx routing!)
         - Add Dockerfile for nginx, to copy the config file accross!
 
-### Production deployment guide
+### Production deployment guide (AWS Elastic Beanstalk)
 - Create `Dockerfiles` for each service for **production** instead of the ones created for **development**
     - `worker`: only change CMD command to `npm run start` from `npm run dev`
     - `server`: only change CMD command to `npm run start` from `npm run dev`
@@ -419,7 +423,7 @@
                         - `echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin`
                 - Push the images
 
-- Deployment to AWS Elastic Beanstalk:
+- Deployment to `AWS Elastic Beanstalk`:
     - `Create a Dockerrun.aws.json` file - this will be the instructions file for AWS (similar to docker-compose, but instead of *services*, we will have *container definitions*):
         - We already have the images uploaded to DockerHub, so we are just managing these
         - The documentation we will use is here: https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html#container_definitions
@@ -490,19 +494,177 @@
     - Once the app is deployed, the Elastic Beanstalk status should be updated to `Health: Ok`
         - Then you can access the link to the app, from the `Applications` / Click on your app, then use the link under `Domain`
 
+### Deployment with Kubernetes (Production to Google Cloud)
+- Architecture:
+    - Traffic comes into our Node using an `Ingress` (we will be setting this up all as a single node first!)
+    - It redirects traffic to the Client and Server (API), which are set up as deployments, that use a `ClusterIP` service.
+    - The Server/API is then connected to Redis and Postgres, both being separate deployments, also using a `ClusterIP` service.
+    - The worker deployment is connected to the `ClusterIP` of Redis
+    - A `PVC` (Persistent Volume Claim) is set up for the Postgres pod
+
+- Steps:
+    1. Create config files for each element/object we will be using:
+        - Create main architecure first:
+            - `client-deployment.yaml`
+            - `client-cluster-ip-service.yaml`
+            - `server-deployment.yaml` (we will have to add also the ENV variables for Redis and Postgres!)
+            - `server-cluster-ip-service.yaml`
+            - `worker-deployment.yaml` (we will have to add also the ENV variables for Redis and Postgres! But no service or port setup is needed, because we are only connecting FROM it, not TO it)
+            - `redis-deployment.yaml`
+            - `redis-cluster-ip-service.yaml`
+            - `postgres-deployment.yaml`
+            - `postgres-cluster-ip-service.yaml`
+
+        - Create persistent volumes for databases: 
+            - `database-persistent-volume-claim.yaml`
+                - Update `postgres-deployment.yaml` file with:
+                    - `template/spec` section with `volumes`
+                    - `containers` section with `volumeMounts` (`subPath` is only required for postgres specifically!)
+        
+        - Configure environment variables:
+            - `server` needs:
+                - `REDIS_HOST` (constant value, but of URL type - describes how to connect to service - use the name of the service!)
+                - `REDIS_PORT` (constant value)
+                - `PGUSER` (constant value)
+                - `PGHOST` (constant value, but of URL type - describes how to connect to service - use the name of the service!)
+                - `PGDATABASE` (constant value)
+                - `PGPORT` (constant value)
+                - `POSTGRES-PASSWORD` (used with a secret)
+            - `worker` needs:
+                - `REDIS_HOST` (constant value, but of URL type - describes how to connect to service - use the name of the service!)
+                - `REDIS_PORT` (constant value)
+            
+            - `server-deployment.yaml`:
+                - add `env` to `templates/containers` section
+                    - `REDIS_HOST` and `PGHOST` values are the names of the services we are connecting to, so:
+                        - `redis-cluster-ip-service`
+                        - `postgres-cluster-ip-service`
+            - `worker-deployment.yaml`:
+                - add `env` to `templates/containers` section (only redis needs to be added)
+            - For the final variable, we use a secret with an imperative command to create it locally (see below at `Secret` object section)
+                - we need to add this also as an env variable to our `server-deployment.yaml` file (instead of `value`, we use `valueFrom`/`secretKeyRef`)
+                - we also need to add this to our `postgres-deployment.yaml` file!
+
+        - Config files can also be combined (eg. add the service and the deployment in a single file, that work together):
+            - We just need to copy them one after the other in the file, and separate them with a `---` line
+        
+        - Setting up `ingress` (https://kubernetes.github.io/ingress-nginx/deploy/):
+            - Setup `ingress` locally: 
+                - make sure you have `minikube` running!
+                - `kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.10.1/deploy/static/provider/cloud/deploy.yaml`
+                - `minikube addons enable ingress`
+            - Create config file with these routing rules:
+                - `/` path is forwarded to `client`
+                - `/api` path is forwarded to the `server`
+
+    2. Test the setup locally on minikube:
+        - to apply a group of config files:
+            - `kubectl apply -f k8s` (we refer to the folder, and everything inside it will be applied)
+        - then connect with:
+            - `minikube tunnel` -> connect to `127.0.0.1` (localhost) in your browser
+
+    3. Create a Github/Travis flow to build images and deploy (this is where production deployment starts):
+        - create a git repo out of this project (if wasn't already)
+        - open `Travis` and open this project (by default it loads now all projects!)
+            - `.travis.yml` file will be created after the `Google Cloud` project is set up. It will include:
+                - Install Google Cloud SDK CLI
+                - Sonfigure the SDK without Google Cloud auth info
+                - Login to Docker CLI
+                - Build the test version of the app's client
+                - Run tests
+                - If tests were successful, run a script to deploy newest images
+            - the following steps will be from a separate script file (`deploy.sh`):
+                - Build all the images, tag them and push them to DockerHub
+                - Apply all config file in the k8s folder
+                - Imperatively set latest images on each deployment (ideally always work with a specific version tag!)
+                    - **Versioning tag:**
+                        - Both tags will be used:
+                            - `docker build -t <docker_id>/<image_name>:latest -f ./client/Dockerfile ./client`
+                            - `docker build -t <docker_id>/<image_name>:$GIT_SHA -f ./client/Dockerfile ./client`  
+                                - a `GIT-SHA` is a unique identifier generated after a git push command. It can be printed out with the following command:
+                                    - `git rev-parse HEAD`
+                        - the travis file already was written using this double tagging
+                        - the pushing will have to be done twice, to include both tags!
+
+    4. Deploy the app to a cloud provider (GCP will be used in this project)
+        - set up `Google Cloud` project
+        - enable `Kubernetes Engine` and create a cluster with a minimal setup
+        - create a `service account`:
+            - look for `IAM and admin` -> `Service accounts` -> `Create service account`:
+                - name: "travis-deployer"
+                - project role: "kubernetes engine admin"
+            - then create a new key for it and save it as a JSON file:
+                - to upload this securely, we will be running these commands in our project's root folder:
+                    - `docker run -it -v "/$(PWD)":/app ruby:3.0 sh`
+                        - Then inside the shell:
+                            - `gem install travis`
+                            - `travis login` (alternatively add `--com` or `--pro` flags)
+                            - Now copy the downloaded json file into the repo's root folder (do this from windows!)
+                                - rename it to `service-account.json`, so it's easier to work with
+                            - Navigate to the `/app` folder again the the shell and run this command:
+                                - `travis encrypt-file service-account.json -r gaklamar/fibonacci-calculator-k8s`
+                                    - there will be a command `openssl ...` that should be copied as the first input in the travis file's `before_install` section
+                                    - copy the generated `service-accoint.json.enc` file into the repo (it should already be there)
+                                        - basically you just need to delete the original file containing the private key
+        - In Travis:
+            - Inside project's settings under environmental variables:
+                - Add `DOCKER_USERNAME` with your username
+                - Add `DOCKER_PASSWORD` with your password
+        
+        - Adding PG password as a secret:
+            - In the Google Cloud, we can open a terminal on our cluster page:
+                - Do configuration:
+                    - `gcloud config set project <project-id>`
+                    - `gcloud config set compute/zone <project-zone>`
+                    - `gcloud container clusters get-credentials <your-cluster-name>`
+                - Create the secret:
+                    - `kubectl create secret generic pgpassword --from-literal POSTGRES_PASSWORD=<your-password>`
+                        - If it was successfully created, it should be visible under kubernetes configuration in your kubernetes engine page on GC
+        
+        - Install helm:
+            - Also, in the GC cluster's terminal:
+                - `curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3`
+                - `chmod 700 get_helm.sh`
+                - `./get_helm.sh`
+            - Then install `ingress-nginx`:
+                - `helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx`
+                - `helm install my-release ingress-nginx/ingress-nginx`
+            - In case of an error, `gcloud` will also need to be updated:
+                - `gcloud container clusters upgrade  YOUR_CLUSTER_NAME --master --cluster-version 1.16`
+        
+        - Assign a `Service Account` to manage Tiller (outdated!):
+            - Type the following commands in the GC command line:
+                - `kubectl create serviceaccount --namespace kube-system tiller`
+                - `kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller`
+            - Assign the `Service Account` to use Tiller:
+                - `helm init --service-account tiller --upgrade`
+        
+        - Use helm to install `ingress-nginx`:
+            - `helm install stable/nginx-ingress --name my-nginx --set rbac.create=true` (from `ingress-nginx` documentation)
+        
+        - `HTTPS`-`not-secure` error fix:
+            - Buy a domain (eg. from the Google Domain registrar)
+            - Set 2 routes under DNS/Custom resource records:
+                - Name: @ | Type: A | TTL: 1H | Data: The IP address from your ingress-nginx service (don't add the port!) / This will handle addresses like `google.com` 
+                - Name: www | Type: CNAME | TTL: 1H | Data: You can just add the address from the line above, that already exists / This will handle addresses like `www.google.com`
+            
+            - Use `CertManager` to set up the certification (install `certmanager` with HELM)
+                - Involves the following steps:
+                    - Create a `Certificate` object:
+                        - describes the details of the certificate that should be obtained
+                    - Create an `Issuer` object
+                        - tells the `Certification manager` where to get the certificate from
+                    - Modify `nginx-ingress` so ituses the certification for HTTPS traffic
+        
+        - **Deployment:**
+            - Happens automatically after a push happens to the `main` branch
+
 # LINKS:
 - Introduction video: https://www.youtube.com/watch?v=AlrImm1T8Wg&ab_channel=KodeKloud
 - CI/CD in 100 seconds: https://www.youtube.com/watch?v=scEDHsr3APg&ab_channel=Fireship
 - Continuous integration vs. delivery vs. deployment: https://www.atlassian.com/continuous-delivery/principles/continuous-integration-vs-delivery-vs-deployment
-- 
 
 - Articles:
     - Meta/Facebook: https://engineering.fb.com/2017/08/31/web/rapid-release-at-massive-scale/
     - Github: https://github.blog/2012-08-29-deploying-at-github/
     - Netflix: https://netflixtechblog.com/how-we-build-code-at-netflix-c5d9bd727f15
-
-
-Worked on jenkins, first using the freestyle project feature, then with a proper pipeline
-I managed to dokcerize my app and push the image to the AWS ECR
-Yesterday I also managed to make it work with Web hooks, so now after each code push to the repo triggers a new build
-The tricky part was to make this work on localhost, because web hooks don't work with local addresses, just public ones

@@ -158,7 +158,6 @@
         - run `terraform destroy` to tear down all resources if you don't need them anymore
 
 - **Getting started tutorial workflow:** *( https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS )*
-    1. 
 
 - **Workshop:**
     - we create a `main.tf` file, but we also create others:
@@ -292,7 +291,6 @@
 
 - **EKS persistency with EBS:** (this is not the original way to solve it, but it's better!)
     1. WATCH WS VIDEO!
-
 
 # LINKS:
 - AWS getting started link: https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS

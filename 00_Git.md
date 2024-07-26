@@ -117,3 +117,29 @@
 
 # PRACTICE
 - Interactive Turorial: https://learngitbranching.js.org/
+
+# GIT WORKFLOW
+https://docs.google.com/presentation/d/1N4vRxd9Rg_rIs__vhUJzz3wVxnJN9wYTa9vM89EEx_k/edit#slide=id.p
+
+- a `commit` is a pointer to a snapshot in reality
+    - generates a HASH code (`SHA`), which is unique to the commit
+    - commits are immutable
+- `branches` are tags
+    - they are mutable
+    - they point to a specific commit
+- `HEAD` points to the branch, and the branch points to the commit that is the latest
+
+- `Pull requests` exist in GitHub, not Git specifically
+
+- Usefule basic commands:
+    - `git log`
+    - `git status`
+    - `git branch`
+
+- Workflow:
+    1. Clone repo
+    2. Create feature-branchname:
+        - `git checkout -b gakalmar-feature-name`
+    3. `git push --set-upstream origin <branch-name>`
+    4. Create pull request on GitHub:  
+        - Use annotations like `Fixes #<number>` to link an issue to the pull request (so it's not linked from the issue, but the other way around)

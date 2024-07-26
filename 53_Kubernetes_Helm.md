@@ -597,6 +597,93 @@
         - **Comparison (`Volume`, `PersistentVolume`, `StorageClass`, `StatefulSet`):**
             - `StatefulSets` manage applications that require specific storage (`Persistent Volumes`), which are defined by their characteristics (`StorageClasses`), and `Volumes` provide temporary storage for other less critical needs
 
+- **More on kubernetes objects:** (from Udemy tutorial)
+
+# Kubernetes-object descriptions:
+- `ClusterIP` service:
+    - services in general: objects that are used to create networking in a cluster
+    - more restrictive than a `NodePort`
+    - exposes pods to other objects **within the cluster** (no external access is allowed!)
+    - only uses `port` and `targetPort` (because it's not reachable form outside)
+        - `port` is through what other k8s objects reach the object (eg. deployment) the service is attached to
+        - `targetPort` is the port the service is connected to (eg. the exposed port of the deployment)
+    - specify `type` as `ClusterIP`
+
+- `Persistent Volume Claim` (`PVC`):
+    - We use these when working with databases, so that a restarted pod will still have the same data that the previous one created (otherwise it would be deleted)
+    - That's why we create a volume, that is independent from the container running inside the pod (it's basically a volume on a host machine)
+    - We need to avoid creating multiple replicas of a database's container (we are only using `replicas: 1`!)
+    - `Volume`:
+        - In general (eg in Docker): 
+            - a *mechanism* that allows a container to *access* a file system outside itself
+        - Kubernetes `Volumes`: 
+            - an `object` that allows a container to *store* data **at the pod level** 
+            - The standard kubernetes `volume` will be created within the pod, next to the database (eg. Postgres) container, so it will survice a container-restart, but not a pod restart
+        - In Kubernetes we also have `Persistent Volume` and `Persistent Volume Claim`:
+            - The `PV` is created **outside** the pod, so if the pod crashes, the volume is still live
+            - The `PVC` is basically a catalog of all the different volumes available, that you can get for your pod. These storage options need to be defined in the config file you create it with:
+                - Statically provisioned Persistent Volumes are the volumes that are pre-created
+                - Dynamically provisioned Persistent Volumes are the volumes that aren't pre-created, only created when you specifically ask for them
+            - The `PVC` is what theb gets attached to the pod, in its configuration
+            - `PVC` access modes:
+                - `ReadWriteOnce`: can be used by a single node
+                - `ReadOnlyMany`: Multiple nodes can read from this
+                - `ReadWriteMany`: Can be read and written to by many nodes
+        - To find out more about what kinds of `PV`s Kubernetes can create locally, we use the following command:
+            - `kubectl get storageclass` -> will list the available storage options
+                - `k8s.io/minikube-hostpath` is the default - this means "isolate a piece of my local drive for the usage of Kubernetes"
+                - more options are avalilable depending on the cloud provider you use (eg. AWS Block Store, Azure File, Azure Disk, Google Cloud Persistent Disk)
+            - `kubectl describe storageclass` -> for more details, use this command
+            - `kubectl get pv` `... pvc`-> list PVs or PVCs
+
+- `Secret`:
+    - it's also a kubernetes object, that we can create, which is used to securely store information in the cluster (SSH key, password, connection string, etc.)
+    - in this case, we create it with an imperative command, instead of the declarative config file (because if we write a config file for it, the secret would still be legible from the config file -> this means that in the production environment we will also have to create this secret!):
+        - `kubectl create secret generic <secret_name> --from-literal key=value`
+        - `kubectl create secret generic pgpassword --from-literal POSTGRES_PASSWORD=postgres_password`
+    - To see what secrets have been created, use the follwing command:
+        - `kubectl get secrets` (it will not reveal the actual key-value pairs, just then `<secret_name>` under which the kvps are stored)
+
+- `LoadBalancer`:
+    - Legacy way of allowing network traffic into a cluster
+    - Allows traffic into 1 specific set of pods only, so we would need as many as the number of deployments we need to expose  
+
+- `Ingress`:
+    - A special kind of `Service`, which allows external traffic into a set of deployments and other Kubernetes objects
+    - There are multiple implementations of an `Ingress`, we will use the `ingress-nginx` that is a project developed officially by Kubernetes (this is from `github.com/kubernetes/ingress-nginx`)
+        - as opposed to `kubernetes-ingress`, which is a project developed by `nginx` (`github.com/nginxinc/kubernetes-ingress`)
+    - implementing `ingress-nginx` will create an ingress locally, but when deploying it to a cloud environment, it will create a second ingress based on the cloud provider, and the setup will be different for each one of them!
+    - `Controller`:
+        - Previously we created a `config` file that was fed into `kubectl`, so that the running `deployment` could look at it and check the *current state* vs. the *desired state*, and do as it was supposed to. The `deployment` in this case is considered a `controller`
+        - In the world of ingresses it works the same way, but the object we create with the `config` file is called an `Ingress controller`, which makes sure the *current state* is always up-to-date with the *desired state*
+
+    - **Summary:**
+        - We have an `ingress config file`, that creates an `ingress controller`, that is then creating a `traffic-forwarding element` in our infrastructure
+        - In our case with the `ingress-nginx` setup this `traffic forwarding element` will be the same as the controller, so no separated thing is created!
+        - When we set this up on a Cloud Provider, a 2nd ingress service is created by the provider, which is specific to that provider:
+            - With `Google Cloud` specifically:
+                - Traffic comes into the `GC Load Balancer` (still in the cloud!)
+                - Traffic is forwarded to the `Load Balancer Service` (this is inside our cluster)
+                - The `Load Balancer Service` is connected to a `deployment`, that has a container running with the combined `nginx controller/nginx pod`
+                - The `Load Balancer Service` and the `deployment` inside are created using an `ingress config file`, which includes a set of routing rules
+                - The `ingress-nginx` project we are using also creates a `default backend`, which is another `deployment`-`cluster-ip-service` setup on the same level as our `client` and `server` deployments (this is ideally replaced by your app's backend, eg express server)
+
+- `RBAC - Role Based Access Control:`
+    - Limits who can access and modify objects in our cluster:
+    - Enabled on Google Cloud by default
+    - If another app wants to make changes to our cluster, it need permissions, that's why we use `RBAC`
+    - How access and authorization works:
+        - Account types (this just identifies you, doesn't allow you to do something):
+            - `User account`:
+                - Identifies a *person* administering the cluster
+            - `Service Account`:
+                - Identifies a *pod* administering the cluster
+        - Actual authorization is done by the `RoleBindings` (so this is what is linked to a service account or user, that actually gives you access!):
+            - `ClusterRoleBinding`:
+                - Authorizes an account to do a certain set of actions across the *entire cluster*
+            - `RoleBinding:`
+                - Authorizes an account to do a certain set of actions in a *single namespace*
+                
 - **Namespaces:**
     - **Basics:**
         - In Kubernetes, namespaces provide a mechanism for isolating groups of resources within a single cluster
@@ -1302,8 +1389,6 @@
             - `helm upgrade flask-app-with-helm helm/charts/flask-app --install` (if you need to make any changes, eg it didn't work on the first try)
         - Use the 2 commands that get displayed, to get an URL!
 
-- **Kubernetes deployment guide based on Udemy tutorial (2nd Fibonacci project):**
-Add here from Readme file after completing K8S section!
 
 ## COMMANDS:
 - Install (on Linux): *( https://minikube.sigs.k8s.io/docs/start/ )*
