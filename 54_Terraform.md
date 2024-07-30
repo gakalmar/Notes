@@ -118,6 +118,7 @@
 
 # GUIDES:
 
+## Basics:
 - **Generic workflow:**
     0. set up environment:
         - install: `sudo snap install terraform --classic`
@@ -157,8 +158,6 @@
         - OR
         - run `terraform destroy` to tear down all resources if you don't need them anymore
 
-- **Getting started tutorial workflow:** *( https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS )*
-
 - **Workshop:**
     - we create a `main.tf` file, but we also create others:
         - `providers.tf` we add the providers here separately, so it's not all int he `main.tf` file
@@ -171,6 +170,7 @@
     - We now initialize it with commands:
         - `terraform init` -> tries to find the `main.tf` file, and initializes our backend: this is where the `state` is handled
 
+## Based on Codecool tasks:
 - **Terraforming Moon task:** (WS video: Creating an EC2 with SSH access from 27:20)
     0. Create a `main.tf` file in the root of your project folder (use `main-terraforming-moon_step-1.tf` template in resources!)
     0. How to get an AMI:
@@ -292,6 +292,9 @@
 - **EKS persistency with EBS:** (this is not the original way to solve it, but it's better!)
     1. WATCH WS VIDEO!
 
+## Udemy courses:
+- **General Notes:**
+    
 # LINKS:
 - AWS getting started link: https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS
 - Terraform-AWS documentation: https://registry.terraform.io/providers/hashicorp/aws/latest/docs

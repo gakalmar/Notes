@@ -105,585 +105,6 @@
         - 2 master nodes and 3 worker nodes
         - This can be later expanded if there is a need for it
 
-- **Kubernetes Objects:**
-    - K8s consists of objects, that can be created from the CLI or from `yaml` *template files*
-        - **CLI**: not recommended as can't keep track of versions
-        - **template files**: allow version control
-    - **K8s Objects:**
-        - **Core components (Nana):**
-            - `Pod`
-            - `Service` / `Ingress`
-            - `ConfigSet` / `Secret`
-            - `Volume`
-            - `Deployment` / `StatefulSet`
-        - **Pod:**
-            - **Definition:**
-                - `Pods` are the smallest deployable units of computing that you can create and manage in Kubernetes
-                - A `Pod` is a group of one or more containers, with shared storage and network resources, and a specification for how to run the containers. 
-                - Its contents are always co-located and co-scheduled, and run in a shared context.
-                - It is similar to a *group of Docker containers* with shared namespaces and shared filesystem volumes.
-            - **You don't need to create them manually:**
-                - create them using workload resources such as `Deployment` or `Job` (this is for stateless Apps (eg. without a DB))
-                - If your Pods need to track state, consider the `StatefulSet` resource (this is for handling stateful Apps with Databases)
-            - **Used in 2 main ways:**
-                - Pods that run a **single container**:
-                    - The "one-container-per-Pod" model is the most common Kubernetes use case; in this case, you can think of a `Pod` as a wrapper around a single container
-                    - Kubernetes manages `Pods` rather than managing the containers directly
-
-                - Pods that run **multiple containers** that need to work together:
-                    - A `Pod` can encapsulate an application composed of multiple co-located containers that are tightly coupled and need to share resources
-                    - These co-located containers form a single cohesive unit of service—for example, one container serving data stored in a shared volume to the public, while a separate sidecar container refreshes or updates those files.
-                    - The `Pod` wraps these containers, storage resources, and an ephemeral network identity together as a single unit.
-                
-                - Note: Each `Pod` is meant to run a single instance of a given application. If you want to scale your application horizontally (to provide more overall resources by running more instances), you should use multiple `Pods`, one for each instance. In Kubernetes, this is typically referred to as **replication**. Replicated `Pods` are usually created and managed as a group by a workload resource and its controller.
-            
-            - `Pod` template:
-
-                    apiVersion: v1
-                    kind: Pod
-                    metadata:
-                    name: mongo
-                    labels:
-                    app: mongo
-                    spec:
-                    containers:
-                    - name: mongo
-                    image: mongo
-                    ports:
-                    - containerPort: 27017
-
-            - **Static Pod:**
-                - `kubelet:`:
-                    - The `kubelet` is the primary "node agent" that runs on each node. It can register the node with the `apiserver` using one of the following:
-                        - the hostname
-                        - a flag to override the hostname
-                        - or specific logic for a cloud provider.
-                - `Static Pods` are managed directly by the `kubelet daemon` on a specific node, without the `API server` observing them
-                    - as opposed to `Pods` that are managed by the control plane (for example, a Deployment)
-                    - the `kubelet` watches each static `Pod` (and restarts it if it fails)
-                    - `Static Pods` are always *bound to one Kubelet on a specific node*
-                - The `kubelet` automatically tries to create a mirror `Pod` on the `Kubernetes API server` for each `static Pod`.
-                    - This means that the `Pods` running on a node are visible on the API server, but cannot be controlled from there
-                    - The `Pod` names will suffixed with the node hostname with a leading hyphen
-        
-        - **Init Containers:**
-            - A `Pod` can have multiple containers, running apps within it, but it can also have one or more `init containers`, which are *run before the app containers are started*.
-
-            - `Init containers` are exactly like regular containers, except:
-                - `Init containers` always run to completion.
-                - Each `init container` must complete successfully before the next one starts.
-
-            - If a `Pod`'s `init container` fails, the `kubelet` repeatedly restarts that `init container` until it succeeds. However, if the `Pod` has a `restartPolicy` of `Never`, and an `init container` fails during startup of that `Pod`, Kubernetes treats the overall `Pod` as failed.
-        
-        - **Jobs:**
-            - A `Job` creates one or more `Pods` and will continue to retry execution of the `Pods` until a specified number of them successfully terminate:
-                - As `pods` successfully complete, the `Job` tracks the successful completions
-                - When a specified number of successful completions is reached, the task (ie, `Job`) is complete. 
-                - Deleting a `Job` will clean up the Pods it created.
-
-            - A simple case is to create one `Job object` in order to reliably run one `Pod` to completion:
-                -  The `Job object` will start a new `Pod` if the first `Pod` fails or is deleted (for example due to a node hardware failure or a node reboot).
-                - You can also use a `Job` to run multiple `Pods` in parallel.
-        
-        - **ReplicaSet:**
-            - A `ReplicaSet`'s purpose is to maintain a stable set of replica `Pods` running at any given time:
-                - It is often used to guarantee the availability of a specified number of identical `Pods`
-            - A `ReplicaSet` is defined with `fields`, including:
-                - a `selector` that specifies how to identify `Pods` it can acquire
-                - a `number of replicas` indicating how many `Pods` it should be maintaining
-                - a `pod template` specifying the data of new `Pods` it should create to meet the number of replicas criteria. 
-            - A `ReplicaSet` then fulfills its purpose by creating and deleting `Pods` as needed to reach the desired number. When a `ReplicaSet` needs to create new `Pods`, it uses its `Pod template`.
-            - A `ReplicaSet` is linked to its `Pods` via the Pods' `metadata.ownerReferences` field, which specifies what resource the current object is owned by. 
-                - All `Pods` acquired by a `ReplicaSet` have their owning `ReplicaSet`'s identifying information within their `ownerReferences` field. 
-                - It's through this link that the `ReplicaSet` knows of the state of the `Pods` it is maintaining and plans accordingly.
-            - A `ReplicaSet` identifies new `Pods` to acquire by using its `selector`:
-                - If there is a `Pod` that has no `OwnerReference` or the `OwnerReference` is not a `Controller` and it matches a `ReplicaSet`'s `selector`, it will be immediately acquired by said `ReplicaSet`.
-            - A `ReplicaSet` ensures that a specified number of `pod` replicas are running at any given time. However, a `Deployment` is a higher-level concept that manages `ReplicaSets` and provides declarative updates to `Pods` along with a lot of other useful features. 
-                - It's recommended to use `Deployments` instead of directly using `ReplicaSets`, unless you require custom update orchestration or don't require updates at all.
-                - This actually means that you may never need to manipulate `ReplicaSet` objects: use a `Deployment` instead, and define your application in the `spec` section.
-            
-            - `ReplicaSet` template:
-
-                    apiVersion: apps/v1
-                    kind: ReplicaSet
-                    metadata:
-                    name: frontend
-                    labels:
-                    app: guestbook
-                    tier: frontend
-                    spec:
-                    # modify replicas according to your case
-                    replicas: 3
-                    selector:
-                    matchLabels:
-                    tier: frontend
-                    template:
-                    metadata:
-                    labels:
-                    tier: frontend
-                    spec:
-                    containers:
-                    - name: php-redis
-                    image: gcr.io/google_samples/gb-frontend:v3
-        
-        - **Deployment:**
-            - A `Deployment` provides declarative updates for `Pods` and `ReplicaSets`
-            - We don't want to just rely on 1 node, we have to have backups, so there's no downtime -> we can specify how many replicas we want to make of our app node:
-                - We create `deployments`, not `pods` directly, because here we can specify the replica numbers (we can also scale up or down replica numbers)
-                - `deployments` are the blueprints for the app's `pods` (they are another abstraction layer, so now we have `container` -> `pod` -> `deployment`)
-                - the issue is, we can't replicate a whole node, because we can't replicate databases (for this, we use `statefulSet`):
-                    - so if we have a stateless App (eg no DB) -> we can use `Deployment`
-                    - if we have a stateful App (eg we need a DB's state to be tracked for replicas) -> we can use `StatefulSet`
-
-            - After you describe a desired state in a `Deployment`, the `Deployment Controller` changes the actual state to the desired state at a controlled rate. 
-                - You can define `Deployments` to create new `ReplicaSets`, or to remove existing `Deployments` and adopt all their resources with new `Deployments`.
-
-            - The following are typical use cases for `Deployments`:
-                1. Create a `Deployment` to rollout a `ReplicaSet`. The `ReplicaSet` creates `Pods` in the background. Check the status of the rollout to see if it succeeds or not.
-                2. Declare the new *state* of the `Pods` by updating the `PodTemplateSpec` of the `Deployment`. A new `ReplicaSet` is created and the `Deployment` manages moving the `Pods` from the old `ReplicaSet` to the new one at a controlled rate. Each new `ReplicaSet` updates the revision of the `Deployment`.
-                3. Rollback to an earlier `Deployment` revision if the current state of the `Deployment` is not stable. Each rollback updates the revision of the `Deployment`.
-                4. Scale up the `Deployment` to facilitate more load.
-                5. Pause the `Deployment` to apply multiple fixes to its `PodTemplateSpec` and then resume it to start a new rollout.
-                6. Use the status of the `Deployment` as an indicator that a rollout has stuck.
-                7. Clean up older `ReplicaSets` that you don't need anymore.
-            
-            - `Deployment` template:
-
-                    apiVersion: apps/v1
-                    kind: Deployment
-                    metadata:
-                    name: nginx-deployment
-                    labels:
-                    app: nginx
-                    spec:
-                    replicas: 3
-                    selector:
-                    matchLabels:
-                    app: nginx
-                    template:
-                    metadata:
-                    labels:
-                    app: nginx
-                    spec:
-                    containers:
-                    - name: nginx
-                    image: nginx:1.14.2
-                    ports:
-                    - containerPort: 80
-
-        - **DaemonSet:**
-            - A `DaemonSet` ensures that all (or some) Nodes run a copy of a `Pod`:
-                - As nodes are added to the cluster, `Pods` are added to them
-                - As nodes are removed from the cluster, those `Pods` are garbage collected
-                - Deleting a `DaemonSet` will clean up the `Pods` it created.
-
-            - Some typical uses of a `DaemonSet` are:
-                - running a `cluster storage daemon` on every node
-                - running a `logs collection daemon` on every node
-                - running a `node monitoring daemon` on every node
-
-            - In a simple case, one `DaemonSet`, covering all nodes, would be used for each type of daemon.
-            - A more complex setup might use multiple `DaemonSets` for a single type of daemon, but with different flags and/or different memory and cpu requests for different hardware types.
-
-            - `DaemonSet` template:
-
-                    apiVersion: apps/v1
-                    kind: DaemonSet
-                    metadata:
-                    name: fluentd-elasticsearch
-                    namespace: kube-system
-                    labels:
-                    k8s-app: fluentd-logging
-                    spec:
-                    selector:
-                    matchLabels:
-                    name: fluentd-elasticsearch
-                    template:
-                    metadata:
-                    labels:
-                    name: fluentd-elasticsearch
-                    spec:
-                    tolerations:
-                    # this toleration is to have the daemonset runnable on master nodes
-                    # remove it if your masters can't run pods
-                    - key: node-role.kubernetes.io/master
-                    effect: NoSchedule
-                    containers:
-                    - name: fluentd-elasticsearch
-                    image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
-                    resources:
-                    limits:
-                    memory: 200Mi
-                    requests:
-                    cpu: 100m
-                    memory: 200Mi
-                    volumeMounts:
-                    - name: varlog
-                    mountPath: /var/log
-                    - name: varlibdockercontainers
-                    mountPath: /var/lib/docker/containers
-                    readOnly: true
-                    terminationGracePeriodSeconds: 30
-                    volumes:
-                    - name: varlog
-                    hostPath:
-                    path: /var/log
-                    - name: varlibdockercontainers
-                    hostPath:
-                    path: /var/lib/docker/containers
-        
-        - **Service:**
-            - The Kubernetes `service object` (not to be mixed with service in context of microservices) is responsible for handling communication inside or outside the cluster (we mostly use it for internal communications, for external we have `ingress`)
-            - The Kubernetes `service object` has a `type` argument which determines its functionality.
-            - We use these as a docking bay for a `pod`, so that they can communicate with each other:
-                - each `pod` has an IP address, but when that `pod` gets replaced (because it died and needs replacement), a new IP address gets assigned
-                - In order for `pods` maintain communication, they are connected with `services`, that have their own `static IP address`
-            - The most common service types include:
-                - **ClusterIP:**
-                    - A `ClusterIP` service is the default Kubernetes service. It gives you a service inside your cluster that other apps inside your cluster can access. There is no external access.
-                    - There are a few scenarios where you would use the Kubernetes proxy to access your services:
-                        - Debugging your services, or connecting to them directly from your laptop for some reason
-                        - Allowing internal traffic, displaying internal dashboards, etc.
-                    - Because this method requires you to run `kubectl` as an authenticated user, you should NOT use this to expose your service to the internet or use it for production services.
-
-                    - `ClusterIP` template:
-
-                            apiVersion: v1
-                            kind: Service
-                            metadata:
-                            name: my-internal-service
-                            spec:
-                            selector:
-                            app: my-app
-                            type: ClusterIP
-                            ports:
-                            - name: http
-                            port: 80
-                            targetPort: 80
-                            protocol: TCP
-
-                - **NodePort:**
-                    - A `NodePort` service is the most primitive way to get external traffic directly to your service:
-                        -  `NodePort`, as the name implies, opens a specific port on all the Nodes (the VMs), and any traffic that is sent to this port is forwarded to the service. 
-                        - Basically, a `NodePort` service has two differences from a normal `ClusterIP` service:
-                            - First, the type is `NodePort`. 
-                            - There is also an additional port called the `nodePort` that specifies which port to open on the nodes. If you don’t specify this port, it will pick a random port. Most of the time you should let Kubernetes choose the port.
-                    - There are many downsides to using `NodePorts`:
-                        - You can only have one service per port
-                        - You can only use ports `30000–32767`
-                        - If your `Node/VM` IP address change, you need to deal with that
-                        
-                        - For these reasons, we don’t recommend using this method in production to directly expose your service. If you are running a service that doesn’t have to be always available, or you are very cost sensitive, this method will work for you. A good example of such an application is a demo app or something temporary.
-
-                    - `NodePort` template:
-
-                            apiVersion: v1
-                            kind: Service
-                            metadata:
-                            name: my-nodeport-service
-                            spec:
-                            selector:
-                            app: my-app
-                            type: NodePort
-                            ports:
-                            - name: http
-                            port: 80
-                            targetPort: 80
-                            nodePort: 30036
-                            protocol: TCP
-                
-                - **LoadBalancer:**
-                    - A `LoadBalancer` service is the standard way to expose a service to the internet.
-                    - If you want to directly expose a service, this is the default method:
-                        - All traffic on the port you specify will be forwarded to the service
-                        - There is no filtering, no routing, etc. This means you can send almost any kind of traffic to it, like HTTP, TCP, UDP, Websockets or gRPC for example.
-
-                    - The big downside is that each service you expose with a `LoadBalancer` will get its own IP address, and you have to pay for a `LoadBalancer` per exposed service, which can get expensive!
-
-                    - `LoadBalancer` template:
-                            
-                            apiVersion: v1
-                            kind: Service
-                            metadata:
-                            name: example-service
-                            spec:
-                            selector:
-                            app: example
-                            ports:
-                            - port: 8765
-                            targetPort: 9376
-                            type: LoadBalancer
-
-        - **Ingress:**
-            - It's very similar to `services`, but this is for **external connections** -> we can connect to these from outside the cluster
-            - It sits in front of multiple `services` and act as a **smart router** or entrypoint into your cluster.
-            - You can do a lot of different things with an `Ingress`, and there are many types of `Ingress controllers` that have different capabilities:
-                -  Usually an `ingress controller` will spin up a HTTP(S) `Load Balancer` for you. This will let you do both path based and subdomain based routing to backend services. For example, you can send everything on `foo.yourdomain.com` to the `foo` service, and everything under the `yourdomain.com/bar/` path to the bar service
-
-            - `Ingress` template:
-
-                    apiVersion: networking.k8s.io/v1
-                    kind: Ingress
-                    metadata:
-                    name: minimal-ingress
-                    annotations:
-                    nginx.ingress.kubernetes.io/rewrite-target: /
-                    spec:
-                    rules:
-                    - http:
-                    paths:
-                    - path: /testpath
-                    pathType: Prefix
-                    backend:
-                    service:
-                    name: test
-                    port:
-                    number: 80
-
-        - **Secret:**
-            - Kubernetes `Secrets` let you store and manage sensitive information, such as passwords, OAuth tokens, and ssh keys, so that you don't need to include confidential data in your application code
-            - Storing confidential information in a `Secret` is safer and more flexible than putting it verbatim in a `Pod definition` or in a `container image`.
-            - The non-confidential version of a `secret` is a `configmap`
-
-            - To use a `Secret`, a `Pod` needs to reference the `Secret`.
-
-            - Kubernetes provides several `builtin types` for some common usage scenarios. These types vary in terms of the validations performed and the constraints Kubernetes imposes on them.
-
-                    Builtin Type	                            Usage
-                    Opaque	                                    arbitrary user-defined data
-                    kubernetes.io/service-account-token	        service account token
-                    kubernetes.io/dockercfg	serialized          ~/.dockercfg file
-                    kubernetes.io/dockerconfigjson	            serialized ~/.docker/config.json file
-                    kubernetes.io/basic-auth	                credentials for basic authentication
-                    kubernetes.io/ssh-auth	                    credentials for SSH authentication
-                    kubernetes.io/tls	                        data for a TLS client or server
-                    bootstrap.kubernetes.io/token	            bootstrap token data
-            
-            - `Secret` template:
-
-                    apiVersion: v1
-                    kind: Secret
-                    metadata:
-                    name: mysecret
-                    type: Opaque
-                    data:
-                    username: 123
-                    password: xyz
-        
-        - **ConfigMap:**
-            - A `ConfigMap` is an API object used to store non-confidential data in key-value pairs. `Pods` can consume `ConfigMaps` as environment variables, command-line arguments, or as configuration files in a volume (used during either application initialization or runtime).
-
-            - The stored data is used to adjust values assigned to configuration parameters, for example, you can download and run the same container image to spin up containers for the purposes of local development, system test, or running a live end-user workload.
-            
-            - For confidential data we use `secrets` (see above!)
-
-            - A `ConfigMap` allows you to decouple environment-specific configuration from your container images, so that your applications are easily portable. Otherwise we would have to build and deploy our apps again, when we change something inside the app's configuration
-
-            - You can write a `Pod` spec that refers to a `ConfigMap` and configures the `container(s)` in that `Pod` based on the data in the `ConfigMap`. The `Pod` and the `ConfigMap` must be in the same namespace.
-
-            - `ConfigMap` template:
-                    
-                    apiVersion: v1
-                    kind: ConfigMap
-                    metadata:
-                    name: game-demo
-                    data:
-                    # property-like keys; each key maps to a simple value
-                    player_initial_lives: "3"
-                    ui_properties_file_name: "user-interface.properties"
-
-                    # file-like keys
-                    game.properties: |
-                    enemy.types=aliens,monsters
-                    player.maximum-lives=5
-                    user-interface.properties: |
-                    color.good=purple
-                    color.bad=yellow
-                    allow.textmode=true
-        
-        - **PersistentVolume:**
-            - Managing storage is a distinct problem from managing compute instances. The `PersistentVolume` subsystem provides an API for users and administrators that abstracts details of how storage is provided from how it is consumed. To do this, we introduce two new API resources: `PersistentVolume` and `PersistentVolumeClaim`.
-
-            - `PVs` are not namespaced, they are available for the whole cluster!
-
-            - A `PersistentVolume` (PV) is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using `Storage Classes`. It is a resource in the `cluster` just like a `node` is a `cluster` resource. `PVs` are volume plugins like `Volumes`, but have a lifecycle independent of any individual `Pod` that uses the `PV`. This API object captures the details of the implementation of the storage, be that NFS, iSCSI, or a cloud-provider-specific storage system.
-
-            - A `PersistentVolumeClaim` (PVC) is a request for storage by a user. It is similar to a `Pod`. `Pods` consume `node` resources and `PVCs` consume `PV` resources. Pods can request specific levels of resources (CPU and Memory). Claims can request specific size and access modes (e.g., they can be mounted `ReadWriteOnce`, `ReadOnlyMany` or `ReadWriteMany`, see `AccessModes`).
-
-            - While `PersistentVolumeClaims` allow a user to consume abstract storage resources, it is common that users need `PersistentVolumes` with varying properties, such as performance, for different problems. `Cluster` administrators need to be able to offer a variety of PersistentVolumes that differ in more ways than just size and access modes, without exposing users to the details of how those volumes are implemented. For these needs, there is the `StorageClass` resource.
-
-            - `PersistentVolume` template:
-
-                    apiVersion: v1
-                    kind: PersistentVolume
-                    metadata:
-                    name: foo-pv
-                    spec:
-                    storageClassName: ""
-                    claimRef:
-                    name: foo-pvc
-                    namespace: foo
-                    ...
-
-            - `PersistentVolumeClaim` template:
-                    
-                    apiVersion: v1
-                    kind: PersistentVolumeClaim
-                    metadata:
-                    name: foo-pvc
-                    namespace: foo
-                    spec:
-                    storageClassName: "" # Empty string must be explicitly set otherwise default StorageClass will be set
-                    volumeName: foo-pv
-                    ...
-        
-        - **Volumes:**
-            - A `Volume` is a component that allows data to persist and be shared across container restarts and among multiple containers within a pod:
-                - A Kubernetes volume exists as long as the pod containing it exists. Unlike the temporary local storage of a container, a volume can persist data across container restarts and is accessible to all containers within the pod.
-                - Volumes are defined at the pod level, and their lifecycle is tied to the lifecycle of the pod
-            - **Volume types:**
-                - `emptyDir`: starts as an empty volume but persists data as long as the pod is running
-                - `hostPath`: mounts a file or directory from the host node’s filesystem into your pod
-                - `nfs`
-                - `configMap` (see separate section)
-                - `secret` (see separate section)
-            - Volumes are declared in the pod's configuration file under the volumes field, and then they are mounted into containers within the pod
-            - **Use cases:**
-                - Sharing Data Between Containers in a Pod:
-                    - Volumes can be used to share files between containers running within the same pod. For instance, one container might write logs or output data to a volume that another container processes or exports.
-                - Data Persistence:
-                    - To ensure that data persists beyond the life of a pod or for data that needs to survive pod restarts and failures, persistent volumes (PVs) and persistent volume claims (PVCs) are used. These allow for data to be stored in a way that is independent of the pod lifecycle.
-                - Configurations and Secrets:
-                    - `configMap` and `secret volumes` are used to store configuration data and sensitive information, respectively. These volumes can be mounted into pods, allowing containers to use configurations and secrets without hard-coding them into the container images or pod definitions.
-                - Storing Logs and Other Temporary Data:
-                    - `emptyDir` volumes are ideal for temporary data that needs to be shared between containers in a pod, such as logs, caches, or files that should not persist once the pod is deleted.
-                - Accessing Storage Systems:
-                    - Volumes allow pods to access various types of external storage systems like NFS, cloud storage services (e.g., AWS EBS, Azure Disk), and networked storage systems, facilitating data sharing and data persistence in distributed systems.
-                - Running Stateful Applications:
-                    - Stateful applications like databases can use persistent volumes to store database files, ensuring that the data remains available even if the pod needs to be relocated to a different node.
-
-        - **StorageClass:**
-            - A `storageClass` provides a way to describe the "classes" of storage available in a cluster. It acts as a mechanism to dynamically provision storage resources based on the needs of the applications:
-                - it is used for *managing storage solutions* in a **flexible and efficient manner**, aligning storage provisioning with application requirements and simplifying the management of storage resources across the cluster
-            - **What it does:**
-                - allows for **dynamic provisioning** of storage resources, meaning it automates the creation of storage volumes as they are required by applications, based on predefined templates of storage configurations.
-                - It **abstracts the details** of how storage is provided from how it is consumed, enabling administrators to define different types of storage (e.g., performance levels, backup policies, or disk types) under familiar names like "fast" or "slow".
-                - **Customization and flexibility:** Administrators can define multiple `StorageClasses` within a cluster, each tailored for different use cases or performance requirements. This allows users to select the most appropriate type of storage for their specific applications by simply referencing the `StorageClass` name in their `Persistent Volume Claims` (`PVCs`).
-            - **Key Features:**
-                - `Provisioner`:
-                    - Each `StorageClass` includes a provisioner that determines what volume plugin is used for provisioning the storage. This could be internal to Kubernetes or it could be from external sources like `AWS Elastic Block Store` (`EBS`), Google Persistent Disk, or a network file system (NFS).
-                - `Parameters`:
-                    - Administrators can specify parameters within a `StorageClass` to configure the volume plugin, tailoring options such as disk format, replication levels, or IOPS (Input/Output Operations Per Second) for a specific storage type.
-                - `Reclaim Policy`:
-                    - The reclaimPolicy attribute controls what happens to the underlying physical storage when a user deletes the associated `Persistent Volume Claim`. Typical policies include Delete (where the volume is deleted along with the `PVC`) and Retain (where the volume is retained after the `PVC` is deleted).
-                - `Volume Binding Mode`:
-                    - This attribute controls the timing of volume binding and provisioning. It can be set to Immediate (default) where the volume provisioning occurs as soon as the `PVC` is created, or `WaitForFirstConsumer` where provisioning is delayed until a pod actually needs it
-            - **Use cases:**
-                - **Highly Available Applications:**
-                    - Use specific `StorageClasses` that configure more durable and redundant storage options.
-                - **Performance-Sensitive Applications:**
-                    - Choose `StorageClasses` with higher IOPS or faster disk technologies for databases or other I/O-intensive applications.
-                - **Cost Management:**
-                    - Employ `StorageClasses` that map to cost-effective storage solutions for less critical data.
-
-        - **StatefulSets:**
-            - `StatefulSets` are a workload API object used for managing stateful applications. They manage the deployment and scaling of a set of Pods, and unlike `Deployments`, they provide guarantees about the ordering and uniqueness of these Pods
-            - **What they do:**
-                - `StatefulSets` are specifically designed for applications that require a stable, unique network identifier, stable persistent storage, and ordered deployment and scaling.
-                - `StatefulSets` maintain a strict order with regards to how Pods are created, scaled, and deleted. They are created sequentially, and also deleted in reverse order during scaling down.
-                - Each Pod in a `StatefulSet` derives its hostname from the name of the `StatefulSet` and a unique ordinal for each Pod (e.g., myapp-0, myapp-1). This naming convention remains consistent, even if the Pods are rescheduled to new IPs.
-                - `StatefulSets` use `Persistent Volumes` that can be mounted to the Pods based on the same unique ordinal associated with each Pod. If a Pod is rescheduled, it can reattach to the same `Persistent Volume`, preserving its state.
-
-        - **Comparison (`Volume`, `PersistentVolume`, `StorageClass`, `StatefulSet`):**
-            - `StatefulSets` manage applications that require specific storage (`Persistent Volumes`), which are defined by their characteristics (`StorageClasses`), and `Volumes` provide temporary storage for other less critical needs
-
-- **More on kubernetes objects:** (from Udemy tutorial)
-
-# Kubernetes-object descriptions:
-- `ClusterIP` service:
-    - services in general: objects that are used to create networking in a cluster
-    - more restrictive than a `NodePort`
-    - exposes pods to other objects **within the cluster** (no external access is allowed!)
-    - only uses `port` and `targetPort` (because it's not reachable form outside)
-        - `port` is through what other k8s objects reach the object (eg. deployment) the service is attached to
-        - `targetPort` is the port the service is connected to (eg. the exposed port of the deployment)
-    - specify `type` as `ClusterIP`
-
-- `Persistent Volume Claim` (`PVC`):
-    - We use these when working with databases, so that a restarted pod will still have the same data that the previous one created (otherwise it would be deleted)
-    - That's why we create a volume, that is independent from the container running inside the pod (it's basically a volume on a host machine)
-    - We need to avoid creating multiple replicas of a database's container (we are only using `replicas: 1`!)
-    - `Volume`:
-        - In general (eg in Docker): 
-            - a *mechanism* that allows a container to *access* a file system outside itself
-        - Kubernetes `Volumes`: 
-            - an `object` that allows a container to *store* data **at the pod level** 
-            - The standard kubernetes `volume` will be created within the pod, next to the database (eg. Postgres) container, so it will survice a container-restart, but not a pod restart
-        - In Kubernetes we also have `Persistent Volume` and `Persistent Volume Claim`:
-            - The `PV` is created **outside** the pod, so if the pod crashes, the volume is still live
-            - The `PVC` is basically a catalog of all the different volumes available, that you can get for your pod. These storage options need to be defined in the config file you create it with:
-                - Statically provisioned Persistent Volumes are the volumes that are pre-created
-                - Dynamically provisioned Persistent Volumes are the volumes that aren't pre-created, only created when you specifically ask for them
-            - The `PVC` is what theb gets attached to the pod, in its configuration
-            - `PVC` access modes:
-                - `ReadWriteOnce`: can be used by a single node
-                - `ReadOnlyMany`: Multiple nodes can read from this
-                - `ReadWriteMany`: Can be read and written to by many nodes
-        - To find out more about what kinds of `PV`s Kubernetes can create locally, we use the following command:
-            - `kubectl get storageclass` -> will list the available storage options
-                - `k8s.io/minikube-hostpath` is the default - this means "isolate a piece of my local drive for the usage of Kubernetes"
-                - more options are avalilable depending on the cloud provider you use (eg. AWS Block Store, Azure File, Azure Disk, Google Cloud Persistent Disk)
-            - `kubectl describe storageclass` -> for more details, use this command
-            - `kubectl get pv` `... pvc`-> list PVs or PVCs
-
-- `Secret`:
-    - it's also a kubernetes object, that we can create, which is used to securely store information in the cluster (SSH key, password, connection string, etc.)
-    - in this case, we create it with an imperative command, instead of the declarative config file (because if we write a config file for it, the secret would still be legible from the config file -> this means that in the production environment we will also have to create this secret!):
-        - `kubectl create secret generic <secret_name> --from-literal key=value`
-        - `kubectl create secret generic pgpassword --from-literal POSTGRES_PASSWORD=postgres_password`
-    - To see what secrets have been created, use the follwing command:
-        - `kubectl get secrets` (it will not reveal the actual key-value pairs, just then `<secret_name>` under which the kvps are stored)
-
-- `LoadBalancer`:
-    - Legacy way of allowing network traffic into a cluster
-    - Allows traffic into 1 specific set of pods only, so we would need as many as the number of deployments we need to expose  
-
-- `Ingress`:
-    - A special kind of `Service`, which allows external traffic into a set of deployments and other Kubernetes objects
-    - There are multiple implementations of an `Ingress`, we will use the `ingress-nginx` that is a project developed officially by Kubernetes (this is from `github.com/kubernetes/ingress-nginx`)
-        - as opposed to `kubernetes-ingress`, which is a project developed by `nginx` (`github.com/nginxinc/kubernetes-ingress`)
-    - implementing `ingress-nginx` will create an ingress locally, but when deploying it to a cloud environment, it will create a second ingress based on the cloud provider, and the setup will be different for each one of them!
-    - `Controller`:
-        - Previously we created a `config` file that was fed into `kubectl`, so that the running `deployment` could look at it and check the *current state* vs. the *desired state*, and do as it was supposed to. The `deployment` in this case is considered a `controller`
-        - In the world of ingresses it works the same way, but the object we create with the `config` file is called an `Ingress controller`, which makes sure the *current state* is always up-to-date with the *desired state*
-
-    - **Summary:**
-        - We have an `ingress config file`, that creates an `ingress controller`, that is then creating a `traffic-forwarding element` in our infrastructure
-        - In our case with the `ingress-nginx` setup this `traffic forwarding element` will be the same as the controller, so no separated thing is created!
-        - When we set this up on a Cloud Provider, a 2nd ingress service is created by the provider, which is specific to that provider:
-            - With `Google Cloud` specifically:
-                - Traffic comes into the `GC Load Balancer` (still in the cloud!)
-                - Traffic is forwarded to the `Load Balancer Service` (this is inside our cluster)
-                - The `Load Balancer Service` is connected to a `deployment`, that has a container running with the combined `nginx controller/nginx pod`
-                - The `Load Balancer Service` and the `deployment` inside are created using an `ingress config file`, which includes a set of routing rules
-                - The `ingress-nginx` project we are using also creates a `default backend`, which is another `deployment`-`cluster-ip-service` setup on the same level as our `client` and `server` deployments (this is ideally replaced by your app's backend, eg express server)
-
-- `RBAC - Role Based Access Control:`
-    - Limits who can access and modify objects in our cluster:
-    - Enabled on Google Cloud by default
-    - If another app wants to make changes to our cluster, it need permissions, that's why we use `RBAC`
-    - How access and authorization works:
-        - Account types (this just identifies you, doesn't allow you to do something):
-            - `User account`:
-                - Identifies a *person* administering the cluster
-            - `Service Account`:
-                - Identifies a *pod* administering the cluster
-        - Actual authorization is done by the `RoleBindings` (so this is what is linked to a service account or user, that actually gives you access!):
-            - `ClusterRoleBinding`:
-                - Authorizes an account to do a certain set of actions across the *entire cluster*
-            - `RoleBinding:`
-                - Authorizes an account to do a certain set of actions in a *single namespace*
-                
 - **Namespaces:**
     - **Basics:**
         - In Kubernetes, namespaces provide a mechanism for isolating groups of resources within a single cluster
@@ -763,8 +184,354 @@
         - **Example Use Case:**
             - A web server is deployed within a container, and it starts up with some initial load time because it might be loading large data sets or configurations. Even though the container is running, it's not yet ready to serve traffic. A readiness probe can check the HTTP endpoint or a specific condition that returns success only when the server is truly ready to handle requests.
 
-## AWS EKS (Elastic Kubernetes Service)
+## KUBERNETES OBJECTS:
+- **Kubernetes Objects (notes from Udemy basic course):**
+    - `ClusterIP` service:
+        - services in general: objects that are used to create networking in a cluster
+        - more restrictive than a `NodePort`
+        - exposes pods to other objects **within the cluster** (no external access is allowed!)
+        - only uses `port` and `targetPort` (because it's not reachable form outside)
+            - `port` is through what other k8s objects reach the object (eg. deployment) the service is attached to
+            - `targetPort` is the port the service is connected to (eg. the exposed port of the deployment)
+        - specify `type` as `ClusterIP`
+
+    - `Persistent Volume Claim` (`PVC`):
+        - We use these when working with databases, so that a restarted pod will still have the same data that the previous one created (otherwise it would be deleted)
+        - That's why we create a volume, that is independent from the container running inside the pod (it's basically a volume on a host machine)
+        - We need to avoid creating multiple replicas of a database's container (we are only using `replicas: 1`!)
+        - `Volume`:
+            - In general (eg in Docker): 
+                - a *mechanism* that allows a container to *access* a file system outside itself
+            - Kubernetes `Volumes`: 
+                - an `object` that allows a container to *store* data **at the pod level** 
+                - The standard kubernetes `volume` will be created within the pod, next to the database (eg. Postgres) container, so it will survice a container-restart, but not a pod restart
+            - In Kubernetes we also have `Persistent Volume` and `Persistent Volume Claim`:
+                - The `PV` is created **outside** the pod, so if the pod crashes, the volume is still live
+                - The `PVC` is basically a catalog of all the different volumes available, that you can get for your pod. These storage options need to be defined in the config file you create it with:
+                    - Statically provisioned Persistent Volumes are the volumes that are pre-created
+                    - Dynamically provisioned Persistent Volumes are the volumes that aren't pre-created, only created when you specifically ask for them
+                - The `PVC` is what theb gets attached to the pod, in its configuration
+                - `PVC` access modes:
+                    - `ReadWriteOnce`: can be used by a single node
+                    - `ReadOnlyMany`: Multiple nodes can read from this
+                    - `ReadWriteMany`: Can be read and written to by many nodes
+            - To find out more about what kinds of `PV`s Kubernetes can create locally, we use the following command:
+                - `kubectl get storageclass` -> will list the available storage options
+                    - `k8s.io/minikube-hostpath` is the default - this means "isolate a piece of my local drive for the usage of Kubernetes"
+                    - more options are avalilable depending on the cloud provider you use (eg. AWS Block Store, Azure File, Azure Disk, Google Cloud Persistent Disk)
+                - `kubectl describe storageclass` -> for more details, use this command
+                - `kubectl get pv` `... pvc`-> list PVs or PVCs
+
+    - `Secret`:
+        - it's also a kubernetes object, that we can create, which is used to securely store information in the cluster (SSH key, password, connection string, etc.)
+        - in this case, we create it with an imperative command, instead of the declarative config file (because if we write a config file for it, the secret would still be legible from the config file -> this means that in the production environment we will also have to create this secret!):
+            - `kubectl create secret generic <secret_name> --from-literal key=value`
+            - `kubectl create secret generic pgpassword --from-literal POSTGRES_PASSWORD=postgres_password`
+        - To see what secrets have been created, use the follwing command:
+            - `kubectl get secrets` (it will not reveal the actual key-value pairs, just then `<secret_name>` under which the kvps are stored)
+
+    - `LoadBalancer`:
+        - Legacy way of allowing network traffic into a cluster
+        - Allows traffic into 1 specific set of pods only, so we would need as many as the number of deployments we need to expose  
+
+    - `Ingress`:
+        - A special kind of `Service`, which allows external traffic into a set of deployments and other Kubernetes objects
+        - There are multiple implementations of an `Ingress`, we will use the `ingress-nginx` that is a project developed officially by Kubernetes (this is from `github.com/kubernetes/ingress-nginx`)
+            - as opposed to `kubernetes-ingress`, which is a project developed by `nginx` (`github.com/nginxinc/kubernetes-ingress`)
+        - implementing `ingress-nginx` will create an ingress locally, but when deploying it to a cloud environment, it will create a second ingress based on the cloud provider, and the setup will be different for each one of them!
+        - `Controller`:
+            - Previously we created a `config` file that was fed into `kubectl`, so that the running `deployment` could look at it and check the *current state* vs. the *desired state*, and do as it was supposed to. The `deployment` in this case is considered a `controller`
+            - In the world of ingresses it works the same way, but the object we create with the `config` file is called an `Ingress controller`, which makes sure the *current state* is always up-to-date with the *desired state*
+
+        - **Summary:**
+            - We have an `ingress config file`, that creates an `ingress controller`, that is then creating a `traffic-forwarding element` in our infrastructure
+            - In our case with the `ingress-nginx` setup this `traffic forwarding element` will be the same as the controller, so no separated thing is created!
+            - When we set this up on a Cloud Provider, a 2nd ingress service is created by the provider, which is specific to that provider:
+                - With `Google Cloud` specifically:
+                    - Traffic comes into the `GC Load Balancer` (still in the cloud!)
+                    - Traffic is forwarded to the `Load Balancer Service` (this is inside our cluster)
+                    - The `Load Balancer Service` is connected to a `deployment`, that has a container running with the combined `nginx controller/nginx pod`
+                    - The `Load Balancer Service` and the `deployment` inside are created using an `ingress config file`, which includes a set of routing rules
+                    - The `ingress-nginx` project we are using also creates a `default backend`, which is another `deployment`-`cluster-ip-service` setup on the same level as our `client` and `server` deployments (this is ideally replaced by your app's backend, eg express server)
+
+    - `RBAC - Role Based Access Control:`
+        - Limits who can access and modify objects in our cluster:
+        - Enabled on Google Cloud by default
+        - If another app wants to make changes to our cluster, it need permissions, that's why we use `RBAC`
+        - How access and authorization works:
+            - Account types (this just identifies you, doesn't allow you to do something):
+                - `User account`:
+                    - Identifies a *person* administering the cluster
+                - `Service Account`:
+                    - Identifies a *pod* administering the cluster
+            - Actual authorization is done by the `RoleBindings` (so this is what is linked to a service account or user, that actually gives you access!):
+                - `ClusterRoleBinding`:
+                    - Authorizes an account to do a certain set of actions across the *entire cluster*
+                - `RoleBinding:`
+                    - Authorizes an account to do a certain set of actions in a *single namespace*
+                
+- **Kubernetes Objects (archive notes):**
+    - K8s consists of objects, that can be created from the CLI or from `yaml` *template files*
+        - **CLI**: not recommended as can't keep track of versions
+        - **template files**: allow version control
+    - **K8s Objects:**
+        - **Core components (Nana):**
+            - `Pod`
+            - `Service` / `Ingress`
+            - `ConfigSet` / `Secret`
+            - `Volume`
+            - `Deployment` / `StatefulSet`
+        - **Pod:**
+            - **Definition:**
+                - `Pods` are the smallest deployable units of computing that you can create and manage in Kubernetes
+                - A `Pod` is a group of one or more containers, with shared storage and network resources, and a specification for how to run the containers. 
+                - Its contents are always co-located and co-scheduled, and run in a shared context.
+                - It is similar to a *group of Docker containers* with shared namespaces and shared filesystem volumes.
+            - **You don't need to create them manually:**
+                - create them using workload resources such as `Deployment` or `Job` (this is for stateless Apps (eg. without a DB))
+                - If your Pods need to track state, consider the `StatefulSet` resource (this is for handling stateful Apps with Databases)
+            - **Used in 2 main ways:**
+                - Pods that run a **single container**:
+                    - The "one-container-per-Pod" model is the most common Kubernetes use case; in this case, you can think of a `Pod` as a wrapper around a single container
+                    - Kubernetes manages `Pods` rather than managing the containers directly
+
+                - Pods that run **multiple containers** that need to work together:
+                    - A `Pod` can encapsulate an application composed of multiple co-located containers that are tightly coupled and need to share resources
+                    - These co-located containers form a single cohesive unit of service—for example, one container serving data stored in a shared volume to the public, while a separate sidecar container refreshes or updates those files.
+                    - The `Pod` wraps these containers, storage resources, and an ephemeral network identity together as a single unit.
+                
+                - Note: Each `Pod` is meant to run a single instance of a given application. If you want to scale your application horizontally (to provide more overall resources by running more instances), you should use multiple `Pods`, one for each instance. In Kubernetes, this is typically referred to as **replication**. Replicated `Pods` are usually created and managed as a group by a workload resource and its controller.
+            
+            - **Static Pod:**
+                - `kubelet:`:
+                    - The `kubelet` is the primary "node agent" that runs on each node. It can register the node with the `apiserver` using one of the following:
+                        - the hostname
+                        - a flag to override the hostname
+                        - or specific logic for a cloud provider.
+                - `Static Pods` are managed directly by the `kubelet daemon` on a specific node, without the `API server` observing them
+                    - as opposed to `Pods` that are managed by the control plane (for example, a Deployment)
+                    - the `kubelet` watches each static `Pod` (and restarts it if it fails)
+                    - `Static Pods` are always *bound to one Kubelet on a specific node*
+                - The `kubelet` automatically tries to create a mirror `Pod` on the `Kubernetes API server` for each `static Pod`.
+                    - This means that the `Pods` running on a node are visible on the API server, but cannot be controlled from there
+                    - The `Pod` names will suffixed with the node hostname with a leading hyphen
+        
+        - **Init Containers:**
+            - A `Pod` can have multiple containers, running apps within it, but it can also have one or more `init containers`, which are *run before the app containers are started*.
+
+            - `Init containers` are exactly like regular containers, except:
+                - `Init containers` always run to completion.
+                - Each `init container` must complete successfully before the next one starts.
+
+            - If a `Pod`'s `init container` fails, the `kubelet` repeatedly restarts that `init container` until it succeeds. However, if the `Pod` has a `restartPolicy` of `Never`, and an `init container` fails during startup of that `Pod`, Kubernetes treats the overall `Pod` as failed.
+        
+        - **Jobs:**
+            - A `Job` creates one or more `Pods` and will continue to retry execution of the `Pods` until a specified number of them successfully terminate:
+                - As `pods` successfully complete, the `Job` tracks the successful completions
+                - When a specified number of successful completions is reached, the task (ie, `Job`) is complete. 
+                - Deleting a `Job` will clean up the Pods it created.
+
+            - A simple case is to create one `Job object` in order to reliably run one `Pod` to completion:
+                -  The `Job object` will start a new `Pod` if the first `Pod` fails or is deleted (for example due to a node hardware failure or a node reboot).
+                - You can also use a `Job` to run multiple `Pods` in parallel.
+        
+        - **ReplicaSet:**
+            - A `ReplicaSet`'s purpose is to maintain a stable set of replica `Pods` running at any given time:
+                - It is often used to guarantee the availability of a specified number of identical `Pods`
+            - A `ReplicaSet` is defined with `fields`, including:
+                - a `selector` that specifies how to identify `Pods` it can acquire
+                - a `number of replicas` indicating how many `Pods` it should be maintaining
+                - a `pod template` specifying the data of new `Pods` it should create to meet the number of replicas criteria. 
+            - A `ReplicaSet` then fulfills its purpose by creating and deleting `Pods` as needed to reach the desired number. When a `ReplicaSet` needs to create new `Pods`, it uses its `Pod template`.
+            - A `ReplicaSet` is linked to its `Pods` via the Pods' `metadata.ownerReferences` field, which specifies what resource the current object is owned by. 
+                - All `Pods` acquired by a `ReplicaSet` have their owning `ReplicaSet`'s identifying information within their `ownerReferences` field. 
+                - It's through this link that the `ReplicaSet` knows of the state of the `Pods` it is maintaining and plans accordingly.
+            - A `ReplicaSet` identifies new `Pods` to acquire by using its `selector`:
+                - If there is a `Pod` that has no `OwnerReference` or the `OwnerReference` is not a `Controller` and it matches a `ReplicaSet`'s `selector`, it will be immediately acquired by said `ReplicaSet`.
+            - A `ReplicaSet` ensures that a specified number of `pod` replicas are running at any given time. However, a `Deployment` is a higher-level concept that manages `ReplicaSets` and provides declarative updates to `Pods` along with a lot of other useful features. 
+                - It's recommended to use `Deployments` instead of directly using `ReplicaSets`, unless you require custom update orchestration or don't require updates at all.
+                - This actually means that you may never need to manipulate `ReplicaSet` objects: use a `Deployment` instead, and define your application in the `spec` section.
+        
+        - **Deployment:**
+            - A `Deployment` provides declarative updates for `Pods` and `ReplicaSets`
+            - We don't want to just rely on 1 node, we have to have backups, so there's no downtime -> we can specify how many replicas we want to make of our app node:
+                - We create `deployments`, not `pods` directly, because here we can specify the replica numbers (we can also scale up or down replica numbers)
+                - `deployments` are the blueprints for the app's `pods` (they are another abstraction layer, so now we have `container` -> `pod` -> `deployment`)
+                - the issue is, we can't replicate a whole node, because we can't replicate databases (for this, we use `statefulSet`):
+                    - so if we have a stateless App (eg no DB) -> we can use `Deployment`
+                    - if we have a stateful App (eg we need a DB's state to be tracked for replicas) -> we can use `StatefulSet`
+
+            - After you describe a desired state in a `Deployment`, the `Deployment Controller` changes the actual state to the desired state at a controlled rate. 
+                - You can define `Deployments` to create new `ReplicaSets`, or to remove existing `Deployments` and adopt all their resources with new `Deployments`.
+
+            - The following are typical use cases for `Deployments`:
+                1. Create a `Deployment` to rollout a `ReplicaSet`. The `ReplicaSet` creates `Pods` in the background. Check the status of the rollout to see if it succeeds or not.
+                2. Declare the new *state* of the `Pods` by updating the `PodTemplateSpec` of the `Deployment`. A new `ReplicaSet` is created and the `Deployment` manages moving the `Pods` from the old `ReplicaSet` to the new one at a controlled rate. Each new `ReplicaSet` updates the revision of the `Deployment`.
+                3. Rollback to an earlier `Deployment` revision if the current state of the `Deployment` is not stable. Each rollback updates the revision of the `Deployment`.
+                4. Scale up the `Deployment` to facilitate more load.
+                5. Pause the `Deployment` to apply multiple fixes to its `PodTemplateSpec` and then resume it to start a new rollout.
+                6. Use the status of the `Deployment` as an indicator that a rollout has stuck.
+                7. Clean up older `ReplicaSets` that you don't need anymore.
+
+        - **DaemonSet:**
+            - A `DaemonSet` ensures that all (or some) Nodes run a copy of a `Pod`:
+                - As nodes are added to the cluster, `Pods` are added to them
+                - As nodes are removed from the cluster, those `Pods` are garbage collected
+                - Deleting a `DaemonSet` will clean up the `Pods` it created.
+
+            - Some typical uses of a `DaemonSet` are:
+                - running a `cluster storage daemon` on every node
+                - running a `logs collection daemon` on every node
+                - running a `node monitoring daemon` on every node
+
+            - In a simple case, one `DaemonSet`, covering all nodes, would be used for each type of daemon.
+            - A more complex setup might use multiple `DaemonSets` for a single type of daemon, but with different flags and/or different memory and cpu requests for different hardware types.
+        
+        - **Service:**
+            - The Kubernetes `service object` (not to be mixed with service in context of microservices) is responsible for handling communication inside or outside the cluster (we mostly use it for internal communications, for external we have `ingress`)
+            - The Kubernetes `service object` has a `type` argument which determines its functionality.
+            - We use these as a docking bay for a `pod`, so that they can communicate with each other:
+                - each `pod` has an IP address, but when that `pod` gets replaced (because it died and needs replacement), a new IP address gets assigned
+                - In order for `pods` maintain communication, they are connected with `services`, that have their own `static IP address`
+            - The most common service types include:
+                - **ClusterIP:**
+                    - A `ClusterIP` service is the default Kubernetes service. It gives you a service inside your cluster that other apps inside your cluster can access. There is no external access.
+                    - There are a few scenarios where you would use the Kubernetes proxy to access your services:
+                        - Debugging your services, or connecting to them directly from your laptop for some reason
+                        - Allowing internal traffic, displaying internal dashboards, etc.
+                    - Because this method requires you to run `kubectl` as an authenticated user, you should NOT use this to expose your service to the internet or use it for production services.
+
+                - **NodePort:**
+                    - A `NodePort` service is the most primitive way to get external traffic directly to your service:
+                        -  `NodePort`, as the name implies, opens a specific port on all the Nodes (the VMs), and any traffic that is sent to this port is forwarded to the service. 
+                        - Basically, a `NodePort` service has two differences from a normal `ClusterIP` service:
+                            - First, the type is `NodePort`. 
+                            - There is also an additional port called the `nodePort` that specifies which port to open on the nodes. If you don’t specify this port, it will pick a random port. Most of the time you should let Kubernetes choose the port.
+                    - There are many downsides to using `NodePorts`:
+                        - You can only have one service per port
+                        - You can only use ports `30000–32767`
+                        - If your `Node/VM` IP address change, you need to deal with that
+                        
+                        - For these reasons, we don’t recommend using this method in production to directly expose your service. If you are running a service that doesn’t have to be always available, or you are very cost sensitive, this method will work for you. A good example of such an application is a demo app or something temporary.
+
+                - **LoadBalancer:**
+                    - A `LoadBalancer` service is the standard way to expose a service to the internet.
+                    - If you want to directly expose a service, this is the default method:
+                        - All traffic on the port you specify will be forwarded to the service
+                        - There is no filtering, no routing, etc. This means you can send almost any kind of traffic to it, like HTTP, TCP, UDP, Websockets or gRPC for example.
+
+                    - The big downside is that each service you expose with a `LoadBalancer` will get its own IP address, and you have to pay for a `LoadBalancer` per exposed service, which can get expensive!
+
+        - **Ingress:**
+            - It's very similar to `services`, but this is for **external connections** -> we can connect to these from outside the cluster
+            - It sits in front of multiple `services` and act as a **smart router** or entrypoint into your cluster.
+            - You can do a lot of different things with an `Ingress`, and there are many types of `Ingress controllers` that have different capabilities:
+                -  Usually an `ingress controller` will spin up a HTTP(S) `Load Balancer` for you. This will let you do both path based and subdomain based routing to backend services. For example, you can send everything on `foo.yourdomain.com` to the `foo` service, and everything under the `yourdomain.com/bar/` path to the bar service
+
+        - **Secret:**
+            - Kubernetes `Secrets` let you store and manage sensitive information, such as passwords, OAuth tokens, and ssh keys, so that you don't need to include confidential data in your application code
+            - Storing confidential information in a `Secret` is safer and more flexible than putting it verbatim in a `Pod definition` or in a `container image`.
+            - The non-confidential version of a `secret` is a `configmap`
+
+            - To use a `Secret`, a `Pod` needs to reference the `Secret`.
+
+            - Kubernetes provides several `builtin types` for some common usage scenarios. These types vary in terms of the validations performed and the constraints Kubernetes imposes on them.
+
+                    Builtin Type	                            Usage
+                    Opaque	                                    arbitrary user-defined data
+                    kubernetes.io/service-account-token	        service account token
+                    kubernetes.io/dockercfg	serialized          ~/.dockercfg file
+                    kubernetes.io/dockerconfigjson	            serialized ~/.docker/config.json file
+                    kubernetes.io/basic-auth	                credentials for basic authentication
+                    kubernetes.io/ssh-auth	                    credentials for SSH authentication
+                    kubernetes.io/tls	                        data for a TLS client or server
+                    bootstrap.kubernetes.io/token	            bootstrap token data
+            
+        - **ConfigMap:**
+            - A `ConfigMap` is an API object used to store non-confidential data in key-value pairs. `Pods` can consume `ConfigMaps` as environment variables, command-line arguments, or as configuration files in a volume (used during either application initialization or runtime).
+
+            - The stored data is used to adjust values assigned to configuration parameters, for example, you can download and run the same container image to spin up containers for the purposes of local development, system test, or running a live end-user workload.
+            
+            - For confidential data we use `secrets` (see above!)
+
+            - A `ConfigMap` allows you to decouple environment-specific configuration from your container images, so that your applications are easily portable. Otherwise we would have to build and deploy our apps again, when we change something inside the app's configuration
+
+            - You can write a `Pod` spec that refers to a `ConfigMap` and configures the `container(s)` in that `Pod` based on the data in the `ConfigMap`. The `Pod` and the `ConfigMap` must be in the same namespace.
+        
+        - **PersistentVolume:**
+            - Managing storage is a distinct problem from managing compute instances. The `PersistentVolume` subsystem provides an API for users and administrators that abstracts details of how storage is provided from how it is consumed. To do this, we introduce two new API resources: `PersistentVolume` and `PersistentVolumeClaim`.
+
+            - `PVs` are not namespaced, they are available for the whole cluster!
+
+            - A `PersistentVolume` (PV) is a piece of storage in the cluster that has been provisioned by an administrator or dynamically provisioned using `Storage Classes`. It is a resource in the `cluster` just like a `node` is a `cluster` resource. `PVs` are volume plugins like `Volumes`, but have a lifecycle independent of any individual `Pod` that uses the `PV`. This API object captures the details of the implementation of the storage, be that NFS, iSCSI, or a cloud-provider-specific storage system.
+
+            - A `PersistentVolumeClaim` (PVC) is a request for storage by a user. It is similar to a `Pod`. `Pods` consume `node` resources and `PVCs` consume `PV` resources. Pods can request specific levels of resources (CPU and Memory). Claims can request specific size and access modes (e.g., they can be mounted `ReadWriteOnce`, `ReadOnlyMany` or `ReadWriteMany`, see `AccessModes`).
+
+            - While `PersistentVolumeClaims` allow a user to consume abstract storage resources, it is common that users need `PersistentVolumes` with varying properties, such as performance, for different problems. `Cluster` administrators need to be able to offer a variety of PersistentVolumes that differ in more ways than just size and access modes, without exposing users to the details of how those volumes are implemented. For these needs, there is the `StorageClass` resource.
+        
+        - **Volumes:**
+            - A `Volume` is a component that allows data to persist and be shared across container restarts and among multiple containers within a pod:
+                - A Kubernetes volume exists as long as the pod containing it exists. Unlike the temporary local storage of a container, a volume can persist data across container restarts and is accessible to all containers within the pod.
+                - Volumes are defined at the pod level, and their lifecycle is tied to the lifecycle of the pod
+            - **Volume types:**
+                - `emptyDir`: starts as an empty volume but persists data as long as the pod is running
+                - `hostPath`: mounts a file or directory from the host node’s filesystem into your pod
+                - `nfs`
+                - `configMap` (see separate section)
+                - `secret` (see separate section)
+            - Volumes are declared in the pod's configuration file under the volumes field, and then they are mounted into containers within the pod
+            - **Use cases:**
+                - Sharing Data Between Containers in a Pod:
+                    - Volumes can be used to share files between containers running within the same pod. For instance, one container might write logs or output data to a volume that another container processes or exports.
+                - Data Persistence:
+                    - To ensure that data persists beyond the life of a pod or for data that needs to survive pod restarts and failures, persistent volumes (PVs) and persistent volume claims (PVCs) are used. These allow for data to be stored in a way that is independent of the pod lifecycle.
+                - Configurations and Secrets:
+                    - `configMap` and `secret volumes` are used to store configuration data and sensitive information, respectively. These volumes can be mounted into pods, allowing containers to use configurations and secrets without hard-coding them into the container images or pod definitions.
+                - Storing Logs and Other Temporary Data:
+                    - `emptyDir` volumes are ideal for temporary data that needs to be shared between containers in a pod, such as logs, caches, or files that should not persist once the pod is deleted.
+                - Accessing Storage Systems:
+                    - Volumes allow pods to access various types of external storage systems like NFS, cloud storage services (e.g., AWS EBS, Azure Disk), and networked storage systems, facilitating data sharing and data persistence in distributed systems.
+                - Running Stateful Applications:
+                    - Stateful applications like databases can use persistent volumes to store database files, ensuring that the data remains available even if the pod needs to be relocated to a different node.
+
+        - **StorageClass:**
+            - A `storageClass` provides a way to describe the "classes" of storage available in a cluster. It acts as a mechanism to dynamically provision storage resources based on the needs of the applications:
+                - it is used for *managing storage solutions* in a **flexible and efficient manner**, aligning storage provisioning with application requirements and simplifying the management of storage resources across the cluster
+            - **What it does:**
+                - allows for **dynamic provisioning** of storage resources, meaning it automates the creation of storage volumes as they are required by applications, based on predefined templates of storage configurations.
+                - It **abstracts the details** of how storage is provided from how it is consumed, enabling administrators to define different types of storage (e.g., performance levels, backup policies, or disk types) under familiar names like "fast" or "slow".
+                - **Customization and flexibility:** Administrators can define multiple `StorageClasses` within a cluster, each tailored for different use cases or performance requirements. This allows users to select the most appropriate type of storage for their specific applications by simply referencing the `StorageClass` name in their `Persistent Volume Claims` (`PVCs`).
+            - **Key Features:**
+                - `Provisioner`:
+                    - Each `StorageClass` includes a provisioner that determines what volume plugin is used for provisioning the storage. This could be internal to Kubernetes or it could be from external sources like `AWS Elastic Block Store` (`EBS`), Google Persistent Disk, or a network file system (NFS).
+                - `Parameters`:
+                    - Administrators can specify parameters within a `StorageClass` to configure the volume plugin, tailoring options such as disk format, replication levels, or IOPS (Input/Output Operations Per Second) for a specific storage type.
+                - `Reclaim Policy`:
+                    - The reclaimPolicy attribute controls what happens to the underlying physical storage when a user deletes the associated `Persistent Volume Claim`. Typical policies include Delete (where the volume is deleted along with the `PVC`) and Retain (where the volume is retained after the `PVC` is deleted).
+                - `Volume Binding Mode`:
+                    - This attribute controls the timing of volume binding and provisioning. It can be set to Immediate (default) where the volume provisioning occurs as soon as the `PVC` is created, or `WaitForFirstConsumer` where provisioning is delayed until a pod actually needs it
+            - **Use cases:**
+                - **Highly Available Applications:**
+                    - Use specific `StorageClasses` that configure more durable and redundant storage options.
+                - **Performance-Sensitive Applications:**
+                    - Choose `StorageClasses` with higher IOPS or faster disk technologies for databases or other I/O-intensive applications.
+                - **Cost Management:**
+                    - Employ `StorageClasses` that map to cost-effective storage solutions for less critical data.
+
+        - **StatefulSets:**
+            - `StatefulSets` are a workload API object used for managing stateful applications. They manage the deployment and scaling of a set of Pods, and unlike `Deployments`, they provide guarantees about the ordering and uniqueness of these Pods
+            - **What they do:**
+                - `StatefulSets` are specifically designed for applications that require a stable, unique network identifier, stable persistent storage, and ordered deployment and scaling.
+                - `StatefulSets` maintain a strict order with regards to how Pods are created, scaled, and deleted. They are created sequentially, and also deleted in reverse order during scaling down.
+                - Each Pod in a `StatefulSet` derives its hostname from the name of the `StatefulSet` and a unique ordinal for each Pod (e.g., myapp-0, myapp-1). This naming convention remains consistent, even if the Pods are rescheduled to new IPs.
+                - `StatefulSets` use `Persistent Volumes` that can be mounted to the Pods based on the same unique ordinal associated with each Pod. If a Pod is rescheduled, it can reattach to the same `Persistent Volume`, preserving its state.
+
+        - **Comparison (`Volume`, `PersistentVolume`, `StorageClass`, `StatefulSet`):**
+            - `StatefulSets` manage applications that require specific storage (`Persistent Volumes`), which are defined by their characteristics (`StorageClasses`), and `Volumes` provide temporary storage for other less critical needs
+
+## AWS EKS
 - **What is it?**
+    - *Elastic Kubernetes Service*
     - A managed k8s cluster/service:
         - AWS manages Master Nodes
             - Creates the master node and install all the necessary apps (Container Runtime, Master Processes)
@@ -793,7 +560,7 @@
     
     - We can simplify this process with **eks control tool**: `eksctl` (CLI for AWS EKS) (see below in the guides section!)
 
-## HELM
+# HELM
 - What is `Helm`?
     - It's a package manager for K8s, that helps you manage K8s apps through `charts` (packages of pre-configured K8s resources)
     - It is like **an extension  to the basic k8s configuration files**. It makes it available to use variables and download other packages very easily. It helps us with 2 main components:
@@ -926,7 +693,8 @@
     - `helm search repo`:
         - searches the repositories that you have added to your local helm client (search is done over local data)
 
-## GUIDES:
+# GUIDES:
+## Basics:
 - **General tips:**
     - Create a VPC, then create a cluster first:
         - create a VPC (not necessary!)
@@ -952,109 +720,6 @@
             - The application is now available at `http://localhost:7080/`
     4. Delete the service if not used anymore:
         - `kubectl delete service hello-minikube`
-
-- **Kubernetes basics using minikube (from Udemy course):**
-    - Plan:
-        - Images should be ready-to-go on DockerHub
-        - Configurations should be done for:
-            - Creating the container(s)
-            - Creating the networking
-
-    - Create a separate folder from the project (eg. simple-k8s):
-        - Initialize minikube:
-            - `minikube start`
-        - Start by creating the basic k8s objects:
-            - Create `client-pod.yaml`
-            - Create `client-node-port.yaml` (this is a service!)
-        - Once created, we can add them to our cluster / feed them to `kubectl` (we are using `minikube` for development for now):
-            - `kubectl apply -f client-pod.yaml`
-            - `kubectl apply -f client-node-port.yaml`
-                - You can the also delete these with:
-                    - `kubectl delete -f client-pod.yaml`
-            
-            - Ports explained:
-                - `port: 3050`: this is used by other services in the cluster, that need to reach out to the pod the service connects to (through `targetPort`)
-                - `targetPort: 3000`: This is the port we expose our container on, which is specified in the Pod as `containerPort`
-                - `nodePort: 31515`: This is the port of the node, through which we can connect to. So we could type `http://localhost:31515` in theory, but since the VM created by minikube is NOT on localhost, we need to find out it's IP address first:
-                    - To find out the minikube's IP: `minikube ip`
-                    - Now we can connect with: `<minikube-IP>:<nodePort>`, eg `192.168.49.2:31515` (This only works on Linux or Mac!)
-
-        - Check status:
-            - `kubectl get pods`
-            - `kubectl get pods`
-            - `kubectl get services`
-            
-        - Initialize tunnel to access your app(required on Windows!):
-            - `minikube tunnel` -> then connect to `127.0.0.1` (localhost) instead of the `minikube ip`
-            - `minikube service <nodePort-servce-name> --url` -> this gets you an URL that you can use to directly reach your app
-
-        - Get detailed info about a Kubernetes Object:
-            - `kubectl describe <object-type> <object-name>`
-
-        - Updating a `Pod`:
-            - just update the images it uses in the file, then re-apply the .yml file with the same `name` and `kind`
-            - You can only change the image used basically, everything else needs a different approach (use `Deployment` instead)
-        
-        - Using a `Deployment` instead a `Pod`, to run a set of `Pods`:
-            - Runs more, *identical* pods simultaneously! 
-            - Also restarts crashed pods, by monitoring them
-            - These can also be used in production!
-
-            - Uses a `Pod template`, that contains the following info:
-                - Number of containers
-                - Name
-                - Port
-                - Image
-            
-            - If we want the deployment to automatically check and update itself to use the latest version of the image it uses, we do the follwing:
-                - We need to recreate our docker image with a specific tag:
-                    - `docker build gakalmar/new-image:v1.1 .`
-                    - `docker push gakalmar/new-image:v1.1`
-                - Then we can update our running deployment like this:
-                    - `kubectl set image <object_type>/<object_name> <container_name>=<new_image_to_use>`
-                    - `kubectl set image deployment/client-deployment client=gakalmar/fibonacci-calculator-client-dev:v1.1`
-        
-    - Docker runs 2 copies separately: one on your local machine, and the other one inside the node you are using in the kubernetes cluster. By default, in our terminal we are connected to the local docker version, but we can change this in the following way:
-        - `eval $(minikube docker-env)`
-            - This command only updates in the current terminal window, so if you want to use it, just open a new terminal, then kill it once you're done
-
-- **Deploy applications (Load Balancer):**
-    1. access a LoadBalancer deployment:
-        - `kubectl create deployment balanced --image=kicbase/echo-server:1.0`
-        - `kubectl expose deployment balanced --type=LoadBalancer --port=8080`
-    2. In another window, start the tunnel to create a routable IP for the ‘balanced’ deployment:
-        - `minikube tunnel`
-    3. To find the routable IP, run this command and examine the EXTERNAL-IP column:
-        - `kubectl get services balanced`
-        - Your deployment is now available at `<EXTERNAL-IP>:8080`
-
-- **Deploy Google's Hello App and setting up an ingress for it:**
-    - Follow instructions in this link: https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
-
-        1. Enable the NGINX Ingress controller:
-            - `minikube addons enable ingress`
-            - verify: `kubectl get pods -n ingress-nginx`
-        2. Deploy a hello, world app:
-            - `kubectl create deployment web --image=gcr.io/google-samples/hello-app:1.0` #`web` is the name
-            - verify: `kubectl get deployment web`
-        3. Expose deployment: 
-            - `kubectl expose deployment web --type=NodePort --port=8080`
-            - verify: `kubectl get service web`
-        4. Visit the Service via NodePort:
-            - `minikube service web --url`
-                - this gets you an IP with a port, eg `http://172.17.0.15:31637`
-            - verify itt works: `curl http://172.17.0.15:31637` (or in the browser)
-        5. Create an Ingress:
-            - `kubectl create ingress ingressname --rule="/=web:8080"`
-            - check what was created: `kubectl edit ingress ingressname`
-            - or : `kubectl get ingress`
-        6. Modify `/etc/hosts` file:
-            - Add this line: `127.0.0.1       minikube-test.localhost` # instead of just being localhost
-        7. Open tunnel:
-            - `minikube tunnel` # now we can access the minikube through the IP (`127.0.0.1`)
-
-    - Create a second Deployment (=Add a second service?):
-        - Follow instructions in this link: https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
 
 - **Create a k8s cluster in AWS EKS, using `eksctl`:**
     0. Install `eksctl` (if necessary):
@@ -1096,6 +761,45 @@
 
     4. Delete the cluster (after you're done!):
         - Delete cluster: `eksctl delete cluster --name test-cluster`
+
+## Based on Codecool tasks:
+- **Deploy applications (Load Balancer):**
+    1. access a LoadBalancer deployment:
+        - `kubectl create deployment balanced --image=kicbase/echo-server:1.0`
+        - `kubectl expose deployment balanced --type=LoadBalancer --port=8080`
+    2. In another window, start the tunnel to create a routable IP for the ‘balanced’ deployment:
+        - `minikube tunnel`
+    3. To find the routable IP, run this command and examine the EXTERNAL-IP column:
+        - `kubectl get services balanced`
+        - Your deployment is now available at `<EXTERNAL-IP>:8080` (localhost if used tunnel on Windows!)
+
+- **Deploy Google's Hello App and set up an ingress for it:**
+    - Follow instructions in this link: https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
+
+        1. Enable the NGINX Ingress controller:
+            - `minikube addons enable ingress`
+            - verify: `kubectl get pods -n ingress-nginx`
+        2. Deploy a hello, world app:
+            - `kubectl create deployment web --image=gcr.io/google-samples/hello-app:1.0` #`web` is the name
+            - verify: `kubectl get deployment web`
+        3. Expose deployment: 
+            - `kubectl expose deployment web --type=NodePort --port=8080`
+            - verify: `kubectl get service web`
+        4. Visit the Service via NodePort:
+            - `minikube service web --url`
+                - this gets you an IP with a port, eg `http://172.17.0.15:31637`
+            - verify itt works: `curl http://172.17.0.15:31637` (or in the browser)
+        5. Create an Ingress:
+            - `kubectl create ingress ingressname --rule="/=web:8080"`
+            - check what was created: `kubectl edit ingress ingressname`
+            - or : `kubectl get ingress`
+        6. Modify `/etc/hosts` file:
+            - Add this line: `127.0.0.1       minikube-test.localhost` # instead of just being localhost
+        7. Open tunnel:
+            - `minikube tunnel` # now we can access the minikube through the IP (`127.0.0.1`)
+
+    - Create a second Deployment (=Add a second service?):
+        - Follow instructions in this link: https://kubernetes.io/docs/tasks/access-application-cluster/ingress-minikube/
 
 - **Deploy an app on the cluster:**
     1. Create a Deployment:
@@ -1389,6 +1093,71 @@
             - `helm upgrade flask-app-with-helm helm/charts/flask-app --install` (if you need to make any changes, eg it didn't work on the first try)
         - Use the 2 commands that get displayed, to get an URL!
 
+## Udemy courses:
+- **Deployment with minikube (from basic Udemy course):**
+    - Plan:
+        - Images should be ready-to-go on DockerHub
+        - Configurations should be done for:
+            - Creating the container(s)
+            - Creating the networking
+
+    - Create a separate folder from the project (eg. simple-k8s):
+        - Initialize minikube:
+            - `minikube start`
+        - Start by creating the basic k8s objects:
+            - Create `client-pod.yaml`
+            - Create `client-node-port.yaml` (this is a service!)
+        - Once created, we can add them to our cluster / feed them to `kubectl` (we are using `minikube` for development for now):
+            - `kubectl apply -f client-pod.yaml`
+            - `kubectl apply -f client-node-port.yaml`
+                - You can the also delete these with:
+                    - `kubectl delete -f client-pod.yaml`
+            
+            - Ports explained:
+                - `port: 3050`: this is used by other services in the cluster, that need to reach out to the pod the service connects to (through `targetPort`)
+                - `targetPort: 3000`: This is the port we expose our container on, which is specified in the Pod as `containerPort`
+                - `nodePort: 31515`: This is the port of the node, through which we can connect to. So we could type `http://localhost:31515` in theory, but since the VM created by minikube is NOT on localhost, we need to find out it's IP address first:
+                    - To find out the minikube's IP: `minikube ip`
+                    - Now we can connect with: `<minikube-IP>:<nodePort>`, eg `192.168.49.2:31515` (This only works on Linux or Mac!)
+
+        - Check status:
+            - `kubectl get pods`
+            - `kubectl get pods`
+            - `kubectl get services`
+            
+        - Initialize tunnel to access your app(required on Windows!):
+            - `minikube tunnel` -> then connect to `127.0.0.1` (localhost) instead of the `minikube ip`
+            - `minikube service <nodePort-servce-name> --url` -> this gets you an URL that you can use to directly reach your app
+
+        - Get detailed info about a Kubernetes Object:
+            - `kubectl describe <object-type> <object-name>`
+
+        - Updating a `Pod`:
+            - just update the images it uses in the file, then re-apply the .yml file with the same `name` and `kind`
+            - You can only change the image used basically, everything else needs a different approach (use `Deployment` instead)
+        
+        - Using a `Deployment` instead a `Pod`, to run a set of `Pods`:
+            - Runs more, *identical* pods simultaneously! 
+            - Also restarts crashed pods, by monitoring them
+            - These can also be used in production!
+
+            - Uses a `Pod template`, that contains the following info:
+                - Number of containers
+                - Name
+                - Port
+                - Image
+            
+            - If we want the deployment to automatically check and update itself to use the latest version of the image it uses, we do the follwing:
+                - We need to recreate our docker image with a specific tag:
+                    - `docker build gakalmar/new-image:v1.1 .`
+                    - `docker push gakalmar/new-image:v1.1`
+                - Then we can update our running deployment like this:
+                    - `kubectl set image <object_type>/<object_name> <container_name>=<new_image_to_use>`
+                    - `kubectl set image deployment/client-deployment client=gakalmar/fibonacci-calculator-client-dev:v1.1`
+        
+    - Docker runs 2 copies separately: one on your local machine, and the other one inside the node you are using in the kubernetes cluster. By default, in our terminal we are connected to the local docker version, but we can change this in the following way:
+        - `eval $(minikube docker-env)`
+            - This command only updates in the current terminal window, so if you want to use it, just open a new terminal, then kill it once you're done
 
 ## COMMANDS:
 - Install (on Linux): *( https://minikube.sigs.k8s.io/docs/start/ )*

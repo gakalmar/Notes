@@ -17,6 +17,7 @@
         - most of these dashboards are already pre-set, so we can reuse these instead of creating out own
     
 # GUIDES:
+## Based on Codecool tasks:
 - **Install & setup using `kubectl`:**
     0. Set up cluster (and VPC unless it's the default)
 

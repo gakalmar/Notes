@@ -28,7 +28,7 @@
 - használat: `systemctl start/stop/enable/disable/status <service>` (pl. `cron`, `sshd`, `networkd`)
 ### Describe the permission model of Linux! How would you make a file only readable and writable by its owner?
 - permission model -> multi-user jelleg miatt
-- 2 réteg (ownership U/G/O / permission R/W/X) - f/d+9bit
+- 2 réteg (ownership U/G/O / permission R/W/X) - f/d + 9bit
 - módosítás: `chown user:group filename`
 - módosítás: (szimbolikus `chmod g+x file` / abszolút `chmod 744 file`)
 - spec: SUID owner nevében lehet futtatni; `x` -> `s` (`chmod 4744 file`) + GUID (`2744`)
@@ -39,12 +39,12 @@
 - GB (Gigabyte): 10^9 bytes (1 byte = 8 bit -> 1GB = 8Gb)
 ### What are some well-known configuration files on a Linux OS?
 - `/etc/shadow`: encryptálva tárol passwordöket
-- `/etc/passwd`: user account ifót tárol, hogy kik vannak a rendszerben
+- `/etc/passwd`: user account infót tárol, hogy kik vannak a rendszerben
 - `/etc/group`: group-okat tárol ugyanígy
 - `/etc/fstab`: a diskekről és azok mountolásáról tárol információt
-- `/etc/hosts`: itt tárolja a már ismert DNS-eke, hogy ne kelljen mindent lekérdezni
+- `/etc/hosts`: itt tárolja a már ismert DNS-eket, hogy ne kelljen mindent lekérdezni
 - `/etc/crontab`: cronjob ütemezésre szánt feladatokat tárol
-- `/etc/services`: service-ket és a hozzájuk kapcsolódó portokat ls protocol-okat tárolja
+- `/etc/services`: service-ket és a hozzájuk kapcsolódó portokat és protocol-okat tárolja
 - `/etc/skel`: blueprint directory for new users
 ### Explain the "set" builtin command and some of its most commonly used flags!
 - `set` scriptekben használjuk, leginkább debugginghoz, vagy a progress check-hez
@@ -69,20 +69,20 @@
 - Layer 3: Network - ROUTER
     - IP protocol-t használ packet forwardinghoz
 - Layer 4: Transport
-    - Azt biztosítja, hogy az adatok hiánytalanul, megfelelő sorrendben és hibák nélkül eljussanak a címzetthez
+    - Azt biztosítja, hogy az adatok hiánytalanul, megfelelő sorrendben és hibák nélkül eljussanak a címzetthez (TCP, UDP protocol)
 - Layer 5: Session
     - A lokális és távoli appok közti session-öket menedzseli (mukafázis/szakasz)
 - Layer 6: Presentation
     - Data encryption és decryption itt történik, valamint biztosítja, hogy az adatok megfelelően használhatóak legyenek
 - Layer 7: Application
-    - A userhez legközelebbi layer, ez bonyolítja le a kommunikációt az appok között, valamint az end-user serviceket szolgáltatja
+    - A userhez legközelebbi layer, ez bonyolítja le a kommunikációt az appok között, valamint az end-user serviceket szolgáltatja (+DNS, UPP protocol)
 ### What is the difference between a router and a switch?
 - Switch: L2 Data Link / MAC alapú / azonos hálózaton küld packeteket / nincs kapcs. külső internettel (router felé megy a kimenő)
 - Router: L3 Network Layer / IP alapú / networkök közti kapcsolat (kapcs, külső internettel) / Header + Forwardin Table használata
 ### What is the difference between TCP and UDP?
 - Mindkettő a L4 Transport Layer protokolja, de egyszerre csak 1-et használ
 - `TCP` (Transmission Control Protocol): lassú, kézbesítés sikere (megbízható) / újraküldés / session-t hoz létre (port alapú kapcs. a küldő és fogadó között)
-- `UDP` (User Datagram Protocol): gyorsabb, de megbízhatatlan (nincs visszajelzés a sikerről) / connectionless / porton továbbít
+- `UDP` (User Datagram Protocol): gyorsabb, de megbízhatatlan (nincs visszajelzés a sikerről) / connectionless / porton továbbít (pl. video streaming)
 ### What is a VPN?
 - "Egy olyan technológia, amellyel hálózatokat tudunk összekapcsolni"
 - Client to site (site = hálózat): elterjedtebb, clientet köt össze másik hálózattal, nyitott az internet felé / VPN szerverhez kapcsolódunk -> azon kapcsolódik a másikhoz
@@ -100,7 +100,7 @@
 - Port: egy kommunikációs végpont, amit a TCP és UDP protokolok is használnak
 - A well-known-portok előre lefoglalt portok, amiket egyes service-ek használnak, hogy egyszerűsítsék az adattovábbítást
 - Port range-ek: System (0-1023) / User (1024-49151) / Dynamic (49152-65535)
-- Well-known ports: 21 FTP - 22 SSH - 53 DNS - 80 HTTP - 443 HTTPS - 3306 MzSQL - 5432 PostgreSQL - 6443 K8s - 27017 MongoDB 
+- Well-known ports: 21 FTP - 22 SSH - 53 DNS - 80 HTTP - 443 HTTPS - 3306 MySQL - 5432 PostgreSQL - 6443 K8s - 27017 MongoDB 
 ### What are the private IP address ranges?
 - csak privát hálózatokhoz lehet ezeket használni (nem léteznek a neten)
 - **Class A:** `10.0.0.0/8` to `10.255.255.255/8` (8 bites mask, sok subnet lehetőség - nagyobb hálózatok)
@@ -116,14 +116,68 @@
 - Működés: A host küld egy ARP requestet (broadcast) az IP címmel, amihez csatlakozni akar -> a megfelelő device visszaküldi a MAC address-ét (device-ok ARP táblákban tárolják az IP címekhez tartozó MAC címeket)
 ### What are the basic networking components in AWS?
 1. `VPC`: Virtual Private Cloud - izolált része a Cloudnak, ebben hozunk létre subnetet - CIDR block, Availability zone (több), IGW hozzárendel
-2. `Subnet`: Egy IP cím csoport a hálózaron belül - CIDR block, Availability zone (egy!), ebben hozunk létre instance-t, NATGW-t, Route Table tartozik hozzá (forgalom továbbítás)
+2. `Subnet`: Egy IP cím csoport a hálózaron belül - CIDR block, Availability zone (egy!), ebben hozunk létre instance-t, NATGW-t, Route Table tartozik hozzá (forgalom továbbítás) (SG helyett NACL)
 3. `Internet Gateway`: `VPC`-hez tudjuk csatolni (1et!), subnet hozzáférése az Internethez (RT-ben hozzáadni!)
 4. `NAT Gateway`: `private subnet`-nek ad hozzáférést az internethez (kell neki Elastic IP), vissza nem engedi a forgalmat, `public subnet`-ben hozzuk létre,  (RT-ben hozzáadni!)
 5. `EC2 instance`: virtális gép egy `Subnet`-en belül, `Security Group`-ot tudunk neki létrehozni, SSH kulcsot is meg kell határozni
 6. `Security Group`: `inbound` és `outbound rule`-ok létrehozása pl Inbound SSH 22, HTTP 80, ICMP (ping) / Outbound pl adatbázishoz
+    - `Security Group`: EC2 szinten (1 per SG, de lehet többhöz is csatolni), default nem enged be semmit, NACL után szűr, csoportos rule-kezelés, csak ALLOW, **stateful** (resp.-t nem kell külön beállítani), csak 1 gépet véd
+    - `NACL`: subnet szint (1 per SN, de lehet többhöz is csatolni), default mindent beenged, SG előtt szűr, rule-hierarchia (sorszám), ALLOW+DENY, **stateless** (rule-párok, mert response-ra is be kell állítani), hálózaton lévő összes gépre érvényes
 7. `Route Table`: ezzel továbbíthatjuk a forgalmat a belső hálóra (localhost), vagy a gateway-ekre
+8. Storage:
+    - `S3`: object storage, eg. the remote terraform state file , or for static website hosting
+    - `EBS`: Elastic Block Storage, a hard drive in the cloud that can be attached to EC2 instances. Scalable, high-performance, persistent storage. Used for DBs for example
+    - `EFS`: Elastic File Storage, shared file storage for multiple EC2 instances
+    - `Glacier`: Long-term storage for archives (very slow retrieval)
+9. Database:
+    - `RDS`: Relational Database Service
+        - managed relational database
+        - Traditional SQL (MySQL, PostgreSQL, Oracle)
+    - `DynamoDB`:
+        - NoSQL database, for high-performance, scalable applications
+    - `ElastiCache`:
+        - In-memory data storage
+        - use it for caching, real-time analytics, session storage (makes it quicker by reducing DB load)
+    - `Aurora`:
+        - high-performance relational DB for enterprise applications (high availabiliy and performance requirements - eg. e-commerce, finance)
+    - `Redshift`:
+        - data warehousing
+        - big data analytics and complex queries on large datasets (reporting)
+10. Monitoring, logging & tracking activities:
+    - `CloudWatch`: monitoring services, logs (apps), metrics (CPU+memory), alerts
+    - `CloudTrail`: tracks all events, API requests in our AWS environment (improve security) -> can be connected to `CloudWatch`
+11. `AWS Lambda`: 
+    - serverless compute service (lets you run code without setting up a server to run on - pay only for the compute time)
+    - typically we use it to run commands in response to certain events (or incoming API requests), or to automate tasks
+    - Example:
+        - Trigger: an image is uploaded to an S3 bucket
+        - Action: Lambda function processes the image (resize, compress) and copies it into another S3, where we store the images we can use
+12. Containerization and App hosting:
+    - `ECR`: Elastic Container Registry - similar to DockerHub for image storage
+    - `ECS`: Elastic Container Service - somewhere between docker-compose and kubernetes, but you don't have to deal with the infrastructure
+    - `EKS`: Elastic Kubernets Service - allows you to create Kubernetes clusters
+    - `Elastic Beanstalk`: a simplified app deploying service, that is fully managed (PaaS)
+    - `CloudFront`: a content delivery network (CDN) service that speeds up the distribution of your web content (such as HTML, CSS, JavaScript, and images) - uses caching to speed up the process
+13. Infrastructure handling:
+    - `CDK`: Cloud Development Kit - similar to Terraform, is used to define infrastructure, using code
+14. Security:
+    - `IAM Users` and `IAM Roles` - we can attach policies to them that allow for access (Role and User is used for identification, policies are used for permissions and access)
+    - `KMS` - Key management service, allow you to create and then manages key-pairs (for access or for encryption)
+15. API:
+    - Combined usage of the following services:
+        - `API Gateway`: RESTful APIs, integration with `Lambda`
+        - `AWS Lambda`: runs code in response to API requests (for serverless backends)
+        - `AWS AppSync`: query and manipulate data from multiple sources (similar to scraping?)
+        - `AWS Cognito`: Provides authentication, authorization, and user management for web and mobile applications
+
 ### What network diagnostic/debugging tools are you familiar with?
 - `ping` (`-c` count / `-i` interval) / `curl -L http://example.com` (`-L` a redirection miatt) / `traceroute` packet útja a kézbesítésig / `lsof` - list open files - check open ports / `host` or `dig` or `nslookup` DNS feloldás / `nc` netcat - egy távoli szervernek tudod megnézni a nyitott portjait
+### Microservices-architecture management tools:
+- Service Discovery: Consul, Eureka, etcd (allows services to find each other dynamically)
+- Service Mesh: Istion (controls service-to-service communication over a network)
+- Orchestration: Kubernetes
+- API Gataway and reverse proxy: Nginx, Kong
+- Monitoring: Prometheus and Grafana
 
 ## NETWORK SECURITY
 ### What is encryption at rest and encryption in transit, and how are these implemented in AWS?
@@ -180,7 +234,7 @@
 - Docker működése: Rétegelt (layered) architektúra (Dockerfile instruction 1 layer) / egymásra épülnek, így a felsők függnek az alatta lévőktől (a legalsó fölött mindent frissíteni kell) / cached layer az, amit már elkészített egyszer
 - Optimalizálás: A nem cserélt rétegek kerülnek a file-ban felülre (pl IMAGE) / dependency-ket külön file-ba (pl. `requirements.txt` egy Python app esetében)
 ### What are some common practices for optimizing container image size?
-- Minimális `base image` (pl `FROM alpine:3.19.1` vagy distroless) / csak szükséges dependencz install (req.txt file) / install után clean-up / .dockerignore / kevesebb layer (pl RUN command összevonással) / többlépcsős build (build env vs runtime env), így csak az kerül rá a végső image-re, ami tényleg kell
+- Minimális `base image` (pl `FROM alpine:3.19.1` vagy distroless) / csak szükséges dependency install (req.txt file) / install után clean-up / .dockerignore / kevesebb layer (pl RUN command összevonással) / többlépcsős build (build env vs runtime env), így csak az kerül rá a végső image-re, ami tényleg kell
 ### What problems can occur when the "latest" tag is used?
 - probléma forrása: nincs version control (nem egy konkrét verzió) -> új verzió lehet inkompatibilis, nehezebb debug (változó environment), latest lehet egy nem stabil image is! 
 ### Explain the architecture of a Kubernetes cluster!
@@ -190,7 +244,7 @@
 ### What is the difference between Deployment and StatefulSet kubernetes object? / What is the Deployment Kubernetes object responsible for?
 - mindkettő podok indításáért felel egy felsőbb absztrakciós réteget létrehozva (ReplicaSet még köztük van, ami Auto-Scaling groupot futtat!) / könnyen scale-elhető a cluster
 - Deployment: adatbázisokat nem tudunk replikálni (egy közös PersistentVolumeClaim-et használnak), így Deploymentet stateless App-oknál tudunk használni (ahol nincs szükség állandó tárolásra) - így az újraindított pod-ok nem is ugyanazok (más lesz a nevük)
-- StatefulSets: stateful App-oknál (pl ha egy adatbázissal dolguzunk), ahol arra is szükség van, hogy a Podok állandóak legyenek, és a sorrendjük is változatlan legyen (ha 1 leáll, akkor annak a megegyező paramétereivel hoz létre újat, ugyanabban a sorrendben elfoglalt pozícióban) / Minden Pod saját PVC-vel és PV-t használ (PersistetVolume), ezeknek a state-je pedig állandóan szinkronizálva van / GYAKORLATBAN 2 különbség depl. létrehozáshoz képest: (.yaml-ben kell külön volumeClaimTemplates rész + kell egy headless service a podok statikus jellege miatt (ClusterIP -> None ))
+- StatefulSets: stateful App-oknál (pl ha egy adatbázissal dolguzunk), ahol arra is szükség van, hogy a Podok állandóak legyenek, és a sorrendjük is változatlan legyen (ha 1 leáll, akkor annak a megegyező paramétereivel hoz létre újat, ugyanabban a sorrendben elfoglalt pozícióban) / Minden Pod saját PVC-vel és PV-t használ (PersistentVolume), ezeknek a state-je pedig állandóan szinkronizálva van / GYAKORLATBAN 2 különbség depl. létrehozáshoz képest: (.yaml-ben kell külön volumeClaimTemplates rész + kell egy headless service a podok statikus jellege miatt (ClusterIP -> None ))
 - Absztrakciós hierarchia: Deployment - ReplicaSet - Pod - Container
 ### What is a Service kubernetes object responsible for?
 - a Podokhoz férünk hozzá ezek segítségével (Pod IP változik új létrehozásakor -> label/selector alapú kapcsolat service-ekkel (Service selectora a Pod Label-jét keresi meg))
@@ -218,6 +272,7 @@
 - Hátrányai: Komplexebb és időigényesebb az elején jól megírni a kódot
 ### What are the basic commands of the terraform workflow?
 - Alapvető parancsok: `terraform init/plan/apply/destroy` (init elindítja a working dir-t és konfigurálja a backendet)
+    - `init`: létrehozza a working directoryt, kofigurálja a backendet a state file tárolására, előkészíti és installálja a használt modulokar és letölti a provider pluginokat (pl aws)
 - Tovabbiak: `terraform state <subcommand>`: state file kezelése (pl list, mv, rm, show, pull, push) / `terraform refresh`: azonnal updateli a valós állapotot a state alapján / `tf validate`: check syntax és hogy működőképes-e / `tf output`: a generálás utáni adatokat nyerhetjük ki vele, pl IP, hostname (ezek eleinte nem látszanak)
 ### What is the difference between resources and data sources in terraform?
 - resource: az infrastruktúra egy komponense, aminek a lifecycle-jét a TF kezeli (létrehoz valamit, de update-el és töröl is), típust kell megadni és nevet, majd paramétereket / nem 1-az-1-ben komponens, pl private S3 bucket-hez kell extra policy és public access block resource is!
@@ -225,7 +280,7 @@
 ### What does state mean in the context of terraform?
 - A state a stack-ünk (=backend) leképződése terraformban - van mindig egy kívánt állapot és egy valós, és ha különböznek, akkor a valóst frissíti / egy fileban tárolja a TF (`terraform.tfstate`) / lehet lokális, vagy remote file (ha csapatban akarunk dolgozni)
 ### What are modules in terraform?
-- Terraform configurációk gyűjteménye, amik egy-egy resource-gyűjteményt kezelnek / más terraform konfigurációkból tudjuk beolvasni, így hozzáférni a modul-ban található resource-okhoz is / vannak input és output variable-jeik, hogy rugalmasan lehessen ezeket kezelni
+- Terraform konfigurációk gyűjteménye, amik egy-egy resource-gyűjteményt kezelnek / más terraform konfigurációkból tudjuk beolvasni, így hozzáférni a modul-ban található resource-okhoz is / vannak input és output variable-jeik, hogy rugalmasan lehessen ezeket kezelni
 ### List the meta-arguments in terraform with their use cases!
 - A Meta-argumentumokat resource-okkal vagy modulokkal tudjuk használni, hogy módosítsuk/pontosítsuk a műküdésüket:
 - count, for_each, depends_on, lifecycle (pl prevent destroy), provider (defaulton kívül mást ad hozzá), connection (pl SSH-val lehessen hozzá kapcsolódni), timeouts (create, update, delete műveleteknél tudjuk meghatározni)
