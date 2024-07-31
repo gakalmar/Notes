@@ -19,6 +19,11 @@
     Ubuntu usage:
     Pres with useful stuff at the end: https://docs.google.com/presentation/d/1HFJcVCXOBBgr7kGxwM1Uq-frl_7wwjESO7m35Hj7mjc/edit#slide=id.g1263a94a7d_0_46
 
+- **Get OS info:**
+    - `uname -a`: gets Linux verison
+    - `cat /etc/os-release`: gets details about distro
+    - `explorer.exe .`: opens current folder in the file explorer in windows
+
 - **Set keyboard to UK:**
     1. `sudo nano /etc/default/keyboard`:
         - Change these lines:
