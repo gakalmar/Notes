@@ -88,7 +88,10 @@ lance TUI? (diplay running processes in terminal)
     - **Security Groups:**
         - acts as a virtual firewall for your EC2 instances to control incoming and outgoing traffic
         - Both inbound and outbound rules control the flow of traffic to and traffic from your instance (it's just like a turbo version `iptables`)
-        - when no rules are defined in a security group it blocks all inbound and outbound traffic! (By default when you launch an EC2 instance via the AWS Management Console will generate a security group for you which will allow inbound SSH connections and allow all outbound connections.)
+        - when no rules are defined in a security group it blocks all inbound and outbound traffic!     
+            - By default when you launch an EC2 instance via the AWS Management Console will generate a security group for you which will allow inbound SSH connections and allow all outbound connections.
+            - If you create a VPC, a SG gets created by default, and an instance by default gets this SG attached
+            - This SG allows connections from any resource that also has this SG attached (so this means basically, that everyone on the VPC will be allowed to connect by default)
         - each security group can be applied to one or more instances, even across subnets
         - each instance is required to be associated with one or more security groups (to be precise: a security group is associated with a network interface that is attached to an instance)
         - Different setups need different security group setups (eg port 3306 for MySQL)

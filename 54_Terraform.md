@@ -36,7 +36,19 @@
         - Most of a Terraform configuration consists of using arguments to configure Terraform resources:
             - Each resource type defines the arguments its resources can use, the allowed values for each argument, and which arguments are required or optional. 
             - Information about a given resource type can be found in the docs for that resource's provider.
-    
+    - **Meta-arguments:**
+        - Arguments that we can use within blocks, to configure Terraform behaviour:
+            - `depends_on`: explicitly define dependencies
+            - `count` and `for_each`
+            - `provider`: to define a separate provider from the default (used with an alias)
+            - `lifecycle`
+                - `create_before_destroy`: by default it's destroying first, then creating a new resource
+                - `prevent destroy`: exit with an error if the planned change would lead to the resource being destroyed (eg. for a critical resource)
+                - `replace_triggered_by`: replaces the resource when any of the referenced items change
+                - `ignore_changes`: provide a list of attributes that don't trigger an update (for external manual changes for example, revert won't happen)
+            - `connection`: eg connect with SSH
+            - `timeouts`: eg. for create, update, delete operations
+
     - **Attribute:**
         - A named **piece of data** that belongs to some kind of object. The value of an attribute can be referenced in expressions using a dot-separated notation, like `aws_instance.example.id`.
         - Terraform resources and data sources make all of their arguments available as readable attributes.
@@ -45,7 +57,9 @@
     - It's Terraform's cached information about your managed infrastructure and configuration. 
     - This state is used to persistently map the same real world resources to your configuration from run-to-run, keep track of metadata, and improve performance for large infrastructures.
     - Without state, Terraform has no way to identify the real resources it created during previous runs. Thus, when multiple people are collaborating on shared infrastructure, it's important to store state in a shared location, like a free Terraform Cloud organization.
-    - Contents of the state file:
+    - A `tfstate` file gets created after the first apply
+        - It is created locally if no remote backend (S3 or Terraform Cloud) is specified in the `terraform` config block
+    - Contents of the `terraform.tfstate` state file:
         - Primary
             - Resource configuration
             - Binding to real-world object
@@ -56,19 +70,48 @@
             - Sensitive values
     - `Configuration drift`: means that if someone manually changes the infrastructure, Terraform will automatically detect the change when comparing to the desired state, and revert it before any further changes
 
-    - **Backend:**
-        - The part of Terraform's core that determines how Terraform stores state and performs operations (like plan, apply, import, etc.). 
-        - Terraform has multiple backends to choose from, which can be configured in a variety of ways. **Backends are not plugins**, so it is not possible to install additional backends.
-        - In a general computer science sense, a backend is any lower-level implementation that enables a higher-level feature. But in the context of Terraform, "backend" always means the built-in code that handles state and operations.
-    
-    - **Remote Backend:**
-        - A `Terraform CLI feature` that lets Terraform connect to `Terraform Cloud`, by specifying in the Terraform configuration which organization and workspace(s) to use. Used for remote operations in `Terraform Cloud` workspaces, and used for state storage in `Terraform Cloud`'s free tier.
-        - See also backend. Older documentation sometimes refers to backends like `s3` or consul as "remote backends," since they store Terraform's state in a remote service instead of the local filesystem, but today this term usually means the specific backend whose name is remote.
-    
     - **Locking:**
         - When working in a team, if developer A is making changes, the state will be locked, so Developer B can only make changes, once the state is unlocked
         - The ability to prevent new runs from starting in a given workspace. Workspaces are automatically locked while a run is in progress, and can also be manually locked.
         - The remote backend respects the lock status in Terraform Cloud workspaces. Some other Terraform backends can also lock state during runs.
+        - In reality, a `tfstate.lock.info` file gets created during the `destroy`:
+            - If we type `yes`, the lock file is removed, and a `backup` file gets created
+    
+- **Backend:**
+    - The part of Terraform's core that determines how Terraform stores state and performs operations (like plan, apply, import, etc.). 
+    - Terraform has multiple backends to choose from, which can be configured in a variety of ways. **Backends are not plugins**, so it is not possible to install additional backends.
+    - In a general computer science sense, a backend is any lower-level implementation that enables a higher-level feature. But in the context of Terraform, "backend" always means **the built-in code that handles state and operations**.
+    - The `backend` block needs to be added to the `terraform` config, such as:
+
+            terraform {
+                required_version = "~> 1.7"
+                required_providers {
+                    aws = {
+                    source  = "hashicorp/aws"
+                    version = "~> 5.0"
+                    }
+                }
+
+                backend "s3" {
+                    bucket = "tf-backend-gaborkalmar"
+                    key = "state.tfstate"
+                    region = "eu-west-2"
+                }
+            }
+
+    - **Backend types:**
+        - **Local Backend:**
+            - if nothing else is specified in the terraform config block
+
+        - **Remote Backend - Terraform Cloud:**
+            - the `tfstate` file is stored in the `Terraform Cloud`, so it's available for team-work
+            - A `Terraform CLI feature` that lets Terraform connect to `Terraform Cloud`, by specifying in the Terraform configuration which organization and workspace(s) to use. Used for remote operations in `Terraform Cloud` workspaces, and used for state storage in `Terraform Cloud`'s free tier.
+        
+        - **Remote Backend - 3rd party provider (S3 bucket):**
+            - the `tfstate` file is stored in a 3rd party location, most commonly an `S3` bucket, so it's available for team-work
+            - Older documentation sometimes refers to backends like `s3` or consul as "remote backends," since they store Terraform's state in a remote service instead of the local filesystem
+            - requires authentication credentials and read/write permissions    
+
 
 - **Terraform phases:**
     - **Plan:**
@@ -86,10 +129,15 @@
     - **Apply:**
         - To make changes to real infrastructure in order to make it match the desired state (as specified by a Terraform config and set of variables).
         - In conversation, it's common to refer to "applying a plan" (usually in the context of Terraform Cloud's workflow) or "applying a configuration" (usually in the context of the Terraform CLI workflow).
+    
+    - **Destroy:**
+        - The infrastructure gets removed
+        - We can also save the plan for this
 
 - **Terraform objects/blocks:**
     - **Terraform configuration:**
         - Used to modify the default terraform configuration
+        
         - **Example:**
 
                 terraform {
@@ -101,26 +149,72 @@
                     }
                 }
 
-    - **(Terraform) Provider:**
+    - **Providers:**
         - A **plugin for Terraform** that makes a collection of related resources available. A provider plugin is responsible for understanding API interactions with some kind of service and exposing resources based on that API.
         - `Terraform providers` are generally tied to a specific infrastructure provider, which might be an infrastructure as a service (IaaS) provider (like `AWS`, `GCP`, `Microsoft Azure`, `OpenStack`), a platform as a service (PaaS) provider (like `Heroku`), or a software as a service (SaaS) provider (like `Terraform Cloud`, `DNSimple`, `Cloudflare`).
+        - The purpose of the providers is to be able to communicate to different Remote APIs and platforms
+        - The `terraform init` command downloads and sets up the provider for our project
         - There are many existing providers available, but providers can also be custom-built to work with any API.
+        - Providers are developed separately from Terraform
+        - Providers are "passed down" to child modules, but can be also set to be different
+        
         - **Example:**
                 
                 provider "aws" {
                     region = "eu-west-2"
                 }
+        
+        - We can also add different providers to objects in our project, by using an alias:
+                
+                terraform {
+                    required_version = "~> 1.0"
+                    required_providers {
+                        aws = {
+                            source = "hashicorp/aws"
+                            version = "~> 5.0"
+                        }
+                    }
+                }
+
+                provider "aws" {
+                    region = "eu-west-1"
+                }
+
+                provider "aws" {
+                    region = "eu-west-2"
+                    alias = "eu-west-2-alias" # We can refer to this in the resource, so it uses this provider instance
+                }
+
+                resource "aws_s3_bucket" "eu-west-1-bucket" {
+                    bucket = "some-very-random-and-unique-bucket-name-asdin"
+                }
+
+                resource "aws_s3_bucket" "eu-west-2-bucket" {
+                    bucket = "some-very-random-and-unique-bucket-name-19834"
+                    provider = aws.eu-west-2-alias  # This is where we change the default provider, by refering to it with the alias
+                }
 
     - **Resources and Data Sources:**
         - **Resource:**
+            - The main building blocks of Terraform
             - Also-known-as "infrastructure resource":
                 - **A block that describes one or more infrastructure objects**. Resources can be things like `virtual networks`, `compute instances`, or `higher-level components` such as `DNS records`.
                 - An infrastructure object of a type that could be managed by Terraform.
-            - A `resource block` in a configuration instructs Terraform to manage the described resource: 
+            - A `resource` block in a configuration instructs Terraform to manage the described resource: 
                 - during a run, Terraform will create a matching real infrastructure object — if one doesn't already exist —, and will modify the existing object if it doesn't match the desired configuration. 
                 - Terraform uses `state` to keep track of which real infrastructure objects correspond to resources in a configuration.
             - Terraform uses cloud provider `APIs` to create, edit, and destroy resources:
                 - Terraform providers are responsible for defining resource types and mapping transitions in a resource's state to a specific series of API calls that will carry out the necessary changes.
+            - A resource usually consists of a `resource type` and `resource name`, that has to be unique within a project (eg. we can only have 1 EC2 instance called "my-ec2"):
+                - Best practice says that if there is only 1 of that type, we call it `this`
+            - Resource dependencies:
+                - It refers to the order in which the resources need to be created 
+                    - parallel creation:
+                        - if the resources aren't related, they are created paralelly
+                    - sequencial creation
+                        - if resources are connected, then they are created sequencially, by setting up a logical order (eg. a VPC is created before a Subnet)
+                - We can also define explicitly using the `depends_on` meta-argument
+            
             - **Example:**
                     
                     resource "aws_s3_bucket" "my_bucket" {
@@ -131,29 +225,53 @@
             - A **resource-like object** that can be configured in Terraform's configuration language.
             - Unlike resources, data sources *do not create or manage infrastructure*. Instead, they return information about some kind of external object in the form of readable attributes. 
                 - This allows a Terraform configuration to make use of information defined outside of Terraform, or defined by another separate Terraform configuration.
+                - We can also use these external resources, without recreating them (eg. use an existing VPC with an existing Role)
+            - Some example data blocks are `aws_ami`, `aws_caller_identity`, `aws_region`, `aws_vpc`, `aws_availability_zones`, `aws_iam_policy_document`
+            
             - **Example:**
                 
-                data "aws_s3_bucket" "my_external_bucket" {
-                    bucket = "not-managed-by-us"
+                data "aws_vpc" "prod_vpc" {
+                    tags = {
+                        Env = "prod"    # find the vpc in your availability zone that has "prod" value in its "Env" tag
+                    }
                 }
 
     - **Module:**
         - A self-contained collection of Terraform configurations that manages a collection of related infrastructure resources.
         - Other Terraform configurations can call a module, which tells Terraform to manage any resources described by that module.
         - Modules define `input variables` (which the calling module can set values for) and `output values` (which the calling module can reference in expressions).
+        
         - **Example:**
 
                 module "my_module" {
                     source = "./module-example"
                 }
 
-    - **Variables:**
+    - **(Input) Variables:**
         - Also-known-as "input variables".
         - In Terraform, "variables" almost always refers to **input variables**, which are key/value pairs used in a run. 
         - Terraform modules can declare variables to allow customization:
             - for child modules, the parent module provides a value when calling the module
             - for the root module, values are provided at run time.
         - `Terraform Cloud` lets you set values for root input variables in a workspace, so all collaborators can use the same values. Variable values marked as "sensitive" become unreadable in the UI and API, and all variable values are protected by Vault.
+        - We generally declare these in a separate `variables.tf` file:
+            - we can refer to them with `var.<var_name>`
+            - we can set the `type`, add `description`, add `defailt_value`, set it to be a `sensitive` variable and provide validation `rules`
+            - when running `terraform plan` or `terraform apply`, we will be prompted to add these values, unless they have a `default_value`
+                - we can also provide the values directly after the command
+            - **Variable precedence:**
+                - there are many ways we can provide input variables (in the order from lowest precedence to higher - so the ones in the top get overwritten if the value is provided in an other way as well that lower in the list):
+                    1. default values
+                    2. environment variables (`TF_VAR_<name>=<value>`)
+                    3. files:
+                        - `terraform.tfvars`
+                        - `terraform.tfvars.json`
+                        - `*.auto.tfvars`
+                        - `*.auto.tfvars.json`
+                    4. using the command line with `-var` or `--var-file`
+        
+        - *Note*: using variables for `aws_regions` is very risky, because the infrastructure will be created again in a separate region, if you use a different region as the input!
+
         - **Example:**
 
                 variable "bucket_name" {
@@ -161,22 +279,96 @@
                     description = "Bucket name"
                     default     = "my-default-bucket-name"
                 }
-    
+
+                # Then we can refer to its value with "var.bucket_name"
+        
+        - **Input validation:**
+            - You can set the valid values by adding a `validation` attribute to the `variable` block
+
+                    validation {
+                        condition = var.ec2_instance_type == "t2.micro" || var.ec2_instance_type == "t3.micro" # add conditions like this
+                        error_message = "Only t2.micro or t3.micro supported" # returns error message if condition is false
+                    }
+
+                    # or with more advanced syntax:
+
+                    condition = contains(["t2.micro", "t3.micro", var.ec2_instance_type])
+        
+        - **Map and Object variables:**
+            - We can also create a JS-like `object` with kvps, to create a single variable with multiple values (the object can have multiple attributes and a complex structure, with different value types, as opposed to `maps`)
+                - `Object` example:
+
+                        variable "ec2_volume_config" {
+                            description = "The size and type of the root block volume attached to managed EC2 instances"
+                            
+                            type = object({
+                                size = number
+                                type = string
+                            })
+
+                            default = {
+                                size = 10
+                                type = "gp3"
+                            }
+                        }
+
+            - `Map` is a simplified object (a list of key-value pairs), best used if the values for each element are of the same type in the map (no complex structure!)
+                - `Map` example:
+
+                        variable "additional_tags" {
+                            type = map(string)
+                            default = {}
+                        }
+
+                        # Then refer to them like this:
+
+                        resource "aws_instance" "example" {
+                            ...
+                            tags = merge(var.additional_tags, {
+                                ManagedBy = "Terraform"
+                            })
+                        }
+        
+        - **Using `terraform.tfvars` file:** (Doesn't work with `hashicorp terraform` extensions `2.28` and above!)
+            - Create a file named `terraform.tfvars` in the project root
+            - Add the values you would otherwise query here (so instead of default values, we can use this file)
+            - It is of higher presedence also, so even if there is a default value, the file's values will be used
+            - If we want to create a `dev.terraform.tfvars` file and another called `prod.terraform.tfvars`, we can specify which one to use in the command line (this is not good practice, we use `workspaces` for this!):
+                - `terraform plan -var-file="dev.terraform.tfvars"`
+                - Any filed named `terraform.tfvars` is automatically read, but if it doesn't match this format, we need to add `<filename>.auto.tfvars` to make its values automatically loadad
+                - The precedence of the `.auto` file is higher, so anything in there will overwrite any previously declared value
+        
     - **Locals:**
         - Locally decclared variables, only available in the current context
+        - A way to define a variable that can be reused within your module without needing to pass it in as an input variable
         - **Example:**
 
                 locals {
-                    local_example = "This is a local variable"
+                    local_example_1 = "This is a local variable"
+                    local_example_2 = "This is another local variable"
                 }
+
+                # We can now reference them in the code with "locals.local_example_1"
 
     - **Output Values / Outputs:**
         - Data exported by a Terraform module, which can be displayed to a user and/or programmatically used by other Terraform code.
+        - Sensitive values:
+            - within the `output` block, we add a `sensitive = true` attribute
+                - we can also add this to a `variable`, but then it will run into an error saying the output also needs a `sensitive = true` attribute
+            - we can still retrieve its value using the `terraform output -json` command (it will show up in the "value") or by simply querying the output's name
         - **Example:**
 
                 output "bucket-id" {
                     value = aws_s3_bucket.my_bucket.id
                 }
+    
+    - **Using variables and locals (workflow):**
+        - Create a `variable`, to define its type and structure
+        - Give them initial (default) values in a `terraform.tfvars` file
+        - Use `locals` to create computed values using the `variables`
+            - Refer to `variables` with `var.<varname>`
+        - Create an `output` for each `local`:
+            - Refer to `locals` with `local.<localname>`
 
 # COMMANDS
 - `terraform validate`: Checks the syntax of the Terraform files and verifies that they are internally consistent, but does not ensure that the resources exist or that the providers are properly configured.
@@ -189,6 +381,9 @@
 - `terraform state list`: Lists all resources in the state file, useful for managing and manipulating the state.
 - `terraform destroy`: Destroys all resources tracked in the state file. This command is the equivalent of passing a `-destroy` flag to the terraform apply command.
 - `terraform -help`: Provides help information about Terraform commands. It can be used alone for a general overview, or appended to a specific command for detailed help about that command.
+- `terraform output <output_name>`: retrieve the value of an output (if sensitive, it won't display)
+    - `terraform output json`: returns the output objects in a json format
+    - `terraform output -raw <output_name>`: returns value without double-quotes, useful for reusing the value (eg. with `curl` command)
 
 # GUIDES:
 ## Basics:
@@ -366,8 +561,156 @@
     1. WATCH WS VIDEO!
 
 ## Udemy courses:
-- **General Notes:**
+- **Creating partial backends:**
+    - This process isn't used in a local project, just with CI/CD pipelines! (where we can configure the whole commands)
+    - Set up an `S3` remote backend, but don't add the specifics of the backend:
+
+            terraform {
+                required_version = "~> 1.7"
+                required_providers {
+                    aws = {
+                    source  = "hashicorp/aws"
+                    version = "~> 5.0"
+                    }
+                }
+
+                backend "s3" {
+
+                }
+            } 
     
+    - Instead, in a separate file (`dev.tfbackend`), add the lines that you would add to the `backend` configuration:
+
+            bucket         = "tf-backend-gaborkalmar"
+            key            = "backend_configs/dev/state.tfstate"
+            region         = "eu-west-2"
+    
+    - Create one also for profuction (`prod.tfbackend`):
+
+            bucket         = "tf-backend-gaborkalmar"
+            key            = "backend_configs/prod/state.tfstate"
+            region         = "eu-west-2"
+
+    - Now you can initialize it with the following command:
+        - `terraform init -backend-config=dev.tfbackend` OR
+        - `terraform init -backend-config=dev.tfbackend`
+            - In case you already initialized your backend, you can migrate it by adding `-migrate-state` to the end of the command above
+
+- **VPC with Nginx deployment (files in project 45):**
+    1. Deploy a VPC and a subnet:
+        - Create `providers.tf` file:
+            - add `terraform` block with required versions and required provider set to aws
+            - add `provider` block with your region
+        - Create `networking.tf` file:
+            - add `aws_vpc` resource with cidr_block `10.0.0.0/16`
+            - add `aws_subnet` resource with cidr_block `10.0.0.0/24` and connect it to the vpc
+
+            - OPTIONAL:
+                - add `Tags` section to both with `Name`, `ManagedBy` and `Project`:
+                    - use with `locals` block to avoid duplications:
+                        - Use `local` block for common tags:
+
+                                locals {
+                                    common_tags = {
+                                        ManagedBy = "Terraform"
+                                        Project   = "45_Nginx-Deployment"
+                                    }
+                                }
+                        
+                        - For each resource, add additional tags with `merge`:
+
+                                resource "aws_vpc" "this" {
+                                    cidr_block = "10.0.0.0/16"
+
+                                    tags = merge(local.common_tags, {
+                                        Name = "45_VPC"
+                                    })
+                                }
+
+                    - Alternatively we can add all the common tags to the provider block
+
+    2. Deploy an IGW and associate it with the VPC:
+        - In `networking.tf` file:
+            - add `aws_internet_gateway` resource and connect it to the vpc
+
+    3. Setup a route table with a route to the IGW and associate it with the subnet
+        - In `networking.tf` file:
+            - add `aws_route_table` resource and connect it to the vpc; add route block with cidr block (`0.0.0.0`) to gateway_id (note: no equal sign after route!)
+            - add `aws_route_table_association` to connect the RT with the IGW (`subnet_id` and `route_table_id` attributes)
+
+    4. Deploy an EC2 instance insite of the created subnet and associate a public IP address
+        - Link to AMI locator: https://cloud-images.ubuntu.com/locator/ec2/
+        - Create `compute.tf` file:
+            - Add `aws_instance` resource block:
+                - choose an `ami` by filtering for your region, for `amd64` architecture and `Jammy-Jellyfish` (filters are at the bottom of the page!)
+                - initial setup should look like this:
+                        
+                        resource "aws_instance" "web" {
+                            ami = "ami-07e0ad8f78f635e60"
+                            associate_public_ip_address = true
+                            instance_type = "t2.micro"
+                            subnet_id = aws_subnet.public.id
+                            # root_block_device can also be added, but it's not mandatory!
+                        }
+
+    5. Associate a security group that allows public ingress:
+        - *Note:* 
+            - A SG gets created by default with a VPC, and an instance by default gets this SG attached
+            - This SG allows connections from any resource that also has this SG attached (so this means basically, that everyone on the VPC will be allowed to connect by default)
+        - In `compute.tf` file:
+            - Add `aws_security_group` resource with description, name, vpc_id 
+            - Add 2 no. `aws_vpc_security_group_ingress_rule` resources for `http` and `https` with security_group_id, cidr_ipv4, from_port, to_port, ip_protocol
+            - Add `vpc_security_group_ids` attribute to `aws_instance` to attach it to the instance
+
+    6. Change EC2 instance to use a publicly available Nginx AMI:
+        - To find out the `ami`, we will have to click on launch instances, and then `Browse more AMIs`:
+            - Click on the `AWS Marketplace AMIs` tab:
+                - Search for `nginx`, then filter for: "free"
+                - Select the `Bitnami package for NGINX Open Source` -> subscibe on instance launch (don't launch the instance, we only need this to get the `ami`!)
+                - Make sure you're in the correct zone!
+        - Copy the new `ami-id` to the instance's `ami` instead of the initial one
+        - Add `lifecycle` meta-arguments block to EC2 with `create_before_destroy = true`, so that the instance updates don't need waiting for the destruction of the instance first
+
+    7. Destroy infrastructure
+        - Double check with `terraform state list` command, that nothing is left!
+
+- **Deploying a static website using an S3 bucket (files in project 54):**
+    1. Create `providers.tf` file:
+        - Add `terraform` config block with `aws` and `random` providers
+        - Add `provider` block for `aws`
+    2. Create `s3.tf` file:
+        - Add `random_id` resource for bucket suffix
+        - Add `aws_s3_bucker` resource
+    3. Enable public access to the bucket:
+        - Add `aws_s3_bucket_public_access_block` resource, connect the bucket 
+            - set all these to `false` in the resource (this is what's in the "Public Access Block" basically):
+                - `block_public_acls`
+                - `block_public_policy`
+                - `ignore_public_acls`
+                - `restrict_public_buckets`
+    4. Add policy that allows others to only read from this bucket:
+        - Add `aws_s3_bucket_policy` resource and connect the bucket
+            - create policy attribute with `jsonenconde({ <add_policy_here> })`
+            - generate an s3 bucket policy with principal `*`, action `GetObject`, effect `allow`, sid `PublicReadGetObject` and the bucket's arn
+            - *Note*:
+                - After using `terraform apply`, it will fail first, so it needs to be applied again to succeed (it might be because the resources are created at the same time, and needs a `depends_on` meta-argument to work properly, so we could add it)
+    5. Make it work as a static website:
+        - Add `aws_s3_bucket_website_configuration` resource, connect to bucket and add `index.html` and `error.html` documents
+    6. Create new folder called `build`:
+        - Create 2 files inside:
+            - `index.html`
+            - `error.html`
+    7. Upload files and expose public address:
+        - In `s3.tf` file:
+            - Add 2 no. `aws_s3_object` resources, connect to bucket and add these:
+                - `key` with `index.html`
+                - `source` with `build/index.html`
+                - `etag` with `filemd5("build/index.html")`
+                - `content_type` with `text/html`
+            - Do the same with the `error.html`
+        - Create new `outputs.tf` file:
+            - add `output` block with `value = aws_s3_bucket_website_configuration.static_website.website_endpoint`
+
 # LINKS:
 - AWS getting started link: https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS
 - Terraform-AWS documentation: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
