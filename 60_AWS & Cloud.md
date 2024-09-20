@@ -3,11 +3,13 @@
 `micro ~/.baschrc` -> what is in this file, gets loaded in every bash window you open (eg add an alias `alias n=mkdir`)
 lance TUI? (diplay running processes in terminal)
 `/mnt/c` -> this is where all files are in the WSL
-## CLOUD COMPUTING
+
+# CLOUD COMPUTING
 - Cloud computing is on-demand access to services, via the Internet:
     - **Services** can be computing resources, servers (physical or virtual ones), data storage, development tools, networking capabilities, and more
     - These services are all hosted at a remote data center managed by a **cloud services provider** (or **CSP**)
     - The **CSP** makes these resources available for a monthly subscription fee or bills them according to usage.
+
 - Cloud computing benefits: *( https://www.youtube.com/watch?v=M988_fsOSWo&ab_channel=Simplilearn )*
     - **Lower IT costs:**
         - Cloud lets you offload some or most of the costs and effort of purchasing, installing, configuring, and managing your own on-premises infrastructure.
@@ -17,6 +19,7 @@ lance TUI? (diplay running processes in terminal)
     - **Scale more easily and cost-effectively:**
         - Cloud provides elasticity — instead of purchasing excess capacity that sits unused during slow periods, you can scale capacity up and down in response to spikes and dips in traffic.
         - You can also take advantage of your cloud provider's global network to spread your applications closer to users around the world.
+
 - **2 types of cloud computing:**
     - **Deployment model:**
         - Public Cloud: like a bus, available to the crowd over the internet (owned by CSPs like AWS, Azure or Google Cloud)
@@ -47,7 +50,8 @@ lance TUI? (diplay running processes in terminal)
             - Everything is managed by the provider!
         - [comparison chart](assets/iaas-paas-saas.jpg)
 
-## AWS
+# AWS
+## INTRODUCTION
 - AWS is one of the most popular cloud computing platforms that offers services in a metered pay-as-you-go basis
 - The services include:
     - Amazon Elastic Compute Cloud (EC2) (see more below)
@@ -68,7 +72,7 @@ lance TUI? (diplay running processes in terminal)
         - AWS: involves the infrastructure that runs all the services offered in the AWS Cloud (e.g., hardware, software, networking, and facilities)
         - User: involves managing the security of the data they store and process, the applications they deploy, and the configuration of the AWS services they use (e.g., securing access to AWS resources, managing encryption, and ensuring appropriate access controls)
 
-- **SERVICES IN DETAIL:**
+## SERVICES IN DETAIL
     - **Elastic Cloud Compute platform EC2** *( Summary video: https://www.youtube.com/watch?v=TsRBftzZsQo&ab_channel=AmazonWebServices )*
         - allows users to rent a **virtual cluster of computers** on which to run their own applications
             - AWS's version of **virtual computers** emulates most of the attributes of a real computer:
@@ -493,7 +497,10 @@ lance TUI? (diplay running processes in terminal)
 ## USING THE CLI
 - `s3api` commands: https://awscli.amazonaws.com/v2/documentation/api/latest/reference/s3api/index.html#cli-aws-s3api
 
-## GUIDES:
+# GUIDES:
+## Basics:
+
+## Based on Codecool tasks:
 - **Create an IAM admin user:**
     1. Enable `IAM Identity Center`
     2. Create new user: https://docs.aws.amazon.com/singlesignon/latest/userguide/quick-start-default-idc.html
@@ -951,6 +958,11 @@ lance TUI? (diplay running processes in terminal)
         - `ssh -i ~/.ssh/AWS-GK-London.pem ec2-user@18.169.234.255`
         - `sudo yum install openswan`
         - !!! INCOMPLETE - package manager wasn't recognized on the Linux distro I used, couldn't install openswan !!!
+
+
+## Udemy courses:
+
+
 
 ## ALL AWS LINKS:
 - AWS doucumentation: https://docs.aws.amazon.com/

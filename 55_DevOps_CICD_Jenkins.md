@@ -207,6 +207,35 @@
     - Rolling deployment
     - Canary Deployment
 
+## NGINX:
+- **Historical overview:**
+    - Originally it was a program, that runs on a server (what we call a `web server`), that is responsible for handling and replying to incoming HTTP requests from a browser
+    - Then as traffic grew, we needed more servers, and more `nginx` programs:
+        - To distribute this load, `nginx` also became a `proxy server`, that would forward incoming requests from clients to the actual servers (note: `proxy`: means doing something on someone else's behalf). This includes of multiple functionalities:
+            - `load balancing`: distribute the traffic to multiple servers
+            - `caching`: storing DB data locally, so it doesn't need to request it from the DB every time a new data request is coming in
+            - `security`: single entrypoint to private servers (we can focus on security on that one public server, and also uses encrypted communication - only accepts encrypted requests)
+            - `compression and segmentation`: for example Netflix uses is to reduce bandwidth and increase performance when streaming videos
+
+- **Nginx configuration:**
+    - we use `directives` to le `nginx` know, what is the configuration we need:
+        - usually localted in the `/etc/nginx` folder
+        - we can configure it to be a `web server` or a `proxy server`:
+            - web server -> handle requests itself
+            - proxy server -> forward requests (uses `proxy_pass` attribute in the location to define where it goes)
+        - we can also do a lot more...
+
+- **Using it with kubernetes:**
+    - It can also be an `ingress controller`:
+        - it is a specialized load balancer for managing ingress (=incoming) traffic in Kubernetes
+        - it also handles the routing between services (based on rules defined in the `Ingress` resource)
+        - it works **inside** the cluster:
+            - the cloud provider has its own `load balancer`, that is created by the provider in the cloud (the 2 are connected)
+            - the `nginx ingress controller` connects to the providers `load balancer`
+
+- An alternative `web server` is `Apache`
+
+
 # GUIDES
 ## Basics
 - **Install all required plugins:**

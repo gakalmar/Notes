@@ -237,15 +237,34 @@
                 }
 
     - **Module:**
-        - A self-contained collection of Terraform configurations that manages a collection of related infrastructure resources.
-        - Other Terraform configurations can call a module, which tells Terraform to manage any resources described by that module.
-        - Modules define `input variables` (which the calling module can set values for) and `output values` (which the calling module can reference in expressions).
-        
-        - **Example:**
+        - **Basics:**
+            - A self-contained collection of Terraform configurations that manages a collection of related infrastructure resources:
+                - Basically just some terraform files that are kept in a separate directory (in general, we work in the `root` module, so every project we have been working on is already a module on its own)
+                - We can load these into our project and use them
+            - Other Terraform configurations can call a module, which tells Terraform to manage any resources described by that module:
+                - These are called `child modules`
+            - Modules define `input variables` (which the calling module can set values for) and `output values` (which the calling module can reference in expressions).
+            
+            - **Example:**
 
-                module "my_module" {
-                    source = "./module-example"
-                }
+                    module "my_module" {
+                        source = "./module-example"
+                    }
+        
+        - **Standard Module Structure:**
+            - It is recommended that we use a minimal set of files in our module:
+                - `main.tf` consists of the main resources
+                - `outputs.th` consists of the outputs
+                - `variables.tf` consists of all the variables
+                - `LICENSE` (same as a readme with the instructions of how to use the module)
+                - `README.md` detailed documentation and resource description
+        
+        - **Public modules from Terraform Registry:**
+            - To use a module, we use the module block under `provision instructions` to import it into our project
+            - There can also be `submodules` in a module
+            - Modules can also have module and provider dependencies:
+                - eg. an `aws` module requires to specify `aws` as a provider in the root module as well
+            - Under `source code` we can find the github repository, where we can check the code in detail
 
     - **(Input) Variables:**
         - Also-known-as "input variables".
@@ -329,7 +348,7 @@
                             })
                         }
         
-        - **Using `terraform.tfvars` file:** (Doesn't work with `hashicorp terraform` extensions `2.28` and above!)
+        - **Using `terraform.tfvars` file:** (Doesn't work with `hashicorp terraform` VS Code extensions `2.28` and above!)
             - Create a file named `terraform.tfvars` in the project root
             - Add the values you would otherwise query here (so instead of default values, we can use this file)
             - It is of higher presedence also, so even if there is a default value, the file's values will be used
@@ -362,13 +381,26 @@
                     value = aws_s3_bucket.my_bucket.id
                 }
     
-    - **Using variables and locals (workflow):**
-        - Create a `variable`, to define its type and structure
-        - Give them initial (default) values in a `terraform.tfvars` file
-        - Use `locals` to create computed values using the `variables`
-            - Refer to `variables` with `var.<varname>`
-        - Create an `output` for each `local`:
-            - Refer to `locals` with `local.<localname>`
+    - **Functions:**
+        - Terraform has a lot of built-in functions *(Full list: https://developer.hashicorp.com/terraform/language/functions )*
+        - **Examples:**
+            - `max()`:
+
+                    max(12, 54, 3)
+                    
+                    # returns:
+                    54
+            
+            - `merge()`:
+
+                    > merge({a="b", c="d"}, {e="f", c="z"})
+                    
+                    # returns:
+                    {
+                        "a" = "b"
+                        "c" = "z"
+                        "e" = "f"
+                    }
 
 # COMMANDS
 - `terraform validate`: Checks the syntax of the Terraform files and verifies that they are internally consistent, but does not ensure that the resources exist or that the providers are properly configured.
@@ -437,6 +469,14 @@
 
     - We now initialize it with commands:
         - `terraform init` -> tries to find the `main.tf` file, and initializes our backend: this is where the `state` is handled
+
+- **Using variables and locals (workflow):**
+    - Create a `variable`, to define its type and structure
+    - Give them initial (default) values in a `terraform.tfvars` file
+    - Use `locals` to create computed values using the `variables`
+        - Refer to `variables` with `var.<varname>`
+    - Create an `output` for each `local`:
+        - Refer to `locals` with `local.<localname>`
 
 ## Based on Codecool tasks:
 - **Terraforming Moon task:** (WS video: Creating an EC2 with SSH access from 27:20)
@@ -554,14 +594,11 @@
                         - `DB_PASSWORD`: The password you assigned to the above user.
                         - `DB_HOST`: The endpoint of the RDS instance. This is not a URL but a hostname, which typically looks like xxxxx.rds.amazonaws.com.
 
-
-
-
 - **EKS persistency with EBS:** (this is not the original way to solve it, but it's better!)
     1. WATCH WS VIDEO!
 
 ## Udemy courses:
-- **Creating partial backends:**
+- **Creating partial backends (files in project 36):**
     - This process isn't used in a local project, just with CI/CD pipelines! (where we can configure the whole commands)
     - Set up an `S3` remote backend, but don't add the specifics of the backend:
 
@@ -711,6 +748,55 @@
         - Create new `outputs.tf` file:
             - add `output` block with `value = aws_s3_bucket_website_configuration.static_website.website_endpoint`
 
+- **Creating multiple resources using `count` (files in project 100):**
+    1. Create a `providers.tf` file as usual
+    2. Create `networking.tf` file with a VPC
+    3. Create multiple subnets in the VPC, using `count`:
+        - Create an `aws_subnet` resource in the `networking.tf` file with a `vpc_id` and a `cidr_block`, and add a `count` attribute
+            - for the variable you want to increment, you can use the `${count.index}` expression (for the `cidr_block` and the `Name`)
+    4. Add flexible configuration option by using a variable for the count attribute:
+        - Create a `variables.tf` file, and create a `subnet_count` variable, with `type` set to `number`, and `default` set to `2`:
+        - The `aws_subnet` resource should look like this in the end:
+
+                resource "aws_subnet" "this" {
+                    count = var.subnet_count
+                    vpc_id = aws_vpc.this
+                    cidr_block = "10.0.${count.index}.0/24"
+
+                    tags = {
+                        Project = local.project
+                        Name = "${local.project}-${count.index}"
+                    }
+                }
+    
+    - *Note:*
+        - Project 100 in the `terraform-udemy-practice` folder has even more complex and flexible setups where we can create instances based on lists of objects configurations (eg. `ami` and `instace_type`)
+        - `count` is better used when creating resources from a `list(object{})`
+        - `for_each` should be used when creating resources from a `map(object{})`:
+            - Refer to this project for a detailed setup using maps: https://github.com/lm-academy/terraform-course/tree/main/11-multiple-resources
+
+- **IAM iser management (files in project 117):**
+    1. Create `user-roles.yaml` file with some basic user info (`username`, `roles[]`)
+    2. Create `provider.tf` file
+    3. Create a `users.tf` file with:
+        - `locals` block: users_from_yaml -> load from file and use `yamlsdecode`
+    4. Create users in `users.tf` file:
+        - Use an `aws_iam_user` resource and extract each username with a `for_each` loop (`name` is created with `each.value`)
+        - Use an `aws_iam_user_login_profile` resource to create the passwords (add `lifecycle` block to avoid rebuilds when the passwords are changed!)
+            - For now just output the passwords, so we can test login (not a real world practice!)
+            - We can now try loggin in into the aws console (we should see all access denied after successfully logging in, as there are no policies attached!)
+    5. Attach policies to the users based on their roles using their `arn`s: ***(rewatch Udemy course videos 120 to 123 for better understanding! Or just 124 which summarizes it)***
+        - Create new `roles.tf` file:
+            - Add `locals` block, where the policy names are assigned to each role we use (these are not the actual roles, just using the same names to store the policy names!)
+            - Add `aws_iam_role` resource to create the actual roles
+                - This will need a `aws_iam_policy_document` data source that allows certain users to assume this role (only those with access can "assume" it.)
+                - We can go to the consolo, and in the top-right corner, we can switch account to assume a role (add account number and the role's name you want to assume!) - it will only work once we actually attach a `policy` to this `role`
+            - Add `role_policies_list` to locals, so we can iterate through them
+            - Create `aws_iam_policy` data source that creates the `arn`s required for the policies
+            - Create `aws_iam_role_policy_attachment` resource to attach the policies to their roles
+            - Create `users_map` local in `users.tf` file, so it's easier to use than the raw yml format (this way we create a map)
+            - Create `aws_caller_identity` data source to be able to be able to get the user's `account_id`s for the arn in the `aws_iam_policy_document`'s `principals` attribute
+
 # LINKS:
 - AWS getting started link: https://developer.hashicorp.com/terraform/tutorials/aws-get-started?utm_source=WEBSITE&utm_medium=WEB_IO&utm_offer=ARTICLE_PAGE&utm_content=DOCS
 - Terraform-AWS documentation: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
@@ -726,3 +812,10 @@
     - EC2 instance: https://registry.terraform.io/modules/terraform-aws-modules/ec2-instance/aws/latest
     - Security group: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group
     - AWS provider: https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+
+- Built-in functions: https://developer.hashicorp.com/terraform/language/functions
+
+- Terraform project ideas:
+    - Static website deployment using S3 bucket
+    - Infrastructure creator (flexible)
+    - IAM user creator using a yml file
